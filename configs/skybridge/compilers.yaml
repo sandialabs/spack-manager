@@ -1,0 +1,29 @@
+compilers:
+- compiler:
+    environment: {}
+    extra_rpaths: 
+      - /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/compiler/lib/intel64
+    modules: [intel/17.0.1.132 openmpi-intel/1.10]
+    flags: {}
+    operating_system: rhel7
+    paths:
+      cc: /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/bin/intel64/icc
+      cxx: /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/bin/intel64/icpc
+      f77: /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/bin/intel64/ifort
+      fc: /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/bin/intel64/ifort
+    spec: intel@17.0.1
+    target: x86_64
+- compiler:
+    environtment: {}
+    extra_rpaths:
+      - /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64
+    modules: [sierra-devel]
+    flags: {}
+    operating_system: rhel7
+    paths:
+      cc: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icc
+      cxx: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icpc
+      f77: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
+      fc: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
+    spec: intel@19.0.3.199
+    target: x86_64

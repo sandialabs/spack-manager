@@ -1,0 +1,85 @@
+packages:
+  all:
+    compiler: [gcc]
+    modules:  {}
+    paths: {}
+    providers:
+      mpi: [openmpi]
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]
+    variants: +mpi~shared build_type=Release
+    target: [x86-64]
+  libpng:
+    version: [3.49.0]
+    paths:
+      libpng@3.49.0: /usr/lib64
+  findutils:
+    version: [4.4.2]
+    paths:
+      findutils@4.4.2: /usr/bin
+    buildable: false
+  openmpi:
+    version: [4.0.3]
+    modules:
+            openmpi@4.0.3: sierra-mpi/openmpi/4.0.3
+    buildable: False
+  pkg-config:
+    paths:
+      pkg-config@0.29.2: /usr/bin/pkg-config
+    buildable: False
+  cuda:
+    version: [9.2.88]
+    buildable: False
+    modules:
+      cuda@9.2.88: sierra-compiler/nvidia/9.2.88
+  python:
+    version: [3.6.3]
+    modules:
+      python@3.6.3: sierra-python/3.6.3
+    paths:
+      python@2.7.10: /projects/sierra/linux_rh6/install/Python/2.7/
+    buildable: False
+  zlib:
+    version: [1.2.5]
+    paths: 
+      zlib@1.2.5: /usr/
+  bzip2:
+    version: [1.6.0]
+    buildable: false
+    paths:
+      bzip2@1.6.0: /usr/
+  cmake:
+    version: [3.12.2]
+    buildable: false
+    paths:
+      cmake@3.12.2: /projects/sierra/linux_rh6/install/cmake/3.12.2/
+    variants: +ownlibs
+  hdf5:
+    variants: +cxx+hl build_type=Release
+#  netlib-lapack:
+#    version: [system]
+#    paths:
+#      netlib-lapack@system: /usr/lib64
+  superlu:
+    version: [4.3]
+  boost:
+    version: [1.66.0]
+  netcdf:
+    version: [4.4.1.1]
+    variants: +parallel-netcdf maxdims=65536 maxvars=524288 build_type=Release
+  parallel-netcdf:
+    version: [1.12.1]
+  yaml-cpp:
+    version: [0.6.2]
+  fftw:
+    variants: +mpi+fma build_type=Release
+  hypre:
+    version: [develop]
+  openfast:
+    version: [develop]
+    variants: +cxx
+  tioga:
+    version: [develop]
+  trilinos:
+    version: [develop]
+    variants: build_type=Release ~alloptpkgs~xsdkflags~metis~mumps~superlu-dist+superlu~hypre+hdf5~suite-sparse~python~shared+boost+tpetra~epetra~epetraext+exodus+pnetcdf+zlib+stk+teuchos+belos+zoltan+zoltan2~amesos+amesos2~anasazi~ifpack+ifpack2+muelu~fortran~ml+gtest~aztec~sacado~x11+instantiate~instantiate_cmplx~dtk~fortrilinos~openmp~rol~nox+shards~intrepid~intrepid2~cgns

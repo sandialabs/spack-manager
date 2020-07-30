@@ -1,0 +1,90 @@
+packages:
+  all:
+    compiler:
+      - intel@19.0.3
+    modules: {}
+    paths: {}
+    providers:
+      mpi:
+        - openmpi
+      blas:
+        - netlib-lapack
+      lapack:
+        - netlib-lapack
+    variants: +mpi build_type=Release
+  openmpi:
+    version: [1.10.7]
+    buildable: false
+    modules:
+      openmpi@1.10.7: openmpi-intel/1.10
+  intel-mkl:
+    version: [19.0.3]
+    buildable: false
+    modules:
+      intel-mkl@19.0.3: mkl/19.0.3.199
+  pkg-config:
+    paths:
+      pkg-config@0.27.1: /usr/bin/pkg-config
+    buildable: False
+  openssl:
+    version: [1.0.2]
+    buildable: false
+    paths:
+      openssl@1.0.2: /usr
+  ncurses:
+    version: [5.9]
+    buildable: false
+    paths:
+      ncurses@5.9: /usr
+  cmake:
+    version: [3.12.2]
+    buildable: false
+    paths:
+      cmake@3.12.2: /projects/cmake/toss3/3.12.2
+  binutils:
+    version: [2.29.1]
+  zlib:
+    version: [1.2.7]
+    buildable: false
+    paths:
+      zlib@1.2.7: /usr
+  bzip2:
+    version: [1.0.6]
+    buildable: false
+    paths:
+      bzip2@1.0.6: /usr
+  m4:
+    version: [1.4.16]
+    buildable: false
+    paths:
+      m4@1.4.16: /usr
+  boost:
+    version: [1.66.0]
+  hdf5:
+    version: [1.10.1]
+    variants: +mpi+cxx+hl
+  netcdf:
+    version: [4.4.1.1]
+    variants: +parallel-netcdf maxdims=65536 maxvars=524288
+  parallel-netcdf:
+    version: [1.10.0]
+  superlu:
+    version: [4.3]
+  netlib-lapack:
+    version: [3.8.0]
+  yaml-cpp:
+    version: [0.6.2]
+    variants: ~shared
+  fftw:
+    variants: +mpi+fma
+  openfast:
+    version: [develop]
+    variants: +cxx
+  hypre:
+    version: [develop]
+    variants: +int64~superlu-dist
+  tioga:
+    version: [develop]
+  trilinos:
+    version: [develop]
+    variants: ~alloptpkgs~xsdkflags~metis~mumps~superlu-dist+superlu~hypre+hdf5~suite-sparse~python~shared+boost+tpetra~epetra~epetraext+exodus+pnetcdf+zlib+stk+teuchos+belos+zoltan+zoltan2~amesos+amesos2~anasazi~ifpack+ifpack2+muelu~fortran~ml+gtest~aztec~sacado~x11+instantiate~instantiate_cmplx~dtk~fortrilinos~openmp~rol~nox+shards~intrepid~intrepid2~cgns
