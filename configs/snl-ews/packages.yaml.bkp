@@ -1,0 +1,43 @@
+packages:
+  all:
+    compiler: [gcc]
+    providers:
+      mpi:
+        - openmpi
+    variants: +mpi build_type=Release
+  openmpi:
+    version: [4.0.2]
+    paths:
+      openmpi@4.0.2: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.2-gcc-7.2.0-RHEL6/
+    buildable: false
+  pkg-config:
+    paths:
+      pkg-config@0.29.2: /usr/bin/pkg-config
+    buildable: false
+  hdf5:
+    version: [1.10.6]
+    variants: +mpi+cxx+hl
+  cuda:
+    version: [10.1.243]
+    buildable: false
+    modules:
+      cuda@10.1.243: sierra-compiler/nvidia/10.1.243
+  python:
+    version: [3.6.10]
+    modules:
+      python@3.6.10: sierra-python/3.6.10
+    paths:
+      python@2.7.10: /projects/sierra/linux_rh6/install/Python/2.7/
+    buildable: false
+  zlib:
+    version: [1.2.5]
+    buildable: false
+    paths: 
+      zlib@1.2.5: /usr/
+  bzip2:
+    version: [1.6.0]
+    buildable: false
+    paths:
+      bzip2@1.6.0: /usr/
+  cmake:
+    variants: +ownlibs

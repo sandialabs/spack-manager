@@ -1,0 +1,31 @@
+==> [2020-09-20-21:38:26.740816] cmake@3.12.2 : has external module in ['sierra-cmake/3.12.2']
+[+] /projects/sierra/linux_rh7/install/cmake/3.12.2/bin/cmake
+==> [2020-09-20-21:38:26.764588] cuda@9.2.148 : has external module in ['sierra-compiler/nvidia/9.2.148']
+[+] /projects/sierra/linux_rh7/SDK/compilers/nvidia/cuda_9.2.148
+==> [2020-09-20-21:38:26.781311] openmpi@4.0.2 : has external module in ['sierra-mpi/openmpi/4.0.2']
+[+] /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.2-nvidia-9.2.148-RHEL7
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/libiconv-1.16-ahwds4lpuscngotne37s3fuwp44px6ft
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/zlib-1.2.11-3cytcmwcj6brqyd6n6kf7wbxnxpytaez
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/libsigsegv-2.12-zjicgj56ujgcn7aw3lv4tdit5lnjpwau
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/berkeley-db-18.1.40-v3wlwslwe3nllk6g4mqo4elf5zl7c4vu
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/pkgconf-1.7.3-ias3kmz7xflraantj3fwagcgqy65uzkv
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/yaml-cpp-0.6.3-vekijd5b2beqc53ftpztijb6467zjws6
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/glm-0.9.7.1-gpsumzyoya53disppcpoy64c36rnp4rt
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/netlib-lapack-3.8.0-gihtzgh3yb23dh3fvikk3qwak3jrzje6
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/kokkos-nvcc-wrapper-3.1-czqaphxuju5qjjlmot7hkgoyybpihbe5
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/diffutils-3.7-xdybe5a7alylxuvieoqphitjiqkbvg6y
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/hdf5-1.10.6-ixi5s2mrnfl3denjvtb4pp32nndf4tuu
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/m4-1.4.18-747hfiusq5bs4yqtxi7ubz6so3sevmtx
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/ncurses-6.2-xnzfs55ntgktp7esrbjz2sxg7mab4srx
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/superlu-4.3-js7ndq5cbnmig6tv6qbq7km5oh7jrexc
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/bzip2-1.0.8-nts4s7mske3y5blf5pdalawwdft6zdsf
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/matio-1.5.13-elywrmqznqnhjbh7zazmmd4murmprf4x
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/readline-8.0-xlqesevnw4bl6xstox2yyipb3lthmjhz
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/boost-1.74.0-qgzx6r57pbw46z4zzsbdpmofdcbfiq4c
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/gdbm-1.18.1-jzvpbxsji5answiums2ls6rjf73tujyu
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/perl-5.30.3-xxwivzi7h62dcigrvrw6fyhl3mfqwg7g
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/parallel-netcdf-1.12.1-3luonncg22yhlifh7rw6hhbtlowgc3dg
+[+] /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-7.2.0/netcdf-c-4.7.4-vdhphagi4trlwhrqzk7p3534fxti744b
+==> [2020-09-20-21:38:28.453506] Installing trilinos
+==> [2020-09-20-21:38:29.069335] No binary for trilinos found: installing from source
+==> [2020-09-20-21:38:41.696286] trilinos: Executing phase: 'cmake'

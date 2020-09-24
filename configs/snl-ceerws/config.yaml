@@ -1,0 +1,16 @@
+config:
+  install_tree: $spack/opt/spack
+  install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
+  module_roots:
+    tcl:    $spack/share/spack/modules
+    lmod:   $spack/share/spack/lmod
+  build_stage:
+    - $spack/var/spack/stage
+  # Use single source cache per user to avoid unnecessary downloading across spack installations
+  source_cache: ~/.spack/downloads
+  misc_cache: ~/.spack/cache
+  verify_ssl: true
+  checksum: true
+  dirty: false
+  locks: true
+  # build_jobs: 8
