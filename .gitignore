@@ -1,2 +1,3 @@
 views/*
 spack
+__pycache__
