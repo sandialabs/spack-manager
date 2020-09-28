@@ -5,6 +5,8 @@ class Trilinos(bTrilinos, CudaPackage):
     # cuda stuff from PR #17900
     conflicts('+cuda', when='~tpetra')
     depends_on('kokkos-nvcc-wrapper', when='+cuda')
+    depends_on('ninja', type='build')
+    generator = 'Ninja'
 
     def setup_environment(self, spack_env, run_env):
         if '+cuda' in self.spec:
@@ -13,7 +15,7 @@ class Trilinos(bTrilinos, CudaPackage):
             spack_env.set('MPICH_CXX', join_path(self.stage.path, 'Trilinos', 'packages', 'kokkos', 'bin', 'nvcc_wrapper'))
             spack_env.set('CUDACXX', join_path(self.spec['cuda'].prefix, 'bin', 'nvcc'))
 
-        
+
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
