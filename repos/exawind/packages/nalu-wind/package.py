@@ -10,6 +10,8 @@ class NaluWind(bNaluWind, CudaPackage):
     depends_on('ninja', type='build')
 
     def cmake_args(self):
+        if self.spec.variants['test_tol']:
+            self.run_tests = True
         define = CMakePackage.define
         options = super(NaluWind, self).cmake_args()
         options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
