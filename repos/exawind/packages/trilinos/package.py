@@ -12,7 +12,6 @@ class Trilinos(bTrilinos, CudaPackage):
         if '+cuda' in self.spec:
             spack_env.set('NVCC_WRAPPER_DEFAULT_COMPILER', spack_cxx)
             spack_env.set('OMPI_CXX', join_path(self.stage.path, 'Trilinos', 'packages', 'kokkos', 'bin', 'nvcc_wrapper'))
-            spack_env.set('MPICH_CXX', join_path(self.stage.path, 'Trilinos', 'packages', 'kokkos', 'bin', 'nvcc_wrapper'))
             spack_env.set('CUDACXX', join_path(self.spec['cuda'].prefix, 'bin', 'nvcc'))
 
 
