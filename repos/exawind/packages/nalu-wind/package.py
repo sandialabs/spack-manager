@@ -8,6 +8,8 @@ class NaluWind(bNaluWind, CudaPackage):
     depends_on('boost cxxstd=11')
     generator = 'Ninja'
     depends_on('ninja', type='build')
+    variant('wind_utils',default=False,
+            description='Build wind-utils')
 
     def cmake_args(self):
         if self.spec.variants['test_tol']:
@@ -15,6 +17,11 @@ class NaluWind(bNaluWind, CudaPackage):
         define = CMakePackage.define
         options = super(NaluWind, self).cmake_args()
         options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+        if 'wind_utils' in self.spec.variants:
+            options.append(define('ENABLE_WIND_UTILS', True))
+        else:
+            options.append(define('ENABLE_WIND_UTILS', False))
+
         return options
 
     @run_after('cmake')
