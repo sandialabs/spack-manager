@@ -10,7 +10,7 @@ source ${SPACK_ROOT}/share/spack/setup-env.sh
 ########################################################
 # Simple scripts for making it easier to use 
 ########################################################
-function cspack()
+function sspack()
 {
   spack -C ${SPACK_CONFIG} "$@"
 }

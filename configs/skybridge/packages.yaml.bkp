@@ -1,72 +1,63 @@
 packages:
   all:
     compiler:
-    - intel@19.0.3.199
+      - intel@19.0.3.199
+    modules: {}
+    paths: {}
     providers:
       mpi:
-      - openmpi
+        - openmpi
       blas:
-      - netlib-lapack
+        - netlib-lapack
       lapack:
-      - netlib-lapack
+        - netlib-lapack
     variants: +mpi build_type=Release
   openmpi:
     version: [4.0.3]
     buildable: false
-    externals:
-    - spec: openmpi@1.10.7
-      modules:
-      - openmpi-intel/4.0.3
+    modules:
+      openmpi@1.10.7: openmpi-intel/4.0.3
   intel-mkl:
     version: [19.0.3]
     buildable: false
-    externals:
-    - spec: intel-mkl@19.0.3
-      modules:
-      - mkl/19.0.3.199
+    modules:
+      intel-mkl@19.0.3: mkl/19.0.3.199
   pkg-config:
-    buildable: false
-    externals:
-    - spec: pkg-config@0.27.1
-      prefix: /usr/bin/pkg-config
+    paths:
+      pkg-config@0.27.1: /usr/bin/pkg-config
+    buildable: False
   openssl:
     version: [1.0.2]
     buildable: false
-    externals:
-    - spec: openssl@1.0.2
-      prefix: /usr
+    paths:
+      openssl@1.0.2: /usr
   ncurses:
     version: [5.9]
     buildable: false
-    externals:
-    - spec: ncurses@5.9
-      prefix: /usr
+    paths:
+      ncurses@5.9: /usr
   cmake:
     version: [3.12.2]
     buildable: false
-    externals:
-    - spec: cmake@3.12.2
-      prefix: /projects/cmake/toss3/3.12.2
+    paths:
+      cmake@3.12.2: /projects/cmake/toss3/3.12.2
   binutils:
     version: [2.29.1]
   zlib:
     version: [1.2.7]
     buildable: false
-    externals:
-    - spec: zlib@1.2.7
-      prefix: /usr
+    paths:
+      zlib@1.2.7: /usr
   bzip2:
     version: [1.0.6]
     buildable: false
-    externals:
-    - spec: bzip2@1.0.6
-      prefix: /usr
+    paths:
+      bzip2@1.0.6: /usr
   m4:
     version: [1.4.16]
     buildable: false
-    externals:
-    - spec: m4@1.4.16
-      prefix: /usr
+    paths:
+      m4@1.4.16: /usr
   boost:
     version: [1.66.0]
   hdf5:
