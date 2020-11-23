@@ -27,6 +27,8 @@ class NaluWind(bNaluWind, CudaPackage):
                 env.set('OMPI_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             else:
                 env.set('CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
+    variant('compile_commands', default=False,
+            description='generate compile_commands.json and copy to source dir')
 
     def cmake_args(self):
         spec = self.spec
@@ -43,10 +45,13 @@ class NaluWind(bNaluWind, CudaPackage):
         if  '+cuda' in spec:
             options.append(define('ENABLE_CUDA', True))
 
+        if 'build_type=RelWithDebInfo' in self.spec:
+            options.append(define('CMAKE_CXX_FLAGS','-fsanitize=address -fno-sanitize-address-use-after-scope'))
         return options
 
     @run_after('cmake')
     def copy_compile_commands(self):
-        target = os.path.join(self.stage.source_path, "compile_commands.json")
-        source = os.path.join(self.build_directory, "compile_commands.json")
-        copyfile(source, target)
+        if '+compile_commands' in self.spec:
+            target = os.path.join(self.stage.source_path, "compile_commands.json")
+            source = os.path.join(self.build_directory, "compile_commands.json")
+            copyfile(source, target)
