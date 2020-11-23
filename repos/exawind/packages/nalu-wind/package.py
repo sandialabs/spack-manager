@@ -16,6 +16,8 @@ class NaluWind(bNaluWind, CudaPackage):
             description='Build wind-utils')
     variant('set_tmpdir', default='default',
             description='Change tmpdir env variabte in build')
+    variant('asan', default=False,
+            description='turn on address sanitizer')
 
     def setup_build_environment(self, env):
         spec = self.spec
@@ -45,7 +47,7 @@ class NaluWind(bNaluWind, CudaPackage):
         if  '+cuda' in spec:
             options.append(define('ENABLE_CUDA', True))
 
-        if 'build_type=RelWithDebInfo' in self.spec:
+        if '+asan' in self.spec:
             options.append(define('CMAKE_CXX_FLAGS','-fsanitize=address -fno-sanitize-address-use-after-scope'))
         return options
 
