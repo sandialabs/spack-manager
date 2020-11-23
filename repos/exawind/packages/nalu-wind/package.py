@@ -14,11 +14,15 @@ class NaluWind(bNaluWind, CudaPackage):
         depends_on('trilinos+wrapper {arch}'.format(arch=arch_string), when=arch_string)
     variant('wind_utils',default=False,
             description='Build wind-utils')
+    variant('set_tmpdir', default='default',
+            description='Change tmpdir env variabte in build')
 
     def setup_build_environment(self, env):
         spec = self.spec
+        if spec.varinats['set_tempdir'].value is not 'default':
+            env.set('TMPDIR', spec.variants['set_tempdir'].value)
+
         if '+cuda' in spec:
-            env.set('TMPDIR', '/scratch/psakiev/tmp')
             if '+mpi' in spec:
                 env.set('OMPI_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             else:
