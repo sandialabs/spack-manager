@@ -21,7 +21,7 @@ class NaluWind(bNaluWind, CudaPackage):
 
     def setup_build_environment(self, env):
         spec = self.spec
-        if spec.varinats['set_tempdir'].value is not 'default':
+        if spec.varinats['set_tempdir'].value != 'default':
             env.set('TMPDIR', spec.variants['set_tempdir'].value)
 
         if '+cuda' in spec:

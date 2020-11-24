@@ -18,9 +18,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         spec = self.spec
         define = CMakePackage.define
         options = []
-        if self.stage.path is None:
-            print("ERROR ERROR ERROR")
-            exit()
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),
             define('TEST_LOG', os.path.join(self.build_directory, 'nalu-wind-test-log.txt')),
@@ -31,6 +28,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
         options.append('-VV')
         options.append('-S')
+        // TODO pass num procs
         options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
 
         return options
