@@ -1,5 +1,9 @@
 #!/usr/bin/env spack-python
 
+"""
+Build a nalu-wind package if none of the dependencies need to be installed
+"""
+
 from spack.spec import Spec
 import spack.config
 

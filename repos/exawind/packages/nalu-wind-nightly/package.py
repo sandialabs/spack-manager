@@ -28,7 +28,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
         options.append('-VV')
         options.append('-S')
-        // TODO pass num procs
+        # TODO pass num procs
         options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
 
         return options
