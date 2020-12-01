@@ -1,6 +1,14 @@
 #! /bin/bash
 
 ########################################################
+# Tests
+########################################################
+if [[ -z ${SPACK_MANAGER} ]]; then
+    echo "Env variable SPACK_MANAGER not set. You must set this variable."
+    exit 125
+fi
+
+########################################################
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
