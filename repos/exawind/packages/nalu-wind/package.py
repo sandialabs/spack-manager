@@ -11,7 +11,7 @@ class NaluWind(bNaluWind, CudaPackage):
     depends_on('trilinos+cuda', when='+cuda')
     for val in CudaPackage.cuda_arch_values:
         arch_string='cuda_arch={arch}'.format(arch=val)
-        depends_on('trilinos+wrapper {arch}'.format(arch=arch_string), when=arch_string)
+        depends_on('trilinos+wrapper+cuda_rdc {arch}'.format(arch=arch_string), when=arch_string)
     variant('wind_utils',default=False,
             description='Build wind-utils')
     variant('set_tmpdir', default='default',
