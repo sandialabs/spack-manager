@@ -1,0 +1,9 @@
+spack:
+  include:
+  - $SPACK_MANAGER/configs/darwin/packages.yaml
+  specs:
+  - nalu-wind@develop+hypre+tioga+openfast
+  view: false
+  develop:
+    nalu-wind:
+      spec: nalu-wind@develop+hypre+tioga+openfast
