@@ -1,0 +1,10 @@
+spack:
+  include:
+  - $SPACK_MANAGER/configs/skybridge/packages.yaml
+  - $SPACK_MANAGER/configs/skybridge/compilers.yaml
+  - $SPACK_MANAGER/configs/skybridge/config.yaml
+  specs:
+  - matrix:
+    - [nalu-wind@master+hypre+tioga+openfast]
+    - [~cuda]
+  view: false
