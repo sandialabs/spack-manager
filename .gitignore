@@ -4,3 +4,4 @@ __pycache__
 *.lock
 .spack-env/
 *.log
+.spack*

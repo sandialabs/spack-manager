@@ -1,0 +1,11 @@
+spack:
+  include:
+  - $SPACK_MANAGER/configs/snl-cuda9/packages.yaml
+  - $SPACK_MANAGER/configs/snl-cuda9/compilers.yaml
+  - $SPACK_MANAGER/configs/snl-cuda9/config.yaml
+  specs:
+    - matrix:
+      - [nalu-wind@master+hypre+tioga+openfast]
+      - [+cuda cuda_arch=70, ~cuda]
+
+  view: false 

@@ -9,10 +9,10 @@ config:
   build_stage:
     - $spack/var/spack/stage
   # Use single source cache per user to avoid unnecessary downloading across spack installations
-  source_cache: ~/.spack/downloads
-  misc_cache: ~/.spack/cache
+  source_cache: /projects/wind/.spack/downloads
+  misc_cache: /projects/wind/.spack/cache
   verify_ssl: true
   checksum: true
   dirty: false
   locks: true
-  # build_jobs: 8
+  build_jobs: 8
