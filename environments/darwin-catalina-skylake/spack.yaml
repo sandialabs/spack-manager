@@ -2,13 +2,5 @@ spack:
   include:
   - $SPACK_MANAGER/configs/darwin/packages.yaml
   specs:
-  - nalu-wind@develop+hypre+tioga+openfast+compile_commands
-    #  - trilinos@develop
+  - nalu-wind@master+hypre+tioga+openfast+compile_commands
   view: false
-  develop:
-    nalu-wind:
-      spec: nalu-wind@develop+hypre+tioga+openfast
-      path: $EXAWIND_DIR/nalu-wind
-        #    trilinos:
-        #      spec: trilnos@develop
-        #      path: $EXAWIND_DIR/trilinos

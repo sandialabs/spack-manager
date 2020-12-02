@@ -6,7 +6,7 @@ import inspect
 
 class NaluWindNightly(bNaluWind, CudaPackage):
     """Extension of Nalu-Wind for nightly build and test"""
-    maintaniers = ['psakievich']
+    maintainers = ['psakievich']
     git = 'https://github.com/psakievich/nalu-wind.git'
 
     variant('host_name', default='default')
@@ -17,6 +17,10 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
+        if spec.variants['host_name'].value == 'default':
+            spec.variants['host_name'].value = spec.format('{architecture}')
+        if spec.variants['extra_name'].value == 'default':
+             spec.variants['extra_name'].value =spec.format('{compiler} {variants}')
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),
@@ -37,8 +41,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return
     def cmake(self, spec, prefix):
         return
-#    def install(self, spec, prefix):
-#        return
+    def install(self, spec, prefix):
+        return
 
     def build(self, spec, prefix):
         """override base package to run ctest script for nightlies"""

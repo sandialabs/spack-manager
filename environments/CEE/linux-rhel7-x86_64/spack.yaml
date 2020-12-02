@@ -1,0 +1,9 @@
+spack:
+  include:
+  - $SPACK_MANAGER/configs/snl-ews/packages.yaml
+  - $SPACK_MANAGER/configs/snl-ews/compilers.yaml
+  - $SPACK_MANAGER/configs/snl-ews/config.yaml
+  specs:
+  - nalu-wind@master+hypre+tioga+openfast+fftw
+  - nalu-wind-nightly
+  view: true

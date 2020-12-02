@@ -6,9 +6,9 @@ packages:
         - openmpi
     variants: +mpi build_type=Release
   openmpi:
-    version: [4.0.2]
+    version: [4.0.3]
     paths:
-      openmpi@4.0.2: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.2-gcc-7.2.0-RHEL6/
+      openmpi@4.0.3: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.3-gcc-7.2.0-RHEL7/
     buildable: false
   pkg-config:
     paths:
@@ -27,7 +27,7 @@ packages:
     modules:
       python@3.6.10: sierra-python/3.6.10
     paths:
-      python@2.7.10: /projects/sierra/linux_rh6/install/Python/2.7/
+      python@2.7.10: /projects/sierra/linux_rh7/install/Python/2.7/
     buildable: false
   zlib:
     version: [1.2.5]
