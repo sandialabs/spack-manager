@@ -12,6 +12,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     variant('host_name', default='default')
     variant('extra_name', default='default')
+    #variant('NP', default=1)
     generator = 'Unix Makefiles'
     version('cdash', branch='cdash', submodules=True)
 
@@ -31,10 +32,11 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
         options.append(define('HOST_NAME', spec.variants['host_name'].value))
         options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
+        # Pass num procs spack is using into the build script
         options.append(define('NP', spack.config.get('config:build_jobs')))
+        #options.append(define('NP', spec.variants['NP'].value))
         options.append('-VV')
         options.append('-S')
-        # TODO pass num procs
         options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
 
         return options
@@ -43,8 +45,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return
     def cmake(self, spec, prefix):
         return
-#    def install(self, spec, prefix):
-#        return
+    def install(self, spec, prefix):
+        return
 
     def build(self, spec, prefix):
         """override base package to run ctest script for nightlies"""
