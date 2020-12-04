@@ -11,7 +11,7 @@ Beyond the usual `git clone` `git submodule init` and `git submodule update` for
 
 1) If there is no exisiting environment in the [environments](https://github.com/psakievich/spack-manager/environments) folder create one.
 Additional configurations should be added to the [configs](https://github.com/psakievich/spack-manager/configs) directory that can be included in the environment.
-2) Navigate inside this directory and create the environment `spack env create -d .`
+2) Navigate inside the environment directory you wish to use and create the environment `spack env create -d .` after creating the `spack.yaml` file.
 3) Activate the enivronment `spack env activate -d .`
 4) Concretize `spack concretize` and build the packages `spack install`
 
