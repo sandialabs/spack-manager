@@ -4,6 +4,18 @@ import spack.config
 import os
 from shutil import copyfile
 import inspect
+import re
+
+def variant_peeler(var_str):
+    output = ''
+    # extract all the + variants
+    for match in re.finditer(r'(?<=\+)[a-z0-9]*)', var_str):
+        output+='+{v}'.format(v=var_str[match.start(), match.end()])
+    # extract build type
+    for match in re.finditer('r(?<=build_type=)(a-zA-Z)', var_str):
+        output = var_str[match.start(),match.end()] + ' ' + output
+    return output
+
 
 class NaluWindNightly(bNaluWind, CudaPackage):
     """Extension of Nalu-Wind for nightly build and test"""
@@ -22,7 +34,9 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         if spec.variants['host_name'].value == 'default':
             spec.variants['host_name'].value = spec.format('{architecture}')
         if spec.variants['extra_name'].value == 'default':
-             spec.variants['extra_name'].value =spec.format('{compiler} {variants}')
+            extra_name = spec.format('{compiler} ')
+            extra_name += variant_peeler(spec.format('{variants}'))
+            spec.variants['extra_name'].value = extra_name
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),

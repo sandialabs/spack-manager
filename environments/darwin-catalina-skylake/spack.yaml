@@ -3,4 +3,7 @@ spack:
   - $SPACK_MANAGER/configs/darwin/packages.yaml
   specs:
   - nalu-wind@master+hypre+tioga+openfast+compile_commands
+  - nalu-wind-nightly+hypre+tioga+openfast
   view: false
+  repos:
+  - $SPACK_MANAGER/repos/exawind

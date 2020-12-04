@@ -5,3 +5,4 @@ __pycache__
 .spack-env/
 *.log
 .spack*
+*.code-workspace
