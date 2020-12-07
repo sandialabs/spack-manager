@@ -1,2 +1,45 @@
-packages
-...
+packages:
+  all:
+    compiler: [gcc]
+    providers:
+      mpi:
+      - openmpi
+    variants: +mpi build_type=Release
+    target: [x86_64]
+  openmpi:
+    version: [4.0.3]
+    buildable: false
+    externals:
+    - spec: openmpi@4.0.3
+      prefix: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.3-gcc-7.2.0-RHEL7/
+  pkg-config:
+    buildable: false
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr/bin/pkg-config
+  hdf5:
+    version: [1.10.6]
+    variants: +mpi+cxx+hl
+  python:
+    version: [3.6.10]
+    buildable: false
+    externals:
+    - spec: python@2.7.10
+      prefix: /projects/sierra/linux_rh7/install/Python/2.7/
+    - spec: python@3.6.10
+      modules:
+      - sierra-python/3.6.10
+  zlib:
+    version: [1.2.5]
+    buildable: false
+    externals:
+    - spec: zlib@1.2.5
+      prefix: /usr/
+  bzip2:
+    version: [1.6.0]
+    buildable: false
+    externals:
+    - spec: bzip2@1.6.0
+      prefix: /usr/
+  cmake:
+    variants: +ownlibs
