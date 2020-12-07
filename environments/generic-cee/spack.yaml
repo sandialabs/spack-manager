@@ -5,6 +5,4 @@ spack:
   - $SPACK_MANAGER/configs/snl-ews/config.yaml
   specs:
   - nalu-wind@master+hypre+tioga+openfast+fftw ^openblas@0.3.10
-  - nalu-wind-nightly ^openblas@0.3.10
-  - nalu-wind-nightly NP=16 ^openblas@0.3.10
   view: false
