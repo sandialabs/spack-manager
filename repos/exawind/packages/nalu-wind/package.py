@@ -1,5 +1,6 @@
 from spack import *
 from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
+from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
 
@@ -18,6 +19,8 @@ class NaluWind(bNaluWind, CudaPackage):
             description='Change tmpdir env variabte in build')
     variant('asan', default=False,
             description='turn on address sanitizer')
+    variant('compile_commands', default=False,
+            description='generate compile_commands.json and copy to source dir')
 
     def setup_build_environment(self, env):
         spec = self.spec
@@ -29,15 +32,20 @@ class NaluWind(bNaluWind, CudaPackage):
                 env.set('OMPI_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             else:
                 env.set('CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
-    variant('compile_commands', default=False,
-            description='generate compile_commands.json and copy to source dir')
+        else:
+            env.set(
+                "KOKKOS_ARCH_" +
+                Kokkos.spack_micro_arch_map[spec.target.name].upper(), True)
 
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
         options = super(NaluWind, self).cmake_args()
 
-        options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+        cxx_flags =''
+
+        if '+compile_commands' in spec:
+            options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
         if '+wind_utils' in spec:
             options.append(define('ENABLE_WIND_UTILS', True))
@@ -47,8 +55,10 @@ class NaluWind(bNaluWind, CudaPackage):
         if  '+cuda' in spec:
             options.append(define('ENABLE_CUDA', True))
 
-        if '+asan' in self.spec:
-            options.append(define('CMAKE_CXX_FLAGS','-fsanitize=address -fno-sanitize-address-use-after-scope'))
+        if '+asan' in spec:
+            cxx_flags+=' -fsanitize=address -fno-sanitize-address-use-after-scope'
+
+        options.append(define('CMAKE_CXX_FLAGS',cxx_flags))
         return options
 
     @run_after('cmake')

@@ -20,13 +20,6 @@ packages:
   hdf5:
     version: [1.10.6]
     variants: +mpi+cxx+hl
-  cuda:
-    version: [10.1.243]
-    buildable: false
-    externals:
-    - spec: cuda@10.1.243
-      modules:
-      - sierra-compiler/nvidia/10.1.243
   python:
     version: [3.6.10]
     buildable: false

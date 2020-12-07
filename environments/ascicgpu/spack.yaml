@@ -5,6 +5,8 @@ spack:
   - $SPACK_MANAGER/configs/snl-cuda9/config.yaml
   specs:
   - matrix:
-    - [nalu-wind@master+hypre+tioga+openfast]
-    - [+cuda cuda_arch=70, ~cuda]
+    - [nalu-wind@master+hypre+tioga+openfast ^openmpi@4.0.2]
+    - [+cuda cuda_arch=70 ^cuda@9.2.148%gcc@7.2.0, ~cuda target=skylake]
   view: false
+  repos:
+  - $SPACK_MANAGER/repos/exawind
