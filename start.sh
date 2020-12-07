@@ -13,6 +13,7 @@ fi
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
 export SPACK_CONFIG=${SPACK_MANAGER}/configs/snl-ews
+export PATH=${PATH}:${SPACK_MANAGER}/scripts
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 
 ########################################################
