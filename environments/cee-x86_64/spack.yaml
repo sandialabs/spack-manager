@@ -4,11 +4,11 @@ spack:
   - $SPACK_MANAGER/configs/snl-cee/compilers.yaml
   - $SPACK_MANAGER/configs/snl-cee/config.yaml
   specs:
-  - nalu-wind@master+hypre+tioga+openfast+fftw ^openblas@0.3.10
-  - nalu-wind-nightly ^openblas@0.3.10
-  - nalu-wind-nightly
+  - nalu-wind+hypre+openfast+tioga
   view: false
   # ceex-86_64:
   #      root: /projects/wind/views
   #      projections:
   #          all: {name}/{version}-{compiler.name}
+  repos:
+  - $SPACK_MANAGER/repos/exawind

@@ -4,7 +4,7 @@ spack:
   - $SPACK_MANAGER/configs/skybridge/compilers.yaml
   - $SPACK_MANAGER/configs/skybridge/config.yaml
   specs:
-  - matrix:
-    - [nalu-wind@master+hypre+tioga+openfast]
-    - [~cuda]
+      - nalu-wind-nightly+hypre+tioga+openfast
   view: false
+  repos:
+  - $SPACK_MANAGER/repos/exawind
