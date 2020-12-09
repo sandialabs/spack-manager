@@ -15,4 +15,4 @@ config:
   checksum: true
   dirty: false
   locks: true
-  build_jobs: 8
+  build_jobs: 16

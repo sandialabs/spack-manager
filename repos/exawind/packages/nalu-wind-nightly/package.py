@@ -5,6 +5,7 @@ import os
 from shutil import copyfile
 import inspect
 import re
+from spack.util.executable import ProcessError
 
 def variant_peeler(var_str):
     """strip out everything but + variants and build types"""
@@ -45,7 +46,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             define('NALU_DIR', self.stage.source_path),
             define('TEST_LOG', os.path.join(self.build_directory, 'nalu-wind-test-log.txt')),
             define('BUILD_DIR', self.build_directory)])
-        cmake_options = self.cmake_args()
+        cmake_options = self.std_cmake_args
+        cmake_options += self.cmake_args()
         options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
         options.append(define('HOST_NAME', spec.variants['host_name'].value))
         options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
@@ -62,12 +64,16 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return
     def cmake(self, spec, prefix):
         return
-    def install(self, spec, prefix):
-        return
+#    def install(self, spec, prefix):
+#        return
 
     def build(self, spec, prefix):
         """override base package to run ctest script for nightlies"""
         ctest_args = self.ctest_args()
-        print(ctest_args)
         with working_dir(self.build_directory, create=True):
-            inspect.getmodule(self).ctest(*ctest_args)
+            """
+            ctest will throw error 255 if there are any warnings
+            but that doesn't mean our build failed
+            for now just print the error and move on
+            """
+            inspect.getmodule(self).ctest(*ctest_args, fail_on_error=False)

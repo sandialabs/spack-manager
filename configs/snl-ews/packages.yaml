@@ -43,3 +43,5 @@ packages:
       prefix: /usr/
   cmake:
     variants: +ownlibs
+  openblas:
+    version: [0.3.10]

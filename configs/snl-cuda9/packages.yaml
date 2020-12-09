@@ -6,7 +6,7 @@ packages:
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
     variants: build_type=Release
-    target: [skylake]
+    target: [x86_64]
   cmake:
     externals:
     - spec: cmake@3.12.2
