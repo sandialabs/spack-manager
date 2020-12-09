@@ -22,7 +22,7 @@ packages:
     buildable: false
   cuda:
     externals:
-    - spec: cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2
+    - spec: "cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2"
       modules:
       - sierra-compiler/nvidia/9.2.148
       prefix: /projects/sierra/linux_rh7/SDK/compilers/nvidia/cuda_9.2.148/

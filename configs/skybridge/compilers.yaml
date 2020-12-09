@@ -1,8 +1,8 @@
 compilers:
 - compiler:
     environment: {}
-    extra_rpaths: 
-      - /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/compiler/lib/intel64
+    extra_rpaths:
+    - /projects/global/toss3/compilers/intel/intel_2017/compilers_and_libraries_2017.1.132/linux/compiler/lib/intel64
     modules: [intel/17.0.1.132 openmpi-intel/1.10]
     flags: {}
     operating_system: rhel7
@@ -16,7 +16,7 @@ compilers:
 - compiler:
     environtment: {}
     extra_rpaths:
-      - /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64
+    - /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64
     modules: [sierra-devel]
     flags: {}
     operating_system: rhel7

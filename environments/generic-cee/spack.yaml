@@ -1,8 +1,8 @@
 spack:
   include:
-  - $SPACK_MANAGER/configs/snl-ews/packages.yaml
-  - $SPACK_MANAGER/configs/snl-ews/compilers.yaml
-  - $SPACK_MANAGER/configs/snl-ews/config.yaml
+  - $SPACK_MANAGER/configs/snl-cee/packages.yaml
+  - $SPACK_MANAGER/configs/snl-cee/compilers.yaml
+  - $SPACK_MANAGER/configs/snl-cee/config.yaml
   specs:
   - nalu-wind@master+hypre+tioga+openfast+fftw ^openblas@0.3.10
   - nalu-wind-nightly ^openblas@0.3.10
