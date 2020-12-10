@@ -21,6 +21,8 @@ class NaluWind(bNaluWind, CudaPackage):
             description='turn on address sanitizer')
     variant('compile_commands', default=False,
             description='generate compile_commands.json and copy to source dir')
+    variant('tests', default=False,
+            description='turn on tests')
 
     def setup_build_environment(self, env):
         spec = self.spec
@@ -57,6 +59,9 @@ class NaluWind(bNaluWind, CudaPackage):
 
         if '+asan' in spec:
             cxx_flags+=' -fsanitize=address -fno-sanitize-address-use-after-scope'
+
+        if '+tests' in spec:
+            options.append(define('ENABLE_TESTS', True))
 
         options.append(define('CMAKE_CXX_FLAGS',cxx_flags))
         return options
