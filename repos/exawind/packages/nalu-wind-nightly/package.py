@@ -36,7 +36,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         if spec.variants['host_name'].value == 'default':
             spec.variants['host_name'].value = spec.format('{architecture}')
         if spec.variants['extra_name'].value == 'default':
-            extra_name = spec.format('{compiler} ')
+            extra_name = spec.format(' {compiler} ')
             var =  spec.format('{variants}')
             temp =  variant_peeler(var)
             extra_name = extra_name + temp

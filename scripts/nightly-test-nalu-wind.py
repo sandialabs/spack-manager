@@ -1,21 +1,15 @@
 #!/usr/bin/env spack-python
-from spack.spec import Spec
-import spack.config
+from spack.main import SpackCommand
 import sys
 import os
-sys.path.append(os.environ['SPACK_MANAGER']+r'/scripts')
-from SpackConfigRunner import SpackConfigRunner
 
-"""
-Run nightly test of nalu-wind
-"""
-def RunNightlyTest():
-    s = Spec('nalu-wind-nightly+openfast+hypre+tioga').concretized()
-    if spack.store.db.query(s, installed=True):
-        s.package.do_uninstall()
-    s.package.do_install()
+install = SpackCommand('install')
+env = SpackCommand('env')
+uninstall = SpackCommand('uninstall')
 
-if __name__ == '__main__':
-    print(sys.path)
-    runner = SpackConfigRunner()
-    runner(RunNightlyTest)
+env('activate', '{envName}'.format(envName=sys.argv[1]))
+uninstall('-y','nalu-wind-nightly', fail_on_error=False)
+install('-v','nalu-wind-nightly')
+
+#view = SpackCommand('view')
+# create view replacing previous nightly
