@@ -27,7 +27,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     variant('extra_name', default='default')
     #variant('NP', default=1)
     generator = 'Unix Makefiles'
-    version('cdash', branch='cdash', submodules=True)
+    version('master', branch='master', submodules=True)
 
     def ctest_args(self):
         spec = self.spec
