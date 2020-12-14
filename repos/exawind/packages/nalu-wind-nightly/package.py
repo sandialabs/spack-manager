@@ -22,7 +22,6 @@ def variant_peeler(var_str):
 class NaluWindNightly(bNaluWind, CudaPackage):
     """Extension of Nalu-Wind for nightly build and test"""
     maintainers = ['psakievich']
-    git = 'https://github.com/psakievich/nalu-wind.git'
 
     variant('host_name', default='default')
     variant('extra_name', default='default')
