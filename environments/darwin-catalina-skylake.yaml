@@ -1,10 +1,10 @@
 spack:
   include:
-  - $SPACK_MANAGER/configs/darwin/packages.yaml
+  - ~/soft/spack-manager/configs/darwin/packages.yaml
   specs:
   - nalu-wind-nightly
   view: 
     distribute:
-      root: $SPACK_MANAGER/views/mac
+      root: ~/soft/spack-manager/views/mac
   repos:
-  - $SPACK_MANAGER/repos/exawind
+  - ~/soft/spack-manager/repos/exawind

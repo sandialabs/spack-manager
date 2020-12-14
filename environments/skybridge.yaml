@@ -1,10 +1,12 @@
 spack:
   include:
-  - $SPACK_MANAGER/configs/skybridge/packages.yaml
-  - $SPACK_MANAGER/configs/skybridge/compilers.yaml
-  - $SPACK_MANAGER/configs/skybridge/config.yaml
+  - /projects/wind/spack-manager/configs/skybridge/packages.yaml
+  - /projects/wind/spack-manager/configs/skybridge/compilers.yaml
+  - /projects/wind/spack-manager/configs/skybridge/config.yaml
   specs:
       - nalu-wind-nightly+hypre+tioga+openfast
-  view: false
+  view:
+    distribute:
+      root: /projects/wind/spack-manager/views/nightly
   repos:
-  - $SPACK_MANAGER/repos/exawind
+  - /projects/wind/spack-manager/repos/exawind

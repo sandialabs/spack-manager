@@ -1,14 +1,12 @@
 spack:
   include:
-  - $SPACK_MANAGER/configs/snl-cee/packages.yaml
-  - $SPACK_MANAGER/configs/snl-cee/compilers.yaml
-  - $SPACK_MANAGER/configs/snl-cee/config.yaml
+  - /projects/wind/spack-manager/configs/snl-cee/packages.yaml
+  - /projects/wind/spack-manager/configs/snl-cee/compilers.yaml
+  - /projects/wind/spack-manager/configs/snl-cee/config.yaml
   specs:
   - nalu-wind+hypre+openfast+tioga
-  view: false
-  # ceex-86_64:
-  #      root: /projects/wind/views
-  #      projections:
-  #          all: {name}/{version}-{compiler.name}
+  view:
+   ceex-86_64:
+        root: /projects/wind/spack-manager/views/cee-x86_64
   repos:
-  - $SPACK_MANAGER/repos/exawind
+  - /projects/wind/spack-manager/repos/exawind

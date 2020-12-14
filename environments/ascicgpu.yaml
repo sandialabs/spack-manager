@@ -1,10 +1,12 @@
 spack:
   include:
-  - $SPACK_MANAGER/configs/snl-cuda9/packages.yaml
-  - $SPACK_MANAGER/configs/snl-cuda9/compilers.yaml
-  - $SPACK_MANAGER/configs/snl-cuda9/config.yaml
+  - /projects/wind/spack-manager/configs/snl-cuda9/packages.yaml
+  - /projects/wind/spack-manager/configs/snl-cuda9/compilers.yaml
+  - /projects/wind/spack-manager/configs/snl-cuda9/config.yaml
   specs:
   - nalu-wind-nightly+hypre+tioga+openfast+cuda cuda_arch=70 ^cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2
-  view: false
+  view:
+    distribute:
+      root: /projects/wind/spack-manager/views/nightly-cuda9
   repos:
-  - $SPACK_MANAGER/repos/exawind
+  - /projects/wind/spack-manager/repos/exawind
