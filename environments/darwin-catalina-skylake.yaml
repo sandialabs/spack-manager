@@ -3,6 +3,8 @@ spack:
   - $SPACK_MANAGER/configs/darwin/packages.yaml
   specs:
   - nalu-wind-nightly
-  view: false
+  view: 
+    distribute:
+      root: $SPACK_MANAGER/views/mac
   repos:
   - $SPACK_MANAGER/repos/exawind
