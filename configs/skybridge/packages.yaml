@@ -14,7 +14,7 @@ packages:
     version: [4.0.3]
     buildable: false
     externals:
-    - spec: openmpi@1.10.7
+    - spec: openmpi@4.0.3
       modules:
       - openmpi-intel/4.0.3
   intel-mkl:
