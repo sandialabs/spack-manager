@@ -13,7 +13,7 @@ from create_load_script import CreateUserLoads
 install = SpackCommand('install')
 env = SpackCommand('env')
 
-def SpecEnvDeploy(env_name, spec_name)
+def SpecEnvDeploy(env_name, spec_name):
     if env_name not in env('ls'):
         print('Environment {env} has not been created'.format(env=env_name))
         exit(10)
