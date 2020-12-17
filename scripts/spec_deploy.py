@@ -12,16 +12,28 @@ from create_load_script import CreateUserLoads
 
 install = SpackCommand('install')
 env = SpackCommand('env')
+uninstall = SpackCommand('uninstall')
+
+def check_for_env(env_name):
+    if env_name not in env('ls'):
+        raise Exception(
+           'Environment {env} has not been created'.format(env=env_name))
+
+
+def uninstall_spec_from_env(env_name, spec_name):
+    my_env = spenv.Environment(env_name)
+    if my_env.active():
+        my_env.deactivate()
+    uninstall('-f', spec_name)
 
 def SpecEnvDeploy(env_name, spec_name):
-    if env_name not in env('ls'):
-        print('Environment {env} has not been created'.format(env=env_name))
-        exit(10)
+    check_for_env(env_name)
+
+    uninstall_spec_from_env(env_name, spec_name)
 
     with spenv.read(env_name):
-        print(install('--overwrite','-y','-v','{spec}'.format(spec=spec_name)))
-        env('view','enable')
-        env('view', 'loads', '-r')
+        print(install('-y','-v','{spec}'.format(spec=spec_name)))
+        env('loads', '-r')
     CreateUserLoads(env_name)
 
 if __name__ == '__main__':

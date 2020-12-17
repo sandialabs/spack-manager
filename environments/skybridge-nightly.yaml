@@ -5,8 +5,6 @@ spack:
   - /projects/wind/spack-manager/configs/skybridge/config.yaml
   specs:
       - nalu-wind-nightly+hypre+tioga+openfast
-  view:
-    distribute:
-      root: /projects/wind/spack-manager/views/skybridge-nightly
+  view: true
   repos:
   - /projects/wind/spack-manager/repos/exawind
