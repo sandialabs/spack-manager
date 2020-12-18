@@ -4,9 +4,13 @@ spack:
   - /projects/wind/spack-manager/configs/snl-cuda9/compilers.yaml
   - /projects/wind/spack-manager/configs/snl-cuda9/config.yaml
   specs:
-  - nalu-wind-nightly+hypre+tioga+openfast+cuda cuda_arch=70 ^cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2
-  view:
-    distribute:
-        root: /projects/wind/spack-manager/views/cuda9-nightly
+  - nalu-wind-nightly+hypre+tioga+openfast+cuda cuda_arch=70 hostname=ascicgpu ^cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2
+  - trilinos@develop%gcc@7.2.0~adios2~alloptpkgs+amesos+amesos2+anasazi+aztec+belos+boost~cgns~chaco~complex+cuda+cuda_rdc~debug~dtk+epetra+epetraext+exodus+explicit_template_instantiation~float+fortran+glm+gtest+hdf5~hwloc~hypre+ifpack+ifpack2~intrepid~intrepid2~ipo~isorropia+kokkos+matio~mesquite+metis~minitensor+ml+mpi+muelu+mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos+sacado+shards~shared~shylu+stk~stratimikos~strumpack+suite-sparse+superlu~superlu-dist~teko~tempus+teuchos+tpetra+wrapper~x11~xsdkflags+zlib+zoltan+zoltan2 build_type=Release cuda_arch=70 cxxstd=11 gotype=long 
+  view: true
   repos:
   - /projects/wind/spack-manager/repos/exawind
+  develop:
+    nalu-wind-nightly:
+      spec: nalu-wind-nightly+hypre+tioga+openfast+cuda cuda_arch=70 hostname=ascicgpu ^cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2
+    trilinos:
+      spec: trilinos@develop%gcc@7.2.0~adios2~alloptpkgs+amesos+amesos2+anasazi+aztec+belos+boost~cgns~chaco~complex+cuda+cuda_rdc~debug~dtk+epetra+epetraext+exodus+explicit_template_instantiation~float+fortran+glm+gtest+hdf5~hwloc~hypre+ifpack+ifpack2~intrepid~intrepid2~ipo~isorropia+kokkos+matio~mesquite+metis~minitensor+ml+mpi+muelu+mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos+sacado+shards~shared~shylu+stk~stratimikos~strumpack+suite-sparse+superlu~superlu-dist~teko~tempus+teuchos+tpetra+wrapper~x11~xsdkflags+zlib+zoltan+zoltan2 build_type=Release cuda_arch=70 cxxstd=11 gotype=long 

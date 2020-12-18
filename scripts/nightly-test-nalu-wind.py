@@ -1,12 +1,24 @@
 #!/usr/bin/env spack-python
-from spack.main import SpackCommand
 import pathlib
 import sys
 import os
+import socket
 
-install = SpackCommand('install')
-env = SpackCommand('env')
+script_loc = os.path.join(os.environ['SPACK_MANAGER'],'scripts')
+sys.path.append(script_loc)
 
-env('activate', '{envName}'.format(envName=sys.argv[1]))
-install('--overwrite','-y','nalu-wind-nightly')
-env('view','regenerate')
+from spec_deploy import SpecEnvDeploy
+
+hostname = socket.gethostname()
+
+env_name = None
+spec = None
+
+if 'skybridge' in hostname:
+    env_name = 'skybridge-nightly'
+elif 'ascicgpu' in hostname:
+    env_name = 'ascicgpu-nightly'
+else:
+    raise Exception("Nightly test not supported for this platform yet")
+
+SpecEnvDeploy(env_name)
