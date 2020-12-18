@@ -22,7 +22,7 @@ def check_for_env(env_name):
 
 def uninstall_spec_from_env(env_name, spec_name):
     my_env = spenv.Environment(env_name)
-    if my_env.active():
+    if my_env.active:
         my_env.deactivate()
     uninstall('-f', spec_name)
 
