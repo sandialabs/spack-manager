@@ -43,5 +43,8 @@ packages:
       prefix: /usr/
   cmake:
     variants: +ownlibs
+    externals:
+    - spec: cmake@3.13.2
+      prefix: /usr/netpub/cmake-3.13.2-Linux-x86_64
   openblas:
     version: [0.3.10]

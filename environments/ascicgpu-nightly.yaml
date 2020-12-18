@@ -7,6 +7,6 @@ spack:
   - nalu-wind-nightly+hypre+tioga+openfast+cuda cuda_arch=70 ^cuda@9.2.148%gcc@7.2.0 ^openmpi@4.0.2
   view:
     distribute:
-      root: /projects/wind/spack-manager/views/nightly-cuda9
+        root: /projects/wind/spack-manager/views/cuda9-nightly
   repos:
   - /projects/wind/spack-manager/repos/exawind

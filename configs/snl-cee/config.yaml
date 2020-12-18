@@ -10,7 +10,7 @@ config:
   - $spack/var/spack/stage
   # Use single source cache per user to avoid unnecessary downloading across spack installations
   source_cache: $SPACK_MANAGER/.spack/downloads
-  misc_cache: $SPACK_MAANGER/.spack/cache
+  misc_cache: $SPACK_MANGER/.spack/cache
   verify_ssl: true
   checksum: true
   dirty: false
