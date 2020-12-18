@@ -4,13 +4,13 @@ spack:
   - /projects/wind/spack-manager/configs/skybridge/compilers.yaml
   - /projects/wind/spack-manager/configs/skybridge/config.yaml
   specs:
-      - nalu-wind-nightly+hypre+tioga+openfast hostname=skybridge
+      - nalu-wind-nightly+hypre+tioga+openfast host_name=skybridge
       - trilinos@develop~adios2~alloptpkgs+amesos+amesos2+anasazi+aztec+belos+boost~cgns~chaco~complex~cuda~cuda_rdc~debug~dtk+epetra+epetraext+exodus+explicit_template_instantiation~float+fortran+glm+gtest+hdf5~hwloc~hypre+ifpack+ifpack2~intrepid~intrepid2~ipo~isorropia+kokkos+matio~mesquite+metis~minitensor+ml+mpi+muelu+mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos+sacado+shards~shared~shylu+stk~stratimikos~strumpack+suite-sparse+superlu~superlu-dist~teko~tempus+teuchos+tpetra~wrapper~x11~xsdkflags+zlib+zoltan+zoltan2
   view: true
   repos:
   - /projects/wind/spack-manager/repos/exawind
   develop:
     nalu-wind-nightly:
-      spec: nalu-wind-nightly@master+hypre+tioga+openfast hostname=skybridge
+      spec: nalu-wind-nightly@master+hypre+tioga+openfast host_name=skybridge
     trilinos:
       spec: trilinos@develop~adios2~alloptpkgs+amesos+amesos2+anasazi+aztec+belos+boost~cgns~chaco~complex~cuda~cuda_rdc~debug~dtk+epetra+epetraext+exodus+explicit_template_instantiation~float+fortran+glm+gtest+hdf5~hwloc~hypre+ifpack+ifpack2~intrepid~intrepid2~ipo~isorropia+kokkos+matio~mesquite+metis~minitensor+ml+mpi+muelu+mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos+sacado+shards~shared~shylu+stk~stratimikos~strumpack+suite-sparse+superlu~superlu-dist~teko~tempus+teuchos+tpetra~wrapper~x11~xsdkflags+zlib+zoltan+zoltan2
