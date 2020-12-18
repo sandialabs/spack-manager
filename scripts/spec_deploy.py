@@ -4,7 +4,7 @@ import spack.environment as env
 import pathlib
 import sys
 import os
-import spack.executable
+import spack.util.executable
 
 script_loc = os.path.join(os.environ['SPACK_MANAGER'],'scripts')
 sys.path.append(script_loc)
@@ -13,7 +13,7 @@ from create_load_script import CreateUserLoads
 
 env_cmd = SpackCommand('env')
 cd = SpackCommand('cd')
-git = spack.executable.which('git')
+git = spack.util.executable.which('git')
 
 def SpecEnvDeploy(env_name):
     """Pull all develop branches and then reinstall"""
@@ -22,8 +22,9 @@ def SpecEnvDeploy(env_name):
         with this_env:
             for root in this_env.roots():
                 # roots should only be develop specs, need to add check
-                cd(r.name)
+                cd(root.name)
                 git('pull')
+                git('submodule', 'update')
             this_env.concretize()
             this_env.install_all()
             env_cmd('loads', '-r')
