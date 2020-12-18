@@ -28,7 +28,7 @@ def SpecEnvDeploy(env_name):
             this_env.install_all()
             env_cmd('loads', '-r')
         CreateUserLoads(env_name)
-    else
+    else:
         raise Exception(
            'Environment {env} has not been created'.format(env=env_name))
 
