@@ -14,9 +14,8 @@ def CreateUserLoads(my_env):
     env = SpackCommand('env')
 
     # check env
-    if my_env not in env('list'):
-        print('Env not installed')
-        exit()
+    if not ev.exists(my_env):
+        raise Exception('Env not installed')
     # create load
     with ev.read(my_env):
          env('loads', '-r')

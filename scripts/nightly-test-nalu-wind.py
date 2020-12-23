@@ -1,4 +1,6 @@
 #!/usr/bin/env spack-python
+import llnl.util.tty as tty
+tty.set_debug(False)
 import pathlib
 import sys
 import os

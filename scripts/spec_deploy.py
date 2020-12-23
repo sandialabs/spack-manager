@@ -1,4 +1,7 @@
 #!/usr/bin/env spack-python
+import llnl.util.tty as tty
+tty.set_debug(False)
+tty.set_timestamp(True)
 from spack.main import SpackCommand
 import spack.environment as env
 import pathlib
@@ -18,11 +21,11 @@ git = spack.util.executable.which('git')
 def SpecEnvDeploy(env_name):
     """Pull all develop branches and then reinstall"""
     if env.exists(env_name):
-        this_env = env.find_environment(env_name)
+        this_env = env.read(env_name)
         with this_env:
-            for root in this_env.roots():
-                # roots should only be develop specs, need to add check
-                cd(root.name)
+            for name, entry in this_env.dev_specs.items():
+                print(name)
+                cd(name)
                 git('pull')
                 git('submodule', 'update')
             this_env.concretize()
