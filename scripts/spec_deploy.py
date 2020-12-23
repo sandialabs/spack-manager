@@ -28,7 +28,6 @@ def SpecEnvDeploy(env_name):
                 cd(name)
                 git('pull')
                 git('submodule', 'update')
-            this_env.concretize()
             this_env.install_all()
             env_cmd('loads', '-r')
         CreateUserLoads(env_name)
