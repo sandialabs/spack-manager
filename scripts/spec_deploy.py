@@ -28,6 +28,8 @@ def SpecEnvDeploy(env_name):
                 cd(name)
                 try:
                     git('fetch', '--unshallow')
+                except:
+                    pass
                 git('pull')
                 git('submodule', 'update')
             this_env.install_all()
