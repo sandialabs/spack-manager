@@ -26,6 +26,8 @@ def SpecEnvDeploy(env_name):
             for name, entry in this_env.dev_specs.items():
                 print(name)
                 cd(name)
+                try:
+                    git('fetch', '--unshallow')
                 git('pull')
                 git('submodule', 'update')
             this_env.install_all()
