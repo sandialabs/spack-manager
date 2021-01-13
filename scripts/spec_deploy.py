@@ -1,6 +1,6 @@
 #!/usr/bin/env spack-python
 import llnl.util.tty as tty
-tty.set_debug(True)
+tty.set_debug(False)
 tty.set_timestamp(True)
 from spack.main import SpackCommand
 import spack.environment as env
