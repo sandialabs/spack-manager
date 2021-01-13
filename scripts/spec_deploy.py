@@ -1,6 +1,6 @@
 #!/usr/bin/env spack-python
 import llnl.util.tty as tty
-tty.set_debug(False)
+tty.set_debug(True)
 tty.set_timestamp(True)
 from spack.main import SpackCommand
 import spack.environment as env
@@ -15,7 +15,6 @@ sys.path.append(script_loc)
 from create_load_script import CreateUserLoads
 
 env_cmd = SpackCommand('env')
-cd = SpackCommand('cd')
 git = spack.util.executable.which('git')
 
 def SpecEnvDeploy(env_name):
@@ -25,7 +24,7 @@ def SpecEnvDeploy(env_name):
         with this_env:
             for name, entry in this_env.dev_specs.items():
                 print(name)
-                cd(name)
+                os.chdir(os.path.join(this_env.path,name))
                 try:
                     git('fetch', '--unshallow')
                 except:
