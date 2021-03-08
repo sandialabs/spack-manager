@@ -15,8 +15,8 @@ packages:
       prefix: /usr/local/bin
   python:
     externals:
-    - spec: python@3.8.5
-      prefix: /usr/local/
+    - spec: python@3.7.3
+      prefix: /usr/
     - spec: python@2.7.16
       prefix: /usr/
   trilinos:
