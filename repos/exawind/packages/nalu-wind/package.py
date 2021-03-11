@@ -6,10 +6,10 @@ from shutil import copyfile
 
 class NaluWind(bNaluWind, CudaPackage):
     depends_on('kokkos-nvcc-wrapper', when='+cuda')
-    depends_on('boost cxxstd=11')
     #generator = 'Ninja'
     #depends_on('ninja-fortran', type='build')
     depends_on('trilinos+cuda', when='+cuda')
+    depends_on('trilinos cxxstd=14', when='@develop')
     for val in CudaPackage.cuda_arch_values:
         arch_string='cuda_arch={arch}'.format(arch=val)
         depends_on('trilinos+wrapper+cuda_rdc {arch}'.format(arch=arch_string), when=arch_string)
