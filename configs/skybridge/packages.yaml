@@ -42,11 +42,13 @@ packages:
     - spec: ncurses@5.9
       prefix: /usr
   cmake:
-    version: [3.12.2]
-    buildable: false
+    version: [3.12.2, 3.17.1]
+    buildable: true
     externals:
     - spec: cmake@3.12.2
       prefix: /projects/cmake/toss3/3.12.2
+#   - spec: cmake@3.17.1
+#      prefix: /project7/cde/v1/spack/opt/spack/linux-rhel7-x86_64/gcc-7.2.0/cmake-3.17.1-tdvqans/
   binutils:
     version: [2.29.1]
   zlib:
