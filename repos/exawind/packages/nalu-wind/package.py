@@ -11,6 +11,8 @@ class NaluWind(bNaluWind):
             description='generate compile_commands.json and copy to source dir')
     variant('tests', default=False,
             description='turn on tests')
+    depends_on('openfast@develop,master +cxx+shared', when='+openfast+shared')
+    depends_on('openfast@develop,master +cxx~shared', when='+openfast~shared')
 
     def cmake_args(self):
         spec = self.spec
