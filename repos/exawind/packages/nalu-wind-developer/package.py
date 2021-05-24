@@ -4,15 +4,13 @@ from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
 
-class NaluWind(bNaluWind):
+class NaluWindDeveloper(bNaluWind):
     variant('asan', default=False,
             description='turn on address sanitizer')
     variant('compile_commands', default=False,
             description='generate compile_commands.json and copy to source dir')
     variant('tests', default=False,
             description='turn on tests')
-    depends_on('openfast@develop,master +cxx+shared', when='+openfast+shared')
-    depends_on('openfast@develop,master +cxx~shared', when='+openfast~shared')
 
     def cmake_args(self):
         spec = self.spec

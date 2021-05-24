@@ -13,7 +13,7 @@ spack:
   - /projects/wind/spack-manager/repos/exawind
   develop:
     nalu-wind-nightly:
-      spec: nalu-wind-nightly@master+hypre+tioga+openfast host_name=skybridge
+      spec: nalu-wind-nightly@master
     trilinos:
       spec: trilinos@develop
     openfast:
