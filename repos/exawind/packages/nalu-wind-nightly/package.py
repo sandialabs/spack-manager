@@ -1,5 +1,5 @@
 from spack import *
-from spack.pkg.exawind.nalu_wind import NaluWind as bNaluWind
+from spack.pkg.exawind.nalu_wind_developer import NaluWindDeveloper as bNaluWind
 import spack.config
 import os
 from shutil import copyfile

@@ -15,7 +15,7 @@ class NaluWindDeveloper(bNaluWind):
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
-        options = super(NaluWind, self).cmake_args()
+        options = super(NaluWindDeveloper, self).cmake_args()
 
         if '+compile_commands' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))

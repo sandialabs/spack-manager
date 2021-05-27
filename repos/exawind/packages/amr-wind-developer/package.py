@@ -3,14 +3,14 @@ from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
 from shutil import copyfile
 
-class AmrWind(bAmrWind):
+class AmrWindDeveloper(bAmrWind):
     variant('compile_commands', default=False,
             description='generate compile_commands.json and copy to source dir')
 
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
-        options = super(AmrWind, self).cmake_args()
+        options = super(AmrWindDeveloper, self).cmake_args()
 
         if '+compile_commands' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
