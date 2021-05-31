@@ -1,10 +1,10 @@
 spack:
   specs:
-  - amr-wind+openfast
-  - py-stk ^trilinos@master
+  - amr-wind+openfast ^netcdf-c+parallel-netcdf ^openfast@master
+  - py-stk
   - matrix:
-    - [nalu-wind+hypre+openfast+tioga+wind-utils]
-    - [^trilinos@develop, ^trilinos@master ^openfast@master]
+    - [nalu-wind+hypre+openfast+tioga+wind-utils ^hypre+int64 ^openfast@master]
+    - [^trilinos@develop, ^trilinos@master]
   config:
     install_tree:
       padded_length: 128
@@ -46,13 +46,14 @@ spack:
       externals:
       - spec: bzip2@1.6.0
         prefix: /usr/
-    cmake:
-      variants: +ownlibs
-      externals:
-      - spec: cmake@3.13.2
-        prefix: /usr/netpub/cmake-3.13.2-Linux-x86_64
     openblas:
       version: [0.3.10]
+    tioga:
+      version: [develop]
+    trilinos:
+      version: [develop, master]
+      variants: ~adios2~alloptpkgs~amesos+amesos2~anasazi~aztec+belos+boost~cgns~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~matio~mesquite+metis~minitensor~ml+mpi+muelu~mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra~x11~xsdkflags+zlib+zoltan+zoltan2
+        cxxstd=14 build_type=Release
   compilers:
   - compiler:
       environment: {}
