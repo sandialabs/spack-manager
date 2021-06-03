@@ -7,3 +7,4 @@ __pycache__
 .spack*
 *.code-workspace
 loads
+cache/*
