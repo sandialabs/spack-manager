@@ -3,13 +3,9 @@ spack:
   - amr-wind+openfast ^netcdf-c+parallel-netcdf ^openfast@master
   - py-stk
   - matrix:
-    - [nalu-wind+hypre+openfast+tioga+wind-utils ^hypre+int64 ^openfast@master]
+    - [nalu-wind+hypre+openfast+wind-utils ^hypre+int64 ^openfast@master]
     - [^trilinos@develop]
   config:
-    #install_tree:
-    #  padded_length: 128
-    #source_cache: /projects/wind/.spack/downloads
-    #misc_cache: /projects/wind/.spack/cache
     mirrors:
       local_cache: /projects/wind/spack-manager/cache
   packages:
@@ -74,12 +70,17 @@ spack:
   repos:
   - /projects/wind/spack-manager/repos/exawind
   view:
-    default:
+    daily:
       root: /projects/wind/spack-manager/views/daily
   modules:
     view_relative_modules:
-      use_view: default
+      enable: [tcl]
+      tcl:
+        projections:
+          all: exawind-daily-{name}/{version}
+      roots:
+        tcl: /projects/wind/spack-manager/modules/daily
+      use_view: daily
       prefix_inspections:
         bin:
-          - PATH
-
+        - PATH
