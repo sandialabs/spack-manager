@@ -1,4 +1,3 @@
-views/*
 spack
 __pycache__
 *.lock
@@ -6,5 +5,4 @@ __pycache__
 *.log
 .spack*
 *.code-workspace
-loads
-cache/*
+
