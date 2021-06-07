@@ -80,7 +80,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Cycle environments and update them')
     parser.add_argument('-i', '--input_file', required = False, help = 'File with list of envrionments to update')
     parser.add_argument('-e', '--environment', required = False, help = 'Single environment to update without checking frequency')
+    parser.add_argument('-u', '--update_spack_manager', action='store_true', help = 'Update spack-manager before updating environments')
+    parser.set_defaults(update_spack_manager=False)
     args = parser.parse_args()
+
+    if args.update_spack_manager:
+        os.chdir(os.environ['SPACK_MANAGER'])
+        git('pull')
+        git('submodule', 'update')
 
     if args.input_file is not None:
         UpdateListOfEnvironments(args.input_file)
