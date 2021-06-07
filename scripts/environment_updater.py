@@ -68,12 +68,15 @@ def UpdateEnvironment(e):
     with env:
         env.install_all()
 
+def UpdatePermissionsForEnvironment(env):
+    pass
 
 def UpdateListOfEnvironments(inputFile):
     envs = GetListOfEnvironments(inputFile)
     for e in envs:
         if TimeToUpdate(e['freq']):
             UpdateEnvironment(e['name'])
+            UpdatePermissionsForEnvironment(e['name'])
 
 if __name__ == "__main__":
     import argparse
@@ -96,4 +99,5 @@ if __name__ == "__main__":
         env = args.environment
         UpdateDevelopmentSpecs(env)
         UpdateEnvironment(env)
+        UpdatePermissionsForEnvironment(env)
 
