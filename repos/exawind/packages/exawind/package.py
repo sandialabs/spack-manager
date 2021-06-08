@@ -15,6 +15,7 @@ class Exawind(Package):
     depends_on('amr-wind+openfast+hypre')
     depends_on('py-stk')
     depends_on('trilinos') # for seacas tools
+    depends_on('openfast@master')
 
     def install(self, spec, prefix):
         pass
