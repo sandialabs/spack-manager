@@ -26,7 +26,7 @@ spack:
       providers:
         mpi:
         - openmpi
-      variants: ~shared +mpi build_type=Release
+      variants: +mpi build_type=Release
     openmpi:
       version: [4.0.5]
       buildable: false
@@ -88,18 +88,15 @@ spack:
     view_relative_modules:
       enable: [tcl]
       tcl:
+        blacklist_implicits: true
+        whitelist:
+        - nalu-wind
         projections:
-          all: exawind-daily-{name}/{version}
+          all: exawind-daily
+        hash_length: 0
       roots:
         tcl: /projects/wind/spack-manager/modules/skybridge/daily
       use_view: daily
       prefix_inspections:
         bin:
         - PATH
-  develop:
-    nalu-wind:
-      spec: nalu-wind@master
-    amr-wind:
-      spec: amr-wind@main
-    tioga:
-      spec: tioga@develop

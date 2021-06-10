@@ -14,7 +14,7 @@ class PyStk(PythonPackage):
     git      = "https://github.com/sayerhs/pystk.git"
     url      = "https://github.com/sayerhs/pystk.git"
 
-    maintainers = ['sayerhs','psakievich']
+    maintainers = ['psakievich']
 
     version('master', branch='master')
 
