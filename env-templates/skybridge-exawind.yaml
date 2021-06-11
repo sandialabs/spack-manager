@@ -88,9 +88,9 @@ spack:
     view_relative_modules:
       enable: [tcl]
       tcl:
+        all:
+          load: [sierra-compiler/intel/19.0.3, openmpi-intel/4.0]
         blacklist_implicits: true
-        whitelist:
-        - nalu-wind
         projections:
           all: exawind-daily
         hash_length: 0
