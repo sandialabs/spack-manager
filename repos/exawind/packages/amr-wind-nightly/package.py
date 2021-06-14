@@ -1,5 +1,5 @@
 from spack import *
-from spack.pkg.exawind.nalu_wind_developer import NaluWindDeveloper as bNaluWind
+from spack.pkg.exawind.amr_wind_developer import AmrWindDeveloper as bAmrWind
 import spack.config
 import os
 from shutil import copyfile
@@ -18,16 +18,11 @@ def variant_peeler(var_str):
         output = var_str[match.start():match.end()] + ' ' + output
     return output
 
-
-class NaluWindNightly(bNaluWind, CudaPackage):
-    """Extension of Nalu-Wind for nightly build and test"""
-    maintainers = ['psakievich']
+class AmrWindNightly(bAmrWind):
+    """Extenstion of amr-wind for nightly build and test"""
 
     variant('host_name', default='default')
-    variant('extra_name', default='default')
-    #variant('NP', default=1)
-    generator = 'Unix Makefiles'
-    version('master', branch='master', submodules=True)
+    variant('extra_name', default='')
 
     def ctest_args(self):
         spec = self.spec
@@ -42,8 +37,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             spec.variants['extra_name'].value = extra_name
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
-            define('NALU_DIR', self.stage.source_path),
-            define('TEST_LOG', os.path.join(self.build_directory, 'nalu-wind-test-log.txt')),
+            define('AMR_WIND_DIR', self.stage.source_path),
+            define('TEST_LOG', os.path.join(self.build_directory, 'amr-wind-test-log.txt')),
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
@@ -54,9 +49,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         options.append(define('NP', spack.config.get('config:build_jobs')))
         options.append('-VV')
         options.append('-S')
-        options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
-
-        return options
+        options.append(os.path.join(self.stage.source_path,'tests','CTestNightlyScript.cmake'))
 
     def check(self):
         return
