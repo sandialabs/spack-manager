@@ -73,7 +73,12 @@ def UpdateEnvironment(e):
         env.install_all()
 
 def UpdatePermissionsForEnvironment(env, group):
-    set_dir_permissions(os.envirion['SPACK_MANAGER'],0o755, group)
+    set_permissions.set_dir_permissions(
+        os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
+    set_permissions.set_dir_permissions(
+        os.path.join(os.environ['SPACK_MANAGER'],'views'),0o755, group)
+    set_permissions.set_dir_permissions(
+        os.path.join(os.environ['SPACK_MANAGER'],'spack','opt'),0o755, group)
 
 def UpdateListOfEnvironments(inputFile, group):
     envs = GetListOfEnvironments(inputFile)
@@ -89,11 +94,9 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--environment', required = False, help = 'Single environment to update without checking frequency')
     parser.add_argument('-u', '--update_spack_manager', action='store_true', help = 'Update spack-manager before updating environments')
     parser.add_argument('-g', '--group', required = False, help = 'Group to use when setting permissions')
+    parser.add_argument('-j', '--jobs', required = False, help = 'Number of cores to forward to spack')
     parser.set_defaults(update_spack_manager=False, group='wg-sierra-users')
     args = parser.parse_args()
-
-    print(args.group)
-    exit()
 
     if args.update_spack_manager:
         os.chdir(os.environ['SPACK_MANAGER'])

@@ -22,7 +22,7 @@ class AmrWindNightly(bAmrWind):
     """Extenstion of amr-wind for nightly build and test"""
 
     variant('host_name', default='default')
-    variant('extra_name', default='')
+    variant('extra_name', default='default')
 
     def ctest_args(self):
         spec = self.spec
@@ -49,7 +49,8 @@ class AmrWindNightly(bAmrWind):
         options.append(define('NP', spack.config.get('config:build_jobs')))
         options.append('-VV')
         options.append('-S')
-        options.append(os.path.join(self.stage.source_path,'tests','CTestNightlyScript.cmake'))
+        options.append(os.path.join(self.stage.source_path,'test','CTestNightlyScript.cmake'))
+        return options
 
     def check(self):
         return
