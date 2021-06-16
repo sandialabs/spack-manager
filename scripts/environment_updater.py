@@ -32,8 +32,13 @@ def GetValidEnvironment(env):
 
 def GetListOfEnvironments(iFile):
     envs = []
-    with open(iFile) as fp:
-        name, frequency = fp.readline().split()
+    fp = open(iFile)
+    for line in fp:
+        print(line)
+        try:
+            name, frequency = line.split()
+        except:
+            print('Failing line: ', line)
         envs.append({'name' : name,'freq' : frequency})
     return envs
 
@@ -73,6 +78,7 @@ def UpdateEnvironment(e):
         env.install_all()
 
 def UpdatePermissionsForEnvironment(env, group):
+    print("Updaing Permissions")
     set_permissions.set_dir_permissions(
         os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
     set_permissions.set_dir_permissions(
@@ -84,8 +90,14 @@ def UpdateListOfEnvironments(inputFile, group):
     envs = GetListOfEnvironments(inputFile)
     for e in envs:
         if TimeToUpdate(e['freq']):
-            UpdateEnvironment(e['name'])
-            UpdatePermissionsForEnvironment(e['name'], group)
+            print("Updating environment: {f}".format(f=e['name']))
+            try:
+                UpdateEnvironment(e['name'])
+            except:
+                pass
+            finally:
+                print('Finished with environment: {f}'.format(f=e['name']))
+    UpdatePermissionsForEnvironment(None, group)
 
 if __name__ == "__main__":
     import argparse
@@ -111,4 +123,4 @@ if __name__ == "__main__":
         UpdateDevelopmentSpecs(env)
         UpdateEnvironment(env)
         UpdatePermissionsForEnvironment(env, args.group)
-
+

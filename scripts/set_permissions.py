@@ -13,7 +13,10 @@ def recursive_file_system_func(path, func, kargs):
         func(**kargs)
         for filename in filenames:
             kargs['path'] = os.path.join(dirpath, filename)
-            func( **kargs)
+            try:
+                func( **kargs)
+            except:
+                pass
 
 def recursive_chown(path, user=None, group=None):
     kargs = {
