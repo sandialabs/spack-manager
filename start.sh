@@ -12,7 +12,8 @@ fi
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
-export SPACK_CONFIG=${SPACK_MANAGER}/configs/snl-ews
+source ${SPACK_MANAGER}/scripts/impose_configs.sh
+export SPACK_CONFIG=${SPACK_MANAGER}/config/${MACHINE}
 export PATH=${PATH}:${SPACK_MANAGER}/scripts
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 

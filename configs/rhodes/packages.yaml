@@ -1,0 +1,3 @@
+packages:
+  fftw:
+    variants: simd=avx2

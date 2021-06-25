@@ -1,13 +1,40 @@
+# Copyright 2013-2021 Lawrence Livermore National Security, LLC and other
+# Spack Project Developers. See the top-level COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+
 from spack import *
 
 
-class Exawind(BundlePackage):
-    """Dummy package for the exawind suite"""
+class Exawind(CMakePackage):
+    """Application suite and C++ driver for Exawind project."""
 
-    version('main')
-    depends_on('nalu-wind+hypre+tioga+openfast+wind-utils')
-    depends_on('amr-wind+openfast+hypre')
-    #depends_on('py-stk')
-    depends_on('trilinos') # for seacas tools
-    depends_on('openfast@master')
+    homepage = "https://github.com/Exawind"
+    git = "https://github.com/Exawind/exwsim-cpp.git"
 
+    maintainers = ['jrood-nrel']
+
+    tags = ['ecp', 'ecp-apps']
+
+    version('master', branch='main')
+
+    depends_on('trilinos+stk')
+    depends_on('tioga+shared~nodegid')
+    depends_on('nalu-wind+fftw+hypre+openfast+tioga+wind-utils')
+    depends_on('amr-wind+hypre+mpi+netcdf+openfast')
+    depends_on('openfast+cxx+shared@master')
+    depends_on('yaml-cpp@0.6:')
+
+    def cmake_args(self):
+        spec = self.spec
+
+        args = [
+            self.define('Trilinos_DIR', spec['trilinos'].prefix),
+            self.define('TIOGA_DIR', spec['tioga'].prefix),
+            self.define('Nalu-Wind_DIR', spec['nalu-wind'].prefix),
+            self.define('AMR-Wind_DIR', spec['amr-wind'].prefix),
+            self.define('OpenFAST_DIR', spec['openfast'].prefix),
+            self.define('YAML-CPP_DIR', spec['yaml-cpp'].prefix)
+        ]
+
+        return args
