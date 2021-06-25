@@ -17,8 +17,8 @@ if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
     exit 125
 fi
-export SPACK_CONFIG_BASE=${SPACK_MANAGER}/config/base
-export SPACK_CONFIG_MACHINE=${SPACK_MANAGER}/config/${SPACK_MANAGER_MACHINE}
+export SPACK_CONFIG_BASE=${SPACK_MANAGER}/configs/base
+export SPACK_CONFIG_MACHINE=${SPACK_MANAGER}/configs/${SPACK_MANAGER_MACHINE}
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 #export PATH=${PATH}:${SPACK_MANAGER}/scripts
 

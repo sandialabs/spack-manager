@@ -23,6 +23,7 @@ class AmrWindNightly(bAmrWind):
 
     variant('host_name', default='default')
     variant('extra_name', default='default')
+    variant('latest_amrex', default=False)
 
     def ctest_args(self):
         spec = self.spec
@@ -30,11 +31,11 @@ class AmrWindNightly(bAmrWind):
         if spec.variants['host_name'].value == 'default':
             spec.variants['host_name'].value = spec.format('{architecture}')
         if spec.variants['extra_name'].value == 'default':
-            extra_name = spec.format(' {compiler} ')
-            var =  spec.format('{variants}')
-            temp =  variant_peeler(var)
-            extra_name = extra_name + temp
-            spec.variants['extra_name'].value = extra_name
+            extra_name = spec.format('-{compiler}')
+            #var =  spec.format('{variants}')
+            #temp =  variant_peeler(var)
+            #extra_name = extra_name + temp
+            #spec.variants['extra_name'].value = extra_name
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('AMR_WIND_DIR', self.stage.source_path),
