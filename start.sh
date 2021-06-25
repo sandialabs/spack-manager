@@ -23,7 +23,7 @@ source ${SPACK_ROOT}/share/spack/setup-env.sh
 #export PATH=${PATH}:${SPACK_MANAGER}/scripts
 
 ########################################################
-# Simple scripts for making config scoping easier to use
+# Simple functions for making config scoping easier to use
 ########################################################
 function sspack()
 {

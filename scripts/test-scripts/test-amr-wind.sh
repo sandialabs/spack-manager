@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash
 
 cmd() {
   echo "+ $@"
@@ -14,7 +14,7 @@ test_configuration() {
   printf "\n"
 
   SPEC="amr-wind-nightly ${CONFIGURATION} host_name=${HOST_NAME}"
-  cmd "spack install --keep-stage ${SPEC}"
+  cmd "sspack install --keep-stage ${SPEC}"
 
   printf "\nDeleting gold files older than 30 days...\n"
   cmd "cd ${GOLDS_DIR} && find . -mtime +30 -not -path '*/\.*' -delete"
@@ -48,7 +48,7 @@ EOL
 
   printf "\nCopying fcompare golds to organized directory...\n"
   cmd "mkdir -p ${TMP_GOLDS_DIR}/${ID_FILE}"
-  (set -x; rsync -avm --include="*/" --include="plt00010**" --exclude="*" $(spack location -b ${SPEC})/test/test_files/ ${TMP_GOLDS_DIR}/${ID_FILE}/)
+  (set -x; rsync -avm --include="*/" --include="plt00010**" --exclude="*" $(sspack location -b ${SPEC})/test/test_files/ ${TMP_GOLDS_DIR}/${ID_FILE}/)
 
   printf "\n"
   printf "************************************************************\n"
@@ -65,6 +65,9 @@ main() {
   printf "============================================================\n"
   printf "Job is running on ${HOSTNAME}\n"
   printf "============================================================\n"
+
+  # Needed to get sspack
+  source ${SPACK_MANAGER}/start.sh
 
   if [ "${SPACK_MANAGER_MACHINE}" == 'rhodes' ] ||
      [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] ||
