@@ -17,16 +17,17 @@ if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
     exit 125
 fi
-export SPACK_CONFIG=${SPACK_MANAGER}/config/${SPACK_MANAGER_MACHINE}
+export SPACK_CONFIG_BASE=${SPACK_MANAGER}/config/base
+export SPACK_CONFIG_MACHINE=${SPACK_MANAGER}/config/${SPACK_MANAGER_MACHINE}
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 #export PATH=${PATH}:${SPACK_MANAGER}/scripts
 
 ########################################################
-# Simple scripts for making it easier to use
+# Simple scripts for making config scoping easier to use
 ########################################################
 function sspack()
 {
-  spack -C ${SPACK_CONFIG} "$@"
+  spack -C ${SPACK_CONFIG_BASE} -C ${SPACK_CONFIG_MACHINE} "$@"
 }
 function spack-switch-config()
 {

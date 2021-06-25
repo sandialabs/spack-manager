@@ -5,7 +5,7 @@ import os
 import socket
 
 if sys.platform == 'darwin':
-    machine = 'mac'
+    machine = 'darwin'
 elif sys.platform == 'linux':
     # NREL machines
     if os.environ['NREL_CLUSTER'] == 'eagle':

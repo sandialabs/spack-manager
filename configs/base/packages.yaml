@@ -3,7 +3,7 @@ packages:
     version: [1.10.7]
     variants: +cxx+hl
   nalu-wind:
-    variants: +openfast+tioga+hypre+fftw
+    variants: +openfast+tioga+hypre+fftw+wind-utils
   netcdf-c:
     version: [4.7.4]
     variants: +parallel-netcdf maxdims=65536 maxvars=524288

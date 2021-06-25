@@ -8,10 +8,10 @@ if [[ "${OS}" == "Darwin" ]]; then
   OSX=$(sw_vers -productVersion)
   case "${OSX}" in
     10.1*)
-      SPACK_MANAGER_MACHINE=mac
+      SPACK_MANAGER_MACHINE=darwin
     ;;
     11.*)
-      SPACK_MANAGER_MACHINE=mac
+      SPACK_MANAGER_MACHINE=darwin
     ;;
   esac
 elif [[ "${OS}" == "Linux" ]]; then
@@ -30,7 +30,7 @@ fi
 
 if [[ "${SPACK_MANAGER_MACHINE}" == "eagle" ]] || \
    [[ "${SPACK_MANAGER_MACHINE}" == "rhodes" ]] || \
-   [[ "${SPACK_MANAGER_MACHINE}" == "mac" ]]; then
+   [[ "${SPACK_MANAGER_MACHINE}" == "darwin" ]]; then
   printf "Machine is detected as ${SPACK_MANAGER_MACHINE}.\n"
   export SPACK_MANAGER_MACHINE=${SPACK_MANAGER_MACHINE}
 else

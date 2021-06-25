@@ -1,25 +1,18 @@
 packages:
-  openmpi:
-    version: [4.0.5]
-  openfast:
-    version: [develop]
-  pkg-config:
-    buildable: false
-    externals:
-    - spec: pkg-config@0.29.2
-      prefix: /usr/local/bin
-  python:
-    version: [3.7.3]
-    externals:
-    - spec: python@3.7.3
-      prefix: /usr
-    - spec: python@2.7.16
-      prefix: /usr
-  trilinos:
-    variants: ~python~complex+explicit_template_instantiation~float~fortran~openmp+shared~xsdkflags+boost~cgns+exodus+gtest+hdf5~hypre~metis~mumps+pnetcdf~suite-sparse~superlu-dist+superlu~x11+zlib~alloptpkgs~amesos+amesos2~anasazi~aztec+belos~epetra~epetraext~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~ml~minitensor+muelu~nox~piro~phalanx~rol~rythmos~sacado~shylu+stk+shards~teko~tempus+teuchos+tpetra+zoltan+zoltan2~dtk~fortrilinos build_type=Release
+  #pkg-config:
+  #  buildable: false
+  #  externals:
+  #  - spec: pkg-config@0.29.2
+  #    prefix: /usr/local/bin
+  #python:
+  #  version: [3.7.3]
+  #  externals:
+  #  - spec: python@3.7.3
+  #    prefix: /usr
+  #  - spec: python@2.7.16
+  #    prefix: /usr
   all:
     compiler: [apple-clang, gcc]
-    variants: build_type=Release
     providers:
       mpi: [openmpi]
       blas: [netlib-lapack]
