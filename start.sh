@@ -12,10 +12,14 @@ fi
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
-source ${SPACK_MANAGER}/scripts/impose_configs.sh
-export SPACK_CONFIG=${SPACK_MANAGER}/config/${MACHINE}
-export PATH=${PATH}:${SPACK_MANAGER}/scripts
+export SPACK_MANAGER_MACHINE=$(${SPACK_MANAGER}/scripts/find_machine.py)
+if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
+    echo "Machine not found."
+    exit 125
+fi
+export SPACK_CONFIG=${SPACK_MANAGER}/config/${SPACK_MANAGER_MACHINE}
 source ${SPACK_ROOT}/share/spack/setup-env.sh
+#export PATH=${PATH}:${SPACK_MANAGER}/scripts
 
 ########################################################
 # Simple scripts for making it easier to use
