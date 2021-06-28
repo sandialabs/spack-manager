@@ -53,8 +53,6 @@ class AmrWind(CMakePackage, CudaPackage):
             description='Enable OpenFAST integration')
     variant('internal-amrex', default=True,
             description='Use AMRex submodule to build')
-    variant('fortran', default=False,
-            description='Build fortran interfaces')
 
     conflicts('+openmp', when='+cuda')
 
@@ -62,8 +60,6 @@ class AmrWind(CMakePackage, CudaPackage):
 
     for opt in process_amrex_constraints():
         dopt = '+particles' + opt
-        if '+hypre' in dopt:
-            dopt = "+fortran" + dopt
         depends_on('amrex@develop' + dopt, when='~internal-amrex' + opt)
 
     depends_on('hypre+shared+mpi+int64~cuda@2.20.0:', when='+mpi~cuda+hypre')
@@ -81,7 +77,7 @@ class AmrWind(CMakePackage, CudaPackage):
         define = CMakePackage.define
 
         vs = ["mpi", "cuda", "openmp", "netcdf", "hypre", "masa",
-              "openfast", "tests", "fortran"]
+              "openfast", "tests"]
         args = [
             self.define_from_variant("AMR_WIND_ENABLE_%s" % v.upper(), v)
             for v in vs

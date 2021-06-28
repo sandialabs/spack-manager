@@ -23,6 +23,7 @@ class AmrWindNightly(bAmrWind):
 
     variant('host_name', default='default')
     variant('extra_name', default='default')
+    variant('test_log', default='default')
     variant('latest_amrex', default=False)
 
     def ctest_args(self):
@@ -32,15 +33,15 @@ class AmrWindNightly(bAmrWind):
             spec.variants['host_name'].value = spec.format('{architecture}')
         if spec.variants['extra_name'].value == 'default':
             extra_name = spec.format('-{compiler}')
-            #var =  spec.format('{variants}')
-            #temp =  variant_peeler(var)
-            #extra_name = extra_name + temp
-            #spec.variants['extra_name'].value = extra_name
+            spec.variants['extra_name'].value = extra_name
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('AMR_WIND_DIR', self.stage.source_path),
-            define('TEST_LOG', os.path.join(self.build_directory, 'amr-wind-test-log.txt')),
             define('BUILD_DIR', self.build_directory)])
+        if spec.variants['test_log'].value == 'default':
+            options.extend([define('TEST_LOG', os.path.join(self.build_directory, 'amr-wind-test-log.txt'))])
+        else:
+            options.extend([define('TEST_LOG', spec.variants['test_log'].value)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
@@ -51,6 +52,8 @@ class AmrWindNightly(bAmrWind):
         options.append('-VV')
         options.append('-S')
         options.append(os.path.join(self.stage.source_path,'test','CTestNightlyScript.cmake'))
+        if spec['mpi'].name == 'openmpi':
+            options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
         return options
 
     def check(self):

@@ -13,7 +13,7 @@ test_configuration() {
   printf "************************************************************\n"
   printf "\n"
 
-  SPEC="amr-wind-nightly host_name=${HOST_NAME} ${CONFIGURATION}"
+  SPEC="amr-wind-nightly host_name=${HOST_NAME} test_log=${TEST_LOG} ${CONFIGURATION}"
   cmd "sspack install --keep-stage ${SPEC}"
 
   printf "\nDeleting gold files older than 30 days...\n"
@@ -98,6 +98,7 @@ main() {
   LOGS_DIR=${SPACK_MANAGER}/logs
   GOLDS_DIR=${SPACK_MANAGER}/golds
   TMP_GOLDS_DIR=${SPACK_MANAGER}/tmp/amr_wind_temp_golds
+  TEST_LOG=${LOGS_DIR}/amr-wind-test-log.txt
  
   printf "============================================================\n"
   printf "HOST_NAME: ${HOST_NAME}\n"
@@ -120,9 +121,9 @@ main() {
   # Test AMR-Wind for the list of configurations
   for CONFIGURATION in "${CONFIGURATIONS[@]}"; do
     printf "\nRemoving previous test log for uploading to CDash...\n"
-    cmd "rm -f ${LOGS_DIR}/amr-wind-test-log.txt"
+    cmd "rm -f ${TEST_LOG}"
     printf "\n"
-    (test_configuration) 2>&1 | tee -i ${LOGS_DIR}/amr-wind-test-log.txt
+    (test_configuration) 2>&1 | tee -i ${TEST_LOG}
   done
 
   printf "============================================================\n"
