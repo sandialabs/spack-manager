@@ -13,7 +13,7 @@ test_configuration() {
   printf "************************************************************\n"
   printf "\n"
 
-  SPEC="amr-wind-nightly ${CONFIGURATION} host_name=${HOST_NAME}"
+  SPEC="amr-wind-nightly host_name=${HOST_NAME} ${CONFIGURATION}"
   cmd "sspack install --keep-stage ${SPEC}"
 
   printf "\nDeleting gold files older than 30 days...\n"

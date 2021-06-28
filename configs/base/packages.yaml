@@ -8,7 +8,7 @@ packages:
     version: [4.7.4]
     variants: +parallel-netcdf maxdims=65536 maxvars=524288
   openfast:
-    version: [develop]
+    version: [2.6.0]
     variants: +cxx
   parallel-netcdf:
     version: [1.12.2]
