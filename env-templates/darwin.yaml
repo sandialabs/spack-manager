@@ -5,7 +5,7 @@ spack:
   #- exawind-nightly
   packages:
     all:
-      target: [x86_64]
+      #target: [x86_64]
       compiler: [apple-clang@12.0.0, gcc, clang]
       variants: build_type=Release +mpi host_name=darwin.hpc.nrel.gov
       providers:
