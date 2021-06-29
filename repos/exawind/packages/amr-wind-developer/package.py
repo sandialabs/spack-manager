@@ -13,6 +13,9 @@ class AmrWindDeveloper(bAmrWind):
         define = CMakePackage.define
         options = super(AmrWindDeveloper, self).cmake_args()
 
+        options.append(define('AMR_WIND_SAVE_GOLDS', True))
+        options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', os.path.join(os.getenv('SPACK_MANAGER'), 'tmp', 'tmp_golds')))
+
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
