@@ -1,5 +1,6 @@
 from spack import *
-from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
+from spack.pkg.exawind.amr_wind import AmrWind as bAmrWind
+#from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
 from shutil import copyfile
 
@@ -11,6 +12,9 @@ class AmrWindDeveloper(bAmrWind):
         spec = self.spec
         define = CMakePackage.define
         options = super(AmrWindDeveloper, self).cmake_args()
+
+        if spec['mpi'].name == 'openmpi':
+            options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
         if '+compile_commands' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
