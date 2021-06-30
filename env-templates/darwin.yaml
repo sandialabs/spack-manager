@@ -1,4 +1,10 @@
 spack:
+  include:
+  - $spack/../configs/base/config.yaml
+  - $spack/../configs/base/packages.yaml
+  - $spack/../configs/base/repos.yaml
+  - $spack/../configs/darwin/config.yaml
+  - $spack/../configs/darwin/packages.yaml
   specs:
   - amr-wind-nightly +netcdf+hypre+openfast~latest_amrex
   #- nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils 
@@ -12,4 +18,5 @@ spack:
         mpi: [openmpi, mpich]
         blas: [netlib-lapack]
         lapack: [netlib-lapack]
-  view: false
+  view: true
+  concretization: together
