@@ -8,6 +8,9 @@ class AmrWindDeveloper(bAmrWind):
     variant('compile_commands', default=False,
             description='generate compile_commands.json and copy to source dir')
 
+    depends_on('ninja', type='build')
+    generator = 'Ninja'
+
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
