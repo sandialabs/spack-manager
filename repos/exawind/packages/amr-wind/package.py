@@ -25,7 +25,7 @@ class AmrWind(CMakePackage, CudaPackage):
     incompressible flow sover for wind turbine and wind farm simulations. """
 
     homepage = "https://github.com/Exawind/amr-wind"
-    git      = "https://github.com/jrood-nrel/amr-wind.git"
+    git      = "https://github.com/Exawind/amr-wind.git"
 
     maintainers = ['sayerhs', 'jrood-nrel', 'michaeljbrazell']
 
