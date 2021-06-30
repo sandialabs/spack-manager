@@ -1,5 +1,8 @@
 packages:
   all:
+    permissions:
+      read: group
+      group: wg-sierra-users
     compiler:
     - intel@19.0.3.199
     providers:
@@ -17,13 +20,13 @@ packages:
     - spec: openmpi@4.0.3
       modules:
       - openmpi-intel/4.0.3
-  intel-mkl:
-    version: [19.0.3]
+  intel-mpi:
+    version: [2019.8.624]
     buildable: false
     externals:
-    - spec: intel-mkl@19.0.3
+    - spec: intel-mpi@2019.8.624
       modules:
-      - mkl/19.0.3.199
+      - intel-mpi/2019
   pkg-config:
     buildable: false
     externals:
@@ -41,14 +44,6 @@ packages:
     externals:
     - spec: ncurses@5.9
       prefix: /usr
-  cmake:
-    version: [3.12.2, 3.17.1]
-    buildable: true
-    externals:
-    - spec: cmake@3.12.2
-      prefix: /projects/cmake/toss3/3.12.2
-#   - spec: cmake@3.17.1
-#      prefix: /project7/cde/v1/spack/opt/spack/linux-rhel7-x86_64/gcc-7.2.0/cmake-3.17.1-tdvqans/
   binutils:
     version: [2.29.1]
   zlib:
@@ -69,33 +64,7 @@ packages:
     externals:
     - spec: m4@1.4.16
       prefix: /usr
-  boost:
-    version: [1.66.0]
-  hdf5:
-    version: [1.10.1]
-    variants: +mpi+cxx+hl
-  netcdf-c:
-    version: [4.4.1.1]
-    variants: +parallel-netcdf maxdims=65536 maxvars=524288
-#  parallel-netcdf:
-#    version: [1.10.0]
   superlu:
     version: [4.3]
   netlib-lapack:
     version: [3.8.0]
-  yaml-cpp:
-    version: [0.6.2]
-    variants: ~shared
-  fftw:
-    variants: +mpi+fma
-  openfast:
-    version: [develop]
-    variants: +cxx
-  hypre:
-    version: [develop]
-    variants: +int64~superlu-dist
-  tioga:
-    version: [develop]
-  trilinos:
-    version: [develop]
-    variants: ~alloptpkgs~xsdkflags~metis~mumps~superlu-dist+superlu~hypre+hdf5~suite-sparse~python~shared+boost+tpetra~epetra~epetraext+exodus+pnetcdf+zlib+stk+teuchos+belos+zoltan+zoltan2~amesos+amesos2~anasazi~ifpack+ifpack2+muelu~fortran~ml+gtest~aztec~sacado~x11+instantiate~instantiate_cmplx~dtk~fortrilinos~openmp~rol~nox+shards~intrepid~intrepid2~cgns

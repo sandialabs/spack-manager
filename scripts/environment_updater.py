@@ -79,12 +79,12 @@ def UpdateEnvironment(e):
 
 def UpdatePermissionsForEnvironment(env, group):
     print("Updaing Permissions")
-    set_permissions.set_dir_permissions(
-        os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
-    set_permissions.set_dir_permissions(
-        os.path.join(os.environ['SPACK_MANAGER'],'views'),0o755, group)
-    set_permissions.set_dir_permissions(
-        os.path.join(os.environ['SPACK_MANAGER'],'spack','opt'),0o755, group)
+    #set_permissions.set_dir_permissions(
+    #    os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
+    #set_permissions.set_dir_permissions(
+    #    os.path.join(os.environ['SPACK_MANAGER'],'views'),0o755, group)
+    #set_permissions.set_dir_permissions(
+    #    os.path.join(os.environ['SPACK_MANAGER'],'spack','opt'),0o755, group)
 
 def UpdateListOfEnvironments(inputFile, group):
     envs = GetListOfEnvironments(inputFile)
@@ -92,6 +92,7 @@ def UpdateListOfEnvironments(inputFile, group):
         if TimeToUpdate(e['freq']):
             print("Updating environment: {f}".format(f=e['name']))
             try:
+                UpdateDevelopmentSpecs(e['name'])
                 UpdateEnvironment(e['name'])
             except:
                 pass
@@ -102,7 +103,7 @@ def UpdateListOfEnvironments(inputFile, group):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description = 'Cycle environments and update them')
-    parser.add_argument('-i', '--input_file', required = False, help = 'File with list of envrionments to update')
+    parser.add_argument('-i', '--input_file', required = False, help = 'File with list of environments to update')
     parser.add_argument('-e', '--environment', required = False, help = 'Single environment to update without checking frequency')
     parser.add_argument('-u', '--update_spack_manager', action='store_true', help = 'Update spack-manager before updating environments')
     parser.add_argument('-g', '--group', required = False, help = 'Group to use when setting permissions')
