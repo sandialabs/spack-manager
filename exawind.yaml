@@ -1,5 +1,6 @@
 spack:
   include:
+  - general_config.yaml
   - general_packages.yaml
   - general_module_view_pair.yaml
   - machine_config.yaml

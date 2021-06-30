@@ -6,7 +6,7 @@ class ExawindNightly(BundlePackage):
     version('main')
 
 
-    depends_on('nalu-wind-nightly+hypre+tioga+openfast+wind-utils')
+    depends_on('nalu-wind-nightly+boost+hypre+tioga+openfast+wind-utils')
     depends_on('amr-wind-nightly+openfast+hypre')
     depends_on('trilinos') # for seacas tools
     depends_on('openfast@master')

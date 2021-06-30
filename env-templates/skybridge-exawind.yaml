@@ -1,84 +1,12 @@
 spack:
+  include:
+  - general_config.yaml
+  - general_packages.yaml
+  - machine_config.yaml
+  - machine_packages.yaml
+  - machine_compilers.yaml
   specs:
   - exawind
-  config:
-    mirrors:
-      local_cache: /projects/wind/spack-manager/cache
-      e4s: https://cache.e4s.io
-    install_tree:
-      projections:
-        all: ${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}
-      root: $spack/opt/spack
-    module_roots:
-      tcl: $spack/share/spack/modules
-      lmod: $spack/share/spack/lmod
-    build_stage:
-    - $spack/var/spack/stage
-    source_cache: /projects/wind/spack-manager/.spack/downloads
-    misc_cache: /projects/wind/spack-manager/.spack/cache
-    verify_ssl: true
-    checksum: true
-    dirty: false
-    locks: true
-  packages:
-    all:
-      compiler: [intel]
-      providers:
-        mpi:
-        - openmpi
-      variants: +mpi build_type=Release
-    openmpi:
-      version: [4.0.5]
-      buildable: false
-      externals:
-      - spec: openmpi@4.0.5
-        modules:
-        - openmpi-intel/4.0
-    pkg-config:
-      buildable: false
-      externals:
-      - spec: pkg-config@0.29.2
-        prefix: /usr/bin/pkg-config
-    hdf5:
-      version: [1.10.6]
-      variants: +mpi+cxx+hl
-    boost:
-      version: [1.68.0]
-    zlib:
-      version: [1.2.5]
-      buildable: false
-      externals:
-      - spec: zlib@1.2.5
-        prefix: /usr/
-    bzip2:
-      version: [1.6.0]
-      buildable: false
-      externals:
-      - spec: bzip2@1.6.0
-        prefix: /usr/
-    openblas:
-      version: [0.3.10]
-    tioga:
-      version: [develop]
-    trilinos:
-      version: [develop, master]
-      variants: ~shared~adios2~alloptpkgs~amesos+amesos2~anasazi~aztec+belos+boost~cgns~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~matio~mesquite+metis~minitensor~ml+mpi+muelu~mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra~x11~xsdkflags+zlib+zoltan+zoltan2
-        cxxstd=14 build_type=Release
-  compilers:
-  - compiler:
-      environment: {}
-      extra_rpaths:
-      - /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64
-      modules: [sierra-devel]
-      flags: {}
-      operating_system: rhel7
-      paths:
-        cc: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icc
-        cxx: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icpc
-        f77: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
-        fc: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
-      spec: intel@19.0.3.199
-      target: x86_64
   repos:
   - /projects/wind/spack-manager/repos/exawind
   view:

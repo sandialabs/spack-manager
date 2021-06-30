@@ -79,12 +79,12 @@ def UpdateEnvironment(e):
 
 def UpdatePermissionsForEnvironment(env, group):
     print("Updaing Permissions")
-    set_permissions.set_dir_permissions(
-        os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
-    set_permissions.set_dir_permissions(
-        os.path.join(os.environ['SPACK_MANAGER'],'views'),0o755, group)
-    set_permissions.set_dir_permissions(
-        os.path.join(os.environ['SPACK_MANAGER'],'spack','opt'),0o755, group)
+    #set_permissions.set_dir_permissions(
+    #    os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
+    #set_permissions.set_dir_permissions(
+    #    os.path.join(os.environ['SPACK_MANAGER'],'views'),0o755, group)
+    #set_permissions.set_dir_permissions(
+    #    os.path.join(os.environ['SPACK_MANAGER'],'spack','opt'),0o755, group)
 
 def UpdateListOfEnvironments(inputFile, group):
     envs = GetListOfEnvironments(inputFile)
