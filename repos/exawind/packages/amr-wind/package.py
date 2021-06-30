@@ -31,7 +31,7 @@ class AmrWind(CMakePackage, CudaPackage):
 
     tags = ['ecp', 'ecp-apps']
 
-    version('main', branch='jrood/golds', submodules=True)
+    version('main', branch='main', submodules=True)
 
     variant('shared', default=True,
             description='Build shared libraries')
