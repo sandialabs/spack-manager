@@ -7,7 +7,7 @@ spack:
   - $spack/../configs/darwin/packages.yaml
   specs:
   - amr-wind-nightly +netcdf+hypre+openfast~latest_amrex
-  #- nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils 
+  - nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils 
   #- exawind-nightly
   packages:
     all:

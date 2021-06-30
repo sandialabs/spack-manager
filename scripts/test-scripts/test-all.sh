@@ -14,7 +14,7 @@ cmd "cd ${SPACK_MANAGER}/environments/exawind"
 cmd "spack env create -d ."
 cmd "cp ${SPACK_MANAGER}/env-templates/darwin.yaml ${SPACK_MANAGER}/environments/exawind/spack.yaml"
 cmd "spack env activate --sh ."
-set +e; cmd "spack uninstall -a -y amr-wind-nightly"; set -e
+set +e; cmd "spack uninstall -a -y --dependents amr-wind-nightly nalu-wind-nightly trilinos"; set -e
 #cmd "spack mirror add e4s https://cache.e4s.io"
 #cmd "spack buildcache keys -it"
 cmd "spack -e . concretize -f"
