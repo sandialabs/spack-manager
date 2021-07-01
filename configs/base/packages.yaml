@@ -1,6 +1,7 @@
 packages:
   boost:
-    version: [1.68.0]
+    version: [1.76.0]
+    variants: cxxstd=14
   hdf5:
     version: [1.10.7]
     variants: +cxx+hl
@@ -23,6 +24,6 @@ packages:
     compiler: [gcc, intel, clang]
     variants: build_type=Release +mpi
     providers:
-      mpi: [openmpi, intel-mpi]
+      mpi: [openmpi, intel-mpi, mpich]
       blas: [netlib-lapack, intel-mkl]
       lapack: [netlib-lapack, intel-mkl]

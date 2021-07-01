@@ -1,13 +1,13 @@
 spack:
   include:
+  - $spack/../configs/darwin/config.yaml
+  - $spack/../configs/darwin/packages.yaml
   - $spack/../configs/base/config.yaml
   - $spack/../configs/base/packages.yaml
   - $spack/../configs/base/repos.yaml
-  - $spack/../configs/darwin/config.yaml
-  - $spack/../configs/darwin/packages.yaml
   specs:
   - amr-wind-nightly +netcdf+hypre+masa+openfast~latest_amrex host_name=darwind.hpc.nrel.gov
   - nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils host_name=darwind.hpc.nrel.gov
-  #- exawind-nightly
+  - exawind-nightly host_name=darwin.hpc.nrel.gov
   view: false
   concretization: together
