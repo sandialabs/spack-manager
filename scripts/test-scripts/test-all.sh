@@ -18,6 +18,7 @@ set +e
 cmd "spack uninstall -a -y amr-wind-nightly"
 cmd "spack uninstall -a -y nalu-wind-nightly"
 cmd "spack uninstall -a -y --dependents trilinos"
+cmd "spack uninstall -a -y exawind-nightly"
 set -e
 #cmd "spack mirror add e4s https://cache.e4s.io"
 #cmd "spack buildcache keys -it"
