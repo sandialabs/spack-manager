@@ -6,17 +6,8 @@ spack:
   - $spack/../configs/darwin/config.yaml
   - $spack/../configs/darwin/packages.yaml
   specs:
-  - amr-wind-nightly +netcdf+hypre+masa+openfast~latest_amrex
-  - nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils 
+  - amr-wind-nightly +netcdf+hypre+masa+openfast~latest_amrex host_name=darwind.hpc.nrel.gov
+  - nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils host_name=darwind.hpc.nrel.gov
   #- exawind-nightly
-  packages:
-    all:
-      #target: [x86_64]
-      compiler: [apple-clang@12.0.0, gcc, clang]
-      variants: build_type=Release +mpi host_name=darwin.hpc.nrel.gov
-      providers:
-        mpi: [openmpi, mpich]
-        blas: [netlib-lapack]
-        lapack: [netlib-lapack]
-  view: true
+  view: false
   concretization: together

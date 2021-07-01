@@ -12,8 +12,10 @@ packages:
   #  - spec: python@2.7.16
   #    prefix: /usr
   all:
-    compiler: [apple-clang, gcc]
+    #target: [x86_64]
+    compiler: [apple-clang, gcc, clang]
+    variants: build_type=Release
     providers:
-      mpi: [openmpi]
+      mpi: [openmpi, mpich]
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
