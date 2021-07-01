@@ -7,10 +7,10 @@ from spack import *
 
 
 class Exawind(CMakePackage):
-    """Application suite and C++ driver for Exawind project."""
+    """Multi-application driver for Exawind project."""
 
-    homepage = "https://github.com/Exawind"
-    git = "https://github.com/Exawind/exwsim-cpp.git"
+    homepage = "https://github.com/Exawind/exawind-driver"
+    git = "https://github.com/Exawind/exawind-driver.git"
 
     maintainers = ['jrood-nrel']
 
