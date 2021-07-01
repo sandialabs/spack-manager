@@ -1,13 +1,3 @@
 config:
-  #install_tree: $spack/opt/spack
-  #install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
-  #module_roots:
-  #  tcl:    $spack/share/spack/modules
-  #  lmod:   $spack/share/spack/lmod
-  #build_stage:
-    #- /scratch/$user/.spack/stage
-    #- $spack/var/spack/stage
-    #- $tempdir/$user/spack-stage
-    #- ~/.spack/stage
   source_cache: ~/.spack/downloads
   misc_cache: ~/.spack/cache
