@@ -6,11 +6,8 @@ import os
 class ExawindDeveloper(bExawind):
     variant('asan', default=False,
             description='Turn on address sanitizer')
-    variant('compile_commands', default=False,
+    variant('compile_commands', default=True,
             description='Tenerate compile_commands.json and copy to source dir')
-
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:

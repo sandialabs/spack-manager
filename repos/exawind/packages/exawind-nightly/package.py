@@ -12,22 +12,21 @@ class ExawindNightly(bExawind):
 
     variant('host_name', default='default')
 
-    phases = ['test']
+    phases = ['test', 'install']
 
     def ctest_args(self):
         spec = self.spec
-        define = CMakePackage.define
-        if spec.variants['host_name'].value == 'default':
-            spec.variants['host_name'].value = spec.format('{architecture}')
         options = []
-        options.extend([define('TESTING_ROOT_DIR', self.stage.path),
-            define('EXAWIND_DIR', self.stage.source_path),
-            define('BUILD_DIR', self.build_directory)])
+        define = CMakePackage.define
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
+        if spec.variants['host_name'].value == 'default':
+            spec.variants['host_name'].value = spec.format('{architecture}')
         options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
-        options.append(define('HOST_NAME', spec.variants['host_name'].value))
+        options.append(define('CTEST_SOURCE_DIRECTORY', self.stage.source_path))
+        options.append(define('CTEST_BINARY_DIRECTORY', self.build_directory))
         options.append(define('EXTRA_BUILD_NAME', spec.format('-{compiler}')))
+        options.append(define('HOST_NAME', spec.variants['host_name'].value))
         options.append(define('NP', spack.config.get('config:build_jobs')))
         options.append('-VV')
         options.append('-S')
