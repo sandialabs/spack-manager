@@ -4,6 +4,8 @@ import os
 
 
 class ExawindDeveloper(bExawind):
+    version('master', branch='main', submodules=True)
+
     variant('asan', default=False,
             description='Turn on address sanitizer')
     variant('compile_commands', default=True,
