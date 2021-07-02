@@ -1,5 +1,5 @@
 from spack import *
-from spack.pkg.exawind.exawind import Exawind as bExawind
+from spack.pkg.pending.exawind import Exawind as bExawind
 import os
 
 

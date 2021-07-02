@@ -1,6 +1,5 @@
 from spack import *
-from spack.pkg.exawind.amr_wind import AmrWind as bAmrWind
-#from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
+from spack.pkg.pending.amr_wind import AmrWind as bAmrWind
 import os
 from shutil import copyfile
 

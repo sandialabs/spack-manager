@@ -25,5 +25,6 @@ class Nccmp(Package, SourceforgePackage):
 
         configure('--prefix=%s' % prefix)
         make()
-        #make("check") #This does not work on the Mac
+        if sys.platform != 'darwin':
+            make("check")
         make("install")

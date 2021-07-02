@@ -1,5 +1,5 @@
 from spack import *
-from spack.pkg.exawind.nalu_wind import NaluWind as bNaluWind
+from spack.pkg.pending.nalu_wind import NaluWind as bNaluWind
 from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
