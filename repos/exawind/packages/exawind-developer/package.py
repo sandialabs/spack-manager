@@ -1,19 +1,15 @@
 from spack import *
-from spack.pkg.pending.nalu_wind import NaluWind as bNaluWind
-from spack.pkg.builtin.kokkos import Kokkos
+from spack.pkg.pending.exawind import Exawind as bExawind
 import os
-from shutil import copyfile
 
-class NaluWindDeveloper(bNaluWind):
+
+class ExawindDeveloper(bExawind):
+    version('master', branch='main', submodules=True)
+
     variant('asan', default=False,
-            description='turn on address sanitizer')
-    variant('compile_commands', default=False,
-            description='generate compile_commands.json and copy to source dir')
-    variant('tests', default=False,
-            description='turn on tests')
-
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+            description='Turn on address sanitizer')
+    variant('compile_commands', default=True,
+            description='Tenerate compile_commands.json and copy to source dir')
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
@@ -22,13 +18,10 @@ class NaluWindDeveloper(bNaluWind):
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
-        options = super(NaluWindDeveloper, self).cmake_args()
+        options = super(ExawindDeveloper, self).cmake_args()
 
         if '+compile_commands' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
-
-        if '+tests' in spec:
-            options.append(define('ENABLE_TESTS', True))
 
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))

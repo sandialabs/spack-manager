@@ -22,43 +22,32 @@ class AmrWindNightly(bAmrWind):
     """Extenstion of amr-wind for nightly build and test"""
 
     variant('host_name', default='default')
-    variant('extra_name', default='default')
+    variant('latest_amrex', default=False)
+
+    phases = ['test']
 
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
         if spec.variants['host_name'].value == 'default':
             spec.variants['host_name'].value = spec.format('{architecture}')
-        if spec.variants['extra_name'].value == 'default':
-            extra_name = spec.format(' {compiler} ')
-            var =  spec.format('{variants}')
-            temp =  variant_peeler(var)
-            extra_name = extra_name + temp
-            spec.variants['extra_name'].value = extra_name
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('AMR_WIND_DIR', self.stage.source_path),
-            define('TEST_LOG', os.path.join(self.build_directory, 'amr-wind-test-log.txt')),
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
         options.append(define('HOST_NAME', spec.variants['host_name'].value))
-        options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
-        # Pass num procs spack is using into the build script
+        options.append(define('EXTRA_BUILD_NAME', spec.format('-{compiler}')))
+        options.append(define('USE_LATEST_AMREX', spec.variants['latest_amrex'].value))
         options.append(define('NP', spack.config.get('config:build_jobs')))
         options.append('-VV')
         options.append('-S')
         options.append(os.path.join(self.stage.source_path,'test','CTestNightlyScript.cmake'))
         return options
 
-    def check(self):
-        return
-
-    def cmake(self, spec, prefix):
-        return
-
-    def build(self, spec, prefix):
+    def test(self, spec, prefix):
         """override base package to run ctest script for nightlies"""
         ctest_args = self.ctest_args()
         with working_dir(self.build_directory, create=True):

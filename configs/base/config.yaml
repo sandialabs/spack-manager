@@ -1,0 +1,3 @@
+config:
+  source_cache: ~/.spack/downloads
+  misc_cache: ~/.spack/cache

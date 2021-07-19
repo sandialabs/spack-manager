@@ -1,26 +1,27 @@
 packages:
   boost:
-    version: [1.68.0]
-  hypre:
-    version: [develop]
-    variants: +int64~superlu-dist
-  fftw:
-    variants: +mpi+fma
-  yaml-cpp:
-    version: [0.6.2]
+    version: [1.76.0]
+    variants: cxxstd=14
   hdf5:
     version: [1.10.7]
     variants: +cxx+hl
   netcdf-c:
     version: [4.7.4]
     variants: +parallel-netcdf maxdims=65536 maxvars=524288
+  openfast:
+    version: [2.6.0]
+    variants: +cxx
   parallel-netcdf:
     version: [1.12.2]
   tioga:
     version: [develop]
+  yaml-cpp:
+    version: [0.6.3]
   trilinos:
     version: [develop]
     variants: ~adios2~alloptpkgs~amesos+amesos2~anasazi~aztec+belos+boost~cgns~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~matio~mesquite+metis~minitensor~ml+mpi+muelu~mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra~x11~xsdkflags+zlib+zoltan+zoltan2 cxxstd=14 build_type=Release
   all:
     variants: build_type=Release +mpi
-
+    providers:
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]

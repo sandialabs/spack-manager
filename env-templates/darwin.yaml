@@ -1,61 +1,13 @@
 spack:
-  mirrors:
-    E4S: https://cache.e4s.io
-  packages:
-    all:
-      target: [x86_64]
-      compiler: [apple-clang, gcc, clang]
-      variants: build_type=Release +mpi
-      providers:
-        mpi: [openmpi, mpich]
-        blas: [netlib-lapack]
-        lapack: [netlib-lapack]
-    hdf5:
-      version: [1.10.7]
-      variants: +cxx+hl
-    hypre:
-      version: [2.20.0]
-    netcdf-c:
-      version: [4.7.4]
-      variants: +parallel-netcdf maxdims=65536 maxvars=524288
-    openfast:
-      version: [master]
-      variants: +cxx
-    parallel-netcdf:
-      version: [1.12.2]
-    tioga:
-      version: [develop]
-    trilinos:
-      version: [develop]
-      variants: ~adios2~alloptpkgs~amesos+amesos2~anasazi~aztec+belos+boost~cgns~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~matio~mesquite+metis~minitensor~ml+mpi+muelu~mumps+netcdf~nox~openmp~phalanx~piro+pnetcdf~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra~x11~xsdkflags+zlib+zoltan+zoltan2
-        cxxstd=14 build_type=Release
+  include:
+  - $spack/../configs/darwin/config.yaml
+  - $spack/../configs/darwin/packages.yaml
+  - $spack/../configs/base/config.yaml
+  - $spack/../configs/base/packages.yaml
+  - $spack/../configs/base/repos.yaml
   specs:
-  - nalu-wind +tioga +hypre +fftw +wind-utils
+  - amr-wind-nightly +netcdf+hypre+masa+openfast~latest_amrex host_name=darwin.hpc.nrel.gov
+  - nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils host_name=darwin.hpc.nrel.gov
+  - exawind-nightly host_name=darwin.hpc.nrel.gov
   view: false
-  compilers:
-  - compiler:
-      spec: apple-clang@12.0.0
-      paths:
-        cc: /usr/bin/clang
-        cxx: /usr/bin/clang++
-        f77: /usr/local/bin/gfortran-8
-        fc: /usr/local/bin/gfortran-8
-      flags: {}
-      operating_system: catalina
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: apple-clang@10.0.1
-      paths:
-        cc: /usr/bin/clang
-        cxx: /usr/bin/clang++
-        f77: /usr/local/bin/gfortran-8
-        fc: /usr/local/bin/gfortran-8
-      flags: {}
-      operating_system: mojave
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
+  concretization: together

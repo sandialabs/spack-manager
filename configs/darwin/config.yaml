@@ -1,0 +1,9 @@
+config:
+  build_stage:
+    #- /scratch/$user/.spack/stage
+    - $spack/var/spack/stage
+    #- $tempdir/$user/spack-stage
+    #- ~/.spack/stage
+  #mirrors:
+  #  e4s: https://cache.e4s.io
+  #build_jobs: 8
