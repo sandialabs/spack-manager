@@ -26,6 +26,6 @@ class Nccmp(Package, SourceforgePackage):
 
         configure('--prefix=%s' % prefix)
         make()
-        if sys.platform != 'darwin':
-            make("check")
+        #if sys.platform != 'darwin':
+        #    make("check")
         make("install")
