@@ -20,6 +20,10 @@ elif sys.platform == 'linux':
             machine = 'skybridge'
         elif 'ascicgpu' in hostname:
             machine = 'ascicgpu'
+        elif 'cee' in hostname:
+            machine = 'cee'
+        elif 'ghost' in hostname:
+            machine = 'ghost'
 else:
     machine = 'NOT-FOUND'
 
