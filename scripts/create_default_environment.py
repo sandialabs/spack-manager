@@ -7,6 +7,19 @@ on a given machine
 import shutil
 import os
 
+default_env_file =
+ r'spack:
+  include:
+  - general_packages.yaml
+  - general_module_view_pair.yaml
+  - general_repos.yaml
+  - machine_config.yaml
+  - machine_packages.yaml
+  - machine_compilers.yaml
+  - machine_general.yaml
+  specs:
+  - exawind'
+
 def NewName(newHead, oldFile, prefix=None):
     tail = os.path.basename(oldFile)
     print(oldFile, tail, newHead)
@@ -44,7 +57,7 @@ def CreateEnvDir(args):
         if os.path.exists(args.spack_yaml):
             shutil.copy(args.spack_yaml, os.path.join(theDir, 'spack.yaml'))
         else:
-            print("Reference spack.yaml does not exit", args.spack_yaml)
+            open(os.path.join.theDir, 'spack.yaml','w').write(default_env_file)
     else:
         raise Exception('Host not setup in spack-manager: %s' % hostPath)
 
