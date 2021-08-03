@@ -42,9 +42,10 @@ packages:
     - spec: bzip2@1.6.0
       prefix: /usr/
   cmake:
-    variants: +ownlibs
     externals:
-    - spec: cmake@3.13.2
-      prefix: /usr/netpub/cmake-3.13.2-Linux-x86_64
+    - spec: cmake@3.20.0
+      modules:
+      - sierra-cmake/3.20.0
+      prefix: /projects/sierra/linux_rh7/install/cmake/3.20.0/bin/cmake
   openblas:
     version: [0.3.10]

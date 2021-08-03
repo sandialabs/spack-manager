@@ -26,6 +26,7 @@ def find_machine():
             elif 'ghost' in hostname:
                 machine = 'ghost'
     else:
+        print('Machine not found. hostname found is %s' %hostname)
         machine = 'NOT-FOUND'
 
     return machine
