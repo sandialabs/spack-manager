@@ -4,7 +4,7 @@ import os
 from shutil import copyfile
 
 class AmrWindDeveloper(bAmrWind):
-    variant('compile_commands', default=False,
+    variant('compile_commands', default=True,
             description='generate compile_commands.json and copy to source dir')
 
     depends_on('ninja', type='build')

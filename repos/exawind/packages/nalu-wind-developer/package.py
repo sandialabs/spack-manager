@@ -5,11 +5,12 @@ import os
 from shutil import copyfile
 
 class NaluWindDeveloper(bNaluWind):
+    version('master', branch='master', submodules=True)
     variant('asan', default=False,
             description='turn on address sanitizer')
-    variant('compile_commands', default=False,
+    variant('compile_commands', default=True,
             description='generate compile_commands.json and copy to source dir')
-    variant('tests', default=False,
+    variant('tests', default=True,
             description='turn on tests')
 
     depends_on('ninja', type='build')
