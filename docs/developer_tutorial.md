@@ -48,7 +48,7 @@ Luckily, `create_machine_spack_environment.py` will leverage the collective know
 So to let's create the build environment. Let's assume we are on one of the Sandia ascicgpu machines and we'd like to do some work in cuda for nalu-wind.
 Run the following command:
 
-`create_machine_spack_environment.yaml --directory demo --spec 'nalu-wind-developer+cuda cuda_arch=70'`
+`create_machine_spack_environment.py --directory demo --spec 'nalu-wind-developer+cuda cuda_arch=70'`
 
 This command will create the directory `demo` and copy/create files that we need for the environment.
 
@@ -154,7 +154,7 @@ source $SPACK_MANAGER/start.sh
 
 Setup an environment on ascicgpu:
 ```
-create_machine_spack_environment.yaml --directory demo --spec 'nalu-wind-developer+cuda cuda_arch=70'
+create_machine_spack_environment.py --directory demo --spec 'nalu-wind-developer+cuda cuda_arch=70'
 spacktivate demo
 ```
 
@@ -173,6 +173,12 @@ spack install
 ```
 
 You can now edit the files in `demo/trilinos` and rebuild by calling `spack install` again.
+Please note that this will only allow development in `trilinos`.
+If you wish to also develop in `nalu-wind` at the same time and run the `nalu-wind` tests you should also run:
+```
+spack develop nalu-wind-developer@master
+```
+to access the package with developer features for `nalu-wind`.
 
 If you kill this shell you can get back to development environment by calling the following commands (assuming you have set the `SPACK_MANAGER` environment variable).
 ```
