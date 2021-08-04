@@ -85,7 +85,7 @@ The order they are listed in also determines the level of precedence the configu
 These are copied from the machine specific [configs](../configs/) stored in the
 spack-manager repository.
 Further details of these files are outside the scope of this tutorial but can be found
-in the [spack configuration files documentation]((https://spack.readthedocs.io/en/latest/configuration.html).
+in the [spack configuration files documentation](https://spack.readthedocs.io/en/latest/configuration.html).
 
 The spec is what we set and determines how the packages will be built (TPLS, settings, etc.).
 Multiple specs can be added in a given environment but for the demo we will only have one.
