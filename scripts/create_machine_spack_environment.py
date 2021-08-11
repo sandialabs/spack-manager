@@ -17,6 +17,7 @@ default_env_file = (
   - machine_config.yaml
   - machine_packages.yaml
   - machine_compilers.yaml
+  concretization: together
   specs:
   - {spec}""")
 
