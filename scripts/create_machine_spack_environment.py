@@ -18,6 +18,7 @@ default_env_file = (
   - machine_packages.yaml
   - machine_compilers.yaml
   concretization: together
+  view: false
   specs:
   - {spec}""")
 

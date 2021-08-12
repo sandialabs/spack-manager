@@ -4,6 +4,13 @@ import sys
 import os
 import socket
 
+def is_cee(hostname):
+    known_hosts = ('cee', 'ews', 'ecs', 'hpws')
+    for k in known_hosts:
+        if k in hostname:
+            return True
+    return False
+
 def find_machine():
     if sys.platform == 'darwin':
         machine = 'darwin'
@@ -21,7 +28,7 @@ def find_machine():
                 machine = 'skybridge'
             elif 'ascicgpu' in hostname:
                 machine = 'ascicgpu'
-            elif 'cee' in hostname:
+            elif is_cee(hostname):
                 machine = 'cee'
             elif 'ghost' in hostname:
                 machine = 'ghost'

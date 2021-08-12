@@ -16,7 +16,7 @@ and the convenience of setting things up quickly.
 
 First to setup spack-manager execute the following commands:
 ```
-git clone https://github.com/psakievich/spack-manager.git
+git clone --recursive https://github.com/psakievich/spack-manager.git
 export SPACK_MANAGER=$PWD/spack-manager
 ```
 
@@ -30,12 +30,13 @@ This can be done by sourcing the bash-script [start.sh](../start.sh).
 source $SPACK_MANAGER/start.sh
 ```
 
-Another convenience function you can add to your `bashrc` to help with this in the future is
+Another convenience feature you can add to your `bashrc` to help with this in the future is
 ```
-function spack-start(){
-source $SPACK_MANAGER/start.sh
-}
+source $SPACK_MANAGER/scripts/useful_bash_functions.sh
 ```
+This will give you access to several useful quick functions such as
+  1) `spack-start` to auto load spack for you
+  2) `quick-start` to auto load spack and activate an environment whose location you pass as the first argument`
 
 The steps up to this point have just served to activate spack in the active shell.
 Next we will setup a development environment.
@@ -75,6 +76,8 @@ spack:
   - machine_config.yaml
   - machine_packages.yaml
   - machine_compilers.yaml
+  concretization: together
+  view: false
   specs:
   - nalu-wind-developer+cuda cuda_arch=70
 ```
@@ -147,7 +150,7 @@ To do incremental builds you can re-run `spack install`, or if you've already so
 
 Run these commands to install spack-manager and activate it:
 ```
-git clone https://github.com/psakievich/spack-manager.git
+git clone --recursive https://github.com/psakievich/spack-manager.git
 export SPACK_MANAGER=$PWD/spack-manager
 source $SPACK_MANAGER/start.sh
 ```
@@ -160,31 +163,43 @@ spacktivate demo
 
 Add a development spec and concretize the environment:
 ````
-spack develop trilinos@develop
+spack develop nalu-wind-developer@master
 spack concretize
 ````
 This can be any package in the software stack, and you can add multiple develop
 specs into the environment.
-In this case we are only going to develop `trilinos` using the `develop` branch.
+In this case we are only going to develop `nalu-wind` using the `master` branch.
 
 Now build:
 ```
 spack install
 ```
 
-You can now edit the files in `demo/trilinos` and rebuild by calling `spack install` again.
-Please note that this will only allow development in `trilinos`.
-If you wish to also develop in `nalu-wind` at the same time and run the `nalu-wind` tests you should also run:
+You can now edit the files in `demo/nalu-wind-developer` and rebuild by calling `spack install` again.
+Please note that this will only allow development in `nalu-wind`.
+If you wish to also develop in `trilinos` at the same time and run the `nalu-wind` tests you should also run:
 ```
-spack develop nalu-wind-developer@master
+spack develop trilinos@develop
 ```
-to access the package with developer features for `nalu-wind`.
+to access the package with developer features for `trilinos`.
+Please note there is a [bug](https://github.com/spack/spack/issues/25370) with this in `spack` right now specifcally for the `trilinos` spec.
+To get around it run the command twice
+```
+spack develop trilinos@develop
+spack develop trilinos@develop
+```
+
 
 If you kill this shell you can get back to development environment by calling the following commands (assuming you have set the `SPACK_MANAGER` environment variable).
 ```
 source $SPACK_MANAGER/start.sh # activate spack
 spacktivate [pathto]/demo # activate the development environment
 spack install # to build
+```
+or if you use the `useful_bash_functions.sh`
+```
+quick-start [pathto]/demo
+spack install
 ```
 
 
