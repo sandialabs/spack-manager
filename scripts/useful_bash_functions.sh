@@ -10,6 +10,6 @@ function quick-activate(){
 # build directory for the current concretized develop spec
 function enter-develop-env(){
   spack cd -b "$@"
-  spack build-env
+  source ../spack-build-env.txt
 }
 
