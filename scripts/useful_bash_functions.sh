@@ -7,4 +7,9 @@ function quick-activate(){
   spack-start
   spack env activate -d $1
 }
+# build directory for the current concretized develop spec
+function enter-develop-env(){
+  spack cd -b "$@"
+  spack build-env
+}
 
