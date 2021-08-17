@@ -8,13 +8,14 @@ Most of the functionality relies on defining the `SPACK_MANAGER` environment var
 
 The main goals of `spack-manager` are to:
 
-1) Provide a sycronized [spack](https://github.com/spack/spack) version across multiple machines and platforms
-2) Organize package extensions and tools for features that we a) don't want in the main spack repo or b) need quick fixes that should then be merged into spack
+  1) Provide a sycronized [spack](https://github.com/spack/spack) version across multiple machines and platforms
+  2) Organize package extensions and tools for features that we a) don't want in the main spack repo or b) need quick fixes that should then be merged into spack
 
 There are a collection of scripts that will help with:
-a) [setting up developer workflows](docs/developer_tutorial.md)
-b) creating deployable modules for HPC environments
-c) running nightly tests
+  
+  - [setting up developer workflows](docs/developer_tutorial.md)
+  - creating deployable modules for HPC environments
+  - running nightly tests
 
 In all of these objectives the scripts are just simple wrappers around [spack](https://github.com/spack/spack).
 All of these features can be deployed manually through spack commands and carefully constructed spack environments.

@@ -136,13 +136,63 @@ Once the build completes we can look inside the source directory where we will s
 - `spack-build-out.txt`: the build output for the development package
 -  `spack-build-env.txt`: the build environment used (sourcing this file will allow you to enter the exact environment used to build the software)
 -  `spack-build-[hash].txt`: the build directory where the object files, and executables can be found.
+## Making Changes
+If you'd like to change something about the packages in your environment,
+say you want to switch from a `Release` build to a `Debug` build or add a
+new variant to a package, you can modify the spec's in the `spack.yaml` file.
+However, if you do this you must also run
+```
+spack concretize -f
+```
 
-So if you wish to run the regression tests you can run the following. 
+This is how you signal to `spack` that you made a change to an existing spec and need
+`spack` to recreate the dependecy tree.
+This will also result in new hashes for affected packages since the specs have been changed.
+## Running Tests
+To run regression or unit tests you need to do two things:
+  1) Get to the build directory
+  2) Call your testing commands in the appropriate environment
+
+For item 1) `spack` creates a build directory with the format `spack-build-[hash]` inside
+your source code directory.
+You can get to this directory from anywhere by running the command
 ```
-source spack-build-env.txt
-cd spack-build-[hash].txt
-ctest
+spack cd -b [package]
 ```
+This command is telling `spack` to go to the build directory of the package you'd like.
+It is extra helpful if you've re-concretized your environment and have build directories
+from multiple hashes in your environment.
+
+For item 2) it is importnant to remember that `spack` is building with a different environment 
+from the one you used to call the `spack install` command.
+The build shell has a unique environment that should be accessed to run tests.
+If you wish to run tests you will need to make sure you have that environment available to
+your current shell.
+
+There are two approaches for doing this.
+The first is to use a the `spack` command `spack build-env`.
+This command will let you execute any command in the same environment that a package
+was build with.
+
+For example, if you wish to run the regression tests for `nalu-wind` you can run the following. 
+```
+spack cd -b nalu-wind-developer 
+spack build-env nalu-wind-developer ctest [any ctest args]
+```
+This has the advantage of keeping your current shell unmodified, but there is some overhead
+for the command you'd like to execute.
+
+The other option is to source the environment into your current shell.
+When `spack` does a build it creates a `spack-build-env.txt` file that captures the build
+environment.
+This is located at the same directory level as the `spack-build-[hash]` directory.
+If you source this file you can run any of the build or test commands and your environment
+will match the build environment.
+You can also get the output of this file by running the `spack build-env` command without any arguments.
+More information on that command can be found via `spack build-env -h`.
+The main disadvandtage of sourcing the build envronment directly into your working shell
+is that unexpected changes might occur (python or git version may change).
+
 
 To do incremental builds you can re-run `spack install`, or if you've already sourced `spack-build-env.txt` then you can navigate to the build directory and re-run `ninja` or `make` like it was a manual build outside of spack.
 
