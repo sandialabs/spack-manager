@@ -11,3 +11,7 @@ class Openfast(bOpenfast):
     version('2.1.0', tag='v2.1.0')
     version('2.0.0', tag='v2.0.0')
     version('1.0.0', tag='v1.0.0')
+
+    # Avoid using HDF5's installed CMake config with hdf5-shared library names
+    options = super(Openfast, self).cmake_args()
+    options.append('-DHDF5_NO_FIND_PACKAGE_CONFIG_FILE:BOOL=ON')
