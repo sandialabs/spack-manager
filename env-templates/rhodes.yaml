@@ -1,9 +1,6 @@
 spack:
   include:
   - $spack/../configs/rhodes/config.yaml
-  - $spack/../configs/rhodes/modules.yaml
-  - $spack/../configs/rhodes/upstreams.yaml
-  #- $spack/../configs/rhodes/packages.yaml
   - $spack/../configs/base/config.yaml
   - $spack/../configs/base/packages.yaml
   - $spack/../configs/base/repos.yaml
