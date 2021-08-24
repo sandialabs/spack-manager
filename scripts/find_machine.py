@@ -13,6 +13,7 @@ def is_cee(hostname):
 
 def find_machine():
     hostname = socket.gethostname()
+    machine = ''
     if sys.platform == 'darwin':
         machine = 'darwin'
     elif sys.platform == 'linux' or sys.platform == 'linux2':
@@ -23,6 +24,9 @@ def find_machine():
             # Set this in your .bashrc on rhodes
             elif os.environ['NREL_CLUSTER'] == 'rhodes':
                 machine = 'rhodes'
+        # ORNL machines
+        elif os.environ['LMOD_SYSTEM_NAME'] == 'summit':
+            machine = 'summit'
         # SNL machines
         else:
             if 'skybridge' in hostname:

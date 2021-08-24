@@ -6,7 +6,7 @@
 from spack import *
 
 
-class Exawind(CMakePackage):
+class Exawind(CMakePackage, CudaPackage):
     """Multi-application driver for Exawind project."""
 
     homepage = "https://github.com/Exawind/exawind-driver"
@@ -18,12 +18,23 @@ class Exawind(CMakePackage):
 
     version('master', branch='main')
 
-    depends_on('trilinos+stk')
+    variant('openfast', default=False,
+            description='Enable OpenFAST integration')
+
     depends_on('tioga+shared~nodegid')
-    depends_on('nalu-wind+fftw+hypre+openfast+tioga+wind-utils')
-    depends_on('amr-wind+hypre+mpi+netcdf+openfast')
-    depends_on('openfast+cxx+shared@2.6.0')
+    depends_on('trilinos+stk')
+    depends_on('nalu-wind+fftw+hypre+tioga+wind-utils')
+    depends_on('amr-wind+hypre+mpi+netcdf')
     depends_on('yaml-cpp@0.6:')
+
+    depends_on('nalu-wind+openfast', when='+openfast')
+    depends_on('amr-wind+openfast', when='+openfast')
+    depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
+
+    for arch in CudaPackage.cuda_arch_values:
+        depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
+        depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
 
     def cmake_args(self):
         spec = self.spec
@@ -33,8 +44,10 @@ class Exawind(CMakePackage):
             self.define('TIOGA_DIR', spec['tioga'].prefix),
             self.define('Nalu-Wind_DIR', spec['nalu-wind'].prefix),
             self.define('AMR-Wind_DIR', spec['amr-wind'].prefix),
-            self.define('OpenFAST_DIR', spec['openfast'].prefix),
             self.define('YAML-CPP_DIR', spec['yaml-cpp'].prefix)
         ]
+
+        if '+openfast' in spec:
+            args.append(self.define('OpenFAST_DIR', spec['openfast'].prefix))
 
         return args
