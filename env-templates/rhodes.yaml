@@ -1,0 +1,12 @@
+spack:
+  include:
+  - $spack/../configs/rhodes/config.yaml
+  - $spack/../configs/base/config.yaml
+  - $spack/../configs/base/packages.yaml
+  - $spack/../configs/base/repos.yaml
+  specs:
+  - amr-wind-nightly +netcdf+hypre+masa+openfast~latest_amrex host_name=rhodes.hpc.nrel.gov
+  - nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils host_name=rhodes.hpc.nrel.gov
+  - exawind-nightly host_name=rhodes.hpc.nrel.gov
+  view: false
+  concretization: together
