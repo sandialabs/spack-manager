@@ -1,5 +1,6 @@
 packages:
   spectrum-mpi:
+    version: [10.4]
     buildable: false
     externals:
       - spec: "spectrum-mpi@10.4%gcc@10.2.0"
@@ -15,7 +16,7 @@ packages:
       #    - gcc/7.5.0
       #    - spectrum-mpi/10.4.0.3-20210112
   cuda:
-    version: [11.3.1]
+    version: [11.4.0]
     buildable: false
     externals:
       - spec: "cuda@11.4.0%gcc@10.2.0"
@@ -33,76 +34,6 @@ packages:
       - spec: "cuda@10.2.89%gcc@10.2.0"
         modules:
           - cuda/10.2.89
-  cmake:
-    version: [3.20.2]
-    buildable: false
-    externals:
-      - spec: "cmake@3.20.2%gcc@10.2.0"
-        modules:
-          - cmake/3.20.2
-  zlib:
-    version: [1.2.11]
-    buildable: false
-    externals:
-      - spec: "zlib@1.2.11%gcc@10.2.0"
-        modules:
-          - zlib/1.2.11
-  bzip2:
-    version: [1.0.6]
-    buildable: false
-    externals:
-      - spec: "bzip2@1.0.6%gcc@10.2.0"
-        modules:
-          - bzip2/1.0.6
-  libxml2:
-    version: [2.9.8]
-    buildable: false
-    externals:
-      - spec: "libxml2@2.9.8%gcc@10.2.0"
-        modules:
-          - libxml2/2.9.8
-  m4:
-    version: [1.4.18]
-    buildable: false
-    externals:
-      - spec: "m4@1.4.18%gcc@10.2.0"
-        modules:
-          - m4/1.4.18
-  perl:
-    version: [5.30.1]
-    buildable: false
-    externals:
-      - spec: "perl@5.30.1%gcc@10.2.0"
-        modules:
-          - perl/5.30.1
-  autoconf:
-    version: [2.69]
-    buildable: false
-    externals:
-      - spec: "autoconf@2.69%gcc@10.2.0"
-        modules:
-          - autoconf/2.69
-  automake:
-    version: [1.16.3]
-    buildable: false
-    externals:
-      - spec: "automake@1.16.3%gcc@10.2.0"
-        modules:
-          - automake/1.16.3
-  pkgconf:
-    version: [1.7.3]
-    buildable: false
-    externals:
-      - spec: "pkgconf@1.7.3%gcc@10.2.0"
-        modules:
-          - pkgconf/1.7.3
-  python:
-    version: [3.7.7]
-    buildable: false
-    externals:
-      - spec: "python@3.7.7"
-        modules:
-          - python/3.7.7
   all:
     compiler:
       - gcc@10.2.0
