@@ -3,11 +3,26 @@ from spack.pkg.builtin.exawind import Exawind as bExawind
 import os
 
 
-class Exawind(bExawind):
+class Exawind(bExawind, CudaPackage):
     variant('asan', default=False,
             description='turn on address sanitizer')
     depends_on('ninja', type='build')
     generator = 'Ninja'
+
+    # To add to builtin in next merge start
+
+    for arch in CudaPackage.cuda_arch_values:
+        depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
+        depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
+
+    """
+    We need to update openfast to be a variant
+    depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
+    variant('openfast', default=False,
+            description='Enable OpenFASAT integration')
+    """
+    # To add to builtin in next merge end
 
     def cmake_args(self):
         spec = self.spec
