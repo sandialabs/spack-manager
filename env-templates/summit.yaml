@@ -1,0 +1,13 @@
+spack:
+  include:
+  - $spack/../configs/summit/config.yaml
+  - $spack/../configs/summit/packages.yaml
+  - $spack/../configs/summit/compilers.yaml
+  - $spack/../configs/base/config.yaml
+  - $spack/../configs/base/packages.yaml
+  - $spack/../configs/base/repos.yaml
+  specs:
+  - exawind+openfast
+  - exawind+openfast+cuda cuda_arch=70
+  view: false
+  concretization: separately

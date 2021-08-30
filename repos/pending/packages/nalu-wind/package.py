@@ -25,6 +25,8 @@ class NaluWind(CMakePackage, CudaPackage):
     tags = ['ecp', 'ecp-apps']
 
     version('master', branch='master')
+    # Commit to match with last known working Trilinos GPU commit
+    # version('master', commit='8e0c05281b3bb30cdfa4121233e4daa139f36789')
 
     variant('pic', default=True,
             description='Position independent code')
