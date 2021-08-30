@@ -1,3 +1,2 @@
 repos:
   - $spack/../repos/exawind
-  - $spack/../repos/pending

@@ -1,18 +1,13 @@
 from spack import *
-from spack.pkg.pending.nalu_wind import NaluWind as bNaluWind
+from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
 from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
 
-class NaluWindDeveloper(bNaluWind):
+class NaluWind(bNaluWind):
     version('master', branch='master', submodules=True)
     variant('asan', default=False,
             description='turn on address sanitizer')
-    variant('compile_commands', default=True,
-            description='generate compile_commands.json and copy to source dir')
-    variant('tests', default=True,
-            description='turn on tests')
-
     depends_on('ninja', type='build')
     generator = 'Ninja'
 
@@ -25,10 +20,8 @@ class NaluWindDeveloper(bNaluWind):
         define = CMakePackage.define
         options = super(NaluWindDeveloper, self).cmake_args()
 
-        if '+compile_commands' in spec:
+        if 'dev_path' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
-
-        if '+tests' in spec:
             options.append(define('ENABLE_TESTS', True))
 
         if spec['mpi'].name == 'openmpi':
@@ -38,7 +31,7 @@ class NaluWindDeveloper(bNaluWind):
 
     @run_after('cmake')
     def copy_compile_commands(self):
-        if '+compile_commands' in self.spec:
+        if 'dev_path' in self.spec:
             target = os.path.join(self.stage.source_path, "compile_commands.json")
             source = os.path.join(self.build_directory, "compile_commands.json")
             copyfile(source, target)
