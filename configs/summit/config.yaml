@@ -6,4 +6,4 @@ config:
     #- ~/.spack/stage
   #mirrors:
   #  e4s: https://cache.e4s.io
-  build_jobs: 12
+  build_jobs: 16

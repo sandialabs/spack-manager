@@ -10,11 +10,9 @@ set -e
 MYPWD=${PWD}
 
 if [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
-  cmd "module load python/3.7.7"
   cmd "module unload xl"
-  cmd "module load gcc/10.2.0"
+  cmd "module load python/3.7.7"
   cmd "module load binutils"
-  cmd "mpicc --version"
 fi
 
 cmd "export TMPDIR=${MYPWD}/../tmp"
