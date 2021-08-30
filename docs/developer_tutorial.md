@@ -49,7 +49,7 @@ Luckily, `create_machine_spack_environment.py` will leverage the collective know
 So to let's create the build environment. Let's assume we are on one of the Sandia ascicgpu machines and we'd like to do some work in cuda for nalu-wind.
 Run the following command:
 
-`create_machine_spack_environment.py --directory demo --spec 'nalu-wind-developer+cuda cuda_arch=70'`
+`create_machine_spack_environment.py --directory demo --spec 'nalu-wind+cuda cuda_arch=70'`
 
 This command will create the directory `demo` and copy/create files that we need for the environment.
 
@@ -79,7 +79,7 @@ spack:
   concretization: together
   view: false
   specs:
-  - nalu-wind-developer+cuda cuda_arch=70
+  - nalu-wind+cuda cuda_arch=70
 ```
 The includes files are also located in the `demo` directory. 
 These contain machine specific (in this case ascicgpu) and general 
@@ -101,22 +101,22 @@ However, a develop spec is one where you can control the source code location an
 We can choose to let spack clone the git repo for us by running
 
 ```
-spack develop nalu-wind-developer@master
+spack develop nalu-wind@master
 ```
-This will create the directory `demo/nalu-wind-developer` that will be a clone of
+This will create the directory `demo/nalu-wind` that will be a clone of
 the `nalu-wind` source code.
 
 Or we can clone the repo ourselves and tell spack where to point to for the source code
 ```
 git clone https://github.com/Exawind/nalu-wind.git
-spack develop --path nalu-wind nalu-wind-developer@master
+spack develop --path nalu-wind nalu-wind@master
 ```
 
-You will notice that to add a spack develop spec you need the package name (`nalu-wind-developer`) and a version (`master`).
+You will notice that to add a spack develop spec you need the package name (`nalu-wind`) and a version (`master`).
 This tells spack what repo to clone if you are going to have spack clone it.
-You may also wonder why we are using `nalu-wind-developer` instead of `nalu-wind`.
-`nalu-wind-developer` is a package we've added in spack-manager to make it easier for developer workflow.
-We've also created `amr-wind-developer` and `exawind-developer` packages, but the none developer versions are also acceptable.
+You may also wonder why we are using `nalu-wind` instead of `nalu-wind`.
+`nalu-wind` is a package we've added in spack-manager to make it easier for developer workflow.
+We've also created `amr-wind` and `exawind` packages, but the none developer versions are also acceptable.
 If you have any questions about the packages or can't remember the options for the spec's you can run `spack info [package]` to get information about any package.
 
 Now that we've added a develop spec we can concretize.
@@ -176,8 +176,8 @@ was build with.
 
 For example, if you wish to run the regression tests for `nalu-wind` you can run the following. 
 ```
-spack cd -b nalu-wind-developer 
-spack build-env nalu-wind-developer ctest [any ctest args]
+spack cd -b nalu-wind 
+spack build-env nalu-wind ctest [any ctest args]
 ```
 This has the advantage of keeping your current shell unmodified, but there is some overhead
 for the command you'd like to execute.
@@ -207,13 +207,13 @@ source $SPACK_MANAGER/start.sh
 
 Setup an environment on ascicgpu:
 ```
-create_machine_spack_environment.py --directory demo --spec 'nalu-wind-developer+cuda cuda_arch=70'
+create_machine_spack_environment.py --directory demo --spec 'nalu-wind+cuda cuda_arch=70'
 spacktivate demo
 ```
 
 Add a development spec and concretize the environment:
 ````
-spack develop nalu-wind-developer@master
+spack develop nalu-wind@master
 spack concretize
 ````
 This can be any package in the software stack, and you can add multiple develop
@@ -225,7 +225,7 @@ Now build:
 spack install
 ```
 
-You can now edit the files in `demo/nalu-wind-developer` and rebuild by calling `spack install` again.
+You can now edit the files in `demo/nalu-wind` and rebuild by calling `spack install` again.
 Please note that this will only allow development in `nalu-wind`.
 If you wish to also develop in `trilinos` at the same time and run the `nalu-wind` tests you should also run:
 ```
