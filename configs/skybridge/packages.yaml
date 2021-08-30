@@ -13,6 +13,9 @@ packages:
       lapack:
       - netlib-lapack
     variants: +mpi build_type=Release
+  boost:
+    version: [1.68.0]
+    variants: cxxstd=14
   openmpi:
     version: [4.0.3]
     buildable: false
