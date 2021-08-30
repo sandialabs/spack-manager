@@ -1,5 +1,5 @@
 from spack import *
-from spack.pkg.exawind.exawind_developer import ExawindDeveloper as bExawind
+from spack.pkg.exawind.exawind import Exawind as bExawind
 import spack.config
 import os
 from shutil import copyfile
