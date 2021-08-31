@@ -6,23 +6,20 @@ import os
 class Exawind(bExawind, CudaPackage):
     variant('asan', default=False,
             description='turn on address sanitizer')
+    variant('openfast', default=False,
+             description='Enable OpenFAST integration')
+
     depends_on('ninja', type='build')
     generator = 'Ninja'
-
-    # To add to builtin in next merge start
 
     for arch in CudaPackage.cuda_arch_values:
         depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
         depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
         depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
 
-    """
-    We need to update openfast to be a variant
+    depends_on('nalu-wind+openfast', when='+openfast')
+    depends_on('amr-wind+openfast', when='+openfast')
     depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
-    variant('openfast', default=False,
-            description='Enable OpenFASAT integration')
-    """
-    # To add to builtin in next merge end
 
     def cmake_args(self):
         spec = self.spec
