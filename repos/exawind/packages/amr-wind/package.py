@@ -10,7 +10,7 @@ class AmrWind(bAmrWind):
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
-        options = super(AmrWindDeveloper, self).cmake_args()
+        options = super(AmrWind, self).cmake_args()
 
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
