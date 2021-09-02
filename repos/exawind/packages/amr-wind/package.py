@@ -18,6 +18,9 @@ class AmrWind(bAmrWind):
         if 'dev_path' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
+        if '+mpi' in spec:
+            options.append(define('MPI_ROOT', spec['mpi'].prefix))
+
         saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'tmp', 'tmp_golds', 'amr-wind')
         current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
         linked_golds = os.path.join(self.stage.source_path, "test", "AMR-WindGoldFiles")
