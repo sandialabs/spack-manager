@@ -15,9 +15,9 @@ packages:
       - netlib-lapack
     variants: +mpi build_type=Release
   openmpi:
-    version: [4.0.3]
+    version: [4.0.5]
     externals:
-    - spec: openmpi@4.0.3%intel@19.0.3.199
+    - spec: openmpi@4.0.5%intel@19.0.3.199
       modules:
       - openmpi-intel/4.0.5
   pkg-config:
