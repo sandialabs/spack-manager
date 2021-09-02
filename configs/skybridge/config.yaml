@@ -1,8 +1,4 @@
 config:
-  install_tree:
-    projections:
-      all: ${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}
-    root: $spack/opt/spack
   module_roots:
     tcl: $spack/share/spack/modules
     lmod: $spack/share/spack/lmod
@@ -15,3 +11,4 @@ config:
   dirty: false
   locks: true
   build_jobs: 8
+  concretizer: clingo
