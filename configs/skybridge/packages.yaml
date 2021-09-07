@@ -5,6 +5,7 @@ packages:
       group: wg-sierra-users
     compiler:
     - intel@19.0.3.199
+    - gcc@8.3.1
     providers:
       mpi:
       - openmpi
@@ -13,23 +14,12 @@ packages:
       lapack:
       - netlib-lapack
     variants: +mpi build_type=Release
-  boost:
-    version: [1.68.0]
-    variants: cxxstd=14
   openmpi:
-    version: [4.0.3]
-    buildable: false
+    version: [4.0.5]
     externals:
-    - spec: openmpi@4.0.3
+    - spec: openmpi@4.0.5%intel@19.0.3.199
       modules:
-      - openmpi-intel/4.0.3
-  intel-mpi:
-    version: [2019.8.624]
-    buildable: false
-    externals:
-    - spec: intel-mpi@2019.8.624
-      modules:
-      - intel-mpi/2019
+      - openmpi-intel/4.0.5
   pkg-config:
     buildable: false
     externals:
@@ -67,7 +57,3 @@ packages:
     externals:
     - spec: m4@1.4.16
       prefix: /usr
-  superlu:
-    version: [4.3]
-  netlib-lapack:
-    version: [3.8.0]

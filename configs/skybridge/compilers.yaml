@@ -13,3 +13,18 @@ compilers:
       fc: /projects/global/toss3/compilers/intel/intel_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
     spec: intel@19.0.3.199
     target: x86_64
+- compiler:
+    environment: {}
+    extra_rpaths:
+    - /opt/rh/devtoolset-8/root/usr/lib64
+    modules: []
+    flags: {}
+    operating_system: rhel7
+    paths:
+      cc: /opt/rh/devtoolset-8/root/usr/bin/gcc
+      cxx: /opt/rh/devtoolset-8/root/usr/bin/g++
+      f77: /opt/rh/devtoolset-8/root/usr/bin/gfortran
+      fc: /opt/rh/devtoolset-8/root/usr/bin/gfortran
+    spec: gcc@8.3.1
+    target: x86_64
+
