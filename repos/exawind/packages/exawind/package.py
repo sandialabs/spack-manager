@@ -16,11 +16,12 @@ class Exawind(CMakePackage, CudaPackage):
     version('master', branch='main')
     variant('asan', default=False,
             description='turn on address sanitizer')
+
     depends_on('ninja', type='build')
     generator = 'Ninja'
 
     variant('openfast', default=False,
-            description='Enable OpenFASAT integration')
+            description='Enable OpenFAST integration')
     variant('hypre', default=True,
             description='Enable hypre solver')
 
