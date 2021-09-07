@@ -1,0 +1,36 @@
+packages:
+  slurm:
+    buildable: false
+    externals:
+    - spec: slurm@19.05.2
+      prefix: /nopt/slurm/current
+  cuda:
+    buildable: false
+    version: [11.2.2]
+    externals:
+    - spec: cuda@11.2.2
+      prefix: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu
+  openmpi:
+    variants: +pmi +cuda fabrics=verbs schedulers=slurm legacylaunchers=true ~vt
+  mpich:
+    variants: netmod=ucx device=ch4 +slurm +hydra
+  fftw:
+    variants: +mpi+fma simd=avx512
+  libfabric:
+    variants: fabrics=verbs
+  ucx:
+    variants: +optimizations+gdrcopy
+    version: [1.8.1]
+  mpt:
+    version: [2.22]
+    buildable: false
+    externals:
+    - spec: mpt@2.22
+      prefix: /opt/hpe/hpc/mpt/mpt-2.22
+  all:
+    compiler: [gcc@9.3.0, intel@18.0.4, clang@10.0.0]
+    variants: build_type=Release +mpi
+    providers:
+      mpi: [mpt, intel-mpi]
+      blas: [netlib-lapack, intel-mkl]
+      lapack: [netlib-lapack, intel-mkl]
