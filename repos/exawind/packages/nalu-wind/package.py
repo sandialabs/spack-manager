@@ -5,9 +5,9 @@ import os
 from shutil import copyfile
 
 class NaluWind(bNaluWind):
-    # version('master', branch='master', submodules=True)
+    version('master', branch='master', submodules=True)
     # Commit to match with last known working Trilinos GPU commit
-    version('master', commit='8e0c05281b3bb30cdfa4121233e4daa139f36789')
+    # version('master', commit='8e0c05281b3bb30cdfa4121233e4daa139f36789')
 
     variant('asan', default=False,
             description='turn on address sanitizer')

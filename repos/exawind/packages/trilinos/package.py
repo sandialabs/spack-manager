@@ -7,4 +7,4 @@ class Trilinos(bTrilinos):
         generator = 'Ninja'
 
     # Last known working GPU commit
-    version('develop', commit='4796b92fb0644ba8c531dd9953e7a4878b05c62d')
+    # version('develop', commit='4796b92fb0644ba8c531dd9953e7a4878b05c62d')
