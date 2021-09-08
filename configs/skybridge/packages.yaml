@@ -15,11 +15,11 @@ packages:
       - netlib-lapack
     variants: +mpi build_type=Release
   openmpi:
-    version: [4.0.5]
+    version: [4.0.3]
     externals:
-    - spec: openmpi@4.0.5%intel@19.0.3.199
+    - spec: openmpi@4.0.3%intel@19.0.3.199
       modules:
-      - openmpi-intel/4.0.5
+      - openmpi-intel/4.0.3
   pkg-config:
     buildable: false
     externals:
@@ -37,6 +37,11 @@ packages:
     externals:
     - spec: ncurses@5.9
       prefix: /usr
+  ninja:
+    externals::
+    - spec: ninja@1.10.1
+      modules:
+      - cde/v2/ninja/1.10.1
   binutils:
     version: [2.29.1]
   zlib:
