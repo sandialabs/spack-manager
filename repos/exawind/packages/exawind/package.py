@@ -47,7 +47,7 @@ class Exawind(CMakePackage, CudaPackage):
         args = super(Exawind, self).cmake_args()
         define = CMakePackage.define
 
-        if spec.satisfies('dev_path=*')
+        if spec.satisfies('dev_path=*'):
             args.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
         if spec['mpi'].name == 'openmpi':
@@ -62,7 +62,7 @@ class Exawind(CMakePackage, CudaPackage):
 
     @run_after('cmake')
     def copy_compile_commands(self):
-        if self.spec.satisfies('dev_path=*')
+        if self.spec.satisfies('dev_path=*'):
             target = os.path.join(self.stage.source_path, "compile_commands.json")
             source = os.path.join(self.build_directory, "compile_commands.json")
             copyfile(source, target)
