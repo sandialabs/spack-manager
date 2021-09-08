@@ -11,36 +11,47 @@ def is_cee(hostname):
             return True
     return False
 
-def find_machine():
-    hostname = socket.gethostname()
-    machine = ''
-    if sys.platform == 'darwin':
-        machine = 'darwin'
-    elif sys.platform == 'linux' or sys.platform == 'linux2':
-        # NREL machines
-        if 'NREL_CLUSTER' in os.environ:
-            if os.environ['NREL_CLUSTER'] == 'eagle':
-                machine = 'eagle'
-            # Set this in your .bashrc on rhodes
-            elif os.environ['NREL_CLUSTER'] == 'rhodes':
-                machine = 'rhodes'
-        # ORNL machines
-        elif os.environ['LMOD_SYSTEM_NAME'] == 'summit':
-            machine = 'summit'
-        # SNL machines
-        else:
-            if 'skybridge' in hostname:
-                machine = 'skybridge'
-            elif 'ascicgpu' in hostname:
-                machine = 'ascicgpu'
-            elif is_cee(hostname):
-                machine = 'cee'
-            elif 'ghost' in hostname:
-                machine = 'ghost'
-    else:
-        machine = 'NOT-FOUND'
+"""
+setup a dictionary with a key for machine name and checker function
+for value. the checker function should return true for the machine
+match
+"""
+machine_list = {
+    'cee' : lambda : is_cee(socket.gethostname()),
+    'eagle' : lambda : os.environ['NREL_CLUSTER'] == 'eagle',
+    'rhodes' : lambda : os.environ['NREL_CLUSTER'] == 'rhodes',
+    'summit' : lambda : os.environ['LMOD_SYSTEM_NAME'] == 'summit',
+    'skybridge' : lambda : 'skybridge' in socket.gethostname(),
+    'ascicgpu' : lambda : 'ascicgpu' in socket.gethostname(),
+    'ghost' : lambda : 'ghost' in socket.gethostname(),
+    'darwin' : lambda : sys.platform == 'darwin',
+}
 
-    return machine
+def find_machine():
+
+    for machine, am_i_this_machine in machine_list.items():
+        """
+        Since we don't expect uniform environments on all machines
+        we bury our checks in a try/except
+        """
+        try:
+            if am_i_this_machine():
+                return machine
+        except(KeyError):
+            """
+            expect key errors when an environment variable is not defined
+            so these are skipped
+            """
+            pass
+        except:
+            """
+            all other errors will be raised and kill the program
+            we can add more excpetions to the pass list as needed
+            in the future
+            """
+            raise
+
+    return 'NOT-FOUND'
 
 if __name__ == '__main__':
     print(find_machine())
