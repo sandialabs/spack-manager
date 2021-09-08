@@ -11,12 +11,12 @@ from find_machine import find_machine
 default_env_file = (
  """spack:
   include:
-  - general_packages.yaml
-  - general_config.yaml
-  - general_repos.yaml
   - machine_config.yaml
   - machine_packages.yaml
   - machine_compilers.yaml
+  - general_packages.yaml
+  - general_config.yaml
+  - general_repos.yaml
   concretization: together
   view: false
   specs:
