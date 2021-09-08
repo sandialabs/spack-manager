@@ -29,13 +29,13 @@ machine_list = {
 
 def find_machine():
 
-    for machine, am_i_this_machine in machine_list.items():
+    for machine, i_am_this_machine in machine_list.items():
         """
         Since we don't expect uniform environments on all machines
         we bury our checks in a try/except
         """
         try:
-            if am_i_this_machine():
+            if i_am_this_machine():
                 return machine
         except(KeyError):
             """
