@@ -23,7 +23,7 @@ class NaluWind(bNaluWind):
         define = CMakePackage.define
         options = super(NaluWind, self).cmake_args()
 
-        if 'dev_path' in spec:
+        if  spec.satisfies('dev_path=*'):
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
             options.append(define('ENABLE_TESTS', True))
 
@@ -34,7 +34,7 @@ class NaluWind(bNaluWind):
 
     @run_after('cmake')
     def copy_compile_commands(self):
-        if 'dev_path' in self.spec:
+        if self.spec.satisfies('dev_path=*'):
             target = os.path.join(self.stage.source_path, "compile_commands.json")
             source = os.path.join(self.build_directory, "compile_commands.json")
             copyfile(source, target)

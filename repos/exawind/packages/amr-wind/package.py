@@ -15,7 +15,7 @@ class AmrWind(bAmrWind):
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
-        if 'dev_path' in spec:
+        if spec.satisfies('dev_path=*'):
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
         if '+mpi' in spec:
@@ -34,7 +34,7 @@ class AmrWind(bAmrWind):
 
     @run_after('cmake')
     def copy_compile_commands(self):
-        if 'dev_path' in self.spec:
+        if self.spec.satisfies('dev_path=*'):
             target = os.path.join(self.stage.source_path, "compile_commands.json")
             source = os.path.join(self.build_directory, "compile_commands.json")
             copyfile(source, target)
