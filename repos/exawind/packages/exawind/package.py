@@ -13,7 +13,9 @@ class Exawind(CMakePackage, CudaPackage):
 
     tags = ['ecp', 'ecp-apps']
 
-    version('master', branch='main')
+    # Testing is currently always enabled, but should be optional in the future
+    # to avoid cloning the mesh submodule
+    version('master', branch='main', submodules=True)
     variant('asan', default=False,
             description='turn on address sanitizer')
 
