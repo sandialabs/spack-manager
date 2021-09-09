@@ -66,3 +66,8 @@ class Exawind(CMakePackage, CudaPackage):
             target = os.path.join(self.stage.source_path, "compile_commands.json")
             source = os.path.join(self.build_directory, "compile_commands.json")
             copyfile(source, target)
+
+    @run_before('cmake')
+    def add_submodules(self):
+        git = which('git')
+        git('submodule', 'update', '--init', '--recursive')
