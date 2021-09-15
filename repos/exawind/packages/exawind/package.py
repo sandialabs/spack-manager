@@ -19,8 +19,8 @@ class Exawind(CMakePackage, CudaPackage):
     variant('asan', default=False,
             description='turn on address sanitizer')
 
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    #depends_on('ninja', type='build')
+    #generator = 'Ninja'
 
     variant('openfast', default=False,
             description='Enable OpenFAST integration')
@@ -43,6 +43,8 @@ class Exawind(CMakePackage, CudaPackage):
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
 
+    patch('cuda.patch', when='+cuda')
+
     def cmake_args(self):
         spec = self.spec
 
@@ -55,6 +57,10 @@ class Exawind(CMakePackage, CudaPackage):
         if spec['mpi'].name == 'openmpi':
             args.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
         args.append(define('MPI_ROOT', spec['mpi'].prefix))
+
+        if spec.satisfies('+cuda'):
+            args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
+            args.append(define('EXAWIND_ENABLE_CUDA', True))
 
         return args
 
