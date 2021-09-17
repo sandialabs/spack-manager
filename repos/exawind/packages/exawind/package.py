@@ -59,6 +59,7 @@ class Exawind(CMakePackage, CudaPackage):
 
         if spec.satisfies('+cuda'):
             args.append(define('EXAWIND_ENABLE_CUDA', True))
+            args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
 
         return args
 
