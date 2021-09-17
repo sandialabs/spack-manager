@@ -7,7 +7,7 @@ spack:
   - $spack/../configs/base/packages.yaml
   - $spack/../configs/base/repos.yaml
   specs:
-  - exawind+hypre+openfast
+  - exawind@master+hypre+openfast
   - exawind@cuda+hypre+openfast+cuda cuda_arch=70
   view: false
   concretization: separately
