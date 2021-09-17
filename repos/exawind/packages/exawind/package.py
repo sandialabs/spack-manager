@@ -16,6 +16,7 @@ class Exawind(CMakePackage, CudaPackage):
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
     version('master', branch='main', submodules=True)
+    version('cuda', branch='jrood/cuda', submodules=True)
     variant('asan', default=False,
             description='turn on address sanitizer')
 
@@ -43,8 +44,6 @@ class Exawind(CMakePackage, CudaPackage):
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
 
-    patch('cuda.patch', when='+cuda')
-
     def cmake_args(self):
         spec = self.spec
 
@@ -59,7 +58,6 @@ class Exawind(CMakePackage, CudaPackage):
         args.append(define('MPI_ROOT', spec['mpi'].prefix))
 
         if spec.satisfies('+cuda'):
-            args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
             args.append(define('EXAWIND_ENABLE_CUDA', True))
 
         return args

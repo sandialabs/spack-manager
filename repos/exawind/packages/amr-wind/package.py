@@ -4,8 +4,8 @@ import os
 from shutil import copyfile
 
 class AmrWind(bAmrWind):
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    #depends_on('ninja', type='build')
+    #generator = 'Ninja'
 
     def cmake_args(self):
         spec = self.spec

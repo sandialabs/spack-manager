@@ -8,6 +8,6 @@ spack:
   - $spack/../configs/base/repos.yaml
   specs:
   - exawind+hypre+openfast
-  - exawind+hypre+openfast+cuda cuda_arch=70
+  - exawind@cuda+hypre+openfast+cuda cuda_arch=70
   view: false
   concretization: separately
