@@ -1,8 +1,10 @@
 packages:
+  hypre:
+    variants: +shared
   all:
     #target: [x86_64]
     compiler: [apple-clang, gcc, clang]
-    variants: build_type=Release
+    variants: build_type=RelWithDebInfo
     providers:
       mpi: [openmpi, mpich]
       blas: [netlib-lapack]
