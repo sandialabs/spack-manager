@@ -12,6 +12,9 @@ class AmrWind(bAmrWind):
         define = CMakePackage.define
         options = super(AmrWind, self).cmake_args()
 
+        if '+cuda' in spec:
+            options.append(define('BUILD_SHARED_LIBS', False))
+
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
