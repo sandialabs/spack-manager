@@ -3,8 +3,8 @@ from spack.pkg.builtin.tioga import Tioga as bTioga
 import os
 
 class Tioga(bTioga):
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    #depends_on('ninja', type='build')
+    #generator = 'Ninja'
 
     def cmake_args(self):
         spec = self.spec
@@ -12,6 +12,10 @@ class Tioga(bTioga):
         options = super(Tioga, self).cmake_args()
 
         options.append(define('MPI_ROOT', spec['mpi'].prefix))
+        # On some systems these are necessary, on some systems it causes failures
+        # options.append(self.define('CMAKE_CXX_COMPILER', spec['mpi'].mpicxx))
+        # options.append(self.define('CMAKE_C_COMPILER', spec['mpi'].mpicc))
+        # options.append(self.define('CMAKE_Fortran_COMPILER', spec['mpi'].mpifc))
 
         if 'dev_path' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
