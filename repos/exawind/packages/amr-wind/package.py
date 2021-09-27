@@ -4,13 +4,16 @@ import os
 from shutil import copyfile
 
 class AmrWind(bAmrWind):
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    #depends_on('ninja', type='build')
+    #generator = 'Ninja'
 
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
         options = super(AmrWind, self).cmake_args()
+
+        if '+cuda' in spec:
+            options.append(define('BUILD_SHARED_LIBS', False))
 
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))

@@ -16,11 +16,12 @@ class Exawind(CMakePackage, CudaPackage):
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
     version('master', branch='main', submodules=True)
+    version('cuda', branch='jrood/cuda', submodules=True)
     variant('asan', default=False,
             description='turn on address sanitizer')
 
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    #depends_on('ninja', type='build')
+    #generator = 'Ninja'
 
     variant('openfast', default=False,
             description='Enable OpenFAST integration')
@@ -55,6 +56,10 @@ class Exawind(CMakePackage, CudaPackage):
         if spec['mpi'].name == 'openmpi':
             args.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
         args.append(define('MPI_ROOT', spec['mpi'].prefix))
+
+        if spec.satisfies('+cuda'):
+            args.append(define('EXAWIND_ENABLE_CUDA', True))
+            args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
 
         return args
 
