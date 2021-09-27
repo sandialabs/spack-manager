@@ -19,16 +19,16 @@ packages:
     version: [11.3.1]
     buildable: false
     externals:
-      #- spec: "cuda@11.4.0%gcc@10.2.0"
+      #- spec: "cuda@11.4.0%gcc@9.3.0"
       #  modules:
       #    - cuda/11.4.0
-      - spec: "cuda@11.3.1%gcc@10.2.0"
+      - spec: "cuda@11.3.1%gcc@9.3.0"
         modules:
           - cuda/11.3.1
-      #- spec: "cuda@11.0.3%gcc@10.2.0"
+      #- spec: "cuda@11.0.3%gcc@9.3.0"
       #  modules:
       #    - cuda/11.0.3
-      #- spec: "cuda@10.2.89%gcc@10.2.0"
+      #- spec: "cuda@10.2.89%gcc@9.3.0"
       #  modules:
       #    - cuda/10.2.89
   all:
