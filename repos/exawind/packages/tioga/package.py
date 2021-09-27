@@ -12,9 +12,10 @@ class Tioga(bTioga):
         options = super(Tioga, self).cmake_args()
 
         options.append(define('MPI_ROOT', spec['mpi'].prefix))
-        options.append(self.define('CMAKE_CXX_COMPILER', spec['mpi'].mpicxx))
-        options.append(self.define('CMAKE_C_COMPILER', spec['mpi'].mpicc))
-        options.append(self.define('CMAKE_Fortran_COMPILER', spec['mpi'].mpifc))
+        # On some systems these are necessary, on some systems it causes failures
+        # options.append(self.define('CMAKE_CXX_COMPILER', spec['mpi'].mpicxx))
+        # options.append(self.define('CMAKE_C_COMPILER', spec['mpi'].mpicc))
+        # options.append(self.define('CMAKE_Fortran_COMPILER', spec['mpi'].mpifc))
 
         if 'dev_path' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
