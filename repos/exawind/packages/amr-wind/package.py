@@ -7,6 +7,8 @@ class AmrWind(bAmrWind):
     #depends_on('ninja', type='build')
     #generator = 'Ninja'
 
+    depends_on('hypre+unified-memory', when='+hypre+cuda')
+
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define

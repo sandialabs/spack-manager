@@ -16,7 +16,6 @@ class Exawind(CMakePackage, CudaPackage):
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
     version('master', branch='main', submodules=True)
-    version('cuda', branch='jrood/cuda', submodules=True)
     variant('asan', default=False,
             description='turn on address sanitizer')
 
