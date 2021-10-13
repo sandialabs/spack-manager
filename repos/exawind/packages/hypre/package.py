@@ -8,6 +8,6 @@ class Hypre(bHypre):
         options = super(Hypre, self).configure_args()                        
                                                                            
         if '+cuda' in self.spec:
-            options.append('--enable-cublas')
+            options.append('--enable-cusparse')
 
         return options
