@@ -17,9 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.7, 3.8, 3.9]
-    defaults:
-      run:
-        working-directory: ${{github.workspace}}
 
     steps:
     - uses: actions/checkout@v2
@@ -40,5 +37,4 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude repos,spack,views,environments
     - name: Run unit tests
-      run: |
-        run_tests.sh
+      run: ./run_tests.sh
