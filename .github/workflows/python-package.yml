@@ -17,6 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.7, 3.8, 3.9]
+    defaults:
+      run:
+        working-directory: ${{github.workspace}}
 
     steps:
     - uses: actions/checkout@v2
@@ -31,6 +34,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
+        # TODO we should setup a config file so when you run flake8 locally it is the same as here
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude repos,spack,views,environments
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
