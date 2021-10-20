@@ -18,7 +18,7 @@ def test_failsWithAnUnregisteredMachine():
     with TemporaryDirectory as tmpdir:
         args = cmse.parse(['-d', tmpdir, '-m', 'theGOAT_HPC'])
 
-        with pytest.raises(RuntimeError) as einfo:
+        with pytest.raises(AttributeError) as einfo:
             cmse.CreateEnvDir(args)
 
         assert 'Host not setup in spack-manager' in str(einfo.value)
