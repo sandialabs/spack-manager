@@ -10,4 +10,5 @@ exclude = .git,
 count = True
 show-source = True
 statistics = True
+ignore = E722
 
