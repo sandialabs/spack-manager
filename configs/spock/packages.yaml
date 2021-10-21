@@ -1,0 +1,21 @@
+packages:
+  cray-mpich:
+    version: [8.1.7]
+    buildable: false
+    externals:
+      - spec: "cray-mpich@8.1.7%cce@12.0.1"
+        modules:
+          - cray-mpich/8.1.7
+  hip:
+    version: [4.3.0]
+    buildable: false
+    externals:
+      - spec: "hip@4.3.0%cce@12.0.1"
+        modules:
+          - rocm/4.3.0
+  all:
+    compiler:
+      - cce@12.0.1
+    providers:
+      mpi:
+        - cray-mpich@8.1.7

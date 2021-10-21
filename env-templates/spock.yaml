@@ -1,0 +1,12 @@
+spack:
+  include:
+  - $spack/../configs/spock/config.yaml
+  - $spack/../configs/spock/packages.yaml
+  - $spack/../configs/spock/compilers.yaml
+  - $spack/../configs/base/config.yaml
+  - $spack/../configs/base/packages.yaml
+  - $spack/../configs/base/repos.yaml
+  specs:
+  - exawind+hypre
+  view: false
+  concretization: separately

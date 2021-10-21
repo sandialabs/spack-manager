@@ -1,0 +1,13 @@
+--- spack-src-old/CBLAS/CMakeLists.txt	2021-10-21 12:48:27.000000000 -0600
++++ spack-src/CBLAS/CMakeLists.txt	2021-10-21 12:48:43.000000000 -0600
+@@ -12,8 +12,8 @@
+                          SYMBOL_NAMESPACE "F77_")
+ if(NOT FortranCInterface_GLOBAL_FOUND OR NOT FortranCInterface_MODULE_FOUND)
+   message(WARNING "Reverting to pre-defined include/lapacke_mangling.h")
+-    configure_file(include/lapacke_mangling_with_flags.h.in
+-                  ${LAPACK_BINARY_DIR}/include/lapacke_mangling.h)
++    #configure_file(include/lapacke_mangling_with_flags.h.in
++    #              ${LAPACK_BINARY_DIR}/include/lapacke_mangling.h)
+     configure_file(include/cblas_mangling_with_flags.h.in
+                  ${LAPACK_BINARY_DIR}/include/cblas_mangling.h)
+ endif()
