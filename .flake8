@@ -1,0 +1,14 @@
+[flake8]
+exclude = .git,
+     __pycache__,
+     spack,
+     environments,
+     views,
+     modules,
+     .*,
+     repos
+count = True
+show-source = True
+statistics = True
+ignore = E722
+

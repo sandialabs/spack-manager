@@ -10,23 +10,22 @@ from datetime import date
 import os
 import sys
 
-sys.path.append(os.path.join(os.environ['SPACK_MANAGER'],'scripts'))
-import set_permissions
-
 git = spack.util.executable.which('git')
+
 
 def GetValidEnvironment(env):
     try:
-       # check for registerd env
-       return ev.read(env)
+        # check for registerd env
+        return ev.read(env)
     except:
-       try:
-          # check for anonymous env
-          ev.Environment(env)
-       except:
-          raise ev.SpackEnvironmentErrror('%s is not a valid environment' % env)
-       finally:
-          return ev.Environment(env)
+        try:
+            # check for anonymous env
+            ev.Environment(env)
+        except:
+            raise ev.SpackEnvironmentErrror(
+                '%s is not a valid environment' % env)
+        finally:
+            return ev.Environment(env)
     return None
 
 
@@ -39,8 +38,9 @@ def GetListOfEnvironments(iFile):
             name, frequency = line.split()
         except:
             print('Failing line: ', line)
-        envs.append({'name' : name,'freq' : frequency})
+        envs.append({'name': name, 'freq': frequency})
     return envs
+
 
 def TimeToUpdate(f):
     """
@@ -54,10 +54,11 @@ def TimeToUpdate(f):
         return True
     if f == 'daily':
         return True
-    if f == 'quarterly' and today.day == 1 and today.month in [1,4,7,10]:
+    if f == 'quarterly' and today.day == 1 and today.month in [1, 4, 7, 10]:
         return True
 
     return False
+
 
 def UpdateDevelopmentSpecs(e):
     env = GetValidEnvironment(e)
@@ -72,19 +73,12 @@ def UpdateDevelopmentSpecs(e):
             git('pull')
             git('submodule', 'update')
 
+
 def UpdateEnvironment(e):
     env = GetValidEnvironment(e)
     with env:
         env.install_all()
 
-def UpdatePermissionsForEnvironment(env, group):
-    print("Updaing Permissions")
-    #set_permissions.set_dir_permissions(
-    #    os.path.join(os.environ['SPACK_MANAGER'],'modules'),0o755, group)
-    #set_permissions.set_dir_permissions(
-    #    os.path.join(os.environ['SPACK_MANAGER'],'views'),0o755, group)
-    #set_permissions.set_dir_permissions(
-    #    os.path.join(os.environ['SPACK_MANAGER'],'spack','opt'),0o755, group)
 
 def UpdateListOfEnvironments(inputFile, group):
     envs = GetListOfEnvironments(inputFile)
@@ -98,19 +92,31 @@ def UpdateListOfEnvironments(inputFile, group):
                 pass
             finally:
                 print('Finished with environment: {f}'.format(f=e['name']))
-    UpdatePermissionsForEnvironment(None, group)
+
+
+def Parse(args):
+    parser = argparse.ArgumentParser(
+        description='Cycle environments and update them')
+    parser.add_argument(
+        '-i', '--input_file', required=False,
+        help='File with list of environments to update')
+    parser.add_argument(
+        '-e', '--environment', required=False,
+        help='Single environment to update without checking frequency')
+    parser.add_argument(
+        '-u', '--update_spack_manager', action='store_true',
+        help='Update spack-manager before updating environments')
+    parser.add_argument(
+        '-j', '--jobs', required=False,
+        help='Number of cores to forward to spack')
+    parser.set_defaults(update_spack_manager=False, group='wg-sierra-users')
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description = 'Cycle environments and update them')
-    parser.add_argument('-i', '--input_file', required = False, help = 'File with list of environments to update')
-    parser.add_argument('-e', '--environment', required = False, help = 'Single environment to update without checking frequency')
-    parser.add_argument('-u', '--update_spack_manager', action='store_true', help = 'Update spack-manager before updating environments')
-    parser.add_argument('-g', '--group', required = False, help = 'Group to use when setting permissions')
-    parser.add_argument('-j', '--jobs', required = False, help = 'Number of cores to forward to spack')
-    parser.set_defaults(update_spack_manager=False, group='wg-sierra-users')
-    args = parser.parse_args()
 
+    args = Parse(sys.argv[1:])
     if args.update_spack_manager:
         os.chdir(os.environ['SPACK_MANAGER'])
         git('pull')
@@ -123,5 +129,3 @@ if __name__ == "__main__":
         env = args.environment
         UpdateDevelopmentSpecs(env)
         UpdateEnvironment(env)
-        UpdatePermissionsForEnvironment(env, args.group)
-

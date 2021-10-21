@@ -11,7 +11,8 @@ from find_machine import find_machine
 import argparse
 
 default_env_file = (
- """spack:
+    """
+spack:
   include:
   - machine_config.yaml
   - machine_packages.yaml

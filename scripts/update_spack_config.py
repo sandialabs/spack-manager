@@ -6,8 +6,9 @@ import llnl.util.tty as tty
 import shutil
 import os
 
-# Get a function to update the format
+
 def config_updater(cfg_type, cfg_file):
+    # Get a function to update the format
     """
     Courtesy of Greg Becker
     """
@@ -25,6 +26,7 @@ def config_updater(cfg_type, cfg_file):
     msg = 'File "{0}" updated [backup={1}]'
     tty.msg(msg.format(cfg_file, bkp_file))
 
+
 if __name__ == '__main__':
     myTypes = ['config', 'packages', 'compilers']
     myDir = sys.argv[1]
@@ -33,4 +35,3 @@ if __name__ == '__main__':
         resolved = ftemplate.format(tpe=typ)
         if os.path.isfile(resolved):
             config_updater(typ, resolved)
-
