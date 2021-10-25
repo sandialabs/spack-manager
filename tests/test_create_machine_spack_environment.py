@@ -7,7 +7,7 @@ import pytest
 
 def test_basicDirectoryProperties():
     with TemporaryDirectory() as tmpdir:
-        args = cmse.parse(['-d', tmpdir, '-m', 'darwin', '-s', 'binutils'])
+        args = cmse.Parse(['-d', tmpdir, '-m', 'darwin', '-s', 'binutils'])
         assert filecmp.dircmp(tmpdir, args.directory)
         assert 'darwin' == args.machine
         cmse.CreateEnvDir(args)
@@ -16,5 +16,5 @@ def test_basicDirectoryProperties():
 
 def test_failsWithAnUnregisteredMachine():
     with TemporaryDirectory() as tmpdir:
-        args = cmse.parse(['-d', tmpdir, '-m', 'theGOAT_HPC'])
+        args = cmse.Parse(['-d', tmpdir, '-m', 'theGOAT_HPC'])
         pytest.raises(Exception, cmse.CreateEnvDir, args)

@@ -56,6 +56,7 @@ jobs:
     - name: Install dependencies
       run: |
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        ./start.sh
     - name: Run concretization tests
-      run: scripts/test_config_concretization.py
+      run: |
+        source start.sh
+        tests/ci_config_concretization.py
