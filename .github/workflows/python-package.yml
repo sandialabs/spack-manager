@@ -44,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.7]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -59,4 +59,6 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
+        # test and make sure the solver is working for env using clingo
+        spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py

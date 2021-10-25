@@ -28,7 +28,6 @@ spack:
 
 def NewName(newHead, oldFile, prefix=None):
     tail = os.path.basename(oldFile)
-    print(oldFile, tail, newHead)
     if prefix is not None:
         return os.path.join(newHead, prefix + '_' + tail)
     else:
