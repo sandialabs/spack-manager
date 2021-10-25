@@ -82,7 +82,7 @@ def CreateEnvDir(args):
         raise Exception('Host not setup in spack-manager: %s' % hostPath)
 
 
-def parse(args):
+def Parse(args):
     parser = argparse.ArgumentParser(description='A convenience script'
                                      ' for setting up a spack environment'
                                      ' through the spack-manager repository.')
@@ -98,5 +98,5 @@ def parse(args):
 
 
 if __name__ == '__main__':
-    args = parse(sys.argv[1:])
+    args = Parse(sys.argv[1:])
     CreateEnvDir(args)
