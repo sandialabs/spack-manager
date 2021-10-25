@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Script Tests
+name: Tests
 
 on:
   push:
@@ -10,8 +10,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  unit-tests:
     runs-on: ubuntu-latest
     env:
       SPACK_MANAGER: ${{github.workspace}}
@@ -38,3 +37,28 @@ jobs:
         flake8 .
     - name: Run unit tests
       run: ./run_tests.sh
+  concretization:
+    runs-on: ubuntu-latest
+    env:
+      SPACK_MANAGER: ${{github.workspace}}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run concretization tests
+      run: |
+        source start.sh
+        # test and make sure the solver is working for env using clingo
+        spack solve exawind 1> /dev/null 
+        tests/ci_config_concretization.py

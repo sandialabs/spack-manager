@@ -25,7 +25,6 @@ machine_list = {
     'summit': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
     'skybridge': lambda: 'skybridge' in socket.gethostname(),
     'ascicgpu': lambda: 'ascicgpu' in socket.gethostname(),
-    'ghost': lambda: 'ghost' in socket.gethostname(),
     'darwin': lambda: sys.platform == 'darwin',
 }
 
