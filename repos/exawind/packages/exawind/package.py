@@ -19,9 +19,6 @@ class Exawind(CMakePackage, CudaPackage):
     variant('asan', default=False,
             description='turn on address sanitizer')
 
-    #depends_on('ninja', type='build')
-    #generator = 'Ninja'
-
     variant('openfast', default=False,
             description='Enable OpenFAST integration')
     variant('hypre', default=True,

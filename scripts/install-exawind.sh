@@ -22,7 +22,7 @@ cmd "export TMPDIR=${MYPWD}/../tmp"
 cmd "export SPACK_MANAGER=${MYPWD}/.."
 cmd "source ${SPACK_MANAGER}/start.sh"
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
-  cmd "create_machine_spack_environment.py -y ${SPACK_MANAGER}/env-templates/${SPACK_MANAGER_MACHINE}.py -d ${SPACK_MANAGER}/environments/exawind"
+  cmd "create_machine_spack_environment.py -y ${SPACK_MANAGER}/env-templates/${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind"
 else
   cmd "create_machine_spack_environment.py -s exawind+hypre -d ${SPACK_MANAGER}/environments/exawind"
 fi

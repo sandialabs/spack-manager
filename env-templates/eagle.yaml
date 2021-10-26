@@ -6,7 +6,7 @@ spack:
   - general_packages.yaml
   - general_config.yaml
   - general_repos.yaml
-  concretization: together
+  concretization: separately
   view: false
   specs:
   - matrix:
