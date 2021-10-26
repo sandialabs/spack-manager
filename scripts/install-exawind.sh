@@ -25,7 +25,7 @@ elif [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   cmd "module load binutils"
 fi
 
-if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' || "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
+if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
   cmd "create_machine_spack_environment.py -y ${SPACK_MANAGER}/env-templates/${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind"
 else
   cmd "create_machine_spack_environment.py -s exawind+hypre -d ${SPACK_MANAGER}/environments/exawind"
