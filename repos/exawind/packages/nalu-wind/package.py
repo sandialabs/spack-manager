@@ -10,10 +10,6 @@ class NaluWind(bNaluWind):
     variant('asan', default=False,
             description='turn on address sanitizer')
 
-    if os.environ['SPACK_MANAGER_MACHINE'] != 'summit':
-        depends_on('ninja', type='build')
-        generator = 'Ninja'
-
     depends_on('hypre+unified-memory', when='+hypre+cuda')
 
     def setup_build_environment(self, env):
