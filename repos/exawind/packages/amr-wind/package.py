@@ -4,8 +4,6 @@ import os
 from shutil import copyfile
 
 class AmrWind(bAmrWind):
-    #depends_on('ninja', type='build')
-    #generator = 'Ninja'
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
 
