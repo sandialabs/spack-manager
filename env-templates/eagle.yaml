@@ -9,6 +9,7 @@ spack:
   concretization: separately
   view: false
   specs:
-  - matrix:
-    - [exawind]
-    - ['+hypre+cuda cuda_arch=70', '+hypre~cuda', '~hypre+cuda cuda_arch=70 ^nalu-wind+hypre~cuda cuda_arch=None ^amr-wind~hypre+cuda cuda_arch=70', '+cuda cuda_arch=70 ^nalu-wind+hypre+cuda cuda_arch=70 ^amr-wind~hypre~cuda cuda_arch=None']
+    - 'exawind+hypre+amr_wind_gpu+nalu_wind_gpu+cuda cuda_arch=70'
+    - 'exawind+hypre~amr_wind_gpu~nalu_wind_gpu~cuda'
+    - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+cuda cuda_arch=70 ^amr-wind~hypre'
+    - 'exawind~hypre~amr_wind_gpu+nalu_wind_gpu+cuda cuda_arch=70 ^nalu-wind+hypre ^amr-wind~hypre'
