@@ -38,13 +38,13 @@ class Exawind(CMakePackage, CudaPackage):
         depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
 
     depends_on('nalu-wind+tioga')
-    depends_on('amr-wind+mpi')
-    depends_on('tioga~nodegid')
+    depends_on('amr-wind+netcdf+mpi')
+    depends_on('tioga+shared~nodegid')
     depends_on('yaml-cpp@0.6:')
 
     depends_on('nalu-wind+openfast', when='+openfast')
     depends_on('amr-wind+openfast', when='+openfast')
-    depends_on('openfast', when='+openfast')
+    depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
 
