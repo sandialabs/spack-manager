@@ -2,10 +2,7 @@ packages:
   hypre:
     variants: +shared
   all:
-    #target: [x86_64]
+    target: [x86_64]
     compiler: [apple-clang, gcc, clang]
-    variants: build_type=Release
     providers:
       mpi: [openmpi, mpich]
-      blas: [netlib-lapack]
-      lapack: [netlib-lapack]

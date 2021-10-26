@@ -1,0 +1,3 @@
+bootstrap:
+  trusted:
+    github-actions: False

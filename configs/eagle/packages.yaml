@@ -32,5 +32,3 @@ packages:
     variants: build_type=Release +mpi
     providers:
       mpi: [mpt, intel-mpi]
-      blas: [netlib-lapack, intel-mkl]
-      lapack: [netlib-lapack, intel-mkl]

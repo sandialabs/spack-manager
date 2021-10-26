@@ -1,13 +1,14 @@
 spack:
   include:
-  - $spack/../configs/eagle/config.yaml
-  - $spack/../configs/eagle/packages.yaml
-  - $spack/../configs/eagle/compilers.yaml
-  - $spack/../configs/base/config.yaml
-  - $spack/../configs/base/packages.yaml
-  - $spack/../configs/base/repos.yaml
-  specs:
-  - exawind+hypre+openfast
-  - exawind+hypre+openfast+cuda cuda_arch=70
+  - machine_config.yaml
+  - machine_packages.yaml
+  - machine_compilers.yaml
+  - general_packages.yaml
+  - general_config.yaml
+  - general_repos.yaml
+  concretization: together
   view: false
-  concretization: separately
+  specs:
+  - matrix:
+    - [exawind]
+    - ['+hypre+cuda cuda_arch=70', '+hypre~cuda', '~hypre+cuda cuda_arch=70 ^nalu-wind+hypre~cuda cuda_arch=None ^amr-wind~hypre+cuda cuda_arch=70', '+cuda cuda_arch=70 ^nalu-wind+hypre+cuda cuda_arch=70 ^amr-wind~hypre~cuda cuda_arch=None']
