@@ -14,12 +14,7 @@ default_env_file = (
     """
 spack:
   include:
-  - machine_config.yaml
-  - machine_packages.yaml
-  - machine_compilers.yaml
-  - general_packages.yaml
-  - general_config.yaml
-  - general_repos.yaml
+{includes}
   concretization: together
   view: false
   specs:
@@ -35,9 +30,13 @@ def NewName(newHead, oldFile, prefix=None):
 
 
 def CopyFilesAcrossPaths(pathStart, pathEnd, prefix=None):
+    copiedFiles = []
     for f in os.listdir(pathStart):
         d = os.path.join(pathStart, f)
-        shutil.copy(d, NewName(pathEnd, d, prefix))
+        n = NewName(pathEnd, d, prefix)
+        copiedFiles.append(os.path.basename(n))
+        shutil.copy(d, n)
+    return copiedFiles
 
 
 def CreateEnvDir(args):
@@ -67,16 +66,19 @@ def CreateEnvDir(args):
         else:
             theDir = os.getcwd()
 
-        CopyFilesAcrossPaths(genPath, theDir, 'general')
+        machineFiles = CopyFilesAcrossPaths(hostPath, theDir, 'machine')
+        generalFiles = CopyFilesAcrossPaths(genPath, theDir, 'general')
 
-        CopyFilesAcrossPaths(hostPath, theDir, 'machine')
+        includeString = ''
+        for x in machineFiles + generalFiles:
+            includeString += '  - {v}\n'.format(v=x)
 
         if args.yaml is not None:
             assert(os.path.isfile(args.yaml))
             shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
         else:
             open(os.path.join(theDir, 'spack.yaml'), 'w').write(
-                default_env_file.format(spec=spec))
+                default_env_file.format(spec=spec, includes=includeString))
     else:
         raise Exception('Host not setup in spack-manager: %s' % hostPath)
 
