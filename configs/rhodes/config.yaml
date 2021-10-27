@@ -1,7 +1,2 @@
 config:
-  build_stage:
-    - $spack/var/spack/stage
-    #- /scratch/$user/.spack/stage
-    #- $tempdir/$user/spack-stage
-    #- ~/.spack/stage
   build_jobs: 30

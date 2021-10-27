@@ -1,4 +1,6 @@
 config:
   source_cache: ~/.spack/downloads
-  misc_cache: $spack/var/spack/cache
-  concretizer: original
+  misc_cache: $spack/../cache
+  build_stage:
+    - $spack/../stage
+  concretizer: clingo
