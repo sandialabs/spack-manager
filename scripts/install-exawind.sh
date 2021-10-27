@@ -22,7 +22,6 @@ if [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
   cmd "module load binutils"
 elif [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   cmd "source /nopt/nrel/ecom/hpacf/env.sh"
-  cmd "module load binutils"
 fi
 
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
