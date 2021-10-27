@@ -19,18 +19,23 @@ class Exawind(CMakePackage, CudaPackage):
     variant('asan', default=False,
             description='turn on address sanitizer')
 
-    #depends_on('ninja', type='build')
-    #generator = 'Ninja'
-
     variant('openfast', default=False,
             description='Enable OpenFAST integration')
     variant('hypre', default=True,
             description='Enable hypre solver')
+    variant('amr_wind_gpu', default=False,
+            description='Enable AMR-Wind on the GPU')
+    variant('nalu_wind_gpu', default=False,
+            description='Enable Nalu-Wind on the GPU')
+
+    conflicts('+amr_wind_gpu', when='~cuda')
+    conflicts('+nalu_wind_gpu', when='~cuda')
+    conflicts('+amr_wind_gpu~nalu_wind_gpu', when='^amr-wind+hypre')
 
     for arch in CudaPackage.cuda_arch_values:
-        depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
-        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
-        depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
 
     depends_on('nalu-wind+tioga')
     depends_on('amr-wind+netcdf+mpi')

@@ -11,6 +11,7 @@ class NaluWind(bNaluWind):
             description='turn on address sanitizer')
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
+    depends_on('trilinos gotype=long')
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
