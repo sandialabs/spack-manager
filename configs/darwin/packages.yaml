@@ -5,4 +5,4 @@ packages:
     target: [x86_64]
     compiler: [apple-clang, gcc, clang]
     providers:
-      mpi: [openmpi, mpich]
+      mpi: [mpich, openmpi]

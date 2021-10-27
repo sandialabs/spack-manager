@@ -1,0 +1,6 @@
+packages:
+  all:
+    compiler: [gcc, intel, clang]
+    variants: build_type=Release +mpi
+    providers:
+      mpi: [mpich, openmpi]
