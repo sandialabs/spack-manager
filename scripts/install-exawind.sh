@@ -40,5 +40,5 @@ fi
 cmd "spack concretize -f"
 
 for i in {1..2}; do
-  cmd "spack install" &
+  cmd "nice spack install" &
 done; wait
