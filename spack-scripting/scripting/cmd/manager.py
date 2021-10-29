@@ -1,7 +1,7 @@
-from typing import Callable, Dict  # novm
 import manager_cmds.hello_world
 
 description = "commands that are specific to spack-manager"
+section = "spack-manager"
 level = "short"
 
 _subcommands = {}
