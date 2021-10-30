@@ -35,6 +35,10 @@ jobs:
         # TODO we should setup a config file so when you run flake8 locally it is the same as here
         # stop the build if there are Python syntax errors or undefined names
         flake8 .
+    - name: Spack Style
+      run: |
+        # check our spack extension with spack's style guide
+        spack style spack-scripting
     - name: Run unit tests
       run: ./run_tests.sh
   concretization:
