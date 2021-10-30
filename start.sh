@@ -19,7 +19,7 @@ if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; th
     spack config --scope site add config:extensions:['$spack/../spack-scripting']
 fi
 
-export SPACK_MANAGER_MACHINE=$(${SPACK_MANAGER}/scripts/find_machine.py)
+export SPACK_MANAGER_MACHINE=$(spack manager find-machine)
 if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
 fi
