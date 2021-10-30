@@ -16,7 +16,7 @@ export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 
 if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
-    spack config --scope site add config:extensions:['$spack/../spack-scripting']
+    spack config --scope site add config:extensions:[${SPACK_MANAGER}/spack-scripting]
 fi
 
 export SPACK_MANAGER_MACHINE=$(spack manager find-machine)
