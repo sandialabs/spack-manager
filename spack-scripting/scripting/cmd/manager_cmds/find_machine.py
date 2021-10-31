@@ -1,6 +1,6 @@
-import sys
 import os
 import socket
+import sys
 
 
 def is_cee(hostname):
@@ -43,7 +43,7 @@ def find_machine(parser, args):
             so these are skipped
             """
             pass
-        except:
+        except(Exception):
             """
             all other errors will be raised and kill the program
             we can add more excpetions to the pass list as needed
@@ -53,7 +53,8 @@ def find_machine(parser, args):
     print('NOT-FOUND')
     return 'NOT-FOUND'
 
+
 def add_command(parser, command_dict):
     parser.add_parser('find-machine',
-        help='get the current machine detected by spack-manager')
+                      help='get the current machine detected by spack-manager')
     command_dict['find-machine'] = find_machine

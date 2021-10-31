@@ -1,16 +1,18 @@
-from tempfile import TemporaryDirectory
 import os
+from tempfile import TemporaryDirectory
+
 import manager_cmds.create_env as create_env
-import spack.main
-import spack.environment as env
 import pytest
+
+import spack.environment as env
+import spack.main
 
 manager = spack.main.SpackCommand('manager')
 
 
 def test_basicDirectoryProperties():
     with TemporaryDirectory() as tmpdir:
-        manager('create-env','-d', tmpdir, '-m', 'darwin', '-s', 'binutils')
+        manager('create-env', '-d', tmpdir, '-m', 'darwin', '-s', 'binutils')
         assert os.path.isfile(os.path.join(tmpdir, 'spack.yaml'))
         assert os.path.isfile(os.path.join(tmpdir, 'general_packages.yaml'))
 
@@ -18,7 +20,7 @@ def test_basicDirectoryProperties():
 def test_failsWithAnUnregisteredMachine():
     with TemporaryDirectory() as tmpdir:
         with pytest.raises(Exception):
-            manager('create-env','-d', tmpdir, '-m', 'theGOAT_HPC')
+            manager('create-env', '-d', tmpdir, '-m', 'theGOAT_HPC')
 
 
 TESTMACHINE = 'test_machine'

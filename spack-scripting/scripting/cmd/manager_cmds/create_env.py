@@ -4,8 +4,9 @@ A script for creating a new environment
 on a given machine
 """
 
-import shutil
 import os
+import shutil
+
 from find_machine import find_machine
 
 default_env_file = (
@@ -83,13 +84,13 @@ def create_env(parser, args):
 
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser('create-env', help='convenience script'
-                                     ' for setting up a spack environment')
+                                   ' for setting up a spack environment')
     sub_parser.add_argument('-m', '--machine', required=False,
-                        help='Machine to match configs')
+                            help='Machine to match configs')
     sub_parser.add_argument('-d', '--directory', required=False,
-                        help='Directory to copy files')
+                            help='Directory to copy files')
     sub_parser.add_argument('-y', '--yaml', required=False,
-                        help='Reference spack.yaml to copy to directory')
+                            help='Reference spack.yaml to copy to directory')
     sub_parser.add_argument('-s', '--spec', required=False,
-                        help='Spec to populate the environment with')
+                            help='Spec to populate the environment with')
     command_dict['create-env'] = create_env

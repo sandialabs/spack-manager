@@ -30,10 +30,8 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
       run: |
-        # TODO we should setup a config file so when you run flake8 locally it is the same as here
-        # stop the build if there are Python syntax errors or undefined names
+        # flake8 on scripts that aren't spack extensions
         flake8 .
     - name: Spack Style
       run: |
