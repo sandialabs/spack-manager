@@ -12,9 +12,14 @@ fi
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
-export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts
+export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd
 source ${SPACK_ROOT}/share/spack/setup-env.sh
-export SPACK_MANAGER_MACHINE=$(${SPACK_MANAGER}/scripts/find_machine.py)
+
+if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
+    spack config --scope site add config:extensions:[${SPACK_MANAGER}/spack-scripting]
+fi
+
+export SPACK_MANAGER_MACHINE=$(spack manager find-machine)
 if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
 fi

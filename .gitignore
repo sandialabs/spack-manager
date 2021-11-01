@@ -6,4 +6,4 @@ __pycache__
 .spack*
 *.code-workspace
 *.pyc
-
+.vscode

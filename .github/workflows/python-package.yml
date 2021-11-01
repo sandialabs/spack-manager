@@ -18,9 +18,28 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.7, 3.8, 3.9]
-
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run unit tests
+      run: ./run_tests.sh
+  style-checks:
+    runs-on: ubuntu-latest
+    env:
+      SPACK_MANAGER: ${{github.workspace}}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -30,13 +49,15 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
+    - name: Link scripts with flake8
       run: |
-        # TODO we should setup a config file so when you run flake8 locally it is the same as here
-        # stop the build if there are Python syntax errors or undefined names
+        # flake8 on scripts that aren't spack extensions
         flake8 .
-    - name: Run unit tests
-      run: ./run_tests.sh
+    - name: Spack Style
+      run: |
+        # check our spack extension with spack's style guide
+        source start.sh
+        spack style spack-scripting
   concretization:
     runs-on: ubuntu-latest
     env:
