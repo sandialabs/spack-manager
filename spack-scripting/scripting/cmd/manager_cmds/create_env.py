@@ -20,22 +20,11 @@ spack:
   - {spec}""")
 
 
-def NewName(newHead, oldFile, prefix=None):
-    tail = os.path.basename(oldFile)
-    if prefix is not None:
-        return os.path.join(newHead, prefix + '_' + tail)
-    else:
-        return os.path.join(newHead, tail)
-
-
-def CopyFilesAcrossPaths(pathStart, pathEnd, prefix=None):
-    copiedFiles = []
-    for f in os.listdir(pathStart):
-        d = os.path.join(pathStart, f)
-        n = NewName(pathEnd, d, prefix)
-        copiedFiles.append(os.path.basename(n))
-        shutil.copy(d, n)
-    return copiedFiles
+def create_includes(master_file, path_ref_files):
+    with open(master_file, 'wb') as fm:
+        for f in os.listdir(path_ref_files):
+            with open(os.path.abspath(os.path.join(path_ref_files, f)), 'rb') as fs:
+                shutil.copyfileobj(fs, fm)
 
 
 def create_env(parser, args):
@@ -50,7 +39,8 @@ def create_env(parser, args):
     if args.spec is not None:
         spec = args.spec
     else:
-        spec = 'exawind'
+        # give a blank spec
+        spec = ''
 
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
     hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
@@ -65,19 +55,19 @@ def create_env(parser, args):
         else:
             theDir = os.getcwd()
 
-        machineFiles = CopyFilesAcrossPaths(hostPath, theDir, 'machine')
-        generalFiles = CopyFilesAcrossPaths(genPath, theDir, 'general')
+        include_file_name = 'include.yaml'
+        include_file = os.path.join(theDir, include_file_name)
+        create_includes(include_file, hostPath)
+        create_includes(include_file, genPath)
 
-        includeString = ''
-        for x in machineFiles + generalFiles:
-            includeString += '  - {v}\n'.format(v=x)
+        include_str = '  - {v}\n'.format(v=include_file_name)
 
         if args.yaml is not None:
             assert(os.path.isfile(args.yaml))
             shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
         else:
             open(os.path.join(theDir, 'spack.yaml'), 'w').write(
-                default_env_file.format(spec=spec, includes=includeString))
+                default_env_file.format(spec=spec, includes=include_str))
     else:
         raise Exception('Host not setup in spack-manager: %s' % hostPath)
 
