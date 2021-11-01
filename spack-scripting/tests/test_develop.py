@@ -1,6 +1,4 @@
 import os
-import unittest
-import unittest.mock as mock
 from unittest.mock import patch
 
 import pytest
@@ -22,7 +20,6 @@ class TestSpackManagerDevelop(object):
             manager('develop', 'mpich@1.0')
             mock_develop.assert_called_once()
 
-
     @patch('manager_cmds.develop.spack_develop.develop')
     @patch('manager_cmds.develop.git_clone')
     def test_requireUserToSpecifyGitRepoAndBranch(self, mock_git_clone, mock_develop):
@@ -33,7 +30,7 @@ class TestSpackManagerDevelop(object):
             name = 'mpich'
             version = '1.0'
             spec = '{n}@{v}'.format(n=name, v=version)
-            path = os.path.join(e.path, name) 
+            path = os.path.join(e.path, name)
             manager('develop', '--repo-branch', repo, branch, spec)
             mock_develop.assert_called_once()
             mock_git_clone.assert_called_once_with(branch, repo, path)

@@ -1,9 +1,8 @@
 import os
 import shutil
 
-import spack.cmd.develop as spack_develop
-
 import spack.cmd
+import spack.cmd.develop as spack_develop
 import spack.util.executable
 from spack.error import SpackError
 
@@ -14,6 +13,7 @@ def git_clone(branch, repo, path):
     """
     git = spack.util.executable.which('git')
     git('clone', '--recursive', '--branch', branch, repo, path)
+
 
 def _redundant_code_from_spack_develop(args):
     """
@@ -60,6 +60,7 @@ def _redundant_code_from_spack_develop(args):
 
     return (clone, abspath)
 
+
 def manager_develop(parser, args):
     """
     gives the option to clone based on specific fork and branch
@@ -76,11 +77,12 @@ def manager_develop(parser, args):
 
 
 def add_command(parser, command_dict):
-    subparser = parser.add_parser('develop', help='a more intuitieve interface for spack develop',
-                                  conflict_handler='resolve')
+    subparser = parser.add_parser('develop', help='a more intuitieve interface for '
+                                  'spack develop', conflict_handler='resolve')
     spack_develop.setup_parser(subparser)
     clone_group = subparser.add_mutually_exclusive_group()
-    clone_group.add_argument('-rb', '--repo-branch', nargs=2, metavar=('repo', 'branch'),
-                                  required=False, help='git repo to clone from')
+    clone_group.add_argument('-rb', '--repo-branch', nargs=2,
+                             metavar=('repo', 'branch'), required=False,
+                             help='git repo to clone from')
 
     command_dict['develop'] = manager_develop
