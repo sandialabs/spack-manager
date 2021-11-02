@@ -23,7 +23,15 @@ class IncludesCreator():
         data = syaml.syaml_dict()
         try:
             for s in sections:
-                data[s] = self.config.get_config(s)
+                # we have to check that there is data in each scope
+                # or else ill-formatted output can occur
+                has_data = False
+                for scope in self.config.scopes.values():
+                    if scope.get_section(s) is not None:
+                        has_data = True
+                if(has_data):
+                    temp = self.config.get_config(s)
+                    data[s] = temp
         except (yaml.YAMLError, IOError):
             raise spack.config.ConfigError("Error reading configuration: %s" % s)
 
