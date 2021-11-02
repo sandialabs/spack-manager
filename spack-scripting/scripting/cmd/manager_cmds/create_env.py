@@ -20,6 +20,7 @@ spack:
   specs:
   - {spec}""")
 
+
 def create_env(parser, args):
     """
     Copy files as needed
