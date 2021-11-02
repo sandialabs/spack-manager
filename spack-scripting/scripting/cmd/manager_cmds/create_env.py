@@ -7,7 +7,7 @@ on a given machine
 import os
 import shutil
 
-from find_machine import find_machine
+from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
 default_env_file = (

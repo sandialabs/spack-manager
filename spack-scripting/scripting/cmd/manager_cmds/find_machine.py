@@ -11,6 +11,14 @@ def is_cee(hostname):
     return False
 
 
+def is_snl_hpc(hostname):
+    known_hosts = ('skybridge', 'ghost', 'attaway', 'chama')
+    for k in known_hosts:
+        if k in hostname:
+            return True
+    return False
+
+
 """
 setup a dictionary with a key for machine name and checker function
 for value. the checker function should return true for the machine
@@ -21,13 +29,13 @@ machine_list = {
     'eagle': lambda: os.environ['NREL_CLUSTER'] == 'eagle',
     'rhodes': lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
     'summit': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
-    'skybridge': lambda: 'skybridge' in socket.gethostname(),
+    'snl-hpc': lambda:  is_snl_hpc(socket.gethostname()),
     'ascicgpu': lambda: 'ascicgpu' in socket.gethostname(),
     'darwin': lambda: sys.platform == 'darwin',
 }
 
 
-def find_machine(parser, args):
+def find_machine(parser=None, args=None):
     for machine, i_am_this_machine in machine_list.items():
         """
         Since we don't expect uniform environments on all machines

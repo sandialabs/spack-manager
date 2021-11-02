@@ -12,6 +12,7 @@ fi
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
+export SPACK_DISABLE_LOCAL_CONFIG=1
 export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 
