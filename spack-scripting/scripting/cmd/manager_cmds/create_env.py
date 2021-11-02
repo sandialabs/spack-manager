@@ -8,6 +8,7 @@ import os
 import shutil
 
 from find_machine import find_machine
+from manager_cmds.includes_creator import IncludesCreator
 
 default_env_file = (
     """
@@ -18,24 +19,6 @@ spack:
   view: false
   specs:
   - {spec}""")
-
-
-def NewName(newHead, oldFile, prefix=None):
-    tail = os.path.basename(oldFile)
-    if prefix is not None:
-        return os.path.join(newHead, prefix + '_' + tail)
-    else:
-        return os.path.join(newHead, tail)
-
-
-def CopyFilesAcrossPaths(pathStart, pathEnd, prefix=None):
-    copiedFiles = []
-    for f in os.listdir(pathStart):
-        d = os.path.join(pathStart, f)
-        n = NewName(pathEnd, d, prefix)
-        copiedFiles.append(os.path.basename(n))
-        shutil.copy(d, n)
-    return copiedFiles
 
 
 def create_env(parser, args):
@@ -50,10 +33,14 @@ def create_env(parser, args):
     if args.spec is not None:
         spec = args.spec
     else:
-        spec = 'exawind'
+        # give a blank spec
+        spec = ''
 
+    inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
+    inc_creator.add_scope('base', genPath)
     hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
+    inc_creator.add_scope('machine', hostPath)
 
     if os.path.exists(hostPath):
         if args.directory is not None:
@@ -65,19 +52,18 @@ def create_env(parser, args):
         else:
             theDir = os.getcwd()
 
-        machineFiles = CopyFilesAcrossPaths(hostPath, theDir, 'machine')
-        generalFiles = CopyFilesAcrossPaths(genPath, theDir, 'general')
+        include_file_name = 'include.yaml'
+        include_file = os.path.join(theDir, include_file_name)
+        inc_creator.write_includes(include_file)
 
-        includeString = ''
-        for x in machineFiles + generalFiles:
-            includeString += '  - {v}\n'.format(v=x)
+        include_str = '  - {v}\n'.format(v=include_file_name)
 
         if args.yaml is not None:
             assert(os.path.isfile(args.yaml))
             shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
         else:
             open(os.path.join(theDir, 'spack.yaml'), 'w').write(
-                default_env_file.format(spec=spec, includes=includeString))
+                default_env_file.format(spec=spec, includes=include_str))
     else:
         raise Exception('Host not setup in spack-manager: %s' % hostPath)
 

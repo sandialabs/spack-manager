@@ -25,7 +25,7 @@ elif [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
 fi
 
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
-  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind"
+  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_matrix.yaml -d ${SPACK_MANAGER}/environments/exawind"
 else
   cmd "spack manager create-env -s exawind+hypre -d ${SPACK_MANAGER}/environments/exawind"
 fi

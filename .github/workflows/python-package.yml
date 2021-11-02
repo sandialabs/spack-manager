@@ -58,14 +58,15 @@ jobs:
         # check our spack extension with spack's style guide
         source start.sh
         spack style spack-scripting
-  concretization:
-    runs-on: ubuntu-latest
+  concretization-basic:
+    runs-on: ${{matrix.os}}
     env:
       SPACK_MANAGER: ${{github.workspace}}
     strategy:
       fail-fast: false
       matrix:
         python-version: [3.7]
+        os: [ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -82,4 +83,30 @@ jobs:
         source start.sh
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
-        tests/ci_config_concretization.py
+        tests/ci_config_concretization.py -y env-templates/exawind_basic.yaml
+  concretization-matrix:
+    runs-on: ${{matrix.os}}
+    env:
+      SPACK_MANAGER: ${{github.workspace}}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7]
+        os: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run concretization tests
+      run: |
+        source start.sh
+        # test and make sure the solver is working for env using clingo
+        spack solve exawind 1> /dev/null 
+        tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml

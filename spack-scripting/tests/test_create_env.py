@@ -14,7 +14,7 @@ def test_basicDirectoryProperties():
     with TemporaryDirectory() as tmpdir:
         manager('create-env', '-d', tmpdir, '-m', 'darwin', '-s', 'binutils')
         assert os.path.isfile(os.path.join(tmpdir, 'spack.yaml'))
-        assert os.path.isfile(os.path.join(tmpdir, 'general_packages.yaml'))
+        assert os.path.isfile(os.path.join(tmpdir, 'include.yaml'))
 
 
 def test_failsWithAnUnregisteredMachine():
@@ -23,10 +23,8 @@ def test_failsWithAnUnregisteredMachine():
             manager('create-env', '-d', tmpdir, '-m', 'theGOAT_HPC')
 
 
-TESTMACHINE = 'test_machine'
-
-
 def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
+    TESTMACHINE = 'test_machine'
     with TemporaryDirectory() as tmpdir:
         # setup a mirror configuration of spack-manager
         link_dir = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
