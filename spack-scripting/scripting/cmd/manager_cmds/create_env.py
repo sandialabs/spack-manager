@@ -8,6 +8,7 @@ import os
 import shutil
 
 from find_machine import find_machine
+from manager_cmds.includes_creator import IncludesCreator
 
 default_env_file = (
     """
@@ -18,14 +19,6 @@ spack:
   view: false
   specs:
   - {spec}""")
-
-
-def create_includes(master_file, path_ref_files):
-    with open(master_file, 'wb') as fm:
-        for f in os.listdir(path_ref_files):
-            with open(os.path.abspath(os.path.join(path_ref_files, f)), 'rb') as fs:
-                shutil.copyfileobj(fs, fm)
-
 
 def create_env(parser, args):
     """
@@ -42,8 +35,11 @@ def create_env(parser, args):
         # give a blank spec
         spec = ''
 
+    inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
+    inc_creator.add_scope('base', genPath)
     hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
+    inc_creator.add_scope('machine', hostPath)
 
     if os.path.exists(hostPath):
         if args.directory is not None:
@@ -57,8 +53,7 @@ def create_env(parser, args):
 
         include_file_name = 'include.yaml'
         include_file = os.path.join(theDir, include_file_name)
-        create_includes(include_file, hostPath)
-        create_includes(include_file, genPath)
+        inc_creator.write_includes(include_file)
 
         include_str = '  - {v}\n'.format(v=include_file_name)
 
