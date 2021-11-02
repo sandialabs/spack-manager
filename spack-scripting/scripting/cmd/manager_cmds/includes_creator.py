@@ -11,6 +11,9 @@ class IncludesCreator():
         self.config = spack.config.Configuration()
 
     def add_scope(self, name, path):
+        """
+        scopes should be added in order from lowest to highest precident
+        """
         scope = spack.config.ConfigScope(name, os.path.abspath(path))
         self.config.push_scope(scope)
 
