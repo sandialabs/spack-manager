@@ -12,11 +12,11 @@ add_spec = spack.main.SpackCommand('add')
 def parse(args):
     parser = argparse.ArgumentParser('Create nightly test environments')
     parser.add_argument(
-                       '-d', '--directory',
-                        required=True, help='directory to create file')
+        '-d', '--directory',
+        required=True, help='directory to create file')
     parser.add_argument(
-                       '-test-nalu',
-                       dest='test_nalu', action='store_true', help='test nalu')
+        '-test-nalu',
+        dest='test_nalu', action='store_true', help='test nalu')
     parser.add_argument('-nalu-wind-vars',
                         help='string of spack variants for nalu-wind')
     parser.set_defaults(test_nalu=False)
@@ -57,8 +57,10 @@ def create_test_env(args):
             spec = test_package + args.nalu_wind_vars
             variant_factory(spec)
             print('cloning nalu-wind')
-            manager('develop', '-rb',
-                    'https://github.com/Exawind/nalu-wind', 'master', test_package)
+            manager(
+                'develop', '-rb',
+                'https://github.com/Exawind/nalu-wind',
+                'master', test_package)
 
 
 if __name__ == '__main__':
