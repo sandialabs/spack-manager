@@ -13,7 +13,7 @@ The main goals of `spack-manager` are to:
 
 There are a collection of scripts that will help with:
   
-  - [setting up developer workflows](docs/developer_tutorial.md)
+  - [setting up developer workflows](https://github.com/psakievich/spack-manager/wiki/Developer-Documentation#developer-tutorial)
   - creating deployable modules for HPC environments
   - running nightly tests
 
