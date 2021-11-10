@@ -8,6 +8,11 @@ if [[ -z ${SPACK_MANAGER} ]]; then
     exit 125
 fi
 
+if [[ ! -x $(which python3) ]]; then
+    echo "Warning: spack-manager is only designed to work with python 3."
+    echo "You may use spack, but spack-manager specifc commands will fail."
+fi
+
 ########################################################
 # Environment stuff
 ########################################################
