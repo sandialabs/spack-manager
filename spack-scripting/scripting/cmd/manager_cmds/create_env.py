@@ -7,8 +7,14 @@ on a given machine
 import os
 import shutil
 
+import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
+
+import spack.main
+import spack.environment as env
+
+envcmd = spack.main.SpackCommand('env')
 
 default_env_file = (
     """
@@ -27,6 +33,8 @@ def create_env(parser, args):
     """
     if args.machine is not None:
         machine = args.machine
+        if machine not in fm.machine_list.keys():
+            raise Exception('Specified machine %s is not defined' % machine)
     else:
         machine = find_machine()
 
@@ -40,32 +48,38 @@ def create_env(parser, args):
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
     inc_creator.add_scope('base', genPath)
     hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
-    inc_creator.add_scope('machine', hostPath)
 
     if os.path.exists(hostPath):
-        if args.directory is not None:
-            if os.path.exists(args.directory) is False:
-                print("making", args.directory)
-                os.makedirs(args.directory)
-
-            theDir = args.directory
-        else:
-            theDir = os.getcwd()
-
-        include_file_name = 'include.yaml'
-        include_file = os.path.join(theDir, include_file_name)
-        inc_creator.write_includes(include_file)
-
-        include_str = '  - {v}\n'.format(v=include_file_name)
-
-        if args.yaml is not None:
-            assert(os.path.isfile(args.yaml))
-            shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
-        else:
-            open(os.path.join(theDir, 'spack.yaml'), 'w').write(
-                default_env_file.format(spec=spec, includes=include_str))
+        inc_creator.add_scope('machine', hostPath)
     else:
-        raise Exception('Host not setup in spack-manager: %s' % hostPath)
+        print('Host not setup in spack-manager: %s' % hostPath)
+
+    if args.directory is not None:
+        if os.path.exists(args.directory) is False:
+            print("making", args.directory)
+            os.makedirs(args.directory)
+
+        theDir = args.directory
+    else:
+        theDir = os.getcwd()
+
+    include_file_name = 'include.yaml'
+    include_file = os.path.join(theDir, include_file_name)
+    inc_creator.write_includes(include_file)
+
+    include_str = '  - {v}\n'.format(v=include_file_name)
+
+    if args.yaml is not None:
+        assert(os.path.isfile(args.yaml))
+        shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
+    else:
+        open(os.path.join(theDir, 'spack.yaml'), 'w').write(
+            default_env_file.format(spec=spec, includes=include_str))
+
+    if args.activate:
+        print('activating env {0}'.format(theDir))
+        env.activate(env.Environment(theDir))
+        #envcmd('activate', '-d', theDir, '-p')
 
 
 def add_command(parser, command_dict):
@@ -79,4 +93,7 @@ def add_command(parser, command_dict):
                             help='Reference spack.yaml to copy to directory')
     sub_parser.add_argument('-s', '--spec', required=False,
                             help='Spec to populate the environment with')
+    sub_parser.add_argument('-a', '--activate', dest='activate', required=False,
+                            action='store_true', default=False,
+                            help='Activate the environment upon creation')
     command_dict['create-env'] = create_env
