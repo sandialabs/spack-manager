@@ -13,6 +13,12 @@ class NaluWind(bNaluWind):
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')
 
+    cxxstd=['14', '17']
+    variant('cxxstd', default='14', values=cxxstd,  multi=False)
+
+    for std in cxxstd:
+        depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
+
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, 'sup.asan')))
@@ -21,6 +27,7 @@ class NaluWind(bNaluWind):
         spec = self.spec
         define = CMakePackage.define
         options = super(NaluWind, self).cmake_args()
+        options.append(self.define_from_variant('CAMKE_CXX_STD', 'cxxstd'))
 
         if  spec.satisfies('dev_path=*'):
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
