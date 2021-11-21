@@ -8,7 +8,6 @@ import os
 import shutil
 
 import manager_cmds.find_machine as fm
-
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
@@ -48,7 +47,8 @@ def create_env(parser, args):
     if os.path.exists(hostPath):
         inc_creator.add_scope('machine', hostPath)
     else:
-        print('Warning: pre-configured machine not setup in spack-manager: %s' % machine)
+        print('Warning: pre-configured'
+              ' machine not setup in spack-manager: %s' % machine)
 
     if args.directory is not None:
         if os.path.exists(args.directory) is False:
