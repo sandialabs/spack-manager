@@ -7,14 +7,16 @@ on a given machine
 import os
 import shutil
 
+import argparse
+
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
 import spack.main
 import spack.environment as env
+import spack.cmd.env as envcmd
 
-envcmd = spack.main.SpackCommand('env')
 
 default_env_file = (
     """
@@ -78,8 +80,10 @@ def create_env(parser, args):
 
     if args.activate:
         print('activating env {0}'.format(theDir))
-        env.activate(env.Environment(theDir))
-        #envcmd('activate', '-d', theDir, '-p')
+        dumb_parser = argparse.ArgumentParser('dummy')
+        envcmd.env_activate_setup_parser(dumb_parser)
+        activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--shell', 'bash'])
+        envcmd.env_activate(activate_args)
 
 
 def add_command(parser, command_dict):
