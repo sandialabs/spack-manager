@@ -86,6 +86,7 @@ def create_env(parser, args):
         envcmd.env_activate(activate_args)
 
 
+
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser('create-env', help='convenience script'
                                    ' for setting up a spack environment')
