@@ -8,7 +8,8 @@ function quick-activate(){
   spack env activate -d $1
 }
 # function to wrap spack manager calls for shell modification
-function sspack(){
+# i.e. shell-wrapped-spack
+function swspack(){
   spack_command="spack $@"
   if [[ "$*" == *create-env* && "$*" == *-a* ]]; then
     eval $( ${spack_command} )
