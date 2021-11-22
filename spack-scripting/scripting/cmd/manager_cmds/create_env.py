@@ -4,19 +4,15 @@ A script for creating a new environment
 on a given machine
 """
 
+import argparse
 import os
 import shutil
-
-import argparse
 
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
-import spack.main
-import spack.environment as env
 import spack.cmd.env as envcmd
-
 
 default_env_file = (
     """
@@ -38,7 +34,7 @@ def create_env(parser, args):
         if machine not in fm.machine_list.keys():
             raise Exception('Specified machine %s is not defined' % machine)
     else:
-        machine = find_machine()
+        machine = find_machine(verbose=(not args.activate))
 
     if args.spec is not None:
         spec = args.spec
@@ -54,11 +50,13 @@ def create_env(parser, args):
     if os.path.exists(hostPath):
         inc_creator.add_scope('machine', hostPath)
     else:
-        print('Host not setup in spack-manager: %s' % hostPath)
+        if not args.activate:
+            print('Host not setup in spack-manager: %s' % hostPath)
 
     if args.directory is not None:
         if os.path.exists(args.directory) is False:
-            print("making", args.directory)
+            if not args.activate:
+                print("making", args.directory)
             os.makedirs(args.directory)
 
         theDir = args.directory
@@ -79,10 +77,12 @@ def create_env(parser, args):
             default_env_file.format(spec=spec, includes=include_str))
 
     if args.activate:
-        print('activating env {0}'.format(theDir))
         dumb_parser = argparse.ArgumentParser('dummy')
+        dumb_parser.add_argument('-env', required=False)
+        dumb_parser.add_argument('-no-env', required=False)
+        dumb_parser.add_argument('-env-dir', required=False)
         envcmd.env_activate_setup_parser(dumb_parser)
-        activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--shell', 'bash'])
+        activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--sh'])
         envcmd.env_activate(activate_args)
 
 
@@ -99,5 +99,8 @@ def add_command(parser, command_dict):
                             help='Spec to populate the environment with')
     sub_parser.add_argument('-a', '--activate', dest='activate', required=False,
                             action='store_true', default=False,
-                            help='Activate the environment upon creation')
+                            help='Print the shell script required to activate '
+                            'the environment upon creation. '
+                            'When called with sspack it will auto activate'
+                            ' the env')
     command_dict['create-env'] = create_env

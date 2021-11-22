@@ -39,7 +39,9 @@ def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
         envVars = {'SPACK_MANAGER': tmpdir}
         monkeypatch.setattr(os, 'environ', envVars)
 
-        def MockFindMachine():
+        def MockFindMachine(verbose=True):
+            if verbose:
+                print(TESTMACHINE)
             return TESTMACHINE
 
         monkeypatch.setattr(create_env, 'find_machine', MockFindMachine)
