@@ -35,7 +35,7 @@ machine_list = {
 }
 
 
-def find_machine(parser=None, args=None):
+def find_machine(parser=None, args=None, verbose=True):
     for machine, i_am_this_machine in machine_list.items():
         """
         Since we don't expect uniform environments on all machines
@@ -43,7 +43,8 @@ def find_machine(parser=None, args=None):
         """
         try:
             if i_am_this_machine():
-                print(machine)
+                if verbose:
+                    print(machine)
                 return machine
         except(KeyError):
             """
@@ -58,7 +59,8 @@ def find_machine(parser=None, args=None):
             in the future
             """
             raise
-    print('NOT-FOUND')
+    if verbose:
+        print('NOT-FOUND')
     return 'NOT-FOUND'
 
 
