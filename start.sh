@@ -8,13 +8,24 @@ if [[ -z ${SPACK_MANAGER} ]]; then
     exit 125
 fi
 
+if [[ ! -x $(which python3) ]]; then
+    echo "Warning: spack-manager is only designed to work with python 3."
+    echo "You may use spack, but spack-manager specific commands will fail."
+fi
+
 ########################################################
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
-export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts
+export SPACK_DISABLE_LOCAL_CONFIG=1
+export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd
 source ${SPACK_ROOT}/share/spack/setup-env.sh
-export SPACK_MANAGER_MACHINE=$(${SPACK_MANAGER}/scripts/find_machine.py)
+
+if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
+    spack config --scope site add config:extensions:[${SPACK_MANAGER}/spack-scripting]
+fi
+
+export SPACK_MANAGER_MACHINE=$(spack manager find-machine)
 if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
 fi

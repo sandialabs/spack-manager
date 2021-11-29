@@ -1,5 +1,5 @@
 #! /bin/bash
 SPACK_MANAGER=$(pwd)
-export PYTHONPATH=${SPACK_MANAGER}/scripts
+source start.sh
 
-pytest --ignore spack
+spack unit-test --extension scripting

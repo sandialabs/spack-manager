@@ -1,5 +1,6 @@
 from spack import *
 #from spack.pkg.builtin.exawind import Exawind as bExawind
+from shutil import copyfile
 import os
 
 
@@ -73,7 +74,7 @@ class Exawind(CMakePackage, CudaPackage):
 
     @run_after('cmake')
     def copy_compile_commands(self):
-        if self.spec.satisfies('dev_path=*'):
+        source = os.path.join(self.build_directory, "compile_commands.json")
+        if self.spec.satisfies('dev_path=*') and os.path.isfile(source):
             target = os.path.join(self.stage.source_path, "compile_commands.json")
-            source = os.path.join(self.build_directory, "compile_commands.json")
             copyfile(source, target)

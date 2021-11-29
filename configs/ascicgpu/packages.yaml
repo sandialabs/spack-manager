@@ -15,18 +15,13 @@ packages:
       prefix: /projects/sierra/linux_rh7/install/cmake/3.20.0/bin/cmake
   openmpi:
     externals:
-    - spec: openmpi@4.0.5%gcc@7.2.0
+    - spec: openmpi@4.0.5
       modules:
       - sierra-mpi/openmpi/4.0.5
       prefix: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.5-nvidia-11.2.1-RHEL7/
     buildable: false
   cuda:
-    externals:
-    - spec: cuda@11.2.1%gcc@7.2.0 ^openmpi@4.0.5
-      modules:
-      - sierra-compiler/nvidia/11.2.1
-      prefix: /projects/sierra/linux_rh7/SDK/compilers/nvidia/cuda_11.2.1/
-    buildable: false
+    version: [11.2.1]
   python:
     version: [3.6.10]
     buildable: false
