@@ -12,7 +12,5 @@ compilers:
       modules:
       - PrgEnv-gnu
       - gcc/9.3.0
-      - libfabric/1.11.0.4.75
-      - cray-mpich/8.1.10
       environment: {}
       extra_rpaths: []
