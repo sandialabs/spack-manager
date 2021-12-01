@@ -21,8 +21,6 @@ if [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
   cmd "module load python/3.7.7"
   cmd "module load binutils"
 elif [ "${SPACK_MANAGER_MACHINE}" == 'spock' ]; then
-  cmd "module unload rocm"
-  cmd "module load rocm/4.3.0"
   cmd "module load binutils"
 elif [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   cmd "source /nopt/nrel/ecom/hpacf/env.sh"
