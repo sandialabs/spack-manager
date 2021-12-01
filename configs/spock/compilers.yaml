@@ -1,0 +1,16 @@
+compilers:
+  - compiler:
+      spec: gcc@9.3.0
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: sles15
+      target: any
+      modules:
+      - PrgEnv-gnu
+      - gcc/9.3.0
+      environment: {}
+      extra_rpaths: []

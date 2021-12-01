@@ -29,6 +29,7 @@ machine_list = {
     'eagle': lambda: os.environ['NREL_CLUSTER'] == 'eagle',
     'rhodes': lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
     'summit': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
+    'spock': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
     'snl-hpc': lambda:  is_snl_hpc(socket.gethostname()),
     'ascicgpu': lambda: 'ascicgpu' in socket.gethostname(),
     'darwin': lambda: sys.platform == 'darwin',
