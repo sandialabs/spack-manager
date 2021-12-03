@@ -1,3 +1,4 @@
+
 """
 A script for creating a new environment
 on a given machine
@@ -83,7 +84,6 @@ def create_env(parser, args):
         envcmd.env_activate_setup_parser(dumb_parser)
         activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--sh'])
         envcmd.env_activate(activate_args)
-
 
 
 def add_command(parser, command_dict):
