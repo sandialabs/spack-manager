@@ -12,9 +12,26 @@ packages:
     version: [4.3.0]
     buildable: false
     externals:
-      - spec: "hip@4.3.0%gcc@9.3.0"
+      - spec: "hip@4.3.0"
         modules:
           - rocm/4.3.0
+          - craype-accel-amd-gfx908
+  hsa-rocr-dev:
+    version: [4.3.0]
+    buildable: false
+    externals:
+      - spec: "hsa-rocr-dev@4.3.0"
+        modules:
+          - rocm/4.3.0
+          - craype-accel-amd-gfx908
+  llvm-amdgpu:
+    version: [4.3.0]
+    buildable: false
+    externals:
+      - spec: "llvm-amdgpu@4.3.0"
+        modules:
+          - rocm/4.3.0
+          - craype-accel-amd-gfx908
   all:
     compiler:
       - gcc@9.3.0

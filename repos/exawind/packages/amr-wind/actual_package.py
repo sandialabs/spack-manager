@@ -98,10 +98,8 @@ class AmrWind(CMakePackage, CudaPackage, ROCmPackage):
                 args.append(define('AMReX_CUDA_ARCH', amrex_arch))
 
         if '+rocm' in self.spec:
-            archs = self.spec.variants['amdgpu_target'].value
-            if archs != 'none':
-                arch_str = ",".join(archs)
-                args.append(define('AMReX_AMD_ARCH', arch_str))
+            targets = self.spec.variants['amdgpu_target'].value
+            args.append('-DAMReX_AMD_ARCH=' + ';'.join(str(x) for x in targets))
 
         if '+internal-amrex' in self.spec:
             args.append(self.define('AMR_WIND_USE_INTERNAL_AMREX', True))

@@ -15,6 +15,9 @@ class AmrWind(bAmrWind):
         if '+cuda' in spec:
             options.append(define('BUILD_SHARED_LIBS', False))
 
+        if '+rocm' in self.spec:
+            options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
+
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
