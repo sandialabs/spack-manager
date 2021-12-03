@@ -71,6 +71,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
         if spec.satisfies('+rocm'):
             args.append(define('EXAWIND_ENABLE_ROCM', True))
+            args.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
 
         return args
 
