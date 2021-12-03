@@ -1,4 +1,3 @@
-
 """
 A script for creating a new environment
 on a given machine
