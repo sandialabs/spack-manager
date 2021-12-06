@@ -12,14 +12,24 @@ packages:
     version: [4.3.0]
     buildable: false
     externals:
-      - spec: "hip@4.3.0%gcc@9.3.0"
-        modules:
-          - rocm/4.3.0
+      - spec: hip@4.3.0
+        prefix: /opt/rocm-4.3.0/hip
+  hsa-rocr-dev:
+    version: [4.3.0]
+    buildable: false
+    externals:
+      - spec: hsa-rocr-dev@4.3.0
+        prefix: /opt/rocm-4.3.0/hsa
+  llvm-amdgpu:
+    version: [4.3.0]
+    buildable: false
+    externals:
+      - spec: llvm-amdgpu@4.3.0
+        prefix: /opt/rocm-4.3.0/llvm
   all:
     compiler:
       - gcc@9.3.0
     providers:
-      mpi:
-        - cray-mpich@8.1.10
+      mpi: [cray-mpich@8.1.10]
       blas: [openblas]
       lapack: [openblas]

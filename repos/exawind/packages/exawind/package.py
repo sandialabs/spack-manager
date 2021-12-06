@@ -4,7 +4,7 @@ from shutil import copyfile
 import os
 
 
-class Exawind(CMakePackage, CudaPackage):
+class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     """Multi-application driver for Exawind project."""
 
     homepage = "https://github.com/Exawind/exawind-driver"
@@ -17,9 +17,9 @@ class Exawind(CMakePackage, CudaPackage):
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
     version('master', branch='main', submodules=True)
+
     variant('asan', default=False,
             description='turn on address sanitizer')
-
     variant('openfast', default=False,
             description='Enable OpenFAST integration')
     variant('hypre', default=True,
@@ -29,14 +29,17 @@ class Exawind(CMakePackage, CudaPackage):
     variant('nalu_wind_gpu', default=False,
             description='Enable Nalu-Wind on the GPU')
 
-    conflicts('+amr_wind_gpu', when='~cuda')
-    conflicts('+nalu_wind_gpu', when='~cuda')
+    conflicts('+amr_wind_gpu', when='~cuda~rocm')
+    conflicts('+nalu_wind_gpu', when='~cuda~rocm')
     conflicts('+amr_wind_gpu~nalu_wind_gpu', when='^amr-wind+hypre')
 
     for arch in CudaPackage.cuda_arch_values:
         depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu+cuda cuda_arch=%s' % arch)
         depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
         depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+
+    for arch in ROCmPackage.amdgpu_targets:
+        depends_on('amr-wind+rocm amdgpu_target=%s' % arch, when='+amr_wind_gpu+rocm amdgpu_target=%s' % arch)
 
     depends_on('nalu-wind+tioga')
     depends_on('amr-wind+netcdf+mpi')
@@ -65,6 +68,10 @@ class Exawind(CMakePackage, CudaPackage):
         if spec.satisfies('+cuda'):
             args.append(define('EXAWIND_ENABLE_CUDA', True))
             args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
+
+        if spec.satisfies('+rocm'):
+            args.append(define('EXAWIND_ENABLE_ROCM', True))
+            args.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
 
         return args
 

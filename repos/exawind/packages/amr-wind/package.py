@@ -3,7 +3,7 @@ from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
 from shutil import copyfile
 
-class AmrWind(bAmrWind):
+class AmrWind(bAmrWind, ROCmPackage):
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
 
@@ -14,6 +14,12 @@ class AmrWind(bAmrWind):
 
         if '+cuda' in spec:
             options.append(define('BUILD_SHARED_LIBS', False))
+
+        if '+rocm' in self.spec:
+            targets = self.spec.variants['amdgpu_target'].value
+            options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
+            options.append('-DAMR_WIND_ENABLE_ROCM=ON')
+            options.append('-DAMReX_AMD_ARCH=' + ';'.join(str(x) for x in targets))
 
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
