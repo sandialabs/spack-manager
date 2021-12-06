@@ -4,12 +4,13 @@ This is a simple collection of scripts to unify spack usage across multiple mach
 
 Spack is included as a submodule for now to ensure that all the systems are running the same (or close to the same) spack version.
 
-Most of the functionality relies on defining the `SPACK_MANAGER` environment variable in your environment prior to running these i.e. `.bashrc` or `.bash_profile`.  This mainly serves as an absolute reference and could be replaced with local references in the future.
+Most of the functionality relies on defining the `SPACK_MANAGER` environment variable in your environment prior to running any scripts or features in spack-manager.  This mainly serves as an absolute reference and could be replaced with local references in the future.
 
 The main goals of `spack-manager` are to:
 
   1) Provide a sycronized [spack](https://github.com/spack/spack) version across multiple machines and platforms
   2) Organize package extensions and tools for features that we a) don't want in the main spack repo or b) need quick fixes that should then be merged into spack
+  3) Create a uniform framework for developing, testing and deploying specific software stacks across multiple platforms.
 
 There are a collection of scripts that will help with:
   
