@@ -32,11 +32,11 @@ class AmrWindNightly(bAmrWind):
         spec = self.spec
         define = CMakePackage.define
         if spec.variants['host_name'].value == 'default':
-            machine = find_machine(verbose=False)
+            machine = find_machine(verbose=False, full_machine_name=True)
             if machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
-                spec.variants['host_name'].value = fm.machine_with_domain_list[machine]
+                spec.variants['host_name'].value = machine
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('AMR_WIND_DIR', self.stage.source_path),

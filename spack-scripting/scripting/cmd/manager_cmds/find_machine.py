@@ -3,6 +3,12 @@ import socket
 import sys
 
 
+class MachineData:
+    def __init__(self, test, full_machine_name):
+        self.i_am_this_machine=test
+        self.full_machine_name=full_machine_name
+
+
 def is_cee(hostname):
     known_hosts = ('cee', 'ews', 'ecs', 'hpws')
     for k in known_hosts:
@@ -26,49 +32,33 @@ match
 """
 machine_list = {
     # SNL
-    'cee': lambda: is_cee(socket.gethostname()),
-    'snl-hpc': lambda: is_snl_hpc(socket.gethostname()),
-    'ascicgpu': lambda: 'ascicgpu' in socket.gethostname(),
+    'cee': MachineData(lambda: is_cee(socket.gethostname()), 'cee.snl.gov'),
+    'snl-hpc': MachineData(lambda: is_snl_hpc(socket.gethostname()), 'snl-hpc.snl.gov'),
+    'ascicgpu': MachineData(lambda: 'ascicgpu' in socket.gethostname(), 'ascicgpu.snl.gov'),
     # NREL
-    'eagle': lambda: os.environ['NREL_CLUSTER'] == 'eagle',
-    'rhodes': lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
-    'darwin': lambda: sys.platform == 'darwin',
+    'eagle': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'eagle', 'eagle.hpc.nrel.gov'),
+    'rhodes': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'rhodes', 'rhodes.hpc.nrel.gov'),
+    'darwin': MachineData(lambda: sys.platform == 'darwin', 'darwin.hpc.nrel.gov'),
     # OLCF
-    'summit': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
-    'spock': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
+    'summit': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit', 'summit.olcf.ornl.gov'),
+    'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock', 'spock.olcf.ornl.gov'),
 }
 
 
-"""
-Set up a dictionary with a key for fully qualified domain
-name and machine name
-"""
-machine_with_domain_list = {
-    # SNL
-    'cee': 'cee.hpc.snl.gov',
-    'snl-hpc': 'snl-hpc.hpc.snl.gov',
-    'ascicgpu': 'ascicgpu.hpc.snl.gov',
-    # NREL
-    'eagle': 'eagle.hpc.nrel.gov',
-    'rhodes': 'rhodes.hpc.nrel.gov',
-    'darwin': 'darwin.hpc.nrel.gov',
-    # OLCF
-    'summit': 'summit.olcf.ornl.gov',
-    'spock': 'spock.olcf.ornl.gov',
-}
-
-
-def find_machine(parser=None, args=None, verbose=True):
-    for machine, i_am_this_machine in machine_list.items():
+def find_machine(parser=None, args=None, verbose=True, full_machine_name=False):
+    for machine_name, data in machine_list.items():
         """
         Since we don't expect uniform environments on all machines
         we bury our checks in a try/except
         """
         try:
-            if i_am_this_machine():
+            if data.i_am_this_machine():
                 if verbose:
-                    print(machine)
-                return machine
+                    print(machine_name)
+                if full_machine_name:
+                    return full_machine_name
+                else:
+                    return machine_name
         except(KeyError):
             """
             expect key errors when an environment variable is not defined
