@@ -21,7 +21,7 @@ def variant_peeler(var_str):
     return output
 
 class AmrWindNightly(bAmrWind):
-    """Extenstion of amr-wind for nightly build and test"""
+    """Extension of amr-wind for nightly build and test"""
 
     variant('host_name', default='default')
     variant('latest_amrex', default=False)
