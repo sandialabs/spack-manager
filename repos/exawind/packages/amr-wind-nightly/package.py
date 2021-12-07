@@ -6,6 +6,8 @@ from shutil import copyfile
 import inspect
 import re
 from spack.util.executable import ProcessError
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 def variant_peeler(var_str):
     """strip out everything but + variants and build types"""
@@ -30,6 +32,9 @@ class AmrWindNightly(bAmrWind):
         spec = self.spec
         define = CMakePackage.define
         if spec.variants['host_name'].value == 'default':
+            machine = find_machine(verbose=False)
+            spec.variants['host_name'].value = fm.machine_with_domain_list[machine]
+        else:
             spec.variants['host_name'].value = spec.format('{architecture}')
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),

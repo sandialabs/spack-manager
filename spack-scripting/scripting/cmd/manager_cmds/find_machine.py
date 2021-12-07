@@ -20,19 +20,41 @@ def is_snl_hpc(hostname):
 
 
 """
-setup a dictionary with a key for machine name and checker function
-for value. the checker function should return true for the machine
+Set up a dictionary with a key for machine name and checker function
+for value - the checker function should return true for the machine
 match
 """
 machine_list = {
+    # SNL
     'cee': lambda: is_cee(socket.gethostname()),
+    'snl-hpc': lambda: is_snl_hpc(socket.gethostname()),
+    'ascicgpu': lambda: 'ascicgpu' in socket.gethostname(),
+    # NREL
     'eagle': lambda: os.environ['NREL_CLUSTER'] == 'eagle',
     'rhodes': lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
+    'darwin': lambda: sys.platform == 'darwin',
+    # OLCF
     'summit': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
     'spock': lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
-    'snl-hpc': lambda:  is_snl_hpc(socket.gethostname()),
-    'ascicgpu': lambda: 'ascicgpu' in socket.gethostname(),
-    'darwin': lambda: sys.platform == 'darwin',
+}
+
+
+"""
+Set up a dictionary with a key for fully qualified domain
+name and machine name
+"""
+machine_with_domain_list = {
+    # SNL
+    'cee': 'cee.hpc.snl.gov',
+    'snl-hpc': 'snl-hpc.hpc.snl.gov',
+    'ascicgpu': 'ascicgpu.hpc.snl.gov',
+    # NREL
+    'eagle': 'eagle.hpc.nrel.gov',
+    'rhodes': 'rhodes.hpc.nrel.gov',
+    'darwin': 'darwin.hpc.nrel.gov',
+    # OLCF
+    'summit': 'summit.olcf.ornl.gov',
+    'spock': 'spock.olcf.ornl.gov',
 }
 
 
