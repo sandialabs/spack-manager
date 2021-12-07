@@ -5,8 +5,8 @@ import sys
 
 class MachineData:
     def __init__(self, test, full_machine_name):
-        self.i_am_this_machine=test
-        self.full_machine_name=full_machine_name
+        self.i_am_this_machine = test
+        self.full_machine_name = full_machine_name
 
 
 def is_cee(hostname):
@@ -32,16 +32,24 @@ match
 """
 machine_list = {
     # SNL
-    'cee': MachineData(lambda: is_cee(socket.gethostname()), 'cee.snl.gov'),
-    'snl-hpc': MachineData(lambda: is_snl_hpc(socket.gethostname()), 'snl-hpc.snl.gov'),
-    'ascicgpu': MachineData(lambda: 'ascicgpu' in socket.gethostname(), 'ascicgpu.snl.gov'),
+    'cee': MachineData(lambda: is_cee(socket.gethostname()),
+                       'cee.snl.gov'),
+    'snl-hpc': MachineData(lambda: is_snl_hpc(socket.gethostname()),
+                           'snl-hpc.snl.gov'),
+    'ascicgpu': MachineData(lambda: 'ascicgpu' in socket.gethostname(),
+                            'ascicgpu.snl.gov'),
     # NREL
-    'eagle': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'eagle', 'eagle.hpc.nrel.gov'),
-    'rhodes': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'rhodes', 'rhodes.hpc.nrel.gov'),
-    'darwin': MachineData(lambda: sys.platform == 'darwin', 'darwin.hpc.nrel.gov'),
+    'eagle': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'eagle',
+                         'eagle.hpc.nrel.gov'),
+    'rhodes': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
+                          'rhodes.hpc.nrel.gov'),
+    'darwin': MachineData(lambda: sys.platform == 'darwin',
+                          'darwin.hpc.nrel.gov'),
     # OLCF
-    'summit': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit', 'summit.olcf.ornl.gov'),
-    'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock', 'spock.olcf.ornl.gov'),
+    'summit': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
+                          'summit.olcf.ornl.gov'),
+    'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
+                         'spock.olcf.ornl.gov'),
 }
 
 
