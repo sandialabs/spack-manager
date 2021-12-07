@@ -20,15 +20,6 @@ packages:
   hdf5:
     version: [1.10.6]
     variants: +mpi+cxx+hl
-  python:
-    version: [3.6.10]
-    buildable: false
-    externals:
-    - spec: python@2.7.10
-      prefix: /projects/sierra/linux_rh7/install/Python/2.7/
-    - spec: python@3.6.10
-      modules:
-      - sierra-python/3.6.10
   zlib:
     version: [1.2.5]
     buildable: false
