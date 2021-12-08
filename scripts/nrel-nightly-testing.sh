@@ -18,7 +18,7 @@ cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/amr-wind"
 
 # Setup and activate Spack environment
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
-YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_testing.yaml"
+YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate ${EXAWIND_ENV_DIR}"
 
