@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/bash -l
+
+# Trap and kill background processes
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 cmd() {
   echo "+ $@"
@@ -29,7 +32,9 @@ cmd "nice -n19 ionice -c3 spack uninstall -a -y amr-wind-nightly || true"
 
 # Concretize environment and run tests
 cmd "nice -n19 ionice -c3 spack concretize -f"
-cmd "nice -n19 ionice -c3 spack install"
+for i in {1..2}; do
+  cmd "nice -n19 ionice -c3 spack install" &
+done; wait
 
 # Save gold files
 DATE=$(date +%Y-%m-%d-%H-%M)
