@@ -6,6 +6,8 @@ from shutil import copyfile
 import inspect
 import re
 from spack.util.executable import ProcessError
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 def variant_peeler(var_str):
     """strip out everything but + variants and build types"""
@@ -19,7 +21,7 @@ def variant_peeler(var_str):
     return output
 
 class AmrWindNightly(bAmrWind):
-    """Extenstion of amr-wind for nightly build and test"""
+    """Extension of amr-wind for nightly build and test"""
 
     variant('host_name', default='default')
     variant('latest_amrex', default=False)
@@ -30,7 +32,11 @@ class AmrWindNightly(bAmrWind):
         spec = self.spec
         define = CMakePackage.define
         if spec.variants['host_name'].value == 'default':
-            spec.variants['host_name'].value = spec.format('{architecture}')
+            machine = find_machine(verbose=False, full_machine_name=True)
+            if machine == 'NOT-FOUND':
+                spec.variants['host_name'].value = spec.format('{architecture}')
+            else:
+                spec.variants['host_name'].value = machine
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('AMR_WIND_DIR', self.stage.source_path),
