@@ -30,14 +30,12 @@ class AmrWind(bAmrWind, ROCmPackage):
         if '+mpi' in spec:
             options.append(define('MPI_ROOT', spec['mpi'].prefix))
 
-        # saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'tmp', 'tmp_golds', 'amr-wind')
-        # current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
-        # linked_golds = os.path.join(self.stage.source_path, "test", "AMR-WindGoldFiles")
-        # Make this a variant in the future
-        # options.append(define('AMR_WIND_SAVE_GOLDS', False))
-        # options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
-        # if not os.path.lexists(linked_golds):
-        #     os.symlink(current_golds, linked_golds)
+        # Make directories a variant in the future
+        saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
+        current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
+        options.append(define('AMR_WIND_SAVE_GOLDS', True))
+        options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
+        options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
 
         return options
 
