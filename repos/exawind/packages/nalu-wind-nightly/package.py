@@ -34,7 +34,11 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         spec = self.spec
         define = CMakePackage.define
         if spec.variants['host_name'].value == 'default':
-            spec.variants['host_name'].value = spec.format('{architecture}')
+            machine = find_machine(verbose=False, full_machine_name=True)
+            if machine == 'NOT-FOUND':
+                spec.variants['host_name'].value = spec.format('{architecture}')
+            else:
+                spec.variants['host_name'].value = machine
         if spec.variants['extra_name'].value == 'default':
             extra_name = spec.format('-{compiler}')
             #var = spec.format('{variants}')

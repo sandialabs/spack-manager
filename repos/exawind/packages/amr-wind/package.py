@@ -7,6 +7,13 @@ class AmrWind(bAmrWind, ROCmPackage):
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
 
+    variant('asan', default=False,
+            description='Turn on address sanitizer')
+
+    def setup_build_environment(self, env):
+        if '+asan' in self.spec:
+            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer")
+
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
