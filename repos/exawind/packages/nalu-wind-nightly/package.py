@@ -6,6 +6,8 @@ from shutil import copyfile
 import inspect
 import re
 from spack.util.executable import ProcessError
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 def variant_peeler(var_str):
     """strip out everything but + variants and build types"""
