@@ -27,7 +27,7 @@ class NaluWind(bNaluWind):
         spec = self.spec
         define = CMakePackage.define
         options = super(NaluWind, self).cmake_args()
-        options.append(self.define_from_variant('CAMKE_CXX_STD', 'cxxstd'))
+        options.append(self.define_from_variant('CMAKE_CXX_STD', 'cxxstd'))
 
         if  spec.satisfies('dev_path=*'):
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
