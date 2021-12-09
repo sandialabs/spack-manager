@@ -36,6 +36,13 @@ class NaluWind(bNaluWind):
         if spec['mpi'].name == 'openmpi':
             options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
 
+        # Make directories a variant in the future
+        saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'nalu-wind')
+        current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'nalu-wind')
+        options.append(define('NALU_WIND_SAVE_GOLDS', True))
+        options.append(define('NALU_WIND_SAVED_GOLDS_DIR', saved_golds))
+        options.append(define('NALU_WIND_REFERENCE_GOLDS_DIR', current_golds))
+
         return options
 
     @run_after('cmake')

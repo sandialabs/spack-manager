@@ -18,6 +18,9 @@ cmd "source ${SPACK_MANAGER}/start.sh"
 cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/amr-wind"
+cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/nalu-wind"
+cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/nalu-wind"
+cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/nalu-wind"
 
 # Setup and activate Spack environment
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
@@ -39,3 +42,4 @@ done; wait
 # Save gold files
 DATE=$(date +%Y-%m-%d-%H-%M)
 cmd "nice -n19 ionice -c3 tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr_wind_golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
+cmd "nice -n19 ionice -c3 tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu_wind_golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
