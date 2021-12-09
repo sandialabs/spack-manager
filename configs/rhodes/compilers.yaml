@@ -99,9 +99,11 @@ compilers:
     environment:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
+      prepend_path: 
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2018.4-cykqqjzavipzalujhly6qtlgigoyvitb/compilers_and_libraries/linux/lib/intel64
-     #- /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
+     - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
     #flags:
     #  cflags: -O2 -xCORE-AVX2
     #  cxxflags: -O2 -xCORE-AVX2
@@ -119,9 +121,11 @@ compilers:
     environment:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
+      prepend_path: 
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2019.5-37mctejur3kz27ewdthhqdy65jpvkku7/compilers_and_libraries/linux/lib/intel64
-     #- /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
+     - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
     #flags:
     #  cflags: -O2 -xCORE-AVX2
     #  cxxflags: -O2 -xCORE-AVX2
@@ -139,9 +143,11 @@ compilers:
     environment:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2020.2-wehyqthdi6kpopfitwktzcy6vqikyc2c/compilers_and_libraries/linux/lib/intel64
-     #- /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
+     - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
     #flags:
     #  cflags: -O2 -xCORE-AVX2
     #  cxxflags: -O2 -xCORE-AVX2

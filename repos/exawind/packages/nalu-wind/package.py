@@ -8,7 +8,7 @@ class NaluWind(bNaluWind):
     version('master', branch='master', submodules=True)
 
     variant('asan', default=False,
-            description='turn on address sanitizer')
+            description='Turn on address sanitizer')
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')
