@@ -30,7 +30,7 @@ cmd "spack env activate ${EXAWIND_ENV_DIR}"
 
 # Uninstall packages to test
 cmd "nice -n19 ionice -c3 spack uninstall -a -y exawind-nightly || true"
-cmd "nice -n19 ionice -c3 spack uninstall -a -y naly-wind-nightly || true"
+cmd "nice -n19 ionice -c3 spack uninstall -a -y nalu-wind-nightly || true"
 cmd "nice -n19 ionice -c3 spack uninstall -a -y amr-wind-nightly || true"
 
 # Concretize environment and run tests
@@ -41,5 +41,5 @@ done; wait
 
 # Save gold files
 DATE=$(date +%Y-%m-%d-%H-%M)
-cmd "nice -n19 ionice -c3 tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr_wind_golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
-cmd "nice -n19 ionice -c3 tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu_wind_golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
+cmd "nice -n19 ionice -c3 tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
+cmd "nice -n19 ionice -c3 tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
