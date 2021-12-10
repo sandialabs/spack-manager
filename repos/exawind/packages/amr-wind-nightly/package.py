@@ -43,7 +43,9 @@ class AmrWindNightly(bAmrWind):
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
-        options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
+        cmake_options.remove('-G')
+        cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
+        options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
         options.append(define('HOST_NAME', spec.variants['host_name'].value))
         options.append(define('EXTRA_BUILD_NAME', spec.format('-{compiler}')))
         options.append(define('USE_LATEST_AMREX', spec.variants['latest_amrex'].value))
