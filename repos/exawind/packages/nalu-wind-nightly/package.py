@@ -28,8 +28,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     variant('host_name', default='default')
     variant('extra_name', default='default')
 
-    version('master', branch='master', submodules=True)
-
     phases = ['test']
 
     def ctest_args(self):
@@ -53,7 +51,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
-        options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
+        options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
         options.append(define('HOST_NAME', spec.variants['host_name'].value))
         options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
         options.append(define('NP', spack.config.get('config:build_jobs')))
