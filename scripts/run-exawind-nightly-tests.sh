@@ -3,7 +3,7 @@
 #Scheduled script that invokes the nightly Exawind tests
 
 #Example of cron schedule entry:
-#10 0 * * * /bin/bash -c "export ${SPACK_MANAGER}=${WHEREEVER} && cd ${SPACK_MANAGER}/logs && ${SPACK_MANAGER}/spack-manager/scripts/run-exawind-nightly-tests.sh 2>&1"
+#10 0 * * * /bin/bash -c "export ${SPACK_MANAGER}=${WHEREEVER} && cd ${SPACK_MANAGER}/logs && ${SPACK_MANAGER}/spack-manager/scripts/run-exawind-nightly-tests.sh > last-exawind-cron-test-script-invocation.txt 2>&1"
 
 cmd() {
   echo "+ $@"
