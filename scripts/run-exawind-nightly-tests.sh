@@ -36,6 +36,7 @@ cmd "spack env activate ${EXAWIND_ENV_DIR}"
 
 # Concretize environment and run tests
 cmd "nice -n19 ionice -c3 spack concretize -f"
+# Parallelize Spack install DAG
 for i in {1..2}; do
   cmd "nice -n19 ionice -c3 spack install" &
 done; wait
