@@ -20,9 +20,11 @@ class ExawindNightly(bExawind):
         define = CMakePackage.define
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
+        cmake_options.remove('-G')
+        cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
         if spec.variants['host_name'].value == 'default':
             spec.variants['host_name'].value = spec.format('{architecture}')
-        options.append(define('CMAKE_CONFIGURE_ARGS=',' '.join(v for v in cmake_options)))
+        options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
         options.append(define('CTEST_SOURCE_DIRECTORY', self.stage.source_path))
         options.append(define('CTEST_BINARY_DIRECTORY', self.build_directory))
         options.append(define('EXTRA_BUILD_NAME', spec.format('-{compiler}')))
