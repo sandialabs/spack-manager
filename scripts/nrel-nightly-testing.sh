@@ -22,17 +22,17 @@ cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/nalu-wind"
 
-# Setup and activate Spack environment
-cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
-cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
-YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
-cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
-cmd "spack env activate ${EXAWIND_ENV_DIR}"
-
 # Uninstall packages to test
 cmd "nice -n19 ionice -c3 spack uninstall -a -y exawind-nightly || true"
 cmd "nice -n19 ionice -c3 spack uninstall -a -y nalu-wind-nightly || true"
 cmd "nice -n19 ionice -c3 spack uninstall -a -y amr-wind-nightly || true"
+
+# Setup and activate Spack environment
+cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
+YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
+cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
+cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
+cmd "spack env activate ${EXAWIND_ENV_DIR}"
 
 # Concretize environment and run tests
 cmd "nice -n19 ionice -c3 spack concretize -f"
