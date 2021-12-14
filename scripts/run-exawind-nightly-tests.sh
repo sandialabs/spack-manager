@@ -18,18 +18,18 @@ set -e
 printf "Starting at $(date).\n"
 
 if [[ -z ${SPACK_MANAGER} ]]; then
-    printf "SPACK_MANAGER not set so setting it to ${PWD}/spack-manager\n"
+    printf "\nSPACK_MANAGER not set so setting it to ${PWD}/spack-manager\n"
     cmd "export SPACK_MANAGER=${PWD}"
 else
-    printf "SPACK_MANAGER set to ${SPACK_MANAGER}\n"
+    printf "\nSPACK_MANAGER set to ${SPACK_MANAGER}\n"
 fi
 
-printf "Activating Spack-Manager...\n"
+printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh"
 
 EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
 
-printf "Generating test script for submission...\n"
+printf "\nGenerating test script for submission...\n"
 cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
 #!/bin/bash -l
 
@@ -45,7 +45,7 @@ set -e
 
 printf "Starting at $(date)\n"
 
-printf "Setting up gold files directories...\n"
+printf "\nSetting up gold files directories...\n"
 cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/amr-wind"
@@ -53,12 +53,12 @@ cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/nalu-wind"
 
-printf "Uninstall nightly test packages...\n"
+printf "\nUninstall nightly test packages...\n"
 cmd "spack uninstall -a -y exawind-nightly || true"
 cmd "spack uninstall -a -y nalu-wind-nightly || true"
 cmd "spack uninstall -a -y amr-wind-nightly || true"
 
-printf "Setting up and activating Spack environoment...\n"
+printf "\nSetting up and activating Spack environoment...\n"
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
 YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
 cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
@@ -72,7 +72,7 @@ printf "\nspack install\n"
 time (for i in {1..2}; do spack install & done; wait)
 printf "\nTests end: $(date)\n"
 
-printf "Saving gold files...\n"
+printf "\nSaving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
