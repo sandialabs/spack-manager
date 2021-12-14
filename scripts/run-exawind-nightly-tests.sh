@@ -4,9 +4,9 @@
 
 #Example of cron schedule entries:
 #Exawind update spack-manager
-#0 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd ${SPACK_MANAGER} && ${SPACK_MANAGER}/scripts/update-spack-manager-repo.sh > ${SPACK_MANAGER}/logs/last-spack-manager-repo-update.txt 2>&1"
+#0 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd \${SPACK_MANAGER} && \${SPACK_MANAGER}/scripts/update-spack-manager-repo.sh > \${SPACK_MANAGER}/logs/last-spack-manager-repo-update.txt 2>&1"
 #Exawind tests
-#10 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd ${SPACK_MANAGER} && ${SPACK_MANAGER}/spack-manager/scripts/run-exawind-nightly-tests.sh > ${SPACK_MANAGER}/logs/last-exawind-test-script-invocation.txt 2>&1"
+#10 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd \${SPACK_MANAGER} && \${SPACK_MANAGER}/spack-manager/scripts/run-exawind-nightly-tests.sh > \${SPACK_MANAGER}/logs/last-exawind-test-script-invocation.txt 2>&1"
 
 cmd() {
   echo "+ $@"
