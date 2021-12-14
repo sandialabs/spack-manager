@@ -15,6 +15,8 @@ cmd() {
 
 set -e
 
+echo "Starting at $(date).\n"
+
 if [[ -z ${SPACK_MANAGER} ]]; then
     echo "SPACK_MANAGER not set so setting it to ${PWD}/spack-manager."
     cmd "export SPACK_MANAGER=${PWD}"
@@ -22,13 +24,12 @@ else
     echo "SPACK_MANAGER set to ${SPACK_MANAGER}"
 fi
 
-# Activate spack-manager
+echo "Activating Spack-Manager..."
 cmd "source ${SPACK_MANAGER}/start.sh"
 
 EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
-LOG_DIR=${SPACK_MANAGER}/logs
-cd ${LOG_DIR}
 
+echo "Generating test script for submission..."
 cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
 #!/bin/bash -l
 
@@ -42,7 +43,9 @@ cmd() {
 
 set -e
 
-# Setup gold file directories
+echo "Starting at $(date).\n"
+
+echo "Setting up gold files directories..."
 cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/amr-wind"
@@ -50,19 +53,19 @@ cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/nalu-wind"
 
-# Uninstall packages to test
+echo "Uninstall nightly test packages..."
 cmd "spack uninstall -a -y exawind-nightly || true"
 cmd "spack uninstall -a -y nalu-wind-nightly || true"
 cmd "spack uninstall -a -y amr-wind-nightly || true"
 
-# Setup and activate Spack environment
+echo "Setting up and activating Spack environoment..."
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
 YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
 cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate ${EXAWIND_ENV_DIR}"
 
-# Concretize environment and run tests
+echo "Running the tests..."
 cmd "spack concretize -f"
 # Parallelize Spack install DAG
 for i in {1..2}; do
@@ -70,17 +73,25 @@ for i in {1..2}; do
 done; wait
 
 # Save gold files
+echo "Saving gold files..."
 DATE=$(date +%Y-%m-%d-%H-%M)
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
+
+echo "\nDone at $(date)."
 _EOF
 
 cmd "chmod u+x ${EXAWIND_TEST_SCRIPT}"
 
+LOG_DIR=${SPACK_MANAGER}/logs
+DATE=$(date +%Y-%m-%d)
+
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
-  cd ${LOG_DIR} && sbatch -J test-exawind -N 1 -t 4:00:00 -A hfm -p short -o "%x.o%j" --gres=gpu:2 ${EXAWIND_TEST_SCRIPT}
+  (set -x; cd ${LOG_DIR} && sbatch -J test-exawind-${DATE} -N 1 -t 4:00:00 -A hfm -p short -o "%x.o%j" --gres=gpu:2 ${EXAWIND_TEST_SCRIPT})
 elif [ "${SPACK_MANAGER_MACHINE}" == 'rhodes' ]; then
-  cd ${LOG_DIR} && nice -n19 ionice -c3 ${EXAWIND_TEST_SCRIPT} &> "test-exawind-$(date +%Y-%m-%d).log"
+  (set -x; cd ${LOG_DIR} && nice -n19 ionice -c3 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
 elif [ "${SPACK_MANAGER_MACHINE}" == 'darwin' ]; then
-  cd ${LOG_DIR} && nice -n20 ${EXAWIND_TEST_SCRIPT} &> "test-exawind-$(date +%Y-%m-%d).log"
+  (set -x; cd ${LOG_DIR} && nice -n20 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
 fi
+
+echo "\nDone at $(date)."
