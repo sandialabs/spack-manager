@@ -64,13 +64,13 @@ YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests
 cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate ${EXAWIND_ENV_DIR}"
-
-printf "Running the tests...\n"
 cmd "spack concretize -f"
+
 # Parallelize Spack install DAG
-for i in {1..2}; do
-  cmd "spack install" &
-done; wait
+printf "\nTests start: $(date)\n"
+printf "\nspack install\n"
+time (for i in {1..2}; do spack install & done; wait)
+printf "\nTests end: $(date)\n"
 
 printf "Saving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
