@@ -24,9 +24,8 @@ fi
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh"
 
-EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
-
 printf "\nGenerating test script for submission...\n"
+EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
 cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
 #!/bin/bash -l
 
@@ -61,6 +60,14 @@ YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests
 cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate ${EXAWIND_ENV_DIR}"
+DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly
+if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
+  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone amr-wind-nightly@main"
+fi
+DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/hypre
+if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
+  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
+fi
 cmd "spack concretize -f"
 
 # Parallelize Spack install DAG
