@@ -75,6 +75,8 @@ cmd "tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.ta
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
 _EOF
 
+cmd "chmod u+x ${EXAWIND_TEST_SCRIPT}"
+
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   cd ${LOG_DIR} && sbatch -J test-exawind -N 1 -t 4:00:00 -A hfm -p short -o "%x.o%j" --gres=gpu:2 ${EXAWIND_TEST_SCRIPT}
 elif [ "${SPACK_MANAGER_MACHINE}" == 'rhodes' ]; then
