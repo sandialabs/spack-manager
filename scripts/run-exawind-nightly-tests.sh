@@ -63,10 +63,14 @@ cmd "spack env activate ${EXAWIND_ENV_DIR}"
 DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly
 if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
   cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone amr-wind-nightly@main"
+else
+  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --no-clone amr-wind-nightly@main"
 fi
 DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/hypre
 if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
   cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
+else
+  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --no-clone hypre@develop"
 fi
 cmd "spack concretize -f"
 
