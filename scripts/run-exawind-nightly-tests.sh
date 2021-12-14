@@ -2,11 +2,8 @@
 
 #Scheduled script that invokes the nightly Exawind tests
 
-#Example of cron schedule entries:
-#Exawind update spack-manager
-#0 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd \${SPACK_MANAGER} && \${SPACK_MANAGER}/scripts/update-spack-manager-repo.sh > \${SPACK_MANAGER}/logs/last-spack-manager-repo-update.txt 2>&1"
-#Exawind tests
-#10 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd \${SPACK_MANAGER} && \${SPACK_MANAGER}/scripts/run-exawind-nightly-tests.sh > \${SPACK_MANAGER}/logs/last-exawind-test-script-invocation.txt 2>&1"
+#Example of cron schedule entry:
+#0 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd \${SPACK_MANAGER} && \${SPACK_MANAGER}/scripts/update-spack-manager-repo.sh &> \${SPACK_MANAGER}/logs/last-spack-manager-repo-update.txt && \${SPACK_MANAGER}/scripts/run-exawind-nightly-tests.sh &> \${SPACK_MANAGER}/logs/last-exawind-test-script-invocation.txt"
 
 cmd() {
   echo "+ $@"
@@ -27,9 +24,8 @@ fi
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh"
 
-EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
-
 printf "\nGenerating test script for submission...\n"
+EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
 cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
 #!/bin/bash -l
 
@@ -64,6 +60,14 @@ YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests
 cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate ${EXAWIND_ENV_DIR}"
+DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly
+if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
+  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone amr-wind-nightly@main"
+fi
+DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/hypre
+if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
+  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
+fi
 cmd "spack concretize -f"
 
 # Parallelize Spack install DAG

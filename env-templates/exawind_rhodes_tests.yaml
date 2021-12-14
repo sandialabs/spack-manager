@@ -7,7 +7,7 @@ spack:
     #- 'exawind-nightly +hypre %gcc@8.4.0'
     #- 'exawind-nightly +hypre %intel@18.0.4 ^m4@1.4.18'
     #- 'exawind-nightly +hypre+asan %clang@10.0.0 build_type=Debug'
-    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@8.4.0 ^trilinos@develop'
+    #- 'nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@8.4.0 ^trilinos@develop'
     #- 'nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@8.4.0 ^trilinos@master'
     #- 'nalu-wind-nightly +fftw+tioga+hypre+openfast %intel@18.0.4 ^trilinos@develop ^m4@1.4.18'
     #- 'nalu-wind-nightly +fftw+tioga+hypre+openfast+asan %clang@10.0.0 ^trilinos@develop build_type=Debug'
@@ -15,3 +15,10 @@ spack:
     - 'amr-wind-nightly +hypre+masa+netcdf %gcc@8.4.0'
     #- 'amr-wind-nightly +hypre+masa+netcdf %intel@18.0.4 ^m4@1.4.18'
     #- 'amr-wind-nightly +hypre+masa+netcdf+asan %clang@10.0.0 build_type=Debug'
+  #develop:
+  #  amr-wind-nightly:
+  #    spec: amr-wind-nightly@main
+  #    path: $spack/../stage/develop-specs/amr-wind-nightly
+  #  hypre:
+  #    spec: hypre@develop
+  #    path: $spack/../stage/develop-specs/hypre
