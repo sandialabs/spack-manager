@@ -6,7 +6,6 @@ the views that modules use.
 """
 import spack.environment as ev
 import spack.util.executable
-from datetime import date
 import os
 import sys
 

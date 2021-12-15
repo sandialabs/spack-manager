@@ -60,25 +60,26 @@ YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests
 cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate ${EXAWIND_ENV_DIR}"
-DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly
-if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
-  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --no-clone amr-wind-nightly@main"
-else
-  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone amr-wind-nightly@main"
-fi
-DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/hypre
-if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
-  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --no-clone hypre@develop"
-else
-  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
-fi
-cmd "${SPACK_MANAGER}/scripts/spec_updater.py -e exawind"
+#DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly
+#if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
+#  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --no-clone amr-wind-nightly@main"
+#else
+#  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone amr-wind-nightly@main"
+#fi
+#DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/hypre
+#if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
+#  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --no-clone hypre@develop"
+#else
+#  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
+#fi
+#cmd "${SPACK_MANAGER}/scripts/spec_updater.py -e ${SPACK_MANAGER}/environments/exawind"
 cmd "spack concretize -f"
 
 # Parallelize Spack install DAG
 printf "\nTests started at: $(date)\n"
 printf "\nspack install\n"
-time (for i in {1..2}; do spack install & done; wait)
+#time (for i in {1..2}; do spack install & done; wait)
+time spack install
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
