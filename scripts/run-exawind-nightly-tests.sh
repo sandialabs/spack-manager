@@ -72,6 +72,7 @@ if [[ -d ${DEVELOP_SPEC_DIR} ]]; then
 else
   cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
 fi
+cmd "${SPACK_MANAGER}/scripts/spec_updater.py -e exawind"
 cmd "spack concretize -f"
 
 # Parallelize Spack install DAG
