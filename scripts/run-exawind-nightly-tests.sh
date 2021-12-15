@@ -78,8 +78,8 @@ cmd "spack concretize -f"
 # Parallelize Spack install DAG
 printf "\nTests started at: $(date)\n"
 printf "\nspack install\n"
-#time (for i in {1..2}; do spack install & done; wait)
-time spack install
+time (for i in {1..2}; do spack install & done; wait)
+#time spack install
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
