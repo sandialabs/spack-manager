@@ -6,6 +6,7 @@ from shutil import copyfile
 class AmrWind(bAmrWind, ROCmPackage):
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
+    depends_on('py-matplotlib')
 
     variant('asan', default=False,
             description='Turn on address sanitizer')

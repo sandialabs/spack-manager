@@ -39,7 +39,7 @@ class AmrWindNightly(bAmrWind):
                 spec.variants['host_name'].value = machine
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
-            define('AMR_WIND_DIR', self.stage.source_path),
+            define('SOURCE_DIR', self.stage.source_path),
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
