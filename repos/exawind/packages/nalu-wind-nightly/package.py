@@ -46,7 +46,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             #var = spec.format('{variants}')
             #temp = variant_peeler(var)
             #extra_name = extra_name + temp
-            spec.variants['extra_name'].value = extra_name
+            spec.variants['extra_name'].value = extra_name + '-' + str(spec['trilinos'].version)
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),
