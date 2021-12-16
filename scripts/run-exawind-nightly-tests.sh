@@ -30,7 +30,7 @@ cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
 #!/bin/bash -l
 
 # Trap and kill background processes
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+#trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 cmd() {
   echo "+ $@"
@@ -56,15 +56,16 @@ cmd "spack uninstall -a -y amr-wind-nightly || true"
 cmd "spack uninstall -a -y trilinos || true"
 cmd "spack uninstall -a -y hypre || true"
 
-printf "\nUpdating git repos in selected stage directories...\n"
-cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
-
 printf "\nSetting up and activating Spack environoment...\n"
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
 YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
-cmd "rm -f ${EXAWIND_ENV_DIR}/spack.yaml"
 cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
+
+printf "\nUpdating git repos in selected stage directories...\n"
+cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
+
+printf "\nConcretizing environment...\n"
 cmd "spack concretize -f"
 
 # Develop spec stuff that isn't working as desired
@@ -81,11 +82,10 @@ cmd "spack concretize -f"
 #  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
 #fi
 
-# Parallelize Spack install DAG
 printf "\nTests started at: $(date)\n"
-printf "\nspack install\n"
-time (for i in {1..2}; do spack install --dont-restage --keep-stage & done; wait)
-#time spack install --dont-restage --keep-stage
+#printf "\nspack install\n"
+#time (for i in {1..2}; do spack install --dont-restage --keep-stage & done; wait)
+cmd "time spack install --dont-restage --keep-stage"
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
@@ -97,9 +97,9 @@ STAGE_DIR=$(spack location -S)
 if [ ! -z "${STAGE_DIR}" ]; then
   #Haven't been able to find another robust way to rm with exclude
   printf "\nRemoving all unused staged directories...\n"
-  cmd "cd ${STAGE_DIR} && rm -rf spack-stage-a* spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-e* spack-stage-f* spack-stage-g* spack-stage-h* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-n* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
+  cmd "cd ${STAGE_DIR} && rm -rf spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
   #Would like something like this
-  #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "trilinos*" -exec rm -r {} \;
+  #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "spack-stage-trilinos*" -exec rm -r {} \;
 fi
 
 printf "\nDone at $(date)"
