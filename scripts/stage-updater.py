@@ -36,7 +36,8 @@ def UpdateDevelopmentSpecs(e):
                 path = spec.package.stage.source_path
                 version = str(spec.package.version)
                 origin = 'origin/' + version
-                print('Resetting git repo to %s in stage: %s' % (origin, path), flush=True)
+                print('Resetting git repo to %s in stage: %s'
+                    % (origin, path), flush=True)
                 os.chdir(path)
                 git('fetch', '--all')
                 git('reset', '--hard', origin)
