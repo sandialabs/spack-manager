@@ -1,10 +1,11 @@
 #!/usr/bin/env spack-python
 """
-This script will cycle over a list of environments
-and update them.  These environments should control
-the views that modules use.
+This script will cycle over all packages installed
+in an environment and update git source code
+repos for packages with specific names.
 """
 import spack.environment as ev
+from spack.environment import installed_specs
 import spack.util.executable
 import os
 import sys
@@ -14,11 +15,9 @@ git = spack.util.executable.which('git')
 
 def GetValidEnvironment(env):
     try:
-        # check for registerd env
         return ev.read(env)
     except:
         try:
-            # check for anonymous env
             ev.Environment(env)
         except:
             raise ev.SpackEnvironmentErrror(
@@ -29,28 +28,27 @@ def GetValidEnvironment(env):
 
 
 def UpdateDevelopmentSpecs(e):
+    package_names = ['trilinos', 'hypre']
     env = GetValidEnvironment(e)
     with env:
-        for name, entry in env.dev_specs.items():
-            os.chdir(os.path.join(env.path, entry['path']))
-            print('Updating develop spec for: %s' % name)
-            try:
-                git('fetch', '--unshallow', error=os.devnull)
-            except:
-                pass
-            git('fetch', '--all')
-            git('reset', '--hard', 'HEAD')
-            git('clean', '-df')
-            git('submodule', 'update')
-            git('status', '-uno')
+        for spec in installed_specs():
+            if spec.package.name in package_names:
+                path = spec.package.stage.source_path
+                os.chdir(path)
+                print('Updating stage for: %s' % path)
+                git('fetch', '--all')
+                git('reset', '--hard', 'HEAD')
+                git('clean', '-df')
+                git('submodule', 'update')
+                git('status', '-uno')
 
 
 def Parse(args):
     parser = argparse.ArgumentParser(
-        description='Cycle specs and update them')
+        description='Cycle spec stages and update them')
     parser.add_argument(
         '-e', '--environment', required=False,
-        help='Single environment with specs to update')
+        help='Single environment with spec stages to update')
     return parser.parse_args()
 
 
