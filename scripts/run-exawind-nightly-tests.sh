@@ -97,12 +97,12 @@ STAGE_DIR=$(spack location -S)
 if [ ! -z "${STAGE_DIR}" ]; then
   #Haven't been able to find another robust way to rm with exclude
   printf "\nRemoving all unused staged directories...\n"
-  cmd "cd ${STAGE_DIR} && rm -rf spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
+  cmd "cd ${STAGE_DIR} && rm -rf resource* spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-hd* spack-stage-hw* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-nc* spack-stage-net* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-ti* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
   #Would like something like this
   #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "spack-stage-trilinos*" -exec rm -r {} \;
 fi
 
-printf "\nDone at $(date)"
+printf "\nDone at $(date)\n"
 _EOF
 
 cmd "chmod u+x ${EXAWIND_TEST_SCRIPT}"
@@ -118,4 +118,4 @@ elif [ "${SPACK_MANAGER_MACHINE}" == 'darwin' ]; then
   (set -x; cd ${LOG_DIR} && nice -n20 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
 fi
 
-printf "\nDone at $(date)"
+printf "\nDone at $(date)\n"
