@@ -49,6 +49,16 @@ cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/nalu-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/nalu-wind"
 
+printf "\nSetting up Spack environoment...\n"
+cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
+YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
+cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
+
+printf "\nUpdating git repos in selected stage directories...\n"
+cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
+cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
+cmd "spack env deactivate"
+
 printf "\nUninstall nightly test packages...\n"
 cmd "spack uninstall -a -y exawind-nightly || true"
 cmd "spack uninstall -a -y nalu-wind-nightly || true"
@@ -56,16 +66,8 @@ cmd "spack uninstall -a -y amr-wind-nightly || true"
 cmd "spack uninstall -a -y trilinos || true"
 cmd "spack uninstall -a -y hypre || true"
 
-printf "\nSetting up and activating Spack environoment...\n"
-cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
-YAML_FILE="${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}_tests.yaml"
-cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
-cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
-
-printf "\nUpdating git repos in selected stage directories...\n"
-cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
-
 printf "\nConcretizing environment...\n"
+cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
 cmd "spack concretize -f"
 
 # Develop spec stuff that isn't working as desired
@@ -82,9 +84,9 @@ cmd "spack concretize -f"
 #  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
 #fi
 
-printf "\nTests started at: $(date)\n"
-#printf "\nspack install\n"
-#time (for i in {1..2}; do spack install --dont-restage --keep-stage & done; wait)
+printf "\nTests started at: $(date)\n\n"
+#printf "spack install --dont-restage --keep-stage\n"
+#time (for i in {1..4}; do spack install --dont-restage --keep-stage & done; wait)
 cmd "time spack install --dont-restage --keep-stage"
 printf "\nTests ended at: $(date)\n"
 
@@ -101,6 +103,9 @@ if [ ! -z "${STAGE_DIR}" ]; then
   #Would like something like this
   #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "spack-stage-trilinos*" -exec rm -r {} \;
 fi
+
+printf "\nDeactivating environment...\n"
+cmd "spack env deactivate"
 
 printf "\nDone at $(date)\n"
 _EOF

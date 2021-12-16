@@ -34,8 +34,8 @@ def UpdateDevelopmentSpecs(e):
         for spec in installed_specs():
             if spec.package.name in package_names:
                 path = spec.package.stage.source_path
-                os.chdir(path)
                 print('Updating stage for: %s' % path)
+                os.chdir(path)
                 git('fetch', '--all')
                 git('reset', '--hard', 'HEAD')
                 git('clean', '-df')
