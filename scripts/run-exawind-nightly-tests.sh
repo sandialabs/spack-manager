@@ -41,6 +41,12 @@ set -e
 
 printf "Starting at $(date)\n"
 
+printf "\nSetting up recommended environment for machine...\n"
+ENV_SCRIPT=${SPACK_MANAGER}/configs/${SPACK_MANAGER_MACHINE}/env.sh
+if [[ -f "${ENV_SCRIPT}" ]]; then
+  cmd "source ${ENV_SCRIPT}"
+fi
+
 printf "\nSetting up gold files directories...\n"
 cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/amr-wind"
 cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/amr-wind"
@@ -99,7 +105,7 @@ STAGE_DIR=$(spack location -S)
 if [ ! -z "${STAGE_DIR}" ]; then
   #Haven't been able to find another robust way to rm with exclude
   printf "\nRemoving all unused staged directories...\n"
-  cmd "cd ${STAGE_DIR} && rm -rf resource* spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-hd* spack-stage-hw* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-nc* spack-stage-net* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-ti* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
+  cmd "cd ${STAGE_DIR} && rm -rf resource* spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-h* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-nc* spack-stage-net* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-ti* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
   #Would like something like this
   #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "spack-stage-trilinos*" -exec rm -r {} \;
 fi

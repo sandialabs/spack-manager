@@ -28,16 +28,18 @@ def GetValidEnvironment(env):
 
 
 def UpdateDevelopmentSpecs(e):
-    package_names = ['trilinos', 'hypre']
+    package_names = ['trilinos']
     env = GetValidEnvironment(e)
     with env:
         for spec in installed_specs():
             if spec.package.name in package_names:
                 path = spec.package.stage.source_path
-                print('Updating stage for: %s' % path)
+                version = str(spec.package.version)
+                origin = 'origin/' + version
+                print('Resetting git repo to %s in stage: %s' % (origin, path), flush=True)
                 os.chdir(path)
                 git('fetch', '--all')
-                git('reset', '--hard', 'HEAD')
+                git('reset', '--hard', origin)
                 git('clean', '-df')
                 git('submodule', 'update')
                 git('status', '-uno')
