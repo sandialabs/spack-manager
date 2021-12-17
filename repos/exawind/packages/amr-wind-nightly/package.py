@@ -24,6 +24,7 @@ class AmrWindNightly(bAmrWind):
     """Extension of amr-wind for nightly build and test"""
 
     variant('host_name', default='default')
+    variant('extra_name', default='default')
     variant('latest_amrex', default=False)
 
     phases = ['test']
@@ -37,6 +38,10 @@ class AmrWindNightly(bAmrWind):
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
                 spec.variants['host_name'].value = machine
+        if spec.variants['extra_name'].value == 'default':
+            extra_name = spec.format('-{compiler}')
+            if spec.variants['latest_amrex'].value == True:
+                spec.variants['extra_name'].value = extra_name + '-latest-amrex'
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('SOURCE_DIR', self.stage.source_path),
@@ -47,7 +52,7 @@ class AmrWindNightly(bAmrWind):
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
         options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
         options.append(define('HOST_NAME', spec.variants['host_name'].value))
-        options.append(define('EXTRA_BUILD_NAME', spec.format('-{compiler}')))
+        options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
         options.append(define('USE_LATEST_AMREX', spec.variants['latest_amrex'].value))
         options.append(define('NP', spack.config.get('config:build_jobs')))
         options.append('-VV')
