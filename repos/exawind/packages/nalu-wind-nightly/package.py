@@ -42,11 +42,13 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             else:
                 spec.variants['host_name'].value = machine
         if spec.variants['extra_name'].value == 'default':
-            extra_name = spec.format('-{compiler}')
+            spec.variants['extra_name'].value = spec.format('-{compiler}')
             #var = spec.format('{variants}')
             #temp = variant_peeler(var)
-            #extra_name = extra_name + temp
-            spec.variants['extra_name'].value = extra_name + '-' + str(spec['trilinos'].version)
+            #spec.variants['extra_name'].value = spec.variants['extra_name'].value + temp
+            spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-tr-' + str(spec['trilinos'].version)
+            if '+cuda' in spec:
+                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda-' + str(spec['cuda'].version)
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),
