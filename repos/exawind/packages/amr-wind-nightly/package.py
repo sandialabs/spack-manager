@@ -41,7 +41,7 @@ class AmrWindNightly(bAmrWind):
         if spec.variants['extra_name'].value == 'default':
             spec.variants['extra_name'].value = spec.format('-{compiler}')
             if '+cuda' in spec:
-                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda-' + str(spec['cuda'].version)
+                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
             if spec.variants['latest_amrex'].value == True:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-latest-amrex'
         options = []
