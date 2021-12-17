@@ -4,6 +4,7 @@
 
 #Example of cron schedule entry:
 #0 0 * * * /bin/bash -c "export SPACK_MANAGER=/projects/ecp/exawind/exawind-testing/spack-manager && cd \${SPACK_MANAGER} && \${SPACK_MANAGER}/scripts/update-spack-manager-repo.sh &> \${SPACK_MANAGER}/logs/last-spack-manager-repo-update.txt && \${SPACK_MANAGER}/scripts/run-exawind-nightly-tests.sh &> \${SPACK_MANAGER}/logs/last-exawind-test-script-invocation.txt"
+# or just run it when in the spack-manager directory as ./scripts/run-exawind-nightly-tests.sh
 
 cmd() {
   echo "+ $@"
@@ -15,7 +16,7 @@ set -e
 printf "Starting at $(date).\n"
 
 if [[ -z ${SPACK_MANAGER} ]]; then
-    printf "\nSPACK_MANAGER not set so setting it to ${PWD}/spack-manager\n"
+    printf "\nSPACK_MANAGER not set so setting it to ${PWD}\n"
     cmd "export SPACK_MANAGER=${PWD}"
 else
     printf "\nSPACK_MANAGER set to ${SPACK_MANAGER}\n"
