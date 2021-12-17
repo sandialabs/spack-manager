@@ -32,33 +32,40 @@ class AmrWindNightly(bAmrWind):
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
+        machine = find_machine(verbose=False, full_machine_name=True)
         if spec.variants['host_name'].value == 'default':
-            machine = find_machine(verbose=False, full_machine_name=True)
             if machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
                 spec.variants['host_name'].value = machine
         if spec.variants['extra_name'].value == 'default':
             spec.variants['extra_name'].value = spec.format('-{compiler}')
+            if '+cuda' in spec:
+                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
             if spec.variants['latest_amrex'].value == True:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-latest-amrex'
-        options = []
-        options.extend([define('TESTING_ROOT_DIR', self.stage.path),
+        ctest_options = []
+        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('SOURCE_DIR', self.stage.source_path),
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         cmake_options.remove('-G')
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
-        options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
-        options.append(define('HOST_NAME', spec.variants['host_name'].value))
-        options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
-        options.append(define('USE_LATEST_AMREX', spec.variants['latest_amrex'].value))
-        options.append(define('NP', spack.config.get('config:build_jobs')))
-        options.append('-VV')
-        options.append('-S')
-        options.append(os.path.join(self.stage.source_path,'test','CTestNightlyScript.cmake'))
-        return options
+        if machine == 'eagle.hpc.nrel.gov':
+            ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
+            ctest_options.append(define('UNSET_TMPDIR_VAR', True))
+            if '+cuda' in spec:
+                cmake_options.append(define('GPUS_PER_NODE', '2'))
+        ctest_options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
+        ctest_options.append(define('HOST_NAME', spec.variants['host_name'].value))
+        ctest_options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
+        ctest_options.append(define('USE_LATEST_AMREX', spec.variants['latest_amrex'].value))
+        ctest_options.append(define('NP', spack.config.get('config:build_jobs')))
+        ctest_options.append('-VV')
+        ctest_options.append('-S')
+        ctest_options.append(os.path.join(self.stage.source_path,'test','CTestNightlyScript.cmake'))
+        return ctest_options
 
     def test(self, spec, prefix):
         """override base package to run ctest script for nightlies"""

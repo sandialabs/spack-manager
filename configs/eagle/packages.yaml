@@ -4,6 +4,8 @@ packages:
     externals:
     - spec: slurm@19.05.2
       prefix: /nopt/slurm/current
+      modules:
+        - slurm
   cuda:
     buildable: false
     version: [11.2.2]
@@ -27,6 +29,9 @@ packages:
     externals:
     - spec: mpt@2.22
       prefix: /opt/hpe/hpc/mpt/mpt-2.22
+      modules:
+        - mpt/2.22
+        - slurm
   all:
     compiler: [gcc@9.3.0, intel@18.0.4, clang@10.0.0]
     variants: build_type=Release +mpi
