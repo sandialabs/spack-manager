@@ -52,7 +52,7 @@ class AmrWindNightly(bAmrWind):
         cmake_options += self.cmake_args()
         cmake_options.remove('-G')
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
-        if machine == 'eagle':
+        if machine == 'eagle.hpc.nrel.gov':
             ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
             ctest_options.append(define('UNSET_TMPDIR_VAR', True))
             if '+cuda' in spec:
