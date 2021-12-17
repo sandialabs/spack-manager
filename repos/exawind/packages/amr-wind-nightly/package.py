@@ -39,9 +39,9 @@ class AmrWindNightly(bAmrWind):
             else:
                 spec.variants['host_name'].value = machine
         if spec.variants['extra_name'].value == 'default':
-            extra_name = spec.format('-{compiler}')
+            spec.variants['extra_name'].value = spec.format('-{compiler}')
             if spec.variants['latest_amrex'].value == True:
-                spec.variants['extra_name'].value = extra_name + '-latest-amrex'
+                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-latest-amrex'
         options = []
         options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('SOURCE_DIR', self.stage.source_path),
