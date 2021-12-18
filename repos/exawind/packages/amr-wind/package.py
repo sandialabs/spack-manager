@@ -39,12 +39,15 @@ class AmrWind(bAmrWind, ROCmPackage):
         if '+mpi' in spec:
             options.append(define('MPI_ROOT', spec['mpi'].prefix))
 
-        # Make directories a variant in the future
-        saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
-        current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
-        options.append(define('AMR_WIND_SAVE_GOLDS', True))
-        options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
-        options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
+        if '+tests' in spec:
+            # Make directories a variant in the future
+            saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
+            current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
+            os.makedirs(saved_golds, exist_ok=True)
+            os.makedirs(current_golds, exist_ok=True)
+            options.append(define('AMR_WIND_SAVE_GOLDS', True))
+            options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
+            options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
 
         return options
 
