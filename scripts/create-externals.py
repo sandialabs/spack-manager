@@ -14,12 +14,11 @@ template = r"""  {name}:
 """
 
 def write_spec(ext_file, view, spec):
-    # TODO: account for projections with the prefix
     ext_file.write(template.format(
         name = spec.name,
         short_spec = spec.short_spec,
-        prefix = view.root
-    ))
+        prefix = view.get_projection_for_spec(spec)
+        ))
 
 
 def create_external_yaml(args):
