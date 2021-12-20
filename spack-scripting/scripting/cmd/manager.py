@@ -3,6 +3,7 @@ import sys
 import manager_cmds.create_env
 import manager_cmds.develop
 import manager_cmds.find_machine
+import manager_cmds.external
 
 if sys.version_info[0] < 3:
     print('spack-manager commands only support python 3')
@@ -21,6 +22,7 @@ def setup_parser(subparser):
     manager_cmds.create_env.add_command(sp, _subcommands)
     manager_cmds.develop.add_command(sp, _subcommands)
     manager_cmds.find_machine.add_command(sp, _subcommands)
+    manager_cmds.external.add_command(sp, _subcommands)
 
 
 def manager(parser, args):
