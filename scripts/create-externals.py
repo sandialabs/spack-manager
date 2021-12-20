@@ -14,6 +14,7 @@ template = r"""  {name}:
 """
 
 def write_spec(ext_file, view, spec):
+    # TODO: account for projections with the prefix
     ext_file.write(template.format(
         name = spec.name,
         short_spec = spec.short_spec,
