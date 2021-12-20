@@ -1,0 +1,6 @@
+leak:libstdc++.so
+leak:libopen-pal
+leak:libmpi
+leak:libc++
+leak:hwloc_bitmap_alloc
+leak:libmasa
