@@ -7,6 +7,7 @@ class AmrWind(bAmrWind, ROCmPackage):
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('py-matplotlib', when='+masa')
+    depends_on('py-pandas', when='+masa')
 
     variant('asan', default=False,
             description='Turn on address sanitizer')
