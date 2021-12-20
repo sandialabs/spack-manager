@@ -16,6 +16,10 @@ class AmrWind(bAmrWind, ROCmPackage):
         if '+asan' in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer")
 
+    def setup_run_environment(self, env):
+        if '+asan' in self.spec:
+            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, 'sup.asan')))
+
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
