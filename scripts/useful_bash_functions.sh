@@ -5,7 +5,7 @@ function spack-start(){
 # function to quickly activate an environment
 function quick-activate(){
   spack-start
-  spack env activate -d $1
+  spack env activate -p -d $1
 }
 # function to wrap spack manager calls for shell modification
 # i.e. shell-wrapped-spack
