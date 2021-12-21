@@ -14,7 +14,7 @@ class AmrWind(bAmrWind, ROCmPackage):
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
-            env.append_flags('CXXFLAGS', '-fsanitize=address', '-fno-omit-frame-pointer')
+            env.append_flags('CXXFLAGS', '-fsanitize=address -fno-omit-frame-pointer')
             env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, 'sup.asan')))
         if '%intel' in self.spec:
             env.append_flags('CXXFLAGS', '-no-ipo')
