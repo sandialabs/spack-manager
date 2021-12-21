@@ -5,13 +5,11 @@ import llnl.util.tty as tty
 
 from manager_cmds.includes_creator import IncludesCreator
 
-import spack.cmd
-import spack.cmd.common.arguments as arguments
 import spack.environment as ev
 from spack.environment import config_dict
 
 
-def include_exists(env, name):
+def include_entry_exists(env, name):
     includes = config_dict(env.yaml).get('include', [])
     for entry in includes:
         if entry == name:
@@ -20,11 +18,15 @@ def include_exists(env, name):
 
 
 def add_include_entry(env, inc, prepend=True):
-    includes = config_dict(env.yaml).get('include', [])
+    include = config_dict(env.yaml).get('include', [])
+    if len(include) is 0:
+        # includes is missing, need to add it
+        env.yaml['spack'].insert(0, 'include', [])
+        include = config_dict(env.yaml).get('include', [])
     if prepend:
-        includes.insert(0, inc)
+        include.insert(0, inc)
     else:
-        includes.append(inc)
+        include.append(inc)
     env.write()
 
 
@@ -43,7 +45,7 @@ def external(parser, args):
         else:
             ext_name = 'external.yaml'
 
-        if include_exists(env, ext_name):
+        if include_entry_exists(env, ext_name):
             # merge the existing includes with the new one
             # giving precedent to the new data coming in
             merger = IncludesCreator()
@@ -64,7 +66,6 @@ def add_command(parser, command_dict):
                                   ' binaries', conflict_handler='resolve')
     external_prsr.add_argument('-d', '--dependencies', required=False, help='set all the dependencies of this package as externals')
     external_prsr.add_argument('-n', '--name', required=False, help='name the new include file for the externals with this name')
-    # todo mutualy exclusive group for blacklist an whitelists
     select_group = external_prsr.add_mutually_exclusive_group()
     select_group.add_argument('-w', '--whitelist', nargs='*', required=False, help='specs that should be added (omit all others)')
     select_group.add_argument('-b', '--blacklist', nargs='*', required=False, help='specs that should be omitted (add all others)')

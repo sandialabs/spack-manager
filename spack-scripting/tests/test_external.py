@@ -4,6 +4,8 @@ import pytest
 import spack.environment as ev
 import spack.main
 
+from spack.environment import config_dict
+
 env = spack.main.SpackCommand('env')
 manager = spack.main.SpackCommand('manager')
 
@@ -29,7 +31,7 @@ def test_errorsIfThereIsNoExternalYaml(tmpdir):
             manager('external',  e.view_path_default)
 
 
-def test_succesfulExecution(tmpdir):
+def test_firstTimeAddingExternal(tmpdir):
     yaml_file = r"""spack:
   view: true
   specs: [mpileaks]"""
@@ -47,3 +49,7 @@ def test_succesfulExecution(tmpdir):
             with open(extfile, 'w') as ff:
                 ff.write('packages:')
             manager('external',  e.view_path_default)
+            includes = config_dict(e.yaml).get('include', [])
+            assert 1 == len(includes)
+            assert 'external.yaml' == str(includes[0])
+            
