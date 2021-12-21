@@ -1,15 +1,25 @@
 import os
 
+import llnl.util.tty as tty
+
+from manager_cmds.includes_creator import IncludesCreator
+
 import spack.cmd
 import spack.cmd.common.arguments as arguments
+import spack.environment as ev
 
 
 def external(parser, args):
-    env = spack.cmd.require_active_env(cmd_name='external')
-    # check that directory of view exists
+    env = ev.active_environment()
+    if not env:
+        tty.die('spack manager external requires and active environment')
+    # check that directory of ext view exists
     fpath = os.path.join(args.path, 'external.yaml')
     if os.path.isfile(fpath):
         pass
+    else:
+        raise tty.die('No external.yaml file has been written'
+                      ' to the specified directory')
     # search for externals.yaml in the directory
     # copy the file and overwrite any that may exist (or merge?)
     # search for `external.yaml` in the spack:includes and add if it is missing
