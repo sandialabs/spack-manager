@@ -41,11 +41,17 @@ def external(parser, args):
         else:
             ext_name = 'external.yaml'
 
-        if not include_exists(env, ext_name):
+        if include_exists(env, ext_name):
+            # merge the existing includes with the new one
+            # giving precedent to the new data coming in
+            merger = IncludesCreator()
+            merger.add_scope('old', ext_name)
+            merger.add_scope('new', fpath)
+            merger.write_includes(ext_name)
+        else:
             add_include_entry(env, ext_name)
+            shutil.copy2(fpath, ext_name)
 
-        # overwrite file for now
-        shutil.copy2(fpath, ext_name)
     else:
         raise tty.die('No external.yaml file has been written'
                       ' to the specified directory')
