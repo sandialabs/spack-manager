@@ -29,6 +29,8 @@ def add_include_entry(env, inc, prepend=True):
 
 
 def external(parser, args):
+    if args.blacklist or args.whitelist:
+        tty.die('Blake and white lists have not been implemented yet')
     env = ev.active_environment()
     if not env:
         tty.die('spack manager external requires an active environment')
@@ -63,5 +65,8 @@ def add_command(parser, command_dict):
     external_prsr.add_argument('-d', '--dependencies', required=False, help='set all the dependencies of this package as externals')
     external_prsr.add_argument('-n', '--name', required=False, help='name the new include file for the externals with this name')
     # todo mutualy exclusive group for blacklist an whitelists
+    select_group = external_prsr.mutually_exclusive_group()
+    select_group.add_argument('-w', '--whitelist', nargs='*', required=False, help='specs that should be added (omit all others)')
+    select_group.add_argument('-b', '--blacklist', nargs='*', required=False, help='specs that should be omitted (add all others)')
     external_prsr.add_argument('path', help='The location of the external install directory')
     command_dict['external'] = external
