@@ -1,0 +1,4 @@
+leak:libstdc++
+leak:libmpi
+leak:libc++
+leak:libmasa
