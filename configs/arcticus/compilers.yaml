@@ -1,0 +1,14 @@
+compilers:
+  - compiler:
+      spec: intel@2021.4.0
+      paths:
+        cc: /soft/compilers/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/icx
+        cxx: /soft/compilers/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/icpx 
+        f77: /soft/compilers/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/ifx
+        fc: /soft/compilers/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/ifx
+      flags: {}
+      operating_system: opensuse_leap15
+      target: x86_64
+      modules: [gcc/9.2.0]
+      environment: {}
+      extra_rpaths: []
