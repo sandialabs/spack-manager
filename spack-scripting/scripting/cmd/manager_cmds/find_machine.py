@@ -24,6 +24,13 @@ def is_snl_hpc(hostname):
             return True
     return False
 
+def is_jlse(hostname):
+    known_hosts = ('arcticus')
+    for k in known_hosts:
+        if k in hostname:
+            return True
+    return False
+
 
 """
 Set up a dictionary with a key for machine name and checker function
@@ -50,6 +57,9 @@ machine_list = {
                           'summit.olcf.ornl.gov'),
     'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
                          'spock.olcf.ornl.gov'),
+    # JLSE
+    'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
+                            'arcticus.alcf.anl.gov')
 }
 
 

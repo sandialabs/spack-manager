@@ -1,0 +1,9 @@
+packages:
+  boost:
+    version: [1.78.0]
+    variants: ~shared+pic
+  all:
+    compiler: [intel]
+    variants: build_type=Release +mpi
+    providers:
+      mpi: [mpich]
