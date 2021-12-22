@@ -13,12 +13,13 @@ template = r"""  {name}:
     buildable: false
 """
 
+
 def write_spec(ext_file, view, spec):
     ext_file.write(template.format(
-        name = spec.name,
-        short_spec = spec.short_spec,
-        prefix = view.get_projection_for_spec(spec)
-        ))
+        name=spec.name,
+        short_spec=spec.short_spec,
+        prefix=view.get_projection_for_spec(spec)
+    ))
 
 
 def create_external_yaml(args):
@@ -40,7 +41,8 @@ def create_external_yaml(args):
 
 def parse(data):
     parser = argparse.ArgumentParser(
-        description='Create a list of externals from installed environment with view')
+        description='Create a list of externals from installed '
+        'environment with view')
     parser.add_argument(
         'env', help='environment to create the extenals with')
     parser.add_argument(
