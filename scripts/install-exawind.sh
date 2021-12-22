@@ -40,6 +40,7 @@ fi
 printf "\nActivating Spack environment...\n"
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind"
 
+# This should happen automatically with no compilers so we could probably remove this
 if [ "${SPACK_MANAGER_MACHINE}" == 'darwin' ]; then
   cmd "spack compiler find"
 fi
