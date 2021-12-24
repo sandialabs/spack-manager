@@ -43,11 +43,16 @@ def write_spec(view, spec):
         prefix=view.get_projection_for_spec(spec))
 
 
-def create_external_yaml_from_env(path, black_list, white_list, view_key):
+def create_external_yaml_from_env(path, view_key, black_list, white_list):
     env = ev.Environment(path)
 
-    # TODO add some error checking for if no views are present
-    view = env.views[view_key]
+    env.check_views()
+    try:
+        view = env.views[view_key]
+    except KeyError:
+        # not sure why I can't find SpackEnvironmentViewError from the module
+        raise ev.SpackEnvironmentError(
+            'Requested view %s does not exist in %s' % (view_key, path))
 
     specs = env._get_environment_specs()
     roots = env.roots()
@@ -76,16 +81,15 @@ def external(parser, args):
         tty.die('path must point to a spack environment')
 
     # copy the file and overwrite any that may exist (or merge?)
-    if args.name:
-        inc_name = args.name
-    else:
-        inc_name = 'externals.yaml'
+    inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
-    inc_name_abs = os.path.abspath(os.path.join(env.path, inc_name))
-    src = create_external_yaml_from_env(
-        args.path, args.blacklist, args.whitelist, args.view)
+    try:
+        src = create_external_yaml_from_env(
+            args.path, args.view, args.blacklist, args.whitelist)
+    except ev.SpackEnvironmentError as e:
+        tty.die(e.long_message)
 
-    if include_entry_exists(env, inc_name):
+    if include_entry_exists(env, args.name):
         if args.merge:
             # merge the existing includes with the new one
             # giving precedent to the new data coming in
@@ -96,7 +100,7 @@ def external(parser, args):
         else:
             final = src
     else:
-        add_include_entry(env, inc_name)
+        add_include_entry(env, args.name)
         final = src
 
     with open(inc_name_abs, 'w') as fout:
@@ -109,18 +113,17 @@ def add_command(parser, command_dict):
                             help='tools for configuring precompiled'
                             ' binaries', conflict_handler='resolve')
 
-    ext.add_argument('-d',
-                     '--dependencies', required=False,
-                     help='set all the dependencies of this package '
-                     'as externals')
     ext.add_argument('-n',
                      '--name', required=False,
                      help='name the new include file for the '
                      'externals with this name')
+
     ext.add_argument('-v', '--view', required=False, default='default',
                      help='name of view to use in the environment')
-    ext.add_argument('--merge', required=False, dest='merge',
-                     action='store_true', help='merge existing yaml files together')
+
+    ext.add_argument('-m', '--merge', required=False,
+                     action='store_true', help='merge existing yaml files '
+                     'together')
 
     select = ext.add_mutually_exclusive_group()
 
@@ -137,6 +140,7 @@ def add_command(parser, command_dict):
     ext.add_argument('path',
                      help='The location of the external install '
                      'directory')
-    ext.set_defaults(merge=False)
+
+    ext.set_defaults(merge=False, view='default', name='externals.yaml')
 
     command_dict['external'] = external
