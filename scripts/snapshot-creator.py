@@ -11,11 +11,31 @@ from manager_cmds.find_machine import find_machine
 
 import spack.environment as ev
 import spack.main
+import spack.util.spack_yaml as syaml
 
 from datetime import date
 
 arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
+add = spack.main.SpackCommand('add')
+
+base_spec = 'exawind+hypre+openfast'
+
+
+class SnapshotSpec:
+    def __init__(self, id='cpu', spec=base_spec):
+        self.id = id
+        self.spec = spec
+
+
+# a list of specs to build in the snapshot, 1 view will be created for each
+machine_specs = {
+    'darwin': [SnapshotSpec()],
+    'ascicgpu': [SnapshotSpec(),
+                 SnapshotSpec(
+                     id='cuda',
+                     spec=base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu cuda_arch=70')],
+}
 
 
 def parse(stream):
@@ -31,39 +51,27 @@ def parse(stream):
 def path_extension():
     return "exawind/snapshots/{arch}/{date}".format(
         date=date.today().strftime("%Y%m%d"),
-        arch=arch('-t'))
+        arch=arch('-t').strip())
 
 
-# TODO embed this info into find_machine.py
-cuda_machines = ['eagle', 'ascicgpu']
+def add_spec(env, extension, data, create_modules):
+    add(data.spec)
+    view_path = os.path.join(
+        os.environ['SPACK_MANAGER'], 'views', extension, data.id)
+    view_dict = {data.id: {
+        'root': view_path, 'select': '^' + data.spec
+    }}
+    with open(env.manifest_path, 'r') as f:
+        yaml = syaml.load(f)
+    # view yaml entry can also be a bool so first try to add to a dictionary,
+    # and if that fails overwrite entry as a dictionary
+    try:
+        yaml['spack']['view'].update(view_dict)
+    except AttributeError:
+        yaml['spack']['view'] = view_dict
 
-
-def add_specs(env, machine):
-
-    # ensure concretization is separate
-    env.yaml['spack']['concretization'] = 'separately'
-    specs = env.yaml['spack']['specs']
-    specs.append(
-        {'matrix': [['exawind+hypre+openfast+tioga'], ['~cuda']]}
-    )
-
-    # update matrix based on machine specific architecture
-    if machine in cuda_machines:
-        specs[-1]['matrix'][1].append(
-            '+cuda +amr_wind_gpu +nalu_wind_gpu cuda_arch=70')
-
-
-def add_views(env, machine, extension):
-    view = env.yaml['spack']['view']
-    prefix = os.path.join(os.environ['SPACK_MANAGER'], 'views')
-    # can we get away with just 1 view?
-    # todo link type as a parameter ?
-    view = {'base': {'root': os.path.join(prefix, extension, 'cpu'),
-                     'link_type': 'hardlink'}}
-
-
-def add_modules(env, machine, extension):
-    pass
+    with open(env.manifest_path, 'w') as f:
+        syaml.dump(yaml, stream=f, default_flow_style=False)
 
 
 def create_snapshots(args):
@@ -72,14 +80,16 @@ def create_snapshots(args):
     env_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
-    manager('create-env', '-d', env_path)
+    manager('create-env', '-d', env_path, '-s', 'exawind+hypre+openfast')
     with ev.Environment(env_path) as e:
+        with e.write_transaction():
+            e.yaml['spack']['concretization'] = 'separately'
+            e.write()
         # update the spack.yaml in memory so we down't have to carry
         # unnecessary templates for each machine
-        add_specs(e, machine)
-        add_views(e, machine, extension)
-        if args.modules:
-            add_modules(e, machine, extension)
+
+        for s in machine_specs[machine]:
+            add_spec(e, extension, s, args.modules)
 
         # e.concretize()
         # e.install_all()
