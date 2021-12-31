@@ -18,6 +18,8 @@ from datetime import date
 arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
+concretize = spack.main.SpackCommand('concretize')
+install = spack.main.SpackCommand('install')
 
 base_spec = 'exawind+hypre+openfast'
 
@@ -30,11 +32,12 @@ class SnapshotSpec:
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec()],
+    'darwin': [SnapshotSpec(spec='exawind')],
     'ascicgpu': [SnapshotSpec(),
                  SnapshotSpec(
                      id='cuda',
-                     spec=base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu cuda_arch=70')],
+                     spec=base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu'
+                     ' cuda_arch=70')],
 }
 
 
@@ -42,8 +45,12 @@ def parse(stream):
     parser = argparse.ArgumentParser(
         'create a timestamped snapshot for a Exawind machines')
     parser.add_argument(
-        '-m', '--modules', action='store_true', help="create modules to associate with each view in the environment")
-    parser.set_defaults(modules=False)
+        '-m', '--modules', action='store_true',
+        help="create modules to associate with each view in the environment")
+    parser.add_argument(
+        '--just-setup', action='store_true',
+        help='only create the environment, don\'t concretize or install')
+    parser.set_defaults(modules=False, just_setup=False)
 
     return parser.parse_args(stream)
 
@@ -54,12 +61,21 @@ def path_extension():
         arch=arch('-t').strip())
 
 
+def view_excludes(spec):
+    if '+cuda' in spec:
+        return ['+rocm', '~cuda']
+    elif '+rocm' in spec:
+        return ['~rocm', '+cuda']
+    else:
+        return ['+rocm', '+cuda']
+
+
 def add_spec(env, extension, data, create_modules):
     add(data.spec)
     view_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
-        'root': view_path, 'select': '^' + data.spec
+        'root': view_path, 'exclude': view_excludes(data.spec)
     }}
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
@@ -81,18 +97,21 @@ def create_snapshots(args):
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
     manager('create-env', '-d', env_path, '-s', 'exawind+hypre+openfast')
-    with ev.Environment(env_path) as e:
-        with e.write_transaction():
-            e.yaml['spack']['concretization'] = 'separately'
-            e.write()
-        # update the spack.yaml in memory so we down't have to carry
-        # unnecessary templates for each machine
+    e = ev.Environment(env_path)
+    with e.write_transaction():
+        e.yaml['spack']['concretization'] = 'separately'
+        e.write()
 
-        for s in machine_specs[machine]:
-            add_spec(e, extension, s, args.modules)
-
-        # e.concretize()
-        # e.install_all()
+    # update the spack.yaml in memory so we down't have to carry
+    # unnecessary templates for each machine
+    ev.activate(e)
+    for s in machine_specs[machine]:
+        add_spec(e, extension, s, args.modules)
+    # TODO refactor to use spack commands so we get the printing
+    if args.just_setup:
+        return
+    concretize('-f')
+    install()
 
 
 if __name__ == '__main__':
