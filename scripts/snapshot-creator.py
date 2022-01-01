@@ -18,8 +18,6 @@ from datetime import date
 arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
-concretize = spack.main.SpackCommand('concretize')
-install = spack.main.SpackCommand('install')
 
 base_spec = 'exawind+hypre+openfast'
 
@@ -90,13 +88,35 @@ def add_spec(env, extension, data, create_modules):
         syaml.dump(yaml, stream=f, default_flow_style=False)
 
 
+def add_develop_specs(env, develop_blacklist=['cmake', 'yaml-cpp']):
+    # we have to concretize to solve the dependency tree to extract
+    # the top level dependencies and make them develop specs.
+    # anything that is not a develop spec is not gauranteed to get installed
+    # since spack can reuse them for matching hashes
+
+    print('Setting up develop specs')
+    env.concretize()
+    dev_specs = set()
+    for root in env.roots():
+        dev_specs.add(root.format('{name}{@version}'))
+        for dep in root.dependencies():
+            if dep.name not in develop_blacklist:
+                dev_specs.add(dep.format('{name}{@version}'))
+
+    print(dev_specs, len(dev_specs))
+    for spec_string in dev_specs:
+        print('spack manager develop ' + spec_string)
+        manager('develop', spec_string)
+
+
 def create_snapshots(args):
     machine = find_machine(verbose=False)
     extension = path_extension()
     env_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
-    manager('create-env', '-d', env_path, '-s', 'exawind+hypre+openfast')
+    print('Creating snapshot environment')
+    manager('create-env', '-d', env_path)
     e = ev.Environment(env_path)
     with e.write_transaction():
         e.yaml['spack']['concretization'] = 'separately'
@@ -105,13 +125,21 @@ def create_snapshots(args):
     # update the spack.yaml in memory so we down't have to carry
     # unnecessary templates for each machine
     ev.activate(e)
-    for s in machine_specs[machine]:
+
+    spec_data = machine_specs[machine]
+
+    for s in spec_data:
         add_spec(e, extension, s, args.modules)
-    # TODO refactor to use spack commands so we get the printing
+
+    add_develop_specs(e)
     if args.just_setup:
         return
-    concretize('-f')
-    install()
+
+    concrete_specs = e.concretize(force=True)
+    ev.display_specs(concrete_specs)
+    e.install_specs()
+    with e.write_transaction():
+        e.regenerate_views()
 
 
 if __name__ == '__main__':
