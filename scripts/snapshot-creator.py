@@ -18,12 +18,15 @@ from datetime import date
 arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
+uninstall = spack.main.SpackCommand('uninstall')
+concertize = spack.main.SpackCommand('concretize')
+install = spack.main.SpackCommand('install')
 
 base_spec = 'exawind+hypre+openfast'
 
 
 class SnapshotSpec:
-    def __init__(self, id='cpu', spec=base_spec):
+    def __init__(self, id='host-only', spec=base_spec):
         self.id = id
         self.spec = spec
 
@@ -69,11 +72,14 @@ def view_excludes(spec):
 
 
 def add_spec(env, extension, data, create_modules):
+    ev.activate(env)
     add(data.spec)
+    ev.deactivate()
     view_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
-        'root': view_path, 'exclude': view_excludes(data.spec)
+        'root': view_path, 'exclude': view_excludes(data.spec),
+        'link_type': 'hard'
     }}
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
@@ -104,9 +110,11 @@ def add_develop_specs(env, develop_blacklist=['cmake', 'yaml-cpp']):
                 dev_specs.add(dep.format('{name}{@version}'))
 
     print(dev_specs, len(dev_specs))
+    ev.activate(env)
     for spec_string in dev_specs:
         print('spack manager develop ' + spec_string)
         manager('develop', spec_string)
+    ev.deactivate()
 
 
 def create_snapshots(args):
@@ -124,7 +132,6 @@ def create_snapshots(args):
 
     # update the spack.yaml in memory so we down't have to carry
     # unnecessary templates for each machine
-    ev.activate(e)
 
     spec_data = machine_specs[machine]
 
@@ -135,11 +142,11 @@ def create_snapshots(args):
     if args.just_setup:
         return
 
-    concrete_specs = e.concretize(force=True)
-    ev.display_specs(concrete_specs)
-    e.install_specs()
-    with e.write_transaction():
-        e.regenerate_views()
+    ev.activate(e)
+    #concrete_specs = e.concretize(force=True)
+    #ev.display_specs(concrete_specs)
+    concertize('-f')
+    install()
 
 
 if __name__ == '__main__':
