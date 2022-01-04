@@ -36,7 +36,7 @@ class SnapshotSpec:
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec(spec='exawind')],
+    'darwin': [SnapshotSpec(spec='exawind ^nccmp'), SnapshotSpec(id='default')],
     'ascicgpu': [SnapshotSpec(),
                  SnapshotSpec(
                      id='cuda',
@@ -102,21 +102,24 @@ def add_spec(env, extension, data, create_modules):
 
 def get_top_level_specs(env, blacklist=['cmake', 'yaml-cpp']):
     env.concretize()
-    top_specs = set()
+    top_specs = []
     for root in env.roots():
         if root.name in blacklist:
             continue
-        top_specs.add(root.format('{name}{@version}'))
+        top_specs.append(root)  # .format('{name}{@version}'))
         for dep in root.dependencies():
             if dep.name not in blacklist:
-                top_specs.add(dep.format('{name}{@version}'))
-    print('Top Level Specs:', top_specs)
+                top_specs.append(dep)  # .format('{name}{@version}'))
+    # remove any duplicates
+    top_specs = list(dict.fromkeys(top_specs))
+    print('Top Level Specs:', [s.name for s in top_specs])
     return top_specs
 
 
 def find_latest_git_hash(env, spec_name, assign=False):
+    print(spec_name)
     spec = env.matching_spec(spec_name)
-    version_dict = spec.package_class.version[spec.version]
+    version_dict = spec.package_class.versions[spec.version]
     keys = version_dict.keys()
 
     if 'branch' in keys:
@@ -135,6 +138,11 @@ def find_latest_git_hash(env, spec_name, assign=False):
 
     sha, _ = query[0].split('\t')
     return sha
+
+
+def overwrite_yaml_with_full_spec_and_git_hashes():
+    pass
+    #new = spec.format('{name}@')+ hash + spec.format('{variants}')
 
 
 def add_develop_specs(env, dev_specs):
@@ -179,6 +187,9 @@ def create_snapshots(args):
         add_spec(e, extension, s, args.modules)
 
     top_specs = get_top_level_specs(e)
+    for s in top_specs:
+        h = find_latest_git_hash(e, s)
+        print(s.name, h)
 
     if args.stop_after == 'create_env':
         return
