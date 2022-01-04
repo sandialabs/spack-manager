@@ -110,10 +110,11 @@ def get_top_level_specs(env, blacklist=['cmake', 'yaml-cpp']):
         for dep in root.dependencies():
             if dep.name not in blacklist:
                 top_specs.add(dep.format('{name}{@version}'))
+    print('Top Level Specs:', top_specs)
     return top_specs
 
 
-def find_latest_git_hash(env, spec_name):
+def find_latest_git_hash(env, spec_name, assign=False):
     spec = env.matching_spec(spec_name)
     version_dict = spec.package_class.version[spec.version]
     keys = version_dict.keys()
@@ -136,16 +137,14 @@ def find_latest_git_hash(env, spec_name):
     return sha
 
 
-def add_develop_specs(env):
+def add_develop_specs(env, dev_specs):
     # we have to concretize to solve the dependency tree to extract
     # the top level dependencies and make them develop specs.
     # anything that is not a develop spec is not gauranteed to get installed
     # since spack can reuse them for matching hashes
 
     print('Setting up develop specs')
-    dev_specs = get_top_level_specs(env)
 
-    print(dev_specs, len(dev_specs))
     ev.activate(env)
     for spec_string in dev_specs:
         print('spack manager develop ' + spec_string)
@@ -178,11 +177,14 @@ def create_snapshots(args):
 
     for s in spec_data:
         add_spec(e, extension, s, args.modules)
+
+    top_specs = get_top_level_specs(e)
+
     if args.stop_after == 'create_env':
         return
 
     if args.use_develop:
-        add_develop_specs(e)
+        add_develop_specs(e, top_specs)
 
     if args.stop_after == 'develop':
         return
