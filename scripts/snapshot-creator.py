@@ -129,7 +129,7 @@ def add_spec(env, extension, data, create_modules):
             'roots': {'tcl': module_path},
             'arch_folder': False,
             'tcl': {'projections': {
-                    'all': '%s/{name}-%s/{hash:4}' % (extension, data.id)},
+                    'all': '%s/{name}-%s' % (extension, data.id)},
                     'hash_length': 0,
                     'blacklist_implicits': True,
                     'blacklist': excludes}
