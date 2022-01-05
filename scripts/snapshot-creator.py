@@ -30,6 +30,10 @@ base_spec = 'exawind+hypre+openfast'
 blacklist = ['cuda', 'cmake', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
 
 
+def command(command, *args):
+    print(command(*args, fail_on_error=False))
+
+
 class SnapshotSpec:
     def __init__(self, id='default', spec=base_spec):
         self.id = id
@@ -88,10 +92,11 @@ def add_spec(env, extension, data, create_modules):
     ev.activate(env)
     add(data.spec)
     ev.deactivate()
+    excludes = view_excludes(data.spec)
     view_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
-        'root': view_path, 'exclude': view_excludes(data.spec),
+        'root': view_path, 'exclude': excludes,
         'link_type': 'hard'
     }}
     with open(env.manifest_path, 'r') as f:
@@ -104,6 +109,8 @@ def add_spec(env, extension, data, create_modules):
         yaml['spack']['view'] = view_dict
 
     if create_modules:
+        # we want cmake in the view, but not a module
+        excludes.append('cmake')
         module_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'modules')
         module_dict = {data.id: {
@@ -116,7 +123,7 @@ def add_spec(env, extension, data, create_modules):
                     'all': '%s/{name}-%s/{hash:4}' % (extension, data.id)},
                     'hash_length': 0,
                     'blacklist_implicits': True,
-                    'blacklist': ['cmake']}
+                    'blacklist': excludes}
         }}
         try:
             yaml['spack']['modules'].update(module_dict)
@@ -227,11 +234,11 @@ def use_develop_specs(env, specs):
         # with standard spack develop
         if 'trilinos' in spec_string:
             branch = spec_string.split('@')[-1]
-            print(manager('develop', '-rb',
+            command(manager,'develop', '-rb',
                     'https://github.com/trilinos/trilinos',
-                    branch, spec_string))
+                    branch, spec_string)
         else:
-            print(manager('develop', spec_string))
+            command(manager,'develop', spec_string)
     ev.deactivate()
 
 
@@ -244,7 +251,7 @@ def create_snapshots(args):
     print('Creating snapshot environment')
     # we add cmake so it is a root spec that will get added to the view
     # so people using the snapshot don't have to rebuild
-    print(manager('create-env', '-d', env_path, '-s', 'cmake'))
+    command(manager, 'create-env', '-d', env_path, '-s', 'cmake')
     e = ev.Environment(env_path)
     with e.write_transaction():
         e.yaml['spack']['concretization'] = 'separately'
@@ -270,14 +277,14 @@ def create_snapshots(args):
 
     ev.activate(e)
     print('Concretize')
-    print(concretize('-f'))
+    command(concretize, '-f')
     if args.stop_after == 'concretize':
         return
     print('Install')
-    print(install())
+    command(install)
     if args.modules:
         print('Generate module files')
-        print(module('tcl', 'refresh', '-y'))
+        command(module, 'tcl', 'refresh', '-y')
 
 
 if __name__ == '__main__':
