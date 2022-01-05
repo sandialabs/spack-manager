@@ -238,8 +238,7 @@ def use_develop_specs(env, specs):
 
     ev.activate(env)
     for spec_string in dev_specs:
-        print('spack manager develop ' + spec_string)
-        # special treatment for trilinos since if fails
+        # special treatment for trilinos since its clone fails
         # with standard spack develop
         if 'trilinos' in spec_string:
             branch = spec_string.split('@')[-1]
