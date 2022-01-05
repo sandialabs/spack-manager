@@ -31,6 +31,7 @@ blacklist = ['cuda', 'cmake', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
 
 
 def command(command, *args):
+    print('spack', command.command_name, *args)
     print(command(*args, fail_on_error=False))
 
 
