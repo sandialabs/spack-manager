@@ -21,6 +21,7 @@ git = spack.util.executable.which('git')
 arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
+concretize = spack.main.SpackCommand('concretize')
 install = spack.main.SpackCommand('install')
 module = spack.main.SpackCommand('module')
 
@@ -226,11 +227,11 @@ def use_develop_specs(env, specs):
         # with standard spack develop
         if 'trilinos' in spec_string:
             branch = spec_string.split('@')[-1]
-            manager('develop', '-rb',
+            print(manager('develop', '-rb',
                     'https://github.com/trilinos/trilinos',
-                    branch, spec_string)
+                    branch, spec_string))
         else:
-            manager('develop', spec_string)
+            print(manager('develop', spec_string))
     ev.deactivate()
 
 
@@ -243,7 +244,7 @@ def create_snapshots(args):
     print('Creating snapshot environment')
     # we add cmake so it is a root spec that will get added to the view
     # so people using the snapshot don't have to rebuild
-    manager('create-env', '-d', env_path, '-s', 'cmake')
+    print(manager('create-env', '-d', env_path, '-s', 'cmake'))
     e = ev.Environment(env_path)
     with e.write_transaction():
         e.yaml['spack']['concretization'] = 'separately'
@@ -269,15 +270,14 @@ def create_snapshots(args):
 
     ev.activate(e)
     print('Concretize')
-    concrete_specs = e.concretize(force=True)
-    ev.display_specs(concrete_specs)
+    print(concretize('-f'))
     if args.stop_after == 'concretize':
         return
     print('Install')
-    install('-v')
+    print(install())
     if args.modules:
         print('Generate module files')
-        module('tcl', 'refresh', '-y')
+        print(module('tcl', 'refresh', '-y'))
 
 
 if __name__ == '__main__':
