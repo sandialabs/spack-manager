@@ -31,11 +31,19 @@ blacklist = ['cuda', 'cmake', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
 
 
 def command(command, *args):
+    """
+    Execute a spack.main.SpackCommand uniformly
+    and add some print statements
+    """
     print('spack', command.command_name, *args)
     print(command(*args, fail_on_error=False))
 
 
 class SnapshotSpec:
+    """
+    Data structure for storing a tag that is not a hash
+    to represent the spec added to the spack.yaml
+    """
     def __init__(self, id='default', spec=base_spec):
         self.id = id
         self.spec = spec
@@ -235,11 +243,11 @@ def use_develop_specs(env, specs):
         # with standard spack develop
         if 'trilinos' in spec_string:
             branch = spec_string.split('@')[-1]
-            command(manager,'develop', '-rb',
+            command(manager, 'develop', '-rb',
                     'https://github.com/trilinos/trilinos',
                     branch, spec_string)
         else:
-            command(manager,'develop', spec_string)
+            command(manager, 'develop', spec_string)
     ev.deactivate()
 
 
