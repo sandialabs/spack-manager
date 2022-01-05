@@ -45,6 +45,9 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('amr-wind+netcdf+mpi')
     depends_on('tioga+shared~nodegid')
     depends_on('yaml-cpp@0.6:')
+    # not required but added so trilinos gets pickes up as a
+    # direct dependency when creating snapshots
+    depends_on('trilinos')
 
     depends_on('nalu-wind+openfast', when='+openfast')
     depends_on('amr-wind+openfast', when='+openfast')

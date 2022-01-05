@@ -21,8 +21,7 @@ spack:
 {includes}
   concretization: together
   view: false
-  specs:
-  - {spec}""")
+  specs: [{spec}]""")
 
 
 def create_env(parser, args):
