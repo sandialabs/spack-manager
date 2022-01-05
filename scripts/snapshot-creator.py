@@ -6,7 +6,6 @@ and any associated modules
 
 import argparse
 import os
-import re
 import sys
 from manager_cmds.find_machine import find_machine
 
@@ -14,7 +13,6 @@ import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
 import spack.util.executable
-from spack.version import VersionList
 
 from datetime import date
 
@@ -58,9 +56,11 @@ def parse(stream):
         '--stop_after', '-sa', choices=phases,
         help='stop script after this phase')
     parser.add_argument('--use_develop', '-ud', action='store_true',
-                        help='use develop specs for roots and their immediate dependencies')
+                        help='use develop specs for roots and their immediate '
+                             'dependencies')
     parser.add_argument('--name', '-n', required=False,
-                        help='naem the environment something other than the date')
+                        help='naem the environment something other than the '
+                        'date')
     parser.set_defaults(modules=False, use_develop=False, stop_after='install')
 
     return parser.parse_args(stream)
@@ -109,7 +109,8 @@ def add_spec(env, extension, data, create_modules):
             'prefix_inspections': {'bin': ['PATH']},
             'roots': {'tcl': module_path},
             'arch_folder': False,
-            'tcl': {'projections': {'all': '%s/{name}-%s/{hash:4}' % (extension, data.id)},
+            'tcl': {'projections': {
+                    'all': '%s/{name}-%s/{hash:4}' % (extension, data.id)},
                     'hash_length': 0,
                     'blacklist_implicits': True,
                     'blacklist': ['cmake']}
@@ -152,8 +153,9 @@ def find_latest_git_hash(spec):
         # already matched
         return None
     else:
-        raise Exception('no known git type for ' +
-                        spec.format('//{hash} ({name}{@version})'))
+        raise Exception(
+            'no known git type for ' + spec.format(
+                '//{hash} ({name}{@version})'))
 
     # get the matching entry and shas for github
     query = git('ls-remote', spec.package.git, ref,
@@ -218,11 +220,13 @@ def use_develop_specs(env, specs):
     ev.activate(env)
     for spec_string in dev_specs:
         print('spack manager develop ' + spec_string)
-        # special treatment for trilinos since if fails with standard spack develop
+        # special treatment for trilinos since if fails
+        # with standard spack develop
         if 'trilinos' in spec_string:
             branch = spec_string.split('@')[-1]
             manager('develop', '-rb',
-                    'https://github.com/trilinos/trilinos', branch, spec_string)
+                    'https://github.com/trilinos/trilinos',
+                    branch, spec_string)
         else:
             manager('develop', spec_string)
     ev.deactivate()
