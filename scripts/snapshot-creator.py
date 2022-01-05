@@ -26,6 +26,8 @@ module = spack.main.SpackCommand('module')
 
 base_spec = 'exawind+hypre+openfast'
 
+blacklist = ['cuda', 'cmake', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
+
 
 class SnapshotSpec:
     def __init__(self, id='default', spec=base_spec):
@@ -124,7 +126,7 @@ def add_spec(env, extension, data, create_modules):
         syaml.dump(yaml, stream=f, default_flow_style=False)
 
 
-def get_top_level_specs(env, blacklist=['cmake', 'yaml-cpp']):
+def get_top_level_specs(env, blacklist=blacklist):
     env.concretize()
     top_specs = []
     for root in env.roots():
@@ -183,7 +185,7 @@ def replace_versions_with_hashes(spec_string, hash_dict):
     return final
 
 
-def use_latest_git_hashes(env, top_specs, blacklist=['cmake', 'yaml-cpp']):
+def use_latest_git_hashes(env, top_specs, blacklist=blacklist):
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
 
