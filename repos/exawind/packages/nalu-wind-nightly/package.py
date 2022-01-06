@@ -46,7 +46,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             #var = spec.format('{variants}')
             #temp = variant_peeler(var)
             #spec.variants['extra_name'].value = spec.variants['extra_name'].value + temp
-            spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-tr@' + str(spec['trilinos'].version)
+            spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-trilinos@' + str(spec['trilinos'].version)
             if '+cuda' in spec:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
         options = []
