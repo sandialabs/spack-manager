@@ -32,11 +32,16 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     phases = ['test']
 
+    def setup_build_environment(self, env):
+        if '+cuda' in self.spec:
+            env.set("CUDA_LAUNCH_BLOCKING", "1")
+            env.set("CUDA_MANAGED_FORCE_DEVICE_ALLOC", "1")
+
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
+        machine = find_machine(verbose=False, full_machine_name=True)
         if spec.variants['host_name'].value == 'default':
-            machine = find_machine(verbose=False, full_machine_name=True)
             if machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
@@ -49,23 +54,26 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-trilinos@' + str(spec['trilinos'].version)
             if '+cuda' in spec:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
-        options = []
-        options.extend([define('TESTING_ROOT_DIR', self.stage.path),
+        ctest_options = []
+        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),
             define('BUILD_DIR', self.build_directory)])
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         cmake_options.remove('-G')
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
-        options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
-        options.append(define('HOST_NAME', spec.variants['host_name'].value))
-        options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
-        options.append(define('NP', spack.config.get('config:build_jobs')))
-        options.append('-VV')
-        options.append('-S')
-        options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
+        if machine == 'eagle.hpc.nrel.gov':
+            ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
+            ctest_options.append(define('UNSET_TMPDIR_VAR', True))
+        ctest_options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
+        ctest_options.append(define('HOST_NAME', spec.variants['host_name'].value))
+        ctest_options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
+        ctest_options.append(define('NP', spack.config.get('config:build_jobs')))
+        ctest_options.append('-VV')
+        ctest_options.append('-S')
+        ctest_options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
 
-        return options
+        return ctest_options
 
     def test(self, spec, prefix):
         """override base package to run ctest script for nightlies"""
