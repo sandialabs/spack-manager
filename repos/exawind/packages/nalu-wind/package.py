@@ -15,6 +15,7 @@ class NaluWind(bNaluWind):
 
     cxxstd=['14', '17']
     variant('cxxstd', default='14', values=cxxstd,  multi=False)
+    variant('tests', default=True, description='Activate regression tests')
 
     for std in cxxstd:
         depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
@@ -28,27 +29,26 @@ class NaluWind(bNaluWind):
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
-        options = super(NaluWind, self).cmake_args()
-        options.append(self.define_from_variant('CMAKE_CXX_STD', 'cxxstd'))
+        cmake_options = super(NaluWind, self).cmake_args()
+        cmake_options.append(self.define_from_variant('CMAKE_CXX_STD', 'cxxstd'))
 
         if  spec.satisfies('dev_path=*'):
-            options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
-            options.append(define('ENABLE_TESTS', True))
+            cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+            cmake_options.append(define('ENABLE_TESTS', True))
 
         if spec['mpi'].name == 'openmpi':
-            options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
+            cmake_options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
 
-        if self.run_tests or spec.satisfies('dev_path=*'):
-            # Make directories a variant in the future
+        if spec.satisfies('+tests') or self.run_tests or spec.satisfies('dev_path=*'):
             saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'nalu-wind')
             current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'nalu-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
-            options.append(define('NALU_WIND_SAVE_GOLDS', True))
-            options.append(define('NALU_WIND_SAVED_GOLDS_DIR', saved_golds))
-            options.append(define('NALU_WIND_REFERENCE_GOLDS_DIR', current_golds))
+            cmake_options.append(define('NALU_WIND_SAVE_GOLDS', True))
+            cmake_options.append(define('NALU_WIND_SAVED_GOLDS_DIR', saved_golds))
+            cmake_options.append(define('NALU_WIND_REFERENCE_GOLDS_DIR', current_golds))
 
-        return options
+        return cmake_options
 
     @run_after('cmake')
     def copy_compile_commands(self):

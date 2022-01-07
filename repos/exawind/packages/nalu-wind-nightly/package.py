@@ -41,11 +41,13 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         spec = self.spec
         define = CMakePackage.define
         machine = find_machine(verbose=False, full_machine_name=True)
+
         if spec.variants['host_name'].value == 'default':
             if machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
                 spec.variants['host_name'].value = machine
+
         if spec.variants['extra_name'].value == 'default':
             spec.variants['extra_name'].value = spec.format('-{compiler}')
             #var = spec.format('{variants}')
@@ -54,14 +56,18 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-trilinos@' + str(spec['trilinos'].version)
             if '+cuda' in spec:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
-        ctest_options = []
-        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
-            define('NALU_DIR', self.stage.source_path),
-            define('BUILD_DIR', self.build_directory)])
+
+        # Cmake options for ctest
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         cmake_options.remove('-G')
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
+
+        # Ctest options
+        ctest_options = []
+        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
+            define('NALU_DIR', self.stage.source_path),
+            define('BUILD_DIR', self.build_directory)])
         if machine == 'eagle.hpc.nrel.gov':
             ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
             ctest_options.append(define('UNSET_TMPDIR_VAR', True))

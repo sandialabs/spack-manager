@@ -44,14 +44,18 @@ class AmrWindNightly(bAmrWind):
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
             if spec.variants['latest_amrex'].value == True:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-latest-amrex'
-        ctest_options = []
-        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
-            define('SOURCE_DIR', self.stage.source_path),
-            define('BUILD_DIR', self.build_directory)])
+
+        # Cmake options for ctest
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         cmake_options.remove('-G')
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
+
+        # Ctest options
+        ctest_options = []
+        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
+            define('SOURCE_DIR', self.stage.source_path),
+            define('BUILD_DIR', self.build_directory)])
         if machine == 'eagle.hpc.nrel.gov':
             ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
             ctest_options.append(define('UNSET_TMPDIR_VAR', True))
@@ -65,6 +69,7 @@ class AmrWindNightly(bAmrWind):
         ctest_options.append('-VV')
         ctest_options.append('-S')
         ctest_options.append(os.path.join(self.stage.source_path,'test','CTestNightlyScript.cmake'))
+
         return ctest_options
 
     def test(self, spec, prefix):

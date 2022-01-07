@@ -22,37 +22,36 @@ class AmrWind(bAmrWind, ROCmPackage):
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
-        options = super(AmrWind, self).cmake_args()
+        cmake_options = super(AmrWind, self).cmake_args()
 
         if '+cuda' in spec:
-            options.append(define('BUILD_SHARED_LIBS', False))
+            cmake_options.append(define('BUILD_SHARED_LIBS', False))
 
         if '+rocm' in self.spec:
             targets = self.spec.variants['amdgpu_target'].value
-            options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
-            options.append('-DAMR_WIND_ENABLE_ROCM=ON')
-            options.append('-DAMReX_AMD_ARCH=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
+            cmake_options.append('-DAMR_WIND_ENABLE_ROCM=ON')
+            cmake_options.append('-DAMReX_AMD_ARCH=' + ';'.join(str(x) for x in targets))
 
         if spec['mpi'].name == 'openmpi':
-            options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
+            cmake_options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
         if spec.satisfies('dev_path=*'):
-            options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+            cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
         if '+mpi' in spec:
-            options.append(define('MPI_ROOT', spec['mpi'].prefix))
+            cmake_options.append(define('MPI_ROOT', spec['mpi'].prefix))
 
         if '+tests' in spec:
-            # Make directories a variant in the future
             saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
             current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
-            options.append(define('AMR_WIND_SAVE_GOLDS', True))
-            options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
-            options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
+            cmake_options.append(define('AMR_WIND_SAVE_GOLDS', True))
+            cmake_options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
+            cmake_options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
 
-        return options
+        return cmake_options
 
     @run_after('cmake')
     def copy_compile_commands(self):
