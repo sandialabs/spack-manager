@@ -1,5 +1,6 @@
 #! /usr/bin/env spack-python
 
+import os
 import spack.main
 import spack.environment as ev
 import snapshot_creator
@@ -18,13 +19,14 @@ def command(command, *args):
 # set up the snapshot
 print('Create Snapshot')
 args = snapshot_creator.parse(['--use_develop', '--modules', '--name', 'test'])
-snapshot_creator.create_snapshots(args)
-snapshot_path = '$SPACK_MANAGER/environments/exawind/snapshots/test'
+# snapshot_creator.create_snapshots(args)
+snapshot_path = os.path.join(os.environ['SPACK_MANAGER'],
+                             'environments/exawind/snapshots/skylake/test')
 print('Snapshot created at', snapshot_path)
 
 # set up the user environment
-env_path = '$SPACK_MANAGER/environments/test_externals'
-command(manager, 'create_env', '--directory', env_path, '--spec', 'nalu-wind')
+env_path = os.path.join(os.environ['SPACK_MANAGER'], 'environments/test_externals')
+command(manager, 'create-env', '--directory', env_path, '--spec', 'nalu-wind')
 ev.activate(ev.Environment(env_path))
 command(config, 'add', 'config:concretizer:original')
 command(manager, 'external', snapshot_path, '--blacklist', 'nalu-wind')
