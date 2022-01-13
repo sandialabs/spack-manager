@@ -25,7 +25,8 @@ snapshot_path = os.path.join(os.environ['SPACK_MANAGER'],
 print('Snapshot created at', snapshot_path)
 
 # set up the user environment
-env_path = os.path.join(os.environ['SPACK_MANAGER'], 'environments/test_externals')
+env_path = os.path.join(os.environ['SPACK_MANAGER'],
+                        'environments/test_externals')
 command(manager, 'create-env', '--directory', env_path, '--spec', 'nalu-wind')
 ev.activate(ev.Environment(env_path))
 command(config, 'add', 'config:concretizer:original')
