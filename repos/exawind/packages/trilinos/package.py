@@ -5,6 +5,8 @@ class Trilinos(bTrilinos):
     variant('stk_unit_tests', default=False,
             description='turn on STK unit tests')
 
+    patch('kokkos.patch', when='+cuda')
+
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
