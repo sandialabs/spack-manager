@@ -9,23 +9,23 @@ packages:
           - gcc/9.3.0
           - libfabric/1.11.0.4.75
   hip:
-    version: [4.3.0]
+    version: [4.5.0]
     buildable: false
     externals:
-      - spec: hip@4.3.0
-        prefix: /opt/rocm-4.3.0/hip
+      - spec: hip@4.5.0
+        prefix: /opt/rocm-4.5.0/hip
   hsa-rocr-dev:
-    version: [4.3.0]
+    version: [4.5.0]
     buildable: false
     externals:
-      - spec: hsa-rocr-dev@4.3.0
-        prefix: /opt/rocm-4.3.0/hsa
+      - spec: hsa-rocr-dev@4.5.0
+        prefix: /opt/rocm-4.5.0/hsa
   llvm-amdgpu:
-    version: [4.3.0]
+    version: [4.5.0]
     buildable: false
     externals:
-      - spec: llvm-amdgpu@4.3.0
-        prefix: /opt/rocm-4.3.0/llvm
+      - spec: llvm-amdgpu@4.5.0
+        prefix: /opt/rocm-4.5.0/llvm
   all:
     compiler:
       - gcc@9.3.0
