@@ -33,8 +33,9 @@ class Trilinos(bTrilinos, ROCmPackage):
                 env.set('CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
 
         if spec.satisfies('+rocm'):
-            # Using CXXFLAGS for hipcc which isn't in the spack wrappers
-            env.set('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE')
+            if '+stk' in spec:
+                # Using CXXFLAGS for hipcc which isn't in the spack wrappers
+                env.set('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE')
             if '+mpi' in spec:
                 env.set('OMPI_CXX', self.spec['hip'].hipcc)
                 env.set('MPICH_CXX', self.spec['hip'].hipcc)
@@ -47,7 +48,7 @@ class Trilinos(bTrilinos, ROCmPackage):
         define = CMakePackage.define
         options = super(Trilinos, self).cmake_args()
 
-        spack_microarches = []
+        amd_microarches = []
         if "+rocm" in spec:
             options.append(define('Kokkos_ENABLE_ROCM', False))
             options.append(define('Kokkos_ENABLE_HIP', True))
@@ -56,11 +57,10 @@ class Trilinos(bTrilinos, ROCmPackage):
             for amdgpu_target in spec.variants['amdgpu_target'].value:
                 if amdgpu_target != "none":
                     if amdgpu_target in self.amdgpu_arch_map:
-                        spack_microarches.append(
+                        amd_microarches.append(
                             self.amdgpu_arch_map[amdgpu_target])
-
-        for arch in spack_microarches:
-            options.append(self.define("Kokkos_ARCH_" + arch.upper(), True))
+            for arch in amd_microarches:
+                options.append(self.define("Kokkos_ARCH_" + arch.upper(), True))
 
         options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
 
