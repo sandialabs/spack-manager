@@ -52,6 +52,7 @@ class SnapshotSpec:
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
     'darwin': [SnapshotSpec()],
+    'rhodes': [SnapshotSpec()],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
                  SnapshotSpec(

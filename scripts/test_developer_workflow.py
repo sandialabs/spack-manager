@@ -19,7 +19,7 @@ def command(command, *args):
 # set up the snapshot
 print('Create Snapshot')
 args = snapshot_creator.parse(['--use_develop', '--modules', '--name', 'test'])
-# snapshot_creator.create_snapshots(args)
+snapshot_creator.create_snapshots(args)
 snapshot_path = os.path.join(os.environ['SPACK_MANAGER'],
                              'environments/exawind/snapshots/skylake/test')
 print('Snapshot created at', snapshot_path)
