@@ -4,7 +4,7 @@ from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
 
-class NaluWind(bNaluWind):
+class NaluWind(bNaluWind, ROCmPackage):
     version('master', branch='master', submodules=True)
 
     variant('asan', default=False,
@@ -12,6 +12,10 @@ class NaluWind(bNaluWind):
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')
+
+    for _arch in ROCmPackage.amdgpu_targets:
+        depends_on('trilinos@master,develop ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}'.format(_arch),
+                   when='+rocm amdgpu_target={0}'.format(_arch))
 
     cxxstd=['14', '17']
     variant('cxxstd', default='14', values=cxxstd,  multi=False)
@@ -35,6 +39,10 @@ class NaluWind(bNaluWind):
         if  spec.satisfies('dev_path=*'):
             cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
             cmake_options.append(define('ENABLE_TESTS', True))
+
+        if '+rocm' in self.spec:
+            cmake_options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
+            cmake_options.append(define('ENABLE_ROCM', True))
 
         if spec['mpi'].name == 'openmpi':
             cmake_options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
