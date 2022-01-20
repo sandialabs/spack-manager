@@ -120,7 +120,8 @@ def add_spec(env, extension, data, create_modules):
 
     if create_modules:
         # we want cmake in the view, but not a module
-        module_excludes = excludes.copy().append('cmake')
+        module_excludes = excludes.copy()
+        module_excludes.append('cmake')
         module_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'modules')
         module_dict = {data.id: {
@@ -198,7 +199,7 @@ def replace_versions_with_hashes(spec_string, hash_dict):
         if hash:
             version = hash
             new_specs.append('{n}@{v}%{r}'.format(n=name,
-                                              v=version, r=rest))
+                                                  v=version, r=rest))
     final = ' ^'.join(new_specs)
     assert '\n' not in final
     assert '\t' not in final
