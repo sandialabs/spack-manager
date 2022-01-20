@@ -120,7 +120,7 @@ def add_spec(env, extension, data, create_modules):
 
     if create_modules:
         # we want cmake in the view, but not a module
-        excludes.append('cmake')
+        module_excludes = excludes.copy().append('cmake')
         module_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'modules')
         module_dict = {data.id: {
@@ -133,7 +133,7 @@ def add_spec(env, extension, data, create_modules):
                     'all': '%s/{name}-%s' % (extension, data.id)},
                     'hash_length': 0,
                     'blacklist_implicits': True,
-                    'blacklist': excludes}
+                    'blacklist': module_excludes}
         }}
         try:
             yaml['spack']['modules'].update(module_dict)
