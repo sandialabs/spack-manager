@@ -36,7 +36,7 @@ def command(command, *args):
     and add some print statements
     """
     print('spack', command.command_name, *args)
-    print(command(*args, fail_on_error=False))
+    print(command(*args, fail_on_error=True))
 
 
 class SnapshotSpec:
@@ -120,7 +120,8 @@ def add_spec(env, extension, data, create_modules):
 
     if create_modules:
         # we want cmake in the view, but not a module
-        excludes.append('cmake')
+        module_excludes = excludes.copy()
+        module_excludes.append('cmake')
         module_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'modules')
         module_dict = {data.id: {
@@ -133,7 +134,7 @@ def add_spec(env, extension, data, create_modules):
                     'all': '%s/{name}-%s' % (extension, data.id)},
                     'hash_length': 0,
                     'blacklist_implicits': True,
-                    'blacklist': excludes}
+                    'blacklist': module_excludes}
         }}
         try:
             yaml['spack']['modules'].update(module_dict)
@@ -168,7 +169,8 @@ def find_latest_git_hash(spec):
         # git branch
         ref = 'refs/heads/%s' % version_dict['branch']
     elif 'tag' in keys:
-        ref = 'refs/tags/%s' % version_dict['tag']
+        # already matched
+        return None
     elif 'sha256' in keys:
         # already matched
         return None
@@ -196,10 +198,11 @@ def replace_versions_with_hashes(spec_string, hash_dict):
         hash = hash_dict.get(name)
         if hash:
             version = hash
-        new_specs.append('{n}@{v}%{r}'.format(n=name,
-                                              v=version, r=rest))
+            new_specs.append('{n}@{v}%{r}'.format(n=name,
+                                                  v=version, r=rest))
     final = ' ^'.join(new_specs)
     assert '\n' not in final
+    assert '\t' not in final
     return final
 
 
