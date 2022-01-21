@@ -8,6 +8,7 @@ packages:
     - gcc@8.3.1
     providers:
       mpi:
+      - mpich
       - openmpi
       blas:
       - netlib-lapack
@@ -16,17 +17,22 @@ packages:
     variants: +mpi build_type=Release
   boost:
     version: [1.68.0]
-  openmpi:
-    version: [4.0.3]
-    externals:
-    - spec: openmpi@4.0.3%intel@19.0.3.199
-      modules:
-      - openmpi-intel/4.0.3
   pkg-config:
     buildable: false
     externals:
     - spec: pkg-config@0.27.1
       prefix: /usr/bin/pkg-config
+  mpich:
+    variants: netmod=ucx device=ch4 +slurm+hydra
+  ucx:
+    variants: +mlx5-dv+optimizations
+  openmpi:
+    variants: ~vt+pmi schedulers=slurm fabrics=auto legacylaunchers=true 
+  slurm:
+    externals:
+    - spec: slurm@20.02.6
+      prefix: /usr
+    buildable: false
   openssl:
     version: [1.0.2]
     buildable: false
