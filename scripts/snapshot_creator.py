@@ -86,7 +86,7 @@ def parse(stream):
 def path_extension(name):
     return "exawind/snapshots/{arch}/{date}".format(
         date=name if name else date.today().strftime("%Y%m%d"),
-        arch=arch('-t').strip())
+        arch=arch('-b').strip())
 
 
 def view_excludes(spec):
