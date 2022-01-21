@@ -147,7 +147,7 @@ def add_spec(env, extension, data, create_modules):
 
 def get_top_level_specs(env, blacklist=blacklist):
     ev.activate(env)
-    concretize()
+    command(concretize)
     top_specs = []
     for root in env.roots():
         if root.name in blacklist:
