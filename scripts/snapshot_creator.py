@@ -146,7 +146,8 @@ def add_spec(env, extension, data, create_modules):
 
 
 def get_top_level_specs(env, blacklist=blacklist):
-    env.concretize()
+    ev.activate(env)
+    command(concretize)
     top_specs = []
     for root in env.roots():
         if root.name in blacklist:
@@ -158,6 +159,7 @@ def get_top_level_specs(env, blacklist=blacklist):
     # remove any duplicates
     top_specs = list(dict.fromkeys(top_specs))
     print('Top Level Specs:', [s.name for s in top_specs])
+    ev.deactivate()
     return top_specs
 
 

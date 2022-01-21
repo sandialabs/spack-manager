@@ -24,6 +24,7 @@ snapshot_path = os.path.join(os.environ['SPACK_MANAGER'],
                              'environments/exawind/snapshots/skylake/test')
 print('Snapshot created at', snapshot_path)
 
+ev.deactivate()
 # set up the user environment
 env_path = os.path.join(os.environ['SPACK_MANAGER'],
                         'environments/test_externals')
