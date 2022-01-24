@@ -48,12 +48,12 @@ class SnapshotSpec:
     def __init__(self, id='default', spec=base_spec, exclusions=[]):
         self.id = id
         self.spec = spec
-        self.exlusions = exclusions
+        self.exclusions = exclusions
 
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec()],
+    'darwin': [SnapshotSpec(exclusions=['%intel'])],
     'rhodes': [SnapshotSpec()],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
@@ -101,14 +101,15 @@ def path_extension(name):
 
 def view_excludes(snap_spec):
     if '+cuda' in snap_spec.spec:
-        return snap_spec.exclusions.extend(
+        snap_spec.exclusions.extend(
             ['+rocm', '~cuda'])
     elif '+rocm' in snap_spec.spec:
-        return snap_spec.exclusions.extend(
+        snap_spec.exclusions.extend(
             ['~rocm', '+cuda'])
     else:
-        return snap_spec.exclusions.extend(
+        snap_spec.exclusions.extend(
             ['+rocm', '+cuda'])
+    return snap_spec.exclusions.copy()
 
 
 def add_spec(env, extension, data, create_modules):
