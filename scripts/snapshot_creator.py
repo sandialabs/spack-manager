@@ -44,9 +44,11 @@ class SnapshotSpec:
     Data structure for storing a tag that is not a hash
     to represent the spec added to the spack.yaml
     """
-    def __init__(self, id='default', spec=base_spec):
+
+    def __init__(self, id='default', spec=base_spec, exclusions=[]):
         self.id = id
         self.spec = spec
+        self.exlusions = exclusions
 
 
 # a list of specs to build in the snapshot, 1 view will be created for each
@@ -56,9 +58,17 @@ machine_specs = {
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
                  SnapshotSpec(
-                     id='cuda',
-                     spec=base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu'
+                     'cuda', base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu'
                      ' cuda_arch=70')],
+    'eagle': [SnapshotSpec('gcc', base_spec + '%gcc', ['%clang', '%intel']),
+              SnapshotSpec('clang', base_spec + '%clang', ['%gcc', '%intel']),
+              SnapshotSpec('intel', base_spec + '%intel', ['%gcc', '%clang']),
+              SnapshotSpec('gcc-agpu-ngpu',
+                           base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu '
+                           'cuda_arch=70 %gcc', ['%clang', '%intel']),
+              SnapshotSpec('gcc-agpu-ncpu',
+                           base_spec + '+cuda+amr_wind_gpu~nalu_wind_gpu '
+                           'cuda_arch=70 %gcc', ['%clang', '%intel'])],
 }
 
 
@@ -89,20 +99,23 @@ def path_extension(name):
         arch=arch('-b').strip())
 
 
-def view_excludes(spec):
-    if '+cuda' in spec:
-        return ['+rocm', '~cuda']
-    elif '+rocm' in spec:
-        return ['~rocm', '+cuda']
+def view_excludes(snap_spec):
+    if '+cuda' in snap_spec.spec:
+        return snap_spec.exclusions.extend(
+            ['+rocm', '~cuda'])
+    elif '+rocm' in snap_spec.spec:
+        return snap_spec.exclusions.extend(
+            ['~rocm', '+cuda'])
     else:
-        return ['+rocm', '+cuda']
+        return snap_spec.exclusions.extend(
+            ['+rocm', '+cuda'])
 
 
 def add_spec(env, extension, data, create_modules):
     ev.activate(env)
     add(data.spec)
     ev.deactivate()
-    excludes = view_excludes(data.spec)
+    excludes = view_excludes(data)
     view_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
@@ -251,6 +264,10 @@ def use_develop_specs(env, specs):
             command(manager, 'develop', '-rb',
                     'https://github.com/trilinos/trilinos',
                     branch, spec_string)
+        elif 'openfast' in spec_string:
+            # skip openfast. we never want to dev build it
+            # because it takes so long to compile
+            continue
         else:
             command(manager, 'develop', spec_string)
     ev.deactivate()
