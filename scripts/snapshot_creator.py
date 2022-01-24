@@ -104,18 +104,18 @@ def view_excludes(snap_spec):
         return snap_spec.exclusions.extend(
             ['+rocm', '~cuda'])
     elif '+rocm' in snap_spec.spec:
-        return snap_spec.exclusions.extend
-        ['~rocm', '+cuda'])
+        return snap_spec.exclusions.extend(
+            ['~rocm', '+cuda'])
     else:
         return snap_spec.exclusions.extend(
-        ['+rocm', '+cuda'])
+            ['+rocm', '+cuda'])
 
 
 def add_spec(env, extension, data, create_modules):
     ev.activate(env)
     add(data.spec)
     ev.deactivate()
-            excludes=view_excludes(data)
+    excludes = view_excludes(data)
     view_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
@@ -264,6 +264,10 @@ def use_develop_specs(env, specs):
             command(manager, 'develop', '-rb',
                     'https://github.com/trilinos/trilinos',
                     branch, spec_string)
+        elif 'openfast' in spec_string:
+            # skip openfast. we never want to dev build it
+            # because it takes so long to compile
+            continue
         else:
             command(manager, 'develop', spec_string)
     ev.deactivate()
