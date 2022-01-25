@@ -64,6 +64,9 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
         if '%intel' in spec:
             cmake_options.remove('-DBoost_NO_BOOST_CMAKE=ON') # Avoid dashboard warning
+        if machine == 'eagle.hpc.nrel.gov':
+            cmake_options.append(define('TEST_ABS_TOL', '1e-10'))
+            cmake_options.append(define('TEST_REL_TOL', '1e-8'))
 
         # Ctest options
         ctest_options = []
