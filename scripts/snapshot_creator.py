@@ -8,11 +8,13 @@ import argparse
 import os
 import sys
 from manager_cmds.find_machine import find_machine
+import multiprocessing
 
 import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
 import spack.util.executable
+import spack.cmd.install
 
 from datetime import date
 
@@ -22,12 +24,24 @@ arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
 concretize = spack.main.SpackCommand('concretize')
-install = spack.main.SpackCommand('install')
 module = spack.main.SpackCommand('module')
 
 base_spec = 'exawind+hypre+openfast'
 
 blacklist = ['cuda', 'cmake', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
+
+
+def spack_install_cmd(args):
+    """
+    manually call spack.install so we get output
+    """
+    parser = argparse.ArgumentParser('dummy parser')
+    # this is missing from the parser but not really used so we create a dummy
+    parser.add_argument('--not_used', dest='verbose', required=False)
+    spack.cmd.install.setup_parser(parser)
+    parsed_args = parser.parse_args(args)
+    print(parsed_args)
+    spack.cmd.install.install(parser, parsed_args)
 
 
 def command(command, *args):
@@ -36,7 +50,7 @@ def command(command, *args):
     and add some print statements
     """
     print('spack', command.command_name, *args)
-    print(command(*args, fail_on_error=True))
+    print(command(*args, fail_on_error=False))
 
 
 class SnapshotSpec:
@@ -53,7 +67,7 @@ class SnapshotSpec:
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec(exclusions=['%intel'])],
+    'darwin': [SnapshotSpec()],
     'rhodes': [SnapshotSpec()],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
@@ -86,8 +100,14 @@ def parse(stream):
                         help='use develop specs for roots and their immediate '
                              'dependencies')
     parser.add_argument('--name', '-n', required=False,
-                        help='naem the environment something other than the '
+                        help='name the environment something other than the '
                         'date')
+    parser.add_argument('--spack_install_args', '-sai', required=False,
+                        default=[],
+                        help='arguments to forward to spack install')
+    parser.add_argument('--num_threads', '-nt', type=int, default=1,
+                        help='number of threads to use for calling spack '
+                        'install (parallel DAG install)')
     parser.set_defaults(modules=False, use_develop=False, stop_after='install')
 
     return parser.parse_args(stream)
@@ -313,10 +333,13 @@ def create_snapshots(args):
     if args.stop_after == 'concretize':
         return
     print('Install')
-    command(install)
+    with multiprocessing.Pool(args.num_threads):
+        spack_install_cmd(args.spack_install_args)
+
     if args.modules:
         print('Generate module files')
         command(module, 'tcl', 'refresh', '-y')
+    return env_path
 
 
 if __name__ == '__main__':
