@@ -28,7 +28,7 @@ module = spack.main.SpackCommand('module')
 
 base_spec = 'exawind+hypre+openfast'
 
-blacklist = ['cuda', 'cmake', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
+blacklist = ['cuda', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
 
 
 def spack_install_cmd(args):
@@ -68,12 +68,18 @@ class SnapshotSpec:
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
     'darwin': [SnapshotSpec(exclusions=['%intel'])],
-    'rhodes': [SnapshotSpec('gcc', base_spec + '%gcc', ['%clang', '%intel']),
-               SnapshotSpec('clang', base_spec + '%clang', ['%gcc', '%intel']),
-               SnapshotSpec('intel', base_spec + '%intel', ['%gcc', '%clang'])],
-    'eagle': [SnapshotSpec('gcc', base_spec + '%gcc', ['%clang', '%intel']),
-              SnapshotSpec('clang', base_spec + '%clang', ['%gcc', '%intel']),
-              SnapshotSpec('intel', base_spec + '%intel', ['%gcc', '%clang']),
+    'rhodes': [SnapshotSpec('gcc',
+                            base_spec + '%gcc', ['%clang', '%intel']),
+               SnapshotSpec('clang',
+                            base_spec + '%clang', ['%gcc', '%intel']),
+               SnapshotSpec('intel',
+                            base_spec + '%intel', ['%gcc', '%clang'])],
+    'eagle': [SnapshotSpec('gcc',
+                            base_spec + '%gcc', ['%clang', '%intel']),
+              SnapshotSpec('clang',
+                            base_spec + '%clang', ['%gcc', '%intel']),
+              SnapshotSpec('intel',
+                            base_spec + '%intel', ['%gcc', '%clang']),
               SnapshotSpec('gcc-agpu-ngpu',
                            base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu '
                            'cuda_arch=70 %gcc', ['%clang', '%intel']),
@@ -163,9 +169,7 @@ def add_spec(env, extension, data, create_modules):
         yaml['spack']['view'] = view_dict
 
     if create_modules:
-        # we want cmake in the view, but not a module
         module_excludes = excludes.copy()
-        module_excludes.append('cmake')
         module_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'modules')
         module_dict = {data.id: {
@@ -300,6 +304,8 @@ def use_develop_specs(env, specs):
             # skip openfast. we never want to dev build it
             # because it takes so long to compile
             continue
+        elif 'cmake' in spec_string:
+            continue
         else:
             command(manager, 'develop', spec_string)
     ev.deactivate()
@@ -312,9 +318,7 @@ def create_snapshots(args):
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
     print('\nCreating snapshot environment')
-    # we add cmake so it is a root spec that will get added to the view
-    # so people using the snapshot don't have to rebuild
-    command(manager, 'create-env', '-d', env_path, '-s', 'cmake')
+    command(manager, 'create-env', '-d', env_path)
     e = ev.Environment(env_path)
     with e.write_transaction():
         e.yaml['spack']['concretization'] = 'separately'
