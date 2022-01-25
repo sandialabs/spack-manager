@@ -54,11 +54,11 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
         raise ev.SpackEnvironmentError(
             'Requested view %s does not exist in %s' % (view_key, path))
 
-    specs = env._get_environment_specs()
+    view_specs = [s if view.__contains__(s) for s in env._get_environment_specs()]
     roots = env.roots()
     data = "packages:\n"
 
-    for s in view.specs_for_view(specs, roots):
+    for s in view_specs:
         if black_list:
             if s.name in black_list:
                 continue

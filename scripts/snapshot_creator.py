@@ -53,7 +53,11 @@ class SnapshotSpec:
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec(exclusions=['%intel'])],
+    'darwin': [SnapshotSpec('clang', 'exawind~openfast~hypre', ['%gcc']),
+               SnapshotSpec(
+                   'gcc',
+                   'exawind%gcc@7.5.0~openfast~hypre',
+                   ['%apple-clang'])],
     'rhodes': [SnapshotSpec()],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
@@ -317,6 +321,7 @@ def create_snapshots(args):
     if args.modules:
         print('Generate module files')
         command(module, 'tcl', 'refresh', '-y')
+    return env_path
 
 
 if __name__ == '__main__':
