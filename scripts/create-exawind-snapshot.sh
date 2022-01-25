@@ -22,6 +22,6 @@ printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh"
 
 printf "\nRunning snapshot creator...\n"
-cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name"
+cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --num_threads 4"
 
 printf "\nDone at $(date)\n"
