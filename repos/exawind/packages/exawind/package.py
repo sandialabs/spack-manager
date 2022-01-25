@@ -53,6 +53,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on('trilinos')
+    depends_on('cmake')
     depends_on('hypre', when='+hypre')
 
     def cmake_args(self):
