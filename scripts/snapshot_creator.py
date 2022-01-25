@@ -67,13 +67,10 @@ class SnapshotSpec:
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec()],
-    'rhodes': [SnapshotSpec()],
-    'snl-hpc': [SnapshotSpec()],
-    'ascicgpu': [SnapshotSpec(),
-                 SnapshotSpec(
-                     'cuda', base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu'
-                     ' cuda_arch=70')],
+    'darwin': [SnapshotSpec(exclusions=['%intel'])],
+    'rhodes': [SnapshotSpec('gcc', base_spec + '%gcc', ['%clang', '%intel']),
+               SnapshotSpec('clang', base_spec + '%clang', ['%gcc', '%intel']),
+               SnapshotSpec('intel', base_spec + '%intel', ['%gcc', '%clang'])],
     'eagle': [SnapshotSpec('gcc', base_spec + '%gcc', ['%clang', '%intel']),
               SnapshotSpec('clang', base_spec + '%clang', ['%gcc', '%intel']),
               SnapshotSpec('intel', base_spec + '%intel', ['%gcc', '%clang']),
@@ -83,6 +80,11 @@ machine_specs = {
               SnapshotSpec('gcc-agpu-ncpu',
                            base_spec + '+cuda+amr_wind_gpu~nalu_wind_gpu '
                            'cuda_arch=70 %gcc', ['%clang', '%intel'])],
+    'snl-hpc': [SnapshotSpec()],
+    'ascicgpu': [SnapshotSpec(),
+                 SnapshotSpec(
+                     'cuda', base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu'
+                     ' cuda_arch=70')],
 }
 
 
@@ -102,6 +104,9 @@ def parse(stream):
     parser.add_argument('--name', '-n', required=False,
                         help='name the environment something other than the '
                         'date')
+    parser.add_argument('--use_machine_name', '-mn', action='store_true',
+                        help='use machine name in the snapshot path '
+                        'instead of computed architecture')
     parser.add_argument('--spack_install_args', '-sai', required=False,
                         default=[],
                         help='arguments to forward to spack install')
@@ -113,10 +118,15 @@ def parse(stream):
     return parser.parse_args(stream)
 
 
-def path_extension(name):
-    return "exawind/snapshots/{arch}/{date}".format(
-        date=name if name else date.today().strftime("%Y%m%d"),
-        arch=arch('-b').strip())
+def path_extension(name, use_machine_name):
+    if use_machine_name:
+        return "exawind/snapshots/{machine}/{date}".format(
+            date=name if name else date.today().strftime("%Y-%m-%d"),
+            machine=os.environ['SPACK_MANAGER_MACHINE'])
+    else:
+        return "exawind/snapshots/{arch}/{date}".format(
+            date=name if name else date.today().strftime("%Y-%m-%d"),
+            arch=arch('-b').strip())
 
 
 def view_excludes(snap_spec):
@@ -181,6 +191,7 @@ def add_spec(env, extension, data, create_modules):
 
 def get_top_level_specs(env, blacklist=blacklist):
     ev.activate(env)
+    print('\nInitial concretize')
     command(concretize)
     top_specs = []
     for root in env.roots():
@@ -192,7 +203,7 @@ def get_top_level_specs(env, blacklist=blacklist):
                 top_specs.append(dep)
     # remove any duplicates
     top_specs = list(dict.fromkeys(top_specs))
-    print('Top Level Specs:', [s.name for s in top_specs])
+    print('\nTop Level Specs:', [s.name for s in top_specs])
     ev.deactivate()
     return top_specs
 
@@ -272,7 +283,7 @@ def use_develop_specs(env, specs):
     # anything that is not a develop spec is not gauranteed to get installed
     # since spack can reuse them for matching hashes
 
-    print('Setting up develop specs')
+    print('\nSetting up develop specs')
     dev_specs = list(dict.fromkeys(
         [s.format('{name}{@version}') for s in specs]))
 
@@ -296,11 +307,11 @@ def use_develop_specs(env, specs):
 
 def create_snapshots(args):
     machine = find_machine(verbose=False)
-    extension = path_extension(args.name)
+    extension = path_extension(args.name, args.use_machine_name)
     env_path = os.path.join(
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
-    print('Creating snapshot environment')
+    print('\nCreating snapshot environment')
     # we add cmake so it is a root spec that will get added to the view
     # so people using the snapshot don't have to rebuild
     command(manager, 'create-env', '-d', env_path, '-s', 'cmake')
@@ -328,16 +339,16 @@ def create_snapshots(args):
         return
 
     ev.activate(e)
-    print('Concretize')
+    print('\nConcretize')
     command(concretize, '-f')
     if args.stop_after == 'concretize':
         return
-    print('Install')
+    print('\nInstall')
     with multiprocessing.Pool(args.num_threads):
         spack_install_cmd(args.spack_install_args)
 
     if args.modules:
-        print('Generate module files')
+        print('\nGenerate module files')
         command(module, 'tcl', 'refresh', '-y')
     return env_path
 
