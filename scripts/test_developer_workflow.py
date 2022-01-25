@@ -25,14 +25,17 @@ parser.add_argument('--snap_name', required=False,
                     help='directory name for the snapshot')
 parser.add_argument('--dev_name', required=False,
                     help='directory name for the developer env')
+parser.add_argument('--num_threads', required=False,
+                    help='DAG paralleization')
 parser.set_defaults(view_name='default', snap_name='test',
-                    dev_name='test_external')
+                    dev_name='test_external', num_threads=1)
 args = parser.parse_args()
 
 # set up the snapshot
 print('Create Snapshot')
 args = snapshot_creator.parse(
-    ['--use_develop', '--modules', '--name', args.snap_name])
+    ['--use_develop', '--modules', '--name', args.snap_name,
+     '--num_threads', args.num_threads])
 snapshot_path = snapshot_creator.create_snapshots(args)
 print('Snapshot created at', snapshot_path)
 
