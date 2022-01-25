@@ -1,6 +1,4 @@
 packages:
-  amr-wind:
-    variants: ~shared
   boost:
     version: [1.76.0]
     variants: cxxstd=14

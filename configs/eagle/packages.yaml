@@ -33,7 +33,7 @@ packages:
         - mpt/2.22
         - slurm
   all:
-    compiler: [gcc@9.3.0, intel@18.0.4, clang@10.0.0]
+    compiler: [gcc@9.3.0, clang@10.0.0, intel@18.0.4]
     variants: build_type=Release +mpi
     providers:
-      mpi: [mpt, intel-mpi]
+      mpi: [mpt]

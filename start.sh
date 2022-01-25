@@ -17,7 +17,8 @@ fi
 # Environment stuff
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
-export SPACK_DISABLE_LOCAL_CONFIG=1
+export SPACK_DISABLE_LOCAL_CONFIG=true
+export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/cache
 export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 
@@ -30,3 +31,6 @@ if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
 fi
 export PATH=${PATH}:${SPACK_MANAGER}/scripts
+
+# Clean Spack misc caches
+spack clean -m
