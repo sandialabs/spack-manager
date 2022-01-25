@@ -67,11 +67,7 @@ class SnapshotSpec:
 
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
-    'darwin': [SnapshotSpec('clang', 'exawind~openfast~hypre', ['%gcc']),
-               SnapshotSpec(
-                   'gcc',
-                   'exawind%gcc@7.5.0~openfast~hypre',
-                   ['%apple-clang'])],
+    'darwin': [SnapshotSpec()],
     'rhodes': [SnapshotSpec()],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
@@ -106,11 +102,12 @@ def parse(stream):
     parser.add_argument('--name', '-n', required=False,
                         help='name the environment something other than the '
                         'date')
-    parser.add_argument('--spack_install_args', '-sai', required=False, default=[],
+    parser.add_argument('--spack_install_args', '-sai', required=False,
+                        default=[],
                         help='arguments to forward to spack install')
     parser.add_argument('--num_threads', '-nt', type=int, default=1,
-                        help='number of threads to use for calling spack install'
-                        ' (parallel DAG install)')
+                        help='number of threads to use for calling spack '
+                        'install (parallel DAG install)')
     parser.set_defaults(modules=False, use_develop=False, stop_after='install')
 
     return parser.parse_args(stream)
