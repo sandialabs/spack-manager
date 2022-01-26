@@ -345,8 +345,8 @@ def create_snapshots(args):
     if args.stop_after == 'concretize':
         return
     print('\nInstall')
-    #with multiprocessing.Pool(args.num_threads):
-    spack_install_cmd(args.spack_install_args)
+    with multiprocessing.Pool(args.num_threads):
+        spack_install_cmd(args.spack_install_args)
 
     if args.modules:
         print('\nGenerate module files')
