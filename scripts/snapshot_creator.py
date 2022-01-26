@@ -80,11 +80,8 @@ machine_specs = {
                            base_spec + '%clang', ['%gcc', '%intel']),
               SnapshotSpec('intel',
                            base_spec + '%intel', ['%gcc', '%clang']),
-              SnapshotSpec('gcc-agpu-ngpu',
+              SnapshotSpec('gcc-cuda',
                            base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu '
-                           'cuda_arch=70 %gcc', ['%clang', '%intel']),
-              SnapshotSpec('gcc-agpu-ncpu',
-                           base_spec + '+cuda+amr_wind_gpu~nalu_wind_gpu '
                            'cuda_arch=70 %gcc', ['%clang', '%intel'])],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),

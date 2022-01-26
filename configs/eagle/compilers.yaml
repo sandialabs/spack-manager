@@ -145,10 +145,11 @@ compilers:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
       prepend_path:
-        PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/binutils-2.34-2drppsfmkeudqr3ll7zz7pqxlsszuh4b/bin
+        PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/binutils-2.34-2drppsfmkeudqr3ll7zz7pqxlsszuh4b/bin:/nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-9.3.0-tdarikl76ke42iuhzz42kpytshmm5mew/bin
+        LD_LIBRARY_PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/intel-parallel-studio-cluster.2019.5-qlb5jj5e3kx4q34unx4oyq2oldsuyx6y/compilers_and_libraries/linux/lib/intel64:/nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-9.3.0-tdarikl76ke42iuhzz42kpytshmm5mew/lib64
     extra_rpaths:
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/intel-parallel-studio-cluster.2019.5-qlb5jj5e3kx4q34unx4oyq2oldsuyx6y/compilers_and_libraries/linux/lib/intel64
-     #- /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-8.4.0-2a3vha6hlw4xc5ja3jyhr7huzaxuw2kt/lib64
+     - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-9.3.0-tdarikl76ke42iuhzz42kpytshmm5mew/lib64
     #flags:
     #  cflags: -xSKYLAKE-AVX512
     #  cxxflags: -xSKYLAKE-AVX512
@@ -167,10 +168,11 @@ compilers:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
       prepend_path:
-        PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/binutils-2.34-2drppsfmkeudqr3ll7zz7pqxlsszuh4b/bin
+        PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/binutils-2.34-2drppsfmkeudqr3ll7zz7pqxlsszuh4b/bin:/nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-9.3.0-tdarikl76ke42iuhzz42kpytshmm5mew/bin
+        LD_LIBRARY_PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/intel-parallel-studio-cluster.2020.2-yroifstc3gpxerjxgfasbrbrvjqv7r22/compilers_and_libraries/linux/lib/intel64:/nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-9.3.0-tdarikl76ke42iuhzz42kpytshmm5mew/lib64
     extra_rpaths:
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/intel-parallel-studio-cluster.2020.2-yroifstc3gpxerjxgfasbrbrvjqv7r22/compilers_and_libraries/linux/lib/intel64
-     #- /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-8.4.0-2a3vha6hlw4xc5ja3jyhr7huzaxuw2kt/lib64
+     - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-9.3.0-tdarikl76ke42iuhzz42kpytshmm5mew/lib64
     #flags:
     #  cflags: -xSKYLAKE-AVX512
     #  cxxflags: -xSKYLAKE-AVX512

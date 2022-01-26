@@ -4,7 +4,4 @@ spack:
   concretization: separately
   view: false
   specs:
-  #- amr-wind-nightly +netcdf+hypre+masa+openfast~latest_amrex host_name=darwin.hpc.nrel.gov
-  #- nalu-wind-nightly +fftw+hypre+openfast+tioga+wind-utils host_name=darwin.hpc.nrel.gov
-  #- exawind-nightly host_name=darwin.hpc.nrel.gov
   - exawind+hypre
