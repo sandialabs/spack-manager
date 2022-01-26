@@ -1,6 +1,7 @@
 packages:
+  perl:
+    version: [5.32.0]
   all:
-    compiler: [gcc@9.3.0, clang@10.0.0, intel@18.0.4]
-    variants: build_type=Release +mpi
+    compiler: [gcc@9.3.0, clang@10.0.0, intel@20.0.2]
     providers:
       mpi: [mpich]
