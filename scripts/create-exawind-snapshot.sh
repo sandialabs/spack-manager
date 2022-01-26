@@ -31,9 +31,7 @@ printf "\nActivating snapshot environment...\n"
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind/snapshots/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
 
 printf "\nInstalling environment...\n"
-for i in {1..4}; do
-  cmd "nice -n19 spack install" &
-done; wait
+time (for i in {1..4}; do nice -n19 spack install & done; wait)
 
 printf "\nCreate modules...\n"
 cmd "spack module tcl refresh -y"
