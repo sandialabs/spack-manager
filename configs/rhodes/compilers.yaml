@@ -12,6 +12,9 @@ compilers:
     spec: gcc@4.8.5
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-4.9.4-h5l33keuh7q4gmbqnmprly6y6l3qzom4/lib64
     modules: []
@@ -24,6 +27,9 @@ compilers:
     spec: gcc@4.9.4
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-5.5.0-mjwqargc722xu5h3khrti5x4sg5zd627/lib64
     modules: []
@@ -36,6 +42,9 @@ compilers:
     spec: gcc@5.5.0
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-6.5.0-4suzn3n4bcnvgauc3ld2itrqqvmhfkmi/lib64
     modules: []
@@ -48,6 +57,9 @@ compilers:
     spec: gcc@6.5.0
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-7.5.0-jrfxr7ebhyh4xhq37zaqsc7mzsxs7ggt/lib64
     modules: []
@@ -60,6 +72,9 @@ compilers:
     spec: gcc@7.5.0
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
     modules: []
@@ -72,6 +87,9 @@ compilers:
     spec: gcc@8.4.0
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-9.3.0-x5jehyzpwqee2ywu7scqcagjyz3nyim3/lib64
     modules: []
@@ -84,6 +102,9 @@ compilers:
     spec: gcc@9.3.0
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-10.1.0-ij6an7jl2g5y3tsvkdhwgazppoeenjxf/lib64
     modules: []
@@ -99,8 +120,9 @@ compilers:
     environment:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
-      prepend_path: 
-        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin:/opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
+        LD_LIBRARY_PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2018.4-cykqqjzavipzalujhly6qtlgigoyvitb/compilers_and_libraries/linux/lib/intel64:/opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2018.4-cykqqjzavipzalujhly6qtlgigoyvitb/compilers_and_libraries/linux/lib/intel64
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
@@ -121,15 +143,16 @@ compilers:
     environment:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
-      prepend_path: 
-        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin:/opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
+        LD_LIBRARY_PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2019.5-37mctejur3kz27ewdthhqdy65jpvkku7/compilers_and_libraries/linux/lib/intel64:/opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2019.5-37mctejur3kz27ewdthhqdy65jpvkku7/compilers_and_libraries/linux/lib/intel64
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
-    #flags:
-    #  cflags: -O2 -xCORE-AVX2
-    #  cxxflags: -O2 -xCORE-AVX2
-    #  fflags: -O2 -xCORE-AVX2
+    flags:
+      cflags: -fp-model consistent
+      cxxflags: -fp-model consistent
+      fflags: -fp-model consistent
     modules: []
     operating_system: centos7
     paths:
@@ -144,14 +167,15 @@ compilers:
       set:
         INTEL_LICENSE_FILE: 28519@license-1.hpc.nrel.gov
       prepend_path:
-        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/bin
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin:/opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-9.3.0-x5jehyzpwqee2ywu7scqcagjyz3nyim3/bin
+        LD_LIBRARY_PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2020.2-wehyqthdi6kpopfitwktzcy6vqikyc2c/compilers_and_libraries/linux/lib/intel64:/opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-9.3.0-x5jehyzpwqee2ywu7scqcagjyz3nyim3/lib64
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/intel-parallel-studio-cluster.2020.2-wehyqthdi6kpopfitwktzcy6vqikyc2c/compilers_and_libraries/linux/lib/intel64
-     - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-8.4.0-26fck7zymxe7v7a7bpybuzqnq43klean/lib64
-    #flags:
-    #  cflags: -O2 -xCORE-AVX2
-    #  cxxflags: -O2 -xCORE-AVX2
-    #  fflags: -O2 -xCORE-AVX2
+     - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/gcc-9.3.0-x5jehyzpwqee2ywu7scqcagjyz3nyim3/lib64
+    flags:
+      cflags: -fp-model consistent
+      cxxflags: -fp-model consistent
+      fflags: -fp-model consistent
     modules: []
     operating_system: centos7
     paths:
@@ -162,6 +186,9 @@ compilers:
     spec: intel@20.0.2
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/llvm-8.0.0-zsrlldhrzzrx2jmwc7tx5pmodym25lei/lib
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/llvm-8.0.0-zsrlldhrzzrx2jmwc7tx5pmodym25lei/lib/clang/8.0.0/lib/linux
@@ -176,6 +203,9 @@ compilers:
     spec: clang@8.0.0
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/llvm-9.0.1-azkfqrcynex7erh44f6i4c6old2gulfu/lib
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/llvm-9.0.1-azkfqrcynex7erh44f6i4c6old2gulfu/lib/clang/9.0.1/lib/linux
@@ -190,6 +220,9 @@ compilers:
     spec: clang@9.0.1
     target: x86_64
 - compiler:
+    environment:
+      prepend_path:
+        PATH: /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/binutils-2.34-c2kyctja4kfq4coe5pn5eb2ssdwcc5at/bin
     extra_rpaths:
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/llvm-10.0.0-tto53szdcqggs7juaofrutajro3tzfp3/lib
      - /opt/compilers/2020-07/spack/opt/spack/linux-centos7-broadwell/gcc-8.4.0/llvm-10.0.0-tto53szdcqggs7juaofrutajro3tzfp3/lib/clang/10.0.0/lib/linux
