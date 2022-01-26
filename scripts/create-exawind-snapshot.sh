@@ -2,6 +2,9 @@
 
 #Script that creates a new shared snapshot for Exawind software
 
+# Trap and kill background processes
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
 cmd() {
   echo "+ $@"
   eval "$@"
@@ -22,6 +25,19 @@ printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh"
 
 printf "\nRunning snapshot creator...\n"
-cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --num_threads 4"
+cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize"
+
+printf "\nActivating snapshot environment...\n"
+cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind/snapshots/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
+
+printf "\nInstalling environment...\n"
+for i in {1..4}; do
+  cmd "nice -n19 spack install" &
+done; wait
+
+printf "\nCreate modules...\n"
+cmd "spack module tcl refresh -y"
+
+cmd "spack env deactivate"
 
 printf "\nDone at $(date)\n"
