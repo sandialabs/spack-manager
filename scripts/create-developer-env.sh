@@ -21,23 +21,27 @@ fi
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh"
 
-# Options
-COMPILER="gcc"
-DEV_PACKAGE="nalu-wind"
-VERSION="master"
-SPEC="${DEV_PACKAGE}@${VERSION}%${COMPILER}"
-
 printf "\nCreating developer environment...\n"
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
-  SNAPSHOT_DIR="/projects/exawind/exawind-snapshots/environment-latest"
+  SNAPSHOT_DIR='/projects/exawind/exawind-snapshots/environment-latest'
+  COMPILER='gcc'
+  SPEC="nalu-wind@master+hypre+cuda cuda_arch=70 %${COMPILER}"
+  BLACKLIST='nalu-wind hypre'
+  DEV_COMMAND='spack manager develop nalu-wind@master; spack manager develop hypre@develop'
+  VIEW="${COMPILER}-cuda"
 elif [ "${SPACK_MANAGER_MACHINE}" == 'rhodes' ]; then
-  SNAPSHOT_DIR="/projects/ecp/exawind/exawind-snapshots/environment-latest"
+  SNAPSHOT_DIR='/projects/ecp/exawind/exawind-snapshots/environment-latest'
+  COMPILER='gcc'
+  SPEC="nalu-wind@master+hypre %${COMPILER}"
+  BLACKLIST='nalu-wind hypre'
+  DEV_COMMAND='spack manager develop nalu-wind@master; spack manager develop hypre@develop'
+  VIEW="${COMPILER}"
 fi
-cmd "spack manager create-env --directory ${SPACK_MANAGER}/environments/exawind --spec ${SPEC}"
+cmd "spack manager create-env --directory ${SPACK_MANAGER}/environments/exawind --spec "${SPEC}""
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind"
 cmd "spack config add config:concretizer:original"
-cmd "spack manager external ${SNAPSHOT_DIR} -v ${COMPILER} --blacklist ${DEV_PACKAGE}"
-cmd "spack manager develop ${SPEC}"
+cmd "spack manager external ${SNAPSHOT_DIR} -v ${VIEW} --blacklist ${BLACKLIST}"
+cmd "${DEV_COMMAND}"
 cmd "spack concretize -f"
 cmd "spack install"
 
