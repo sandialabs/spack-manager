@@ -18,7 +18,7 @@ fi
 ########################################################
 export SPACK_ROOT=${SPACK_MANAGER}/spack
 export SPACK_DISABLE_LOCAL_CONFIG=true
-export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/cache
+export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/.cache
 export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 
