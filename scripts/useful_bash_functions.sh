@@ -15,9 +15,18 @@ function swspack() {
 }
 # function to create, activate, concretize and attempt to install a develop environment all in one step
 function quick-develop() {
-  set -e
-  spack-start
-  swspack manager create-dev-env "$@" -a
-  spack concretize
-  spack install
+  # Trap and kill background processes
+  trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
+  cmd() {
+    echo "+ $@"
+    eval "$@"
+  }
+
+  #set -e
+
+  cmd "spack-start"
+  cmd "swspack manager create-dev-env $* -a"
+  cmd "spack concretize -f"
+  cmd "spack install"
 }

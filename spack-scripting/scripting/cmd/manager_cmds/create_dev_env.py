@@ -22,6 +22,7 @@ def create_dev_env(parser, args):
 	env = ev.Environment(env_path)
 	ev.activate(env)
 	for s in args.spec:
+		print("\tCalling spack manager develop for", s)
 		if '@' not in s:
 			print(
 				'All specs must be concrete to use create-dev-env i.e. at least [name]@[version]')
@@ -30,10 +31,15 @@ def create_dev_env(parser, args):
 			develop(s)
 		else:
 			develop('-rb', 'git@github.com:trilinos/trilinos.git', 'develop', s)
+	if args.print_path:
+		print('Env created at:', env_path)
 
 
 def add_command(parser, command_dict):
 	sub_parser = parser.add_parser(
 		'create-dev-env', help='create a developer focused environment where all root specs are develop specs')
 	create_env.setup_parser_args(sub_parser)
+	sub_parser.add_argument('-p', '--print_path', action='store_true',
+	                        help='print the environment location to the command line')
+	sub_parser.set_defaults(print_path=False)
 	command_dict['create-dev-env'] = create_dev_env
