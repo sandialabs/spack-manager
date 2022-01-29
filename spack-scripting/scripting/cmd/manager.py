@@ -1,5 +1,6 @@
 import sys
 
+import manager_cmds.create_dev_env
 import manager_cmds.create_env
 import manager_cmds.develop
 import manager_cmds.external
@@ -20,6 +21,7 @@ def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar='spack-manager commands',
                                   dest='manager_command')
     manager_cmds.create_env.add_command(sp, _subcommands)
+    manager_cmds.create_dev_env.add_command(sp, _subcommands)
     manager_cmds.develop.add_command(sp, _subcommands)
     manager_cmds.find_machine.add_command(sp, _subcommands)
     manager_cmds.external.add_command(sp, _subcommands)

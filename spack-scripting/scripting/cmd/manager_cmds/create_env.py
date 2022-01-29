@@ -13,21 +13,19 @@ from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
 import spack.cmd.env as envcmd
+import spack.util.spack_yaml as syaml
 
 default_env_file = (
     """
 spack:
-  include:
-{includes}
+  include: []
   concretization: together
   view: false
-  specs: [{spec}]""")
+  specs: []""")
 
 
 def create_env(parser, args):
-    """
-    Copy files as needed
-    """
+    yaml = syaml.load_config(default_env_file)
     if args.machine is not None:
         machine = args.machine
         if machine not in fm.machine_list.keys():
@@ -35,11 +33,8 @@ def create_env(parser, args):
     else:
         machine = find_machine(verbose=(not args.activate))
 
-    if args.spec is not None:
-        spec = args.spec
-    else:
-        # give a blank spec
-        spec = ''
+    if args.spec:
+        yaml['spack']['specs'] = args.spec
 
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
@@ -59,21 +54,27 @@ def create_env(parser, args):
             os.makedirs(args.directory)
 
         theDir = args.directory
+    elif args.name is not None:
+        theDir = os.path.join(
+            os.environ['SPACK_MANAGER'], 'environments', args.name)
+        if os.path.exists(theDir) is False:
+            if not args.activate:
+                print("making", theDir)
+            os.makedirs(theDir)
     else:
         theDir = os.getcwd()
 
     include_file_name = 'include.yaml'
     include_file = os.path.join(theDir, include_file_name)
     inc_creator.write_includes(include_file)
-
-    include_str = '  - {v}\n'.format(v=include_file_name)
+    yaml['spack']['include'].append(include_file_name)
 
     if args.yaml is not None:
         assert(os.path.isfile(args.yaml))
         shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
     else:
-        open(os.path.join(theDir, 'spack.yaml'), 'w').write(
-            default_env_file.format(spec=spec, includes=include_str))
+        with open(os.path.join(theDir, 'spack.yaml'), 'w') as f:
+            syaml.dump_config(yaml, stream=f, default_flow_style=False)
 
     if args.activate:
         dumb_parser = argparse.ArgumentParser('dummy')
@@ -83,23 +84,32 @@ def create_env(parser, args):
         envcmd.env_activate_setup_parser(dumb_parser)
         activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--sh'])
         envcmd.env_activate(activate_args)
+    return theDir
+
+
+def setup_parser_args(sub_parser):
+    sub_parser.add_argument('-m', '--machine', required=False,
+                            help='Machine to match configs')
+    name_group = sub_parser.add_mutually_exclusive_group()
+    name_group.add_argument('-d', '--directory', required=False,
+                            help='Directory to copy files')
+    name_group.add_argument('-n', '--name', required=False,
+                            help='Name of directory to copy files that will be in '
+                            '$SPACK_MANAGER/environments')
+    sub_parser.add_argument('-y', '--yaml', required=False,
+                            help='Reference spack.yaml to copy to directory')
+    sub_parser.add_argument('-s', '--spec', required=False, default=[], nargs='+',
+                            help='Specs to populate the environment with')
+    sub_parser.add_argument('-a', '--activate', dest='activate', required=False,
+                            action='store_true', default=False,
+                            help='Print the shell script required to activate '
+                            'the environment upon creation. '
+                            'When called with swspack it will auto activate'
+                            ' the env')
 
 
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser('create-env', help='convenience script'
                                    ' for setting up a spack environment')
-    sub_parser.add_argument('-m', '--machine', required=False,
-                            help='Machine to match configs')
-    sub_parser.add_argument('-d', '--directory', required=False,
-                            help='Directory to copy files')
-    sub_parser.add_argument('-y', '--yaml', required=False,
-                            help='Reference spack.yaml to copy to directory')
-    sub_parser.add_argument('-s', '--spec', required=False,
-                            help='Spec to populate the environment with')
-    sub_parser.add_argument('-a', '--activate', dest='activate', required=False,
-                            action='store_true', default=False,
-                            help='Print the shell script required to activate '
-                            'the environment upon creation. '
-                            'When called with sspack it will auto activate'
-                            ' the env')
+    setup_parser_args(sub_parser)
     command_dict['create-env'] = create_env
