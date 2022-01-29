@@ -13,3 +13,11 @@ function swspack() {
   spack_command="spack $@"
   eval "$(${spack_command})"
 }
+# function to create, activate, concretize and attempt to install a develop environment all in one step
+function quick-develop() {
+  set -e
+  spack-start
+  swspack manager create-dev-env "$@" -a
+  spack concretize
+  spack install
+}

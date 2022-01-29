@@ -22,6 +22,10 @@ def create_dev_env(parser, args):
 	env = ev.Environment(env_path)
 	ev.activate(env)
 	for s in args.spec:
+		if '@' not in s:
+			print(
+				'All specs must be concrete to use create-dev-env i.e. at least [name]@[version]')
+			exit(1)
 		if 'trilinos' not in s:
 			develop(s)
 		else:
