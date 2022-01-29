@@ -22,6 +22,9 @@ export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/.cache
 export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd
 source ${SPACK_ROOT}/share/spack/setup-env.sh
 
+# Clean Spack misc caches
+spack clean -m
+
 if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
     spack config --scope site add config:extensions:[${SPACK_MANAGER}/spack-scripting]
 fi
@@ -31,6 +34,3 @@ if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
 fi
 export PATH=${PATH}:${SPACK_MANAGER}/scripts
-
-# Clean Spack misc caches
-spack clean -m

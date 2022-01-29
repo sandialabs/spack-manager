@@ -1,5 +1,5 @@
 import argparse
-
+import sys
 import manager_cmds.create_env as create_env
 import manager_cmds.develop
 
@@ -24,7 +24,7 @@ def create_dev_env(parser, args):
 	for s in args.spec:
 		print("\tCalling spack manager develop for", s)
 		if '@' not in s:
-			print(
+			sys.stderr.write(
 				'All specs must be concrete to use create-dev-env i.e. at least [name]@[version]')
 			exit(1)
 		if 'trilinos' not in s:
@@ -32,7 +32,7 @@ def create_dev_env(parser, args):
 		else:
 			develop('-rb', 'git@github.com:trilinos/trilinos.git', 'develop', s)
 	if args.print_path:
-		print('Env created at:', env_path)
+		print('Env created at:\n', env_path)
 
 
 def add_command(parser, command_dict):

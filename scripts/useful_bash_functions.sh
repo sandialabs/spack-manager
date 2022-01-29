@@ -26,7 +26,14 @@ function quick-develop() {
   #set -e
 
   cmd "spack-start"
-  cmd "swspack manager create-dev-env $* -a"
+  cmd "swspack manager create-dev-env $* -a" 2>/tmp/Error
+  ERROR=$(</tmp/Error)
+  echo "$ERROR"
+  if [[ "$ERROR" == *"All specs must be concrete:"* ]]; then
+    echo "An error occured in setting your environment. Please make sure all spack specs have valid spack versions i.e. [name]@[version]"
+    cmd "spack env deactivate"
+    exit 1
+  fi
   cmd "spack concretize -f"
   cmd "spack install"
 }
