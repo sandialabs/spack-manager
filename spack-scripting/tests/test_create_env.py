@@ -52,24 +52,3 @@ def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
         # ensure that this environment can be created
         # missing includes will cause a failure
         env.Environment(tmpdir)
-
-
-def test_envIsActivatedWithActivateFlag(monkeypatch):
-    with TemporaryDirectory() as tmpdir:
-        # setup a mirror configuration of spack-manager
-        link_dir = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
-
-        os.mkdir(os.path.join(tmpdir, 'configs'))
-        os.symlink(link_dir,
-                   os.path.join(tmpdir, 'configs', 'base'))
-
-        # monkeypatches
-        envVars = {'SPACK_MANAGER': tmpdir}
-        monkeypatch.setattr(os, 'environ', envVars)
-
-        manager('create-env', '-d', tmpdir, '-a')
-
-        assert env.active_environment() is not None
-        assert env.active_environment().path == tmpdir
-        # this is required for clean up. need to start using spack test decorators
-        env.deactivate()

@@ -25,7 +25,12 @@ def create_dev_env(parser, args):
 		print("\tCalling spack manager develop for", s)
 		if '@' not in s:
 			sys.stderr.write(
-				'All specs must be concrete to use create-dev-env i.e. at least [name]@[version]')
+				'\nERROR: All specs must be concrete to use '
+				'\'spack manager create-dev-env\' i.e. at '
+				'least [package]@[version].\nTo learn what versions are'
+				' available type \'spack info [package]\''
+				'\nSome common exawind versions are: exawind@master, '
+				'amr-wind@main and nalu-wind@master\n')
 			exit(1)
 		if 'trilinos' not in s:
 			develop(s)

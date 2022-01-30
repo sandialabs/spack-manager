@@ -4,7 +4,6 @@ A script for creating a new environment
 on a given machine
 """
 
-import argparse
 import os
 import shutil
 
@@ -31,7 +30,7 @@ def create_env(parser, args):
         if machine not in fm.machine_list.keys():
             raise Exception('Specified machine %s is not defined' % machine)
     else:
-        machine = find_machine(verbose=(not args.activate))
+        machine = find_machine()
 
     if args.spec:
         yaml['spack']['specs'] = args.spec
@@ -44,13 +43,11 @@ def create_env(parser, args):
     if os.path.exists(hostPath):
         inc_creator.add_scope('machine', hostPath)
     else:
-        if not args.activate:
-            print('Host not setup in spack-manager: %s' % hostPath)
+        print('Host not setup in spack-manager: %s' % hostPath)
 
     if args.directory is not None:
         if os.path.exists(args.directory) is False:
-            if not args.activate:
-                print("making", args.directory)
+            print("making", args.directory)
             os.makedirs(args.directory)
 
         theDir = args.directory
@@ -58,8 +55,7 @@ def create_env(parser, args):
         theDir = os.path.join(
             os.environ['SPACK_MANAGER'], 'environments', args.name)
         if os.path.exists(theDir) is False:
-            if not args.activate:
-                print("making", theDir)
+            print("making", theDir)
             os.makedirs(theDir)
     else:
         theDir = os.getcwd()
@@ -76,14 +72,11 @@ def create_env(parser, args):
         with open(os.path.join(theDir, 'spack.yaml'), 'w') as f:
             syaml.dump_config(yaml, stream=f, default_flow_style=False)
 
-    if args.activate:
-        dumb_parser = argparse.ArgumentParser('dummy')
-        dumb_parser.add_argument('-env', required=False)
-        dumb_parser.add_argument('-no-env', required=False)
-        dumb_parser.add_argument('-env-dir', required=False)
-        envcmd.env_activate_setup_parser(dumb_parser)
-        activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--sh'])
-        envcmd.env_activate(activate_args)
+    fpath = os.path.join(os.environ['SPACK_MANAGER'], '.tmp')
+    os.makedirs(fpath, exist_ok=True)
+    storage = os.path.join(fpath, 'created_env_path.txt')
+    with open(storage, 'w') as f:
+        f.write(theDir)
     return theDir
 
 
@@ -100,12 +93,6 @@ def setup_parser_args(sub_parser):
                             help='Reference spack.yaml to copy to directory')
     sub_parser.add_argument('-s', '--spec', required=False, default=[], nargs='+',
                             help='Specs to populate the environment with')
-    sub_parser.add_argument('-a', '--activate', dest='activate', required=False,
-                            action='store_true', default=False,
-                            help='Print the shell script required to activate '
-                            'the environment upon creation. '
-                            'When called with swspack it will auto activate'
-                            ' the env')
 
 
 def add_command(parser, command_dict):
