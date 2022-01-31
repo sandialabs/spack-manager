@@ -13,7 +13,7 @@ class AmrWind(bAmrWind, ROCmPackage):
             description='Turn on address sanitizer')
     variant('cppcheck', default=False,
             description='Turn on cppcheck')
-    variant('clangtiday', default=False,
+    variant('clangtidy', default=False,
             description='Turn on clang-tidy')
 
     def setup_build_environment(self, env):
