@@ -1,8 +1,9 @@
 import os
-from datetime import datetime
-from manager_utils import base_extension
 import re
 import sys
+from datetime import datetime
+
+from manager_utils import base_extension
 
 import llnl.util.tty as tty
 
@@ -25,7 +26,8 @@ def get_external_dir():
     if os.path.isdir(external_machine) and os.path.isdir(external_arch):
         raise Exception(
             'ERROR: Snapshots based on arch and machine are both valid. '
-            'Please contact system admins and spack-manager maintainers to sort this out')
+            'Please contact system admins and spack-manager maintainers'
+            ' to sort this out')
 
     if os.path.isdir(external_arch):
         external = external_arch

@@ -1,5 +1,5 @@
-from datetime import date
 import os
+from datetime import date
 
 import spack.main
 
