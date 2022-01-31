@@ -11,6 +11,10 @@ class AmrWind(bAmrWind, ROCmPackage):
 
     variant('asan', default=False,
             description='Turn on address sanitizer')
+    variant('cppcheck', default=False,
+            description='Turn on cppcheck')
+    variant('clangtidy', default=False,
+            description='Turn on clang-tidy')
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
@@ -23,6 +27,12 @@ class AmrWind(bAmrWind, ROCmPackage):
         spec = self.spec
         define = CMakePackage.define
         cmake_options = super(AmrWind, self).cmake_args()
+
+        if '+cppcheck' in spec:
+            cmake_options.append(define('AMR_WIND_ENABLE_CPPCHECK', True))
+
+        if '+clangtidy' in spec:
+            cmake_options.append(define('AMR_WIND_ENABLE_CLANG_TIDY', True))
 
         if '+cuda' in spec:
             cmake_options.append(define('BUILD_SHARED_LIBS', False))
