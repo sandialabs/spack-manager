@@ -26,13 +26,16 @@ class ParserMock:
                  name='externals.yaml',
                  whitelist=None,
                  blacklist=None,
-                 merge=False):
+                 merge=False,
+                 latest=False):
         self.path = path
         self.view = view
         self.name = name
         self.whitelist = whitelist
         self.blacklist = blacklist
         self.merge = merge
+        self.latest = False
+        self.list = False
 
 
 def setupExternalEnv(tmpdir, has_view=True):

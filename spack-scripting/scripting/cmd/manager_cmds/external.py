@@ -41,11 +41,7 @@ def get_external_dir():
         return None
 
 
-def get_latest_dated_snapshot():
-    """
-    Get the path for the latest snapshot created by snapshot_creator.py
-    based on the name/date created (not necessarily file creation date)
-    """
+def get_all_snapshots():
     base_dir = get_external_dir()
     if not base_dir:
         # if no snapshots have been created the directory may not exist
@@ -53,10 +49,18 @@ def get_latest_dated_snapshot():
     # get environment directories, make sure we're only pulling in directories
     snapshots = [s for s in os.listdir(base_dir)
                  if os.path.isdir(os.path.join(base_dir, s))]
-    print(snapshots)
+    return snapshots
+
+
+def get_latest_dated_snapshot():
+    """
+    Get the path for the latest snapshot created by snapshot_creator.py
+    based on the name/date created (not necessarily file creation date)
+    """
+    snapshots = get_all_snapshots()
+    base_dir = get_external_dir()
     # remove anything that isn't a date stamp i.e. (custom snapshots)
     dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
-    print(dates)
     dates.sort(reverse=True, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
     return os.path.join(base_dir, dates[0])
 
@@ -144,6 +148,13 @@ def external(parser, args):
             return
     else:
         snap_path = args.path
+    if args.list:
+        extern_dir = get_external_dir()
+        snaps = get_all_snapshots()
+        print("Available snapshot directories are: ")
+        for s in snaps:
+            print('\t' + os.path.join(extern_dir, s))
+        return
 
     # check that directory of ext view exists
     if not ev.is_env_dir(snap_path):
@@ -186,10 +197,8 @@ def add_command(parser, command_dict):
                      '--name', required=False,
                      help='name the new include file for the '
                      'externals with this name')
-
     ext.add_argument('-v', '--view', required=False, default='default',
                      help='name of view to use in the environment')
-
     ext.add_argument('-m', '--merge', required=False,
                      action='store_true', help='merge existing yaml files '
                      'together')
@@ -200,20 +209,18 @@ def add_command(parser, command_dict):
                         '--whitelist', nargs='*', required=False,
                         help='(not implemeted) specs that should '
                         'be added (omit all others)')
-
     select.add_argument('-b',
                         '--blacklist', nargs='*', required=False,
                         help='(not implemented) specs that should '
                         'be omitted (add all others)')
-
     ext.add_argument('path', nargs='?',
                      help='The location of the external install '
                      'directory')
-
     ext.add_argument('--latest', action='store_true',
                      help='use the latest snapshot available')
-
+    ext.add_argument('--list', action='store_true',
+                     help='print a list of the available externals to use')
     ext.set_defaults(merge=False, view='default',
-                     name='externals.yaml', latest=False)
+                     name='externals.yaml', latest=False, list=False)
 
     command_dict['external'] = external
