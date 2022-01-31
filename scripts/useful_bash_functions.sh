@@ -47,6 +47,11 @@ function quick-develop() {
     printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
+  cmd "spack manager external --latest"
+  if [[ $? != 0 ]]; then
+    printf "\nERROR: Exiting quick-develop prematurely\n"
+    return 1
+  fi
   cmd "spack concretize -f"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
