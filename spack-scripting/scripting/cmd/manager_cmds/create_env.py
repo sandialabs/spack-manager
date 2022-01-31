@@ -5,13 +5,11 @@ on a given machine
 """
 
 import os
-import shutil
 
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
-import spack.cmd.env as envcmd
 import spack.util.spack_yaml as syaml
 
 default_env_file = (
@@ -24,7 +22,19 @@ spack:
 
 
 def create_env(parser, args):
-    yaml = syaml.load_config(default_env_file)
+    if args.yaml:
+        assert(os.path.isfile(args.yaml))
+        with open(args.yaml, 'r') as fyaml:
+            yaml = syaml.load_config(fyaml)
+        # if user hasn't explicitly set view and concretization
+        # set them for them
+        if 'view' not in yaml['spack']:
+            yaml['spack']['view'] = False
+        if 'concretization' not in yaml['spack']:
+            yaml['spack']['concretization'] = 'together'
+    else:
+        yaml = syaml.load_config(default_env_file)
+
     if args.machine is not None:
         machine = args.machine
         if machine not in fm.machine_list.keys():
@@ -33,7 +43,10 @@ def create_env(parser, args):
         machine = find_machine()
 
     if args.spec:
-        yaml['spack']['specs'] = args.spec
+        if 'specs' in yaml['spack']:
+            yaml['spack']['specs'].extend(args.spec)
+        else:
+            yaml['spack']['specs'] = args.spec
 
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
@@ -63,14 +76,13 @@ def create_env(parser, args):
     include_file_name = 'include.yaml'
     include_file = os.path.join(theDir, include_file_name)
     inc_creator.write_includes(include_file)
-    yaml['spack']['include'].append(include_file_name)
-
-    if args.yaml is not None:
-        assert(os.path.isfile(args.yaml))
-        shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
+    if 'include' in yaml['spack']:
+        yaml['spack']['include'].append(include_file_name)
     else:
-        with open(os.path.join(theDir, 'spack.yaml'), 'w') as f:
-            syaml.dump_config(yaml, stream=f, default_flow_style=False)
+        yaml['spack']['include'] = [include_file_name]
+
+    with open(os.path.join(theDir, 'spack.yaml'), 'w') as f:
+        syaml.dump_config(yaml, stream=f, default_flow_style=False)
 
     fpath = os.path.join(os.environ['SPACK_MANAGER'], '.tmp')
     os.makedirs(fpath, exist_ok=True)
