@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+import re
 
 import llnl.util.tty as tty
 
@@ -6,6 +8,35 @@ import spack.config
 import spack.environment as ev
 import spack.util.spack_yaml as syaml
 from spack.environment import config_dict
+
+
+def get_external_dir():
+    if 'SPACK_MANAGER_EXTERNAL' in os.environ:
+        manager_root = os.environ['SPACK_MANAGER_EXTERNAL']
+    else:
+        manager_root = os.environ['SPACK_MANAGER']
+    external = os.path.join(manager_root, 'snapshots', 'exawind')
+    if os.path.isdir(external):
+        return external
+    else:
+        return None
+
+
+def get_latest_dated_snapshot():
+    """
+    Get the path for the latest snapshot created by snapshot_creator.py
+    based on the name/date created (not necessarily file creation date)
+    """
+    base_dir = get_external_dir()
+    if not base_dir:
+        return None
+    # get environment directories, make sure we're only pulling in directories
+    snapshots = [s for s in os.listdir(base_dir)
+                 if os.path.isdir(os.path.join(base_dir, s))]
+    # remove anything that isn't a date stamp i.e. (custom snapshots)
+    dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
+    dates.sort(reverse=True, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
+    return os.path.join(base_dir, dates[0])
 
 
 def include_entry_exists(env, name):
@@ -68,7 +99,10 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
             if s.name in white_list:
                 data += write_spec(view, s)
         else:
-            data += write_spec(view, s)
+            # auto blacklist all develops specs in the env
+            # externaling a dev spec will always be an error
+            if not env.is_develop(s):
+                data += write_spec(view, s)
     return syaml.load_config(data)
 
 
