@@ -4,42 +4,47 @@ A script for creating a new environment
 on a given machine
 """
 
-import argparse
 import os
-import shutil
 
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
-import spack.cmd.env as envcmd
+import spack.util.spack_yaml as syaml
+from spack.config import merge_yaml
 
 default_env_file = (
     """
 spack:
-  include:
-{includes}
+  include: []
   concretization: together
   view: false
-  specs: [{spec}]""")
+  specs: []""")
 
 
 def create_env(parser, args):
-    """
-    Copy files as needed
-    """
+    if args.yaml:
+        assert(os.path.isfile(args.yaml))
+        with open(args.yaml, 'r') as fyaml:
+            user_yaml = syaml.load_config(fyaml)
+        # merge defaults and user yaml files precedent to user specified
+        defaults = syaml.load_config(default_env_file)
+        yaml = merge_yaml(defaults, user_yaml)
+    else:
+        yaml = syaml.load_config(default_env_file)
+
     if args.machine is not None:
         machine = args.machine
         if machine not in fm.machine_list.keys():
             raise Exception('Specified machine %s is not defined' % machine)
     else:
-        machine = find_machine(verbose=(not args.activate))
+        machine = find_machine()
 
-    if args.spec is not None:
-        spec = args.spec
-    else:
-        # give a blank spec
-        spec = ''
+    if args.spec:
+        if 'specs' in yaml['spack']:
+            yaml['spack']['specs'].extend(args.spec)
+        else:
+            yaml['spack']['specs'] = args.spec
 
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
@@ -49,57 +54,63 @@ def create_env(parser, args):
     if os.path.exists(hostPath):
         inc_creator.add_scope('machine', hostPath)
     else:
-        if not args.activate:
-            print('Host not setup in spack-manager: %s' % hostPath)
+        print('Host not setup in spack-manager: %s' % hostPath)
 
     if args.directory is not None:
         if os.path.exists(args.directory) is False:
-            if not args.activate:
-                print("making", args.directory)
+            print("making", args.directory)
             os.makedirs(args.directory)
 
         theDir = args.directory
+    elif args.name is not None:
+        theDir = os.path.join(
+            os.environ['SPACK_MANAGER'], 'environments', args.name)
+        if os.path.exists(theDir) is False:
+            print("making", theDir)
+            os.makedirs(theDir)
     else:
         theDir = os.getcwd()
 
     include_file_name = 'include.yaml'
     include_file = os.path.join(theDir, include_file_name)
     inc_creator.write_includes(include_file)
-
-    include_str = '  - {v}\n'.format(v=include_file_name)
-
-    if args.yaml is not None:
-        assert(os.path.isfile(args.yaml))
-        shutil.copy(args.yaml, os.path.join(theDir, 'spack.yaml'))
+    if 'include' in yaml['spack']:
+        yaml['spack']['include'].append(include_file_name)
     else:
-        open(os.path.join(theDir, 'spack.yaml'), 'w').write(
-            default_env_file.format(spec=spec, includes=include_str))
+        yaml['spack']['include'] = [include_file_name]
 
-    if args.activate:
-        dumb_parser = argparse.ArgumentParser('dummy')
-        dumb_parser.add_argument('-env', required=False)
-        dumb_parser.add_argument('-no-env', required=False)
-        dumb_parser.add_argument('-env-dir', required=False)
-        envcmd.env_activate_setup_parser(dumb_parser)
-        activate_args = dumb_parser.parse_args(['-d', theDir, '-p', '--sh'])
-        envcmd.env_activate(activate_args)
+    with open(os.path.join(theDir, 'spack.yaml'), 'w') as f:
+        syaml.dump_config(yaml, stream=f, default_flow_style=False)
+
+    fpath = os.path.join(os.environ['SPACK_MANAGER'], '.tmp')
+
+    os.makedirs(fpath, exist_ok=True)
+
+    storage = os.path.join(fpath, 'created_env_path.txt')
+
+    with open(storage, 'w') as f:
+        f.write(theDir)
+
+    return theDir
+
+
+def setup_parser_args(sub_parser):
+    sub_parser.add_argument('-m', '--machine', required=False,
+                            help='Machine to match configs')
+    name_group = sub_parser.add_mutually_exclusive_group()
+    name_group.add_argument('-d', '--directory', required=False,
+                            help='Directory to copy files')
+    name_group.add_argument('-n', '--name', required=False,
+                            help='Name of directory to copy files that will be in '
+                            '$SPACK_MANAGER/environments')
+    sub_parser.add_argument('-y', '--yaml', required=False,
+                            help='Reference spack.yaml to copy to directory')
+    sub_parser.add_argument('-s', '--spec', required=False, default=[], nargs='+',
+                            help='Specs to populate the environment with')
 
 
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser('create-env', help='convenience script'
                                    ' for setting up a spack environment')
-    sub_parser.add_argument('-m', '--machine', required=False,
-                            help='Machine to match configs')
-    sub_parser.add_argument('-d', '--directory', required=False,
-                            help='Directory to copy files')
-    sub_parser.add_argument('-y', '--yaml', required=False,
-                            help='Reference spack.yaml to copy to directory')
-    sub_parser.add_argument('-s', '--spec', required=False,
-                            help='Spec to populate the environment with')
-    sub_parser.add_argument('-a', '--activate', dest='activate', required=False,
-                            action='store_true', default=False,
-                            help='Print the shell script required to activate '
-                            'the environment upon creation. '
-                            'When called with sspack it will auto activate'
-                            ' the env')
+    setup_parser_args(sub_parser)
     command_dict['create-env'] = create_env

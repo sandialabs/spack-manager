@@ -12,10 +12,10 @@ set -e
 printf "Starting at $(date).\n"
 
 if [[ -z ${SPACK_MANAGER} ]]; then
-    printf "\nSPACK_MANAGER not set so setting it to ${PWD}\n"
-    cmd "export SPACK_MANAGER=${PWD}"
+  printf "\nSPACK_MANAGER not set so setting it to ${PWD}\n"
+  cmd "export SPACK_MANAGER=${PWD}"
 else
-    printf "\nSPACK_MANAGER set to ${SPACK_MANAGER}\n"
+  printf "\nSPACK_MANAGER set to ${SPACK_MANAGER}\n"
 fi
 
 printf "\nActivating Spack-Manager...\n"
@@ -37,9 +37,14 @@ elif [ "${SPACK_MANAGER_MACHINE}" == 'rhodes' ]; then
   DEV_COMMAND='spack manager develop nalu-wind@master; spack manager develop hypre@develop'
   VIEW="${COMPILER}"
 fi
-cmd "spack manager create-env --directory ${SPACK_MANAGER}/environments/exawind --spec "${SPEC}""
+# all of these commands will eventually be combined into
+# quick-develop --name --exawind --spec $SPEC hypre@develop
+# still missing view selection for this
+
+# updated to use the new --name flag
+cmd "spack manager create-env --name exawind --spec "${SPEC}""
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind"
-cmd "spack config add config:concretizer:original"
+# if you do develop first then it will now auto-blacklist those specs for you
 cmd "spack manager external ${SNAPSHOT_DIR} -v ${VIEW} --blacklist ${BLACKLIST}"
 cmd "${DEV_COMMAND}"
 cmd "spack concretize -f"

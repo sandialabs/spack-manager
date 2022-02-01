@@ -54,22 +54,28 @@ def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
         env.Environment(tmpdir)
 
 
-def test_envIsActivatedWithActivateFlag(monkeypatch):
-    with TemporaryDirectory() as tmpdir:
-        # setup a mirror configuration of spack-manager
-        link_dir = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
+def test_specsCanBeAddedToExisitingYaml(tmpdir):
+    with tmpdir.as_cwd():
+        preset_yaml = """
+spack:
+  develop:
+    amr-wind:
+      spec: amr-wind@main
+      path: /tst/dir"""
 
-        os.mkdir(os.path.join(tmpdir, 'configs'))
-        os.symlink(link_dir,
-                   os.path.join(tmpdir, 'configs', 'base'))
+        with open('test.yaml', 'w') as fyaml:
+            fyaml.write(preset_yaml)
 
-        # monkeypatches
-        envVars = {'SPACK_MANAGER': tmpdir}
-        monkeypatch.setattr(os, 'environ', envVars)
+        env_root = str(tmpdir.join('dev'))
+        os.makedirs(env_root)
 
-        manager('create-env', '-d', tmpdir, '-a')
+        manager('create-env', '-d', env_root, '-m', 'darwin',
+                '-y', 'test.yaml', '-s', 'amr-wind', 'nalu-wind')
 
-        assert env.active_environment() is not None
-        assert env.active_environment().path == tmpdir
-        # this is required for clean up. need to start using spack test decorators
-        env.deactivate()
+        e = env.Environment(env_root)
+        assert e.yaml['spack']['specs'][0] == 'amr-wind'
+        assert e.yaml['spack']['specs'][1] == 'nalu-wind'
+        assert e.yaml['spack']['develop']['amr-wind']['spec'] == 'amr-wind@main'
+        assert e.yaml['spack']['develop']['amr-wind']['path'] == '/tst/dir'
+        assert not e.yaml['spack']['view']
+        assert e.yaml['spack']['concretization'] == 'together'

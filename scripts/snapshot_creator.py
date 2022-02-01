@@ -9,6 +9,7 @@ import os
 import sys
 from manager_cmds.find_machine import find_machine
 import multiprocessing
+from manager_utils import path_extension
 
 import spack.environment as ev
 import spack.main
@@ -16,11 +17,9 @@ import spack.util.spack_yaml as syaml
 import spack.util.executable
 import spack.cmd.install
 
-from datetime import date
 
 git = spack.util.executable.which('git')
 
-arch = spack.main.SpackCommand('arch')
 manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
 concretize = spack.main.SpackCommand('concretize')
@@ -119,17 +118,6 @@ def parse(stream):
     parser.set_defaults(modules=False, use_develop=False, stop_after='install')
 
     return parser.parse_args(stream)
-
-
-def path_extension(name, use_machine_name):
-    if use_machine_name:
-        return "exawind/snapshots/{machine}/{date}".format(
-            date=name if name else date.today().strftime("%Y-%m-%d"),
-            machine=os.environ['SPACK_MANAGER_MACHINE'])
-    else:
-        return "exawind/snapshots/{arch}/{date}".format(
-            date=name if name else date.today().strftime("%Y-%m-%d"),
-            arch=arch('-b').strip())
 
 
 def view_excludes(snap_spec):
