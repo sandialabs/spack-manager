@@ -33,4 +33,4 @@ class TestSpackManagerDevelop(object):
             path = os.path.join(e.path, name)
             manager('develop', '--repo-branch', repo, branch, spec)
             mock_develop.assert_called_once()
-            mock_git_clone.assert_called_once_with(branch, repo, path)
+            mock_git_clone.assert_called_once_with(branch, repo, path, False)

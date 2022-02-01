@@ -7,12 +7,16 @@ import spack.util.executable
 from spack.error import SpackError
 
 
-def git_clone(branch, repo, path):
+def git_clone(branch, repo, path, shallow):
     """
     git clone wrapper to help with mocking
     """
     git = spack.util.executable.which('git')
-    git('clone', '--recursive', '--branch', branch, repo, path)
+    git_args = ['clone', '--single-branch', '--recursive']
+    if shallow:
+        git_args.extend(['--depth', '1'])
+    git_args.extend(['--branch', branch, repo, path])
+    git(*git_args)
 
 
 def _redundant_code_from_spack_develop(args):
@@ -70,7 +74,7 @@ def manager_develop(parser, args):
 
     if args.repo_branch and clone:
         repo, branch = args.repo_branch
-        git_clone(branch, repo, path)
+        git_clone(branch, repo, path, args.shallow)
         args.clone = False
 
     spack_develop.develop(None, args)
@@ -84,5 +88,7 @@ def add_command(parser, command_dict):
     clone_group.add_argument('-rb', '--repo-branch', nargs=2,
                              metavar=('repo', 'branch'), required=False,
                              help='git repo to clone from')
+    subparser.add_argument('--shallow', required=False, action='store_true',
+                           help='performa a shallow clone of the repo')
 
     command_dict['develop'] = manager_develop
