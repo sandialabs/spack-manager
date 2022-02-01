@@ -28,12 +28,8 @@ function quick-create() {
 }
 # function to create, activate, concretize and attempt to install a develop environment all in one step
 function quick-develop() {
-  # Trap and kill background processes
-  trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
-
   # since we want this to run in the active shell
   # we mush manually return instead of exiting with set -e
-
   cmd "spack-start"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
