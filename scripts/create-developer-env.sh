@@ -42,7 +42,7 @@ fi
 # still missing view selection for this
 
 # updated to use the new --name flag
-cmd "spack manager create-env --name exawind --spec "${SPEC}""
+cmd "spack manager create-env --name exawind --spec '${SPEC}'"
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind"
 # if you do develop first then it will now auto-blacklist those specs for you
 cmd "spack manager external ${SNAPSHOT_DIR} -v ${VIEW} --blacklist ${BLACKLIST}"
