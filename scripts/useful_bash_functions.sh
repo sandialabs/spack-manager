@@ -16,6 +16,9 @@ function quick-activate() {
 function quick-create() {
   cmd "spack-start"
   cmd "spack manager create-env $@"
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    return
+  fi
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-create prematurely\n"
     return 1
@@ -38,7 +41,7 @@ function quick-develop() {
   fi
   cmd "spack manager create-dev-env $*"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-     return
+    return
   fi
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
