@@ -33,4 +33,5 @@ export SPACK_MANAGER_MACHINE=$(spack manager find-machine)
 if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
 fi
+export SPACK_MANAGER_EXTERNAL=$(${SPACK_MANAGER}/scripts/supported_external_paths.py)
 export PATH=${PATH}:${SPACK_MANAGER}/scripts
