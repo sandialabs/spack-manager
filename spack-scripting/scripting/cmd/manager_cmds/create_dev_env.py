@@ -19,6 +19,11 @@ def develop(args):
 
 
 def create_dev_env(parser, args):
+    if not args.spec:
+        sys.stderr.write(
+            '\nERROR: specs are a required argument for '
+            'spack manager create-dev-env.\n')
+        exit(1)
     for s in args.spec:
         # check that all specs were concrete
         if '@' not in s:
