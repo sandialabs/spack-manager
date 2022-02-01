@@ -58,8 +58,9 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
         assert 'path' in e.yaml['spack']['develop']['nalu-wind']
         # mocked out call that would update yaml with trilinos info but
         # assuming it works fine
-        mock_dev.assert_any_call(['amr-wind@main'])
-        mock_dev.assert_any_call(['nalu-wind@master'])
+        mock_dev.assert_any_call(['--path', amr_path.strpath, 'amr-wind@main'])
+        mock_dev.assert_any_call(
+            ['--path', nalu_path.strpath, 'nalu-wind@master'])
         mock_dev.assert_called_with([
             '-rb', 'git@github.com:trilinos/trilinos.git',
             'master', 'trilinos@master'])
