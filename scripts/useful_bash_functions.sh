@@ -37,6 +37,9 @@ function quick-develop() {
     return 1
   fi
   cmd "spack manager create-dev-env $*"
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+     return
+  fi
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
