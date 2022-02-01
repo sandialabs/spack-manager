@@ -137,6 +137,10 @@ def external(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die('spack manager external requires an active environment')
+    # for now we have to use the original concretizer
+    # see: https://github.com/spack/spack/issues/28201
+    env.yaml['spack']['config'] = {'concretizer': 'original'}
+    env.write()
     if args.latest:
         snap_path = get_latest_dated_snapshot()
         if not snap_path:

@@ -45,7 +45,6 @@ env_path = os.path.join(os.environ['SPACK_MANAGER'],
                         'environments', args.dev_name)
 command(manager, 'create-env', '--directory', env_path, '--spec', 'nalu-wind')
 ev.activate(ev.Environment(env_path))
-command(config, 'add', 'config:concretizer:original')
 command(manager, 'external', snapshot_path, '-v', args.view_name,
         '--blacklist', 'nalu-wind')
 command(manager, 'develop', 'nalu-wind@master')
