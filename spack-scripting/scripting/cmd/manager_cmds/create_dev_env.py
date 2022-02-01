@@ -1,9 +1,9 @@
 import argparse
-import llnl.util.tty as tty
-import sys
 
 import manager_cmds.create_env as create_env
 import manager_cmds.develop
+
+import llnl.util.tty as tty
 
 import spack.environment as ev
 
