@@ -36,19 +36,18 @@ function quick-create() {
 function quick-develop() {
   # since we want this to run in the active shell
   # we mush manually return instead of exiting with set -e
-
   cmd "spack-start"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
   cmd "spack manager create-dev-env $*"
-  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    return
-  fi
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
+  fi
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    return
   fi
   EPATH=$(cat $SPACK_MANAGER/.tmp/created_env_path.txt)
   cmd "spack env activate --dir ${EPATH} --prompt"
