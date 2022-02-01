@@ -282,7 +282,7 @@ def use_develop_specs(env, specs):
         # with standard spack develop
         if 'trilinos' in spec_string:
             branch = spec_string.split('@')[-1]
-            command(manager, 'develop', '-rb',
+            command(manager, 'develop', '--shallow', '-rb',
                     'https://github.com/trilinos/trilinos',
                     branch, spec_string)
         elif 'openfast' in spec_string:
@@ -292,7 +292,7 @@ def use_develop_specs(env, specs):
         elif 'cmake' in spec_string:
             continue
         else:
-            command(manager, 'develop', spec_string)
+            command(manager, 'develop', '--shallow', spec_string)
     ev.deactivate()
 
 
