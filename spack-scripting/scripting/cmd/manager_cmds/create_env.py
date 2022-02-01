@@ -11,6 +11,7 @@ from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
 import spack.util.spack_yaml as syaml
+from spack.config import merge_yaml
 
 default_env_file = (
     """
@@ -25,13 +26,10 @@ def create_env(parser, args):
     if args.yaml:
         assert(os.path.isfile(args.yaml))
         with open(args.yaml, 'r') as fyaml:
-            yaml = syaml.load_config(fyaml)
-        # if user hasn't explicitly set view and concretization
-        # set them for them
-        if 'view' not in yaml['spack']:
-            yaml['spack']['view'] = False
-        if 'concretization' not in yaml['spack']:
-            yaml['spack']['concretization'] = 'together'
+            user_yaml = syaml.load_config(fyaml)
+        # merge defaults and user yaml files precedent to user specified
+        defaults = syaml.load_config(default_env_file)
+        yaml = merge_yaml(defaults, user_yaml)
     else:
         yaml = syaml.load_config(default_env_file)
 
@@ -85,8 +83,11 @@ def create_env(parser, args):
         syaml.dump_config(yaml, stream=f, default_flow_style=False)
 
     fpath = os.path.join(os.environ['SPACK_MANAGER'], '.tmp')
+
     os.makedirs(fpath, exist_ok=True)
+
     storage = os.path.join(fpath, 'created_env_path.txt')
+
     with open(storage, 'w') as f:
         f.write(theDir)
 

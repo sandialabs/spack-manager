@@ -73,7 +73,7 @@ def manager_develop(parser, args):
         git_clone(branch, repo, path)
         args.clone = False
 
-    spack_develop.develop(parser, args)
+    spack_develop.develop(None, args)
 
 
 def add_command(parser, command_dict):
