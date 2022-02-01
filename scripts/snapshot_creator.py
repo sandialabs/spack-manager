@@ -67,6 +67,7 @@ class SnapshotSpec:
 # a list of specs to build in the snapshot, 1 view will be created for each
 machine_specs = {
     'darwin': [SnapshotSpec(exclusions=['%intel'])],
+    'cee': [SnapshotSpec()],
     'rhodes': [SnapshotSpec('gcc',
                             base_spec + '%gcc', ['%clang', '%intel']),
                SnapshotSpec('clang',
