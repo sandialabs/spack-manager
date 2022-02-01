@@ -1,4 +1,5 @@
 import argparse
+import llnl.util.tty as tty
 import sys
 
 import manager_cmds.create_env as create_env
@@ -20,21 +21,19 @@ def develop(args):
 
 def create_dev_env(parser, args):
     if not args.spec:
-        sys.stderr.write(
+        tty.die(
             '\nERROR: specs are a required argument for '
             'spack manager create-dev-env.\n')
-        exit(1)
     for s in args.spec:
         # check that all specs were concrete
         if '@' not in s:
-            sys.stderr.write(
+            tty.die(
                 '\nERROR: All specs must be concrete to use '
                 '\'spack manager create-dev-env\' i.e. at '
                 'least [package]@[version].\nTo learn what versions are'
                 ' available type \'spack info [package]\''
                 '\nSome common exawind versions are: exawind@master, '
                 'amr-wind@main and nalu-wind@master\n')
-            exit(1)
     env_path = create_env.create_env(parser, args)
     env = ev.Environment(env_path)
     ev.activate(env)
