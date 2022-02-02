@@ -32,6 +32,22 @@ function quick-create() {
   cmd "spack env activate --dir ${EPATH} --prompt"
 }
 
+# same as quick-create but calls create-env-dev instead
+# can be used to add externals
+function quick-create-dev() {
+  cmd "spack-start"
+  cmd "spack manager create-env-dev $@"
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    return
+  fi
+  if [[ $? != 0 ]]; then
+    printf "\nERROR: Exiting quick-create prematurely\n"
+    return 1
+  fi
+  EPATH=$(cat $SPACK_MANAGER/.tmp/created_env_path.txt)
+  cmd "spack env activate --dir ${EPATH} --prompt"
+}
+
 # function to create, activate, concretize and attempt to install a develop environment all in one step
 function quick-develop() {
   # since we want this to run in the active shell

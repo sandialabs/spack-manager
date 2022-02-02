@@ -34,7 +34,6 @@ def get_external_dir():
     else:
         external = external_machine
 
-    print(external)
     if os.path.isdir(external):
         return external
     else:
@@ -134,6 +133,16 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
 
 
 def external(parser, args):
+    if args.list:
+        extern_dir = get_external_dir()
+        snaps = get_all_snapshots()
+        print('Available snapshot directories (and views) are: ')
+        for s in snaps:
+            env_dir = os.path.join(extern_dir, s)
+            env = ev.Environment(env_dir)
+            views = ', '.join(env.views.keys())
+            print(' - {path} ({views})'.format(path=env_dir, views=views))
+        return
     env = ev.active_environment()
     if not env:
         tty.die('spack manager external requires an active environment')
@@ -152,13 +161,6 @@ def external(parser, args):
             return
     else:
         snap_path = args.path
-    if args.list:
-        extern_dir = get_external_dir()
-        snaps = get_all_snapshots()
-        print("Available snapshot directories are: ")
-        for s in snaps:
-            print('\t' + os.path.join(extern_dir, s))
-        return
 
     # check that directory of ext view exists
     if not ev.is_env_dir(snap_path):
