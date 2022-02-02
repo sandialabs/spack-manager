@@ -36,7 +36,7 @@ function quick-create() {
 # can be used to add externals
 function quick-create-dev() {
   cmd "spack-start"
-  cmd "spack manager create-env-dev $@"
+  cmd "spack manager create-dev-env $@"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     return
   fi
@@ -72,11 +72,6 @@ function quick-develop() {
     return 1
   fi
   cmd "spack manager external --latest"
-  if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-develop prematurely\n"
-    return 1
-  fi
-  cmd "spack concretize -f"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
