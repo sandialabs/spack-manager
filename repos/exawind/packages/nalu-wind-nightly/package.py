@@ -32,11 +32,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     phases = ['test']
 
-    def setup_build_environment(self, env):
-        if '+cuda' in self.spec:
-            env.set("CUDA_LAUNCH_BLOCKING", "1")
-            env.set("CUDA_MANAGED_FORCE_DEVICE_ALLOC", "1")
-
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
