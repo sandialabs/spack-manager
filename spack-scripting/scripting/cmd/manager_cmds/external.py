@@ -104,6 +104,10 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
     env = ev.Environment(path)
 
     env.check_views()
+    if view_key is None:
+        # get the first view that was added to the environment as the default
+        view_key = env.views.keys()[0]
+
     try:
         view = env.views[view_key]
     except KeyError:
@@ -203,8 +207,11 @@ def add_command(parser, command_dict):
                      '--name', required=False,
                      help='name the new include file for the '
                      'externals with this name')
-    ext.add_argument('-v', '--view', required=False, default='default',
-                     help='name of view to use in the environment')
+    ext.add_argument('-v', '--view', required=False,
+                     help='name of view to use in the environment.\n'
+                     'This will default to the first view in the environment\n'
+                     'i.e. the first view listed in "spack manager external --list"'
+                     ' command')
     ext.add_argument('-m', '--merge', required=False,
                      action='store_true', help='merge existing yaml files '
                      'together')
@@ -225,8 +232,10 @@ def add_command(parser, command_dict):
     ext.add_argument('--latest', action='store_true',
                      help='use the latest snapshot available')
     ext.add_argument('--list', action='store_true',
-                     help='print a list of the available externals to use')
-    ext.set_defaults(merge=False, view='default',
+                     help='print a list of the available externals to use.\n'
+                     'Values in parenthesis are the view names for each '
+                     'external')
+    ext.set_defaults(merge=False,
                      name='externals.yaml', latest=False, list=False)
 
     command_dict['external'] = external
