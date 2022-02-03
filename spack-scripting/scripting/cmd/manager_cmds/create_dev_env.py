@@ -58,6 +58,7 @@ def add_command(parser, command_dict):
     sub_parser = parser.add_parser(
         'create-dev-env',
         help='create a developer focused environment where all root specs are'
-        ' develop specs')
+        ' develop specs and they are automatically cloned from the default'
+        ' branches')
     create_env.setup_parser_args(sub_parser)
     command_dict['create-dev-env'] = create_dev_env
