@@ -1,6 +1,5 @@
 import os
 import re
-import sys
 from datetime import datetime
 
 from manager_utils import base_extension
