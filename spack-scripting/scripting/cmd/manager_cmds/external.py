@@ -1,6 +1,5 @@
 import os
 import re
-import sys
 from datetime import datetime
 
 from manager_utils import base_extension
@@ -59,9 +58,13 @@ def get_latest_dated_snapshot():
     snapshots = get_all_snapshots()
     base_dir = get_external_dir()
     # remove anything that isn't a date stamp i.e. (custom snapshots)
-    dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
-    dates.sort(reverse=True, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
-    return os.path.join(base_dir, dates[0])
+    if base_dir and snapshots:
+        dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
+        dates.sort(reverse=True, key=lambda date: datetime.strptime(
+            date, "%Y-%m-%d"))
+        return os.path.join(base_dir, dates[0])
+    else:
+        return
 
 
 def include_entry_exists(env, name):
@@ -106,7 +109,7 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
     env.check_views()
     if view_key is None:
         # get the first view that was added to the environment as the default
-        view_key = env.views.keys()[0]
+        view_key = list(env.views.keys())[0]
 
     try:
         view = env.views[view_key]
@@ -157,11 +160,11 @@ def external(parser, args):
     if args.latest:
         snap_path = get_latest_dated_snapshot()
         if not snap_path:
-            sys.stderr.write('WARNING: No \'externals.yaml\' created because no valid '
-                             'snapshots were found. \n'
-                             '\tIf you are trying to use a system level snapshot make '
-                             'sure you have SPACK_MANAGER_EXTERNAL pointing to '
-                             'spack-manager directory for the system.\n')
+            print('WARNING: No \'externals.yaml\' created because no valid '
+                  'snapshots were found. \n'
+                  '  If you are trying to use a system level snapshot make '
+                  'sure you have SPACK_MANAGER_EXTERNAL pointing to '
+                  'spack-manager directory for the system.\n')
             return
     else:
         snap_path = args.path
