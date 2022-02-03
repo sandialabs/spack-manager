@@ -29,8 +29,6 @@ def get_external_dir():
             'Please contact system admins and spack-manager maintainers'
             ' to sort this out')
 
-    print(external_machine)
-    print(external_arch)
     if os.path.isdir(external_arch):
         external = external_arch
     else:
@@ -62,7 +60,6 @@ def get_latest_dated_snapshot():
     base_dir = get_external_dir()
     # remove anything that isn't a date stamp i.e. (custom snapshots)
     if base_dir and snapshots:
-        print(base_dir)
         dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
         dates.sort(reverse=True, key=lambda date: datetime.strptime(
             date, "%Y-%m-%d"))
