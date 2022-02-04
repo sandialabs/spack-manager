@@ -140,4 +140,10 @@ packages:
     externals:
       - spec: "openssl@1.1.1l%gcc"
         prefix: /usr/
-
+  boost:
+    version: [1.76.0]
+    buildable: false
+    externals:
+      - spec: "boost@1.76.0%gcc"
+        modules:
+          - boost/1.76.0
