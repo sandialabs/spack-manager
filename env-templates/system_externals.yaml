@@ -4,9 +4,8 @@ spack:
   - system_specs:
     - cmake
     - mpich%gcc@9.3.0
-
   - when: env['SPACK_MANAGER_MACHINE']=='ascicgpu'
-    system_specs: []cuda@11.2.2%gcc@9.3.0]
+    system_specs: [cuda@11.2.2%gcc@9.3.0]
 
   - when: env['SPACK_MANAGER_MACHINE']=='darwin'
     system_specs: [gcc@9.3.0]
