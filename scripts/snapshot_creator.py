@@ -85,9 +85,9 @@ machine_specs = {
                            'cuda_arch=70 %gcc', ['%clang', '%intel'])],
     'summit': [SnapshotSpec('gcc', 'exawind+hypre'
                             '~cuda~amr_wind_gpu~nalu_wind_gpu %gcc'),
-              SnapshotSpec('cuda', 'exawind+hypre'
-                           '+cuda+amr_wind_gpu+nalu_wind_gpu '
-                           'cuda_arch=70 %gcc')],
+               SnapshotSpec('cuda', 'exawind+hypre'
+                            '+cuda+amr_wind_gpu+nalu_wind_gpu '
+                            'cuda_arch=70 %gcc')],
     'snl-hpc': [SnapshotSpec()],
     'ascicgpu': [SnapshotSpec(),
                  SnapshotSpec(
