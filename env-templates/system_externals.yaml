@@ -1,0 +1,26 @@
+# nothing here should depend on architecture
+spack:
+  definitions:
+  - system_specs:
+    - cmake
+    - mpich%gcc@9.3.0
+
+  - when: env['SPACK_MANAGER_MACHINE']=='ascicgpu'
+    system_specs: [gcc@9.3.0+binutils+piclibs, cuda@11.2.2%gcc@9.3.0]
+
+  - when: env['SPACK_MANAGER_MACHINE']=='darwin'
+    system_specs: [gcc@9.3.0]
+
+  specs:
+  - $system_specs
+  view:
+    default:
+      root: /projects/wind/spack-manager/views/system
+      projections:
+        all: '{compiler.name}-{compiler.version/}{name}-{version}'
+      link_type: hardlink
+  config:
+    install_missing_compilers: true
+  packages:
+    all:
+      target: [x86_64]
