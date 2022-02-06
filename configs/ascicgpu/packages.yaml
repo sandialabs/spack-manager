@@ -2,23 +2,88 @@ packages:
   all:
     compiler: [gcc]
     providers:
-      mpi: [openmpi]
+      mpi: [mpich]
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
     variants: build_type=Release
     target: [x86_64]
   cmake:
     externals:
-    - spec: cmake@3.20.0
-      modules:
-      - sierra-cmake/3.20.0
-      prefix: /projects/sierra/linux_rh7/install/cmake/3.20.0/bin/cmake
-  openmpi:
+    - spec: cmake@3.22.2
+      prefix: /projects/wind/spack-manager/views/system/gcc-4.8.5/cmake-3.22.2
+    buildable: false
+  ncurses:
     externals:
-    - spec: openmpi@4.0.5
-      modules:
-      - sierra-mpi/openmpi/4.0.5
-      prefix: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.5-nvidia-11.2.1-RHEL7/
+    - spec: ncurses@6.2%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/ncurses-6.2
+    buildable: false
+  openssl:
+    externals:
+    - spec: openssl@1.1.1m%gcc@4.8.5
+      prefix: /projects/wind/spack-manager/views/system/gcc-4.8.5/openssl-1.1.1m
+    buildable: false
+  zlib:
+    externals:
+    - spec: zlib@1.2.11%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/zlib-1.2.11
+    buildable: false
+  mpich:
+    externals:
+    - spec: mpich@3.4.2%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/mpich-3.4.2
+    buildable: false
+  hwloc:
+    externals:
+    - spec: hwloc@2.7.0%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/hwloc-2.7.0
+    buildable: false
+  libpciaccess:
+    externals:
+    - spec: libpciaccess@0.16%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libpciaccess-0.16
+    buildable: false
+  libxml2:
+    externals:
+    - spec: libxml2@2.9.12%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libxml2-2.9.12
+    buildable: false
+  libiconv:
+    externals:
+    - spec: libiconv@1.16%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libiconv-1.16
+    buildable: false
+  xz:
+    externals:
+    - spec: xz@5.2.5%gcc@9.3.0~pic
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/xz-5.2.5
+    buildable: false
+  libfabric:
+    externals:
+    - spec: libfabric@1.14.0%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libfabric-1.14.0
     buildable: false
   cuda:
-    version: [11.2.1]
+    externals:
+    - spec: cuda@11.2.2%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/cuda-11.2.2
+    buildable: false
+  binutils:
+    externals:
+    - spec: binutils@2.37%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/binutils-2.37
+    buildable: false
+  gettext:
+    externals:
+    - spec: gettext@0.21%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/gettext-0.21
+    buildable: false
+  bzip2:
+    externals:
+    - spec: bzip2@1.0.8%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/bzip2-1.0.8
+    buildable: false
+  tar:
+    externals:
+    - spec: tar@1.34%gcc@9.3.0
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/tar-1.34
+    buildable: false
