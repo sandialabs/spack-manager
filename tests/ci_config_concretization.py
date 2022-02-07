@@ -1,5 +1,6 @@
 #!/usr/bin/env spack-python
 from tempfile import TemporaryDirectory
+import manager_cmds.find_machine as find_machine
 from manager_cmds.find_machine import machine_list
 import spack.environment as env
 import spack.main
@@ -26,11 +27,16 @@ def run_tests(args):
     failure = False
     machine_names = list(machine_list.keys())
     matrix_test_machines = ['eagle', 'summit']
+    this_machine = find_machine(verbose=False)
 
     if '_matrix.yaml' in args.yaml:
         machine_names = matrix_test_machines
     else:
         machine_names = list(set(machine_names) - set(matrix_test_machines))
+    # remove from ascicgpu from darwin due to gcc conflict
+    # need to test if we can move to boost@1.77
+    if this_machine == 'darwin' and 'ascicgpu' in machine_names:
+        machine_names.remove('ascicgpu')
 
     for name in machine_names:
         try:
