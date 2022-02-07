@@ -10,7 +10,7 @@ packages:
   cmake:
     externals:
     - spec: cmake@3.22.2
-      prefix: /projects/wind/spack-manager/views/system/gcc-4.8.5/cmake-3.22.2
+      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/cmake-3.22.2
     buildable: false
   ncurses:
     externals:
