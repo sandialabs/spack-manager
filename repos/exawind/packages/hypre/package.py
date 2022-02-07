@@ -4,7 +4,11 @@ import os
 
 class Hypre(bHypre):
 
-    phases = ['autoreconf', 'configure', 'clean', 'build', 'install']
+    phases = ['autoreconf', 'distclean', 'configure', 'clean', 'build', 'install']
+
+    def distclean(self, spec, prefix):
+        with working_dir('src'):
+            make('distclean')
 
     def clean(self, spec, prefix):
         with working_dir('src'):
