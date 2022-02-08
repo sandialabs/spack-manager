@@ -1,4 +1,3 @@
-import sys
 extensions = ['myst_parser']
 templates_path = ['_templates']
 master_doc = 'index'
