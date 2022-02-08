@@ -37,8 +37,8 @@ def run_tests(args):
         if '_matrix.yaml' in args.yaml:
             machine_names = matrix_test_machines
         else:
-            machine_names = list(set(machine_names) -
-                                 set(matrix_test_machines))
+            machine_names = list(
+                set(machine_names) - set(matrix_test_machines))
 
     for name in machine_names:
         try:
