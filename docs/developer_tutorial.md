@@ -24,7 +24,7 @@ It is advisable to set `SPACK_MANAGER` environment variable in your `bashrc` or 
 since most of the scripts rely on this environment variable to run correctly.
 
 Next you want to activate spack via spack manager.
-This can be done by sourcing the bash-script [start.sh](../start.sh).
+This can be done by sourcing the bash-script start.sh.
 
 ```
 source $SPACK_MANAGER/start.sh
@@ -85,7 +85,7 @@ The includes files are also located in the `demo` directory.
 These contain machine specific (in this case ascicgpu) and general 
 configurations.
 The order they are listed in also determines the level of precedence the configuration files are given.
-These are copied from the machine specific [configs](../configs/) stored in the
+These are copied from the machine specific configs directory stored in the
 spack-manager repository.
 Further details of these files are outside the scope of this tutorial but can be found
 in the [spack configuration files documentation](https://spack.readthedocs.io/en/latest/configuration.html).
