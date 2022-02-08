@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  Docs:
+  docs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel previous runs
