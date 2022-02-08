@@ -31,7 +31,6 @@ jobs:
         run: |
           echo "::add-matcher::.github/problem-matchers/sphinx.json"
           sphinx-build -M html ./docs ./build_docs/manual 2>&1 | tee -a build-output.txt
-          doxygen ./docs/doxygen/Doxyfile
           mv ./build_docs/manual/html ./documentation
           touch ./documentation/.nojekyll
       - name: Report
