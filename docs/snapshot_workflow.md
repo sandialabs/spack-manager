@@ -198,6 +198,7 @@ Next we will edit code in `hypre`:
 ```
 
 Then we can simply rebuild and instal the entire project by:
+```
 [jrood@el1 hypre]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
 ==> Installing environment /scratch/jrood/test/spack-manager/environments/exawind
@@ -238,6 +239,7 @@ Notice both `hypre` and `nalu-wind` are rebuilt. Since `nalu-wind` depends on `h
 Spack also performed the `make install` step and the binaries are installed to regular Spack paths in `${SPACK_MANAGER}/spack/opt`. So the binaries can be referenced from the installed directory or from the build directories in each project in `${SPACK_MANAGER}/environments/exawind`.
 
 Next we can edit code in `nalu-wind` as well, and rebuild the project:
+```
 [jrood@el1 hypre]$ cd ${SPACK_MANAGER}/environments/exawind/nalu-wind
 [jrood@el1 nalu-wind]$ echo "//" >> unit_tests.C
 [jrood@el1 nalu-wind]$ spack install
