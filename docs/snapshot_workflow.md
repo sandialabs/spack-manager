@@ -1,5 +1,4 @@
-# Spack-Sanager: Snapshot Developer Workflow Example
-
+# Snapshot Developer Workflow Example
 
 In this tutorial we will look at how to setup a developer workflow using snapshots if they are provided on your machine.
 
