@@ -6,8 +6,8 @@ We use the Eagle machine at NREL for the example, and we choose to develop both 
 projects for running on the GPU using CUDA. Starting from nothing, we first clone spack-manager:
 ```
 [user@el1 ~]$ export SCRATCH=/scratch/${USER}
-[user@el1 ~]$ mkdir ${SCRATCH}/test && cd ${SCRATCH}/test
-[user@el1 test]$ git clone --recursive https://github.com/psakievich/spack-manager.git
+[user@el1 ~]$ cd ${SCRATCH}
+[user@el1 user]$ git clone --recursive https://github.com/psakievich/spack-manager.git
 Cloning into 'spack-manager'...
 remote: Enumerating objects: 2610, done.
 remote: Counting objects: 100% (2610/2610), done.
@@ -16,7 +16,7 @@ remote: Total 2610 (delta 1345), reused 2476 (delta 1256), pack-reused 0
 Receiving objects: 100% (2610/2610), 426.10 KiB | 4.14 MiB/s, done.
 Resolving deltas: 100% (1345/1345), done.
 Submodule 'spack' (https://github.com/spack/spack) registered for path 'spack'
-Cloning into '/lustre/eaglefs/scratch/user/test/spack-manager/spack'...
+Cloning into '/lustre/eaglefs/scratch/user/spack-manager/spack'...
 remote: Enumerating objects: 354065, done.
 remote: Total 354065 (delta 0), reused 0 (delta 0), pack-reused 354065
 Receiving objects: 100% (354065/354065), 155.14 MiB | 22.08 MiB/s, done.
@@ -26,7 +26,7 @@ Submodule path 'spack': checked out '3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be'
 
 We `cd` to `spack-manager` and activate it:
 ```
-[user@el1 spack-manager]$ export SPACK_MANAGER=${SCRATCH}/test/spack-manager && source ${SPACK_MANAGER}/start.sh
+[user@el1 spack-manager]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh
 Activating Spack-Manager...
 ==> Removing cached information on repositories
 ```
@@ -38,7 +38,7 @@ Our environment will be called `exawind` using the `--name` argument. We will ch
 enabled (`+hypre`), and CUDA (`+cuda cuda_arch=70`), using the GCC compiler (`%gcc`, which without a version, selects the default compiler version).
 ```
 [user@el1 spack-manager]$ spack manager create-env --name exawind --spec 'nalu-wind@master+hypre+cuda cuda_arch=70 %gcc'
-making /scratch/user/test/spack-manager/environments/exawind
+making /scratch/user/spack-manager/environments/exawind
 ```
 
 Once the environment is created, we need to activate it:
@@ -122,10 +122,10 @@ concretize with the command (we almost always want to use the force with `-f`):
 ==> Warning: the original concretizer is currently being used.
         Upgrade to "clingo" at your earliest convenience. The original concretizer will be removed from Spack starting at v0.18.0
 ==> Concretized nalu-wind@master%gcc+cuda+hypre cuda_arch=70
- -   rbzxf3n  nalu-wind@master%gcc@9.3.0~asan~boost~catalyst+cuda~fftw+hypre~ipo~openfast+pic~rocm+tests~tioga~wind-utils abs_tol=1e-15 build_type=Release cuda_arch=70 cxxstd=14 dev_path=/scratch/user/test/spack-manager/environments/exawind/nalu-wind rel_tol=1e-12 arch=linux-centos7-skylake_avx512
+ -   rbzxf3n  nalu-wind@master%gcc@9.3.0~asan~boost~catalyst+cuda~fftw+hypre~ipo~openfast+pic~rocm+tests~tioga~wind-utils abs_tol=1e-15 build_type=Release cuda_arch=70 cxxstd=14 dev_path=/scratch/user/spack-manager/environments/exawind/nalu-wind rel_tol=1e-12 arch=linux-centos7-skylake_avx512
  -   b5pippu      ^cmake@3.22.1%gcc@9.3.0~doc+ncurses+openssl+ownlibs~qt build_type=Release arch=linux-centos7-skylake_avx512
  -   cwar5vn      ^cuda@11.2.2%gcc@9.3.0~allow-unsupported-compilers~dev arch=linux-centos7-skylake_avx512
- -   ukbdvpe      ^hypre@develop%gcc@9.3.0~complex+cuda~debug+fortran~gptune~int64~internal-superlu~mixedint+mpi~openmp+shared~superlu-dist+unified-memory cuda_arch=70 dev_path=/scratch/user/test/spack-manager/environments/exawind/hypre arch=linux-centos7-skylake_avx512
+ -   ukbdvpe      ^hypre@develop%gcc@9.3.0~complex+cuda~debug+fortran~gptune~int64~internal-superlu~mixedint+mpi~openmp+shared~superlu-dist+unified-memory cuda_arch=70 dev_path=/scratch/user/spack-manager/environments/exawind/hypre arch=linux-centos7-skylake_avx512
  -   ypwgjj2          ^mpt@2.22%gcc@9.3.0 arch=linux-centos7-skylake_avx512
  -   g4tc7v2          ^netlib-lapack@3.9.1%gcc@9.3.0~external-blas~ipo+lapacke+shared~xblas build_type=Release arch=linux-centos7-skylake_avx512
  -   sp3klcm      ^kokkos-nvcc-wrapper@3.2.00%gcc@9.3.0+mpi arch=linux-centos7-skylake_avx512
@@ -142,7 +142,7 @@ So now we are able to install our project with the simple command:
 ```
 [user@el1 spack-manager]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
-==> Installing environment /scratch/user/test/spack-manager/environments/exawind
+==> Installing environment /scratch/user/spack-manager/environments/exawind
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
 [+] /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu (external cuda-11.2.2-cwar5vnomowwdorf57nay6e7erladdby)
 ==> mpt@2.22 : has external module in ['mpt/2.22', 'slurm']
@@ -162,7 +162,7 @@ So now we are able to install our project with the simple command:
 ==> hypre: Executing phase: 'install'
 ==> hypre: Successfully installed hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
   Fetch: 0.00s.  Build: 4m 30.38s.  Total: 4m 30.38s.
-[+] /lustre/eaglefs/scratch/user/test/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
 ==> Installing nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
 ==> No binary for nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx found: installing from source
 ==> No patches needed for nalu-wind
@@ -171,7 +171,7 @@ So now we are able to install our project with the simple command:
 ==> nalu-wind: Executing phase: 'install'
 ==> nalu-wind: Successfully installed nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
   Fetch: 0.00s.  Build: 32m 27.59s.  Total: 32m 27.59s.
-[+] /lustre/eaglefs/scratch/user/test/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
 ```
 
 We notice that both `nalu-wind` and `hypre` are being rebuilt, while the rest of the dependency graph is fullfilled through the externals defined from
@@ -181,7 +181,7 @@ and iterate easily on a simplified build process.
 We start by verifying our currently activated environment in Spack:
 ```
 [user@el1 spack-manager]$ spack find
-==> In environment /scratch/user/test/spack-manager/environments/exawind
+==> In environment /scratch/user/spack-manager/environments/exawind
 ==> Root specs
 -- no arch / gcc ------------------------------------------------
 nalu-wind@master%gcc +cuda+hypre cuda_arch=70
@@ -201,7 +201,7 @@ Then we can simply rebuild and install the entire project by:
 ```
 [user@el1 hypre]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
-==> Installing environment /scratch/user/test/spack-manager/environments/exawind
+==> Installing environment /scratch/user/spack-manager/environments/exawind
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
 [+] /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu (external cuda-11.2.2-cwar5vnomowwdorf57nay6e7erladdby)
 ==> mpt@2.22 : has external module in ['mpt/2.22', 'slurm']
@@ -222,7 +222,7 @@ Then we can simply rebuild and install the entire project by:
 ==> hypre: Executing phase: 'install'
 ==> hypre: Successfully installed hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
   Fetch: 0.00s.  Build: 4m 26.05s.  Total: 4m 26.05s.
-[+] /lustre/eaglefs/scratch/user/test/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
 ==> Installing nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
 ==> No binary for nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx found: installing from source
 ==> No patches needed for nalu-wind
@@ -231,8 +231,8 @@ Then we can simply rebuild and install the entire project by:
 ==> nalu-wind: Executing phase: 'install'
 ==> nalu-wind: Successfully installed nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
   Fetch: 0.00s.  Build: 1m 33.13s.  Total: 1m 33.13s.
-[+] /lustre/eaglefs/scratch/user/test/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
-==> Warning: Module file /lustre/eaglefs/scratch/user/test/spack-manager/spack/share/spack/modules/linux-centos7-skylake_avx512/nalu-wind-master-gcc-9.3.0-rbzxf3n exists and will not be overwritten
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==> Warning: Module file /lustre/eaglefs/scratch/user/spack-manager/spack/share/spack/modules/linux-centos7-skylake_avx512/nalu-wind-master-gcc-9.3.0-rbzxf3n exists and will not be overwritten
 ```
 
 Notice both `hypre` and `nalu-wind` are rebuilt. Since `nalu-wind` depends on `hypre`, it is rebuilt in order, and `nalu-wind` is relinked to `hypre`.
@@ -244,7 +244,7 @@ Next we can edit code in `nalu-wind` as well, and rebuild the project:
 [user@el1 nalu-wind]$ echo "//" >> unit_tests.C
 [user@el1 nalu-wind]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
-==> Installing environment /scratch/user/test/spack-manager/environments/exawind
+==> Installing environment /scratch/user/spack-manager/environments/exawind
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
 [+] /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu (external cuda-11.2.2-cwar5vnomowwdorf57nay6e7erladdby)
 ==> mpt@2.22 : has external module in ['mpt/2.22', 'slurm']
@@ -255,7 +255,7 @@ Next we can edit code in `nalu-wind` as well, and rebuild the project:
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netcdf-c-4.7.4-p2fnhpzbpg7wtriqqsbudgtdwgtcrud3)
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external trilinos-develop-uyq6mxbuc2lw3oext626lbmyiiyh7bqf)
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external yaml-cpp-0.6.3-ci73hainzvjnag2ynsg7jxvaotnflzal)
-[+] /lustre/eaglefs/scratch/user/test/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
 ==> Installing nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
 ==> No binary for nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx found: installing from source
 ==> No patches needed for nalu-wind
@@ -264,8 +264,8 @@ Next we can edit code in `nalu-wind` as well, and rebuild the project:
 ==> nalu-wind: Executing phase: 'install'
 ==> nalu-wind: Successfully installed nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
   Fetch: 0.00s.  Build: 1m 27.78s.  Total: 1m 27.78s.
-[+] /lustre/eaglefs/scratch/user/test/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
-==> Warning: Module file /lustre/eaglefs/scratch/user/test/spack-manager/spack/share/spack/modules/linux-centos7-skylake_avx512/nalu-wind-master-gcc-9.3.0-rbzxf3n exists and will not be overwritten
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==> Warning: Module file /lustre/eaglefs/scratch/user/spack-manager/spack/share/spack/modules/linux-centos7-skylake_avx512/nalu-wind-master-gcc-9.3.0-rbzxf3n exists and will not be overwritten
 ```
 Notice since nothing has changed in `hypre`, only `nalu-wind` was necessary to rebuild. We can continue to edit code and iterate simply by using the `spack install` command to rebuild the entire project concisely.
 
