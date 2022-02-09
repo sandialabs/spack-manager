@@ -61,7 +61,7 @@ to edit their code and rebuild the project with our changes:
 ```
 
 Next, we will turn `nalu-wind` and `hypre` into "develop specs" with a command that tells Spack we want to edit the code for these packages
-locally and always rebuild with out local clones of the packages. We do this with the `spack manager develop` command:
+locally and always rebuild with our local clones of the packages. We do this with the `spack manager develop` command:
 ```
 [user@el1 spack-manager]$ spack manager develop nalu-wind@master; spack manager develop hypre@develop
 ==> Configuring spec nalu-wind@master for development at path nalu-wind
