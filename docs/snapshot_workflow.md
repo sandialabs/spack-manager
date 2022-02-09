@@ -5,9 +5,11 @@ In this tutorial we will look at how to setup a developer workflow using snapsho
 We use the Eagle machine at NREL for the example, and we choose to develop both the `hypre` and `nalu-wind`
 projects for running on the GPU using CUDA. Starting from nothing, we first clone spack-manager:
 ```
-[user@el1 ~]$ export SCRATCH=/scratch/${USER}
-[user@el1 ~]$ cd ${SCRATCH}
-[user@el1 user]$ git clone --recursive https://github.com/psakievich/spack-manager.git
+<pre>
+sample <b>sample</b> sample
+[user@el1 ~]$ <b>export SCRATCH=/scratch/${USER}</b>
+[user@el1 ~]$ <b>cd ${SCRATCH}</b>
+[user@el1 user]$ <b>git clone --recursive https://github.com/psakievich/spack-manager.git</b>
 Cloning into 'spack-manager'...
 remote: Enumerating objects: 2610, done.
 remote: Counting objects: 100% (2610/2610), done.
@@ -22,13 +24,12 @@ remote: Total 354065 (delta 0), reused 0 (delta 0), pack-reused 354065
 Receiving objects: 100% (354065/354065), 155.14 MiB | 22.08 MiB/s, done.
 Resolving deltas: 100% (150589/150589), done.
 Submodule path 'spack': checked out '3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be'
+</pre>
 ```
 
-We `cd` to `spack-manager` and activate it:
+We then activate spack-manager:
 ```
-[user@el1 spack-manager]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh
-Activating Spack-Manager...
-==> Removing cached information on repositories
+[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh
 ```
 
 Once spack-manager itself is activated, we create the Spack environment in which we will install and develop. 
@@ -37,43 +38,30 @@ Our environment will be called `exawind` using the `--name` argument. We will ch
 `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc`, which means, `nalu-wind` at the `master` branch, with hypre
 enabled (`+hypre`), and CUDA (`+cuda cuda_arch=70`), using the GCC compiler (`%gcc`, which without a version, selects the default compiler version).
 ```
-[user@el1 spack-manager]$ spack manager create-env --name exawind --spec 'nalu-wind@master+hypre+cuda cuda_arch=70 %gcc'
+[user@el1 user]$ spack manager create-env --name exawind --spec 'nalu-wind@master+hypre+cuda cuda_arch=70 %gcc'
 making /scratch/user/spack-manager/environments/exawind
 ```
 
 Once the environment is created, we need to activate it:
 ```
-[user@el1 spack-manager]$ spack env activate -d ${SPACK_MANAGER}/environments/exawind
-```
-
-Next, we decide how to take advantage of the prebuilt snapshots on the machine. Here we use the `spack manager external`
-command to specify a "view" in which we want to pull external packages into our environment. Snapshots are organized by date.
-On Eagle there are also symlinks for the latest view available. We will use the latest snapshot, and one that is attributed to 
-our GCC with CUDA configuration, called `gcc-cuda`. Views are typically organized by compiler, e.g. `intel`, `clang`, `gcc`, and
-`gcc-cuda`, etc. We also need to "blacklist" any packages we plan on developing locally. Even without building source locally in
-which the develop is intending to edit, we blacklist anything we want Spack to _always_ build for us. So if we were building
-something like the exawind-driver above Nalu-Wind, we would need to blacklist the `exawind` package here so it will always
-be rebuilt against our changes to `nalu-wind` and `hypre`. In our case we blacklist `nalu-wind` and `hypre`, since we are intending
-to edit their code and rebuild the project with our changes:
-```
-[user@el1 spack-manager]$ spack manager external /projects/exawind/exawind-snapshots/environment-latest -v gcc-cuda --blacklist nalu-wind hypre
-==> Warning: included configuration files should be updated manually [files=include.yaml]
+[user@el1 user]$ spack env activate -d ${SPACK_MANAGER}/environments/exawind
 ```
 
 Next, we will turn `nalu-wind` and `hypre` into "develop specs" with a command that tells Spack we want to edit the code for these packages
 locally and always rebuild with our local clones of the packages. We do this with the `spack manager develop` command:
 ```
-[user@el1 spack-manager]$ spack manager develop nalu-wind@master; spack manager develop hypre@develop
+[user@el1 user]$ spack manager develop nalu-wind@master; spack manager develop hypre@develop
 ==> Configuring spec nalu-wind@master for development at path nalu-wind
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
 ==> Configuring spec hypre@develop for development at path hypre
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
 ```
-This command clones both packages into the `${SPACK_MANAGER}/environments/exawind` directory. It is possible to specify other locations
+
+The `develop` command clones both of our packages into the `${SPACK_MANAGER}/environments/exawind` directory. It is possible to specify other locations
 of these package repos if they are already cloned by using the `-p` option for specifying a path. If we want to let Spack clone, we 
 can always switch our remotes and branches within the repos cloned by Spack by doing something like the following:
 ```
-[user@el1 spack-manager]$ cd ${SPACK_MANAGER}/environments/exawind/nalu-wind
+[user@el1 user]$ cd ${SPACK_MANAGER}/environments/exawind/nalu-wind
 [user@el1 nalu-wind]$ git remote -v
 origin	git@github.com:Exawind/nalu-wind.git (fetch)
 origin	git@github.com:Exawind/nalu-wind.git (push)
@@ -113,12 +101,24 @@ Switched to a new branch 'update_golds_10_26_2021'
 * update_golds_10_26_2021
 ```
 
+Next, we decide how to take advantage of the prebuilt snapshots on the machine. Here we use the `spack manager external`
+command to specify a "view" in which we want to pull external packages into our environment. Snapshots are organized by date.
+By default spack-manager will find the latest snapshot available on your machine automatically. We will use the latest snapshot,
+and one that is attributed to our GCC with CUDA configuration, called `gcc-cuda`. Views are typically organized by compiler,
+e.g. `intel`, `clang`, `gcc`, and
+`gcc-cuda`, etc. We will need to "blacklist" any packages we plan on developing locally, but this happens automatically for packages
+we have already set as develop specs.
+```
+[user@el1 user]$ spack manager external -v gcc-cuda
+==> Warning: included configuration files should be updated manually [files=include.yaml]
+```
+
 Once our externals and git clones are configured, we have the necessary `*.yaml` files in our `${SPACK_MANAGER}/environments/exawind` environment directory
 to "concretize" and (re)install our entire project. The `spack.yaml` file in this directory is the main yaml file in which the
 other yaml files are included. Concretizing is required to solve or map our loosely defined `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc` spec into "concrete" parameters of our dependency graph (or DAG). The concrete DAG is _exactly_ how Spack will fulfill the dependencies for your spec. We
 concretize with the command (we almost always want to use the force with `-f`):
 ```
-[user@el1 spack-manager]$ spack concretize -f
+[user@el1 user]$ spack concretize -f
 ==> Warning: the original concretizer is currently being used.
         Upgrade to "clingo" at your earliest convenience. The original concretizer will be removed from Spack starting at v0.18.0
 ==> Concretized nalu-wind@master%gcc+cuda+hypre cuda_arch=70
@@ -140,7 +140,7 @@ concretize with the command (we almost always want to use the force with `-f`):
 Once our environment is concretized, we don't have to concretize again unless we change some configuration in the `*.yaml` files.
 So now we are able to install our project with the simple command:
 ```
-[user@el1 spack-manager]$ spack install
+[user@el1 user]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
 ==> Installing environment /scratch/user/spack-manager/environments/exawind
 [+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
@@ -180,7 +180,7 @@ and iterate easily on a simplified build process.
 
 We start by verifying our currently activated environment in Spack:
 ```
-[user@el1 spack-manager]$ spack find
+[user@el1 user]$ spack find
 ==> In environment /scratch/user/spack-manager/environments/exawind
 ==> Root specs
 -- no arch / gcc ------------------------------------------------
@@ -193,7 +193,7 @@ cuda@11.2.2  hypre@develop  mpt@2.22  nalu-wind@master  nccmp@1.9.0.1  netcdf-c@
 
 Next we will edit code in `hypre`:
 ```
-[user@el1 spack-manager]$ cd ${SPACK_MANAGER}/environments/exawind/hypre
+[user@el1 user]$ cd ${SPACK_MANAGER}/environments/exawind/hypre
 [user@el1 hypre]$ echo "//" >> src/HYPRE_parcsr_mgr.c
 ```
 
