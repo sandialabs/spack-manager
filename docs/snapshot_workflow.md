@@ -46,6 +46,7 @@ Once the environment is created, we need to activate it:
 ```
 [user@el1 user]$ spack env activate -d ${SPACK_MANAGER}/environments/exawind
 ```
+Both of the previous steps can be combined into one with `quick-create-env -n exawind -s 'nalu-wind@master+hypre+cuda cuda_arch=70%gcc'`.
 
 Next, we will turn `nalu-wind` and `hypre` into "develop specs" with a command that tells Spack we want to edit the code for these packages
 locally and always rebuild with our local clones of the packages. We do this with the `spack manager develop` command:
@@ -103,20 +104,20 @@ Switched to a new branch 'update_golds_10_26_2021'
 
 Next, we decide how to take advantage of the prebuilt snapshots on the machine. Here we use the `spack manager external`
 command to specify a "view" in which we want to pull external packages into our environment. Snapshots are organized by date.
-By default spack-manager will find the latest snapshot available on your machine automatically. We will use the latest snapshot,
+In the future spack-manager will find the latest snapshot available on your machine automatically. Here we will use the latest snapshot through a symlink,
 and one that is attributed to our GCC with CUDA configuration, called `gcc-cuda`. Views are typically organized by compiler,
 e.g. `intel`, `clang`, `gcc`, and
 `gcc-cuda`, etc. We will need to "blacklist" any packages we plan on developing locally, but this happens automatically for packages
 we have already set as develop specs.
 ```
-[user@el1 user]$ spack manager external -v gcc-cuda
+[user@el1 user]$ spack manager external /projects/exawind/exawind-snapshots/environment-latest external -v gcc-cuda
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
 ```
 
 Once our externals and git clones are configured, we have the necessary `*.yaml` files in our `${SPACK_MANAGER}/environments/exawind` environment directory
 to "concretize" and (re)install our entire project. The `spack.yaml` file in this directory is the main yaml file in which the
 other yaml files are included. Concretizing is required to solve or map our loosely defined `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc` spec into "concrete" parameters of our dependency graph (or DAG). The concrete DAG is _exactly_ how Spack will fulfill the dependencies for your spec. We
-concretize with the command (we almost always want to use the force with `-f`):
+concretize with the command (we almost always want to use the force with `-f`). It will likely complain about us using the "original" concretizer, but this will be fixed in the future:
 ```
 [user@el1 user]$ spack concretize -f
 ==> Warning: the original concretizer is currently being used.
