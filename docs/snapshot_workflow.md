@@ -198,7 +198,7 @@ Next we will edit code in `hypre`:
 [user@el1 hypre]$ echo "//" >> src/HYPRE_parcsr_mgr.c
 ```
 
-Then we can simply rebuild and instal the entire project by:
+Then we can simply rebuild and install the entire project by:
 ```
 [user@el1 hypre]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
