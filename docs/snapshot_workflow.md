@@ -139,6 +139,7 @@ concretize with the command (we almost always want to use the force with `-f`):
 Once our environment is concretized, we don't have to concretize again unless we change some configuration in the `*.yaml` files. Before we build and
 install our project, we can change remotes on the  So now we are 
 able to install our project with the simple command:
+```
 [jrood@el1 spack-manager]$ spack install
 ==> Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
 ==> Installing environment /scratch/jrood/test/spack-manager/environments/exawind
