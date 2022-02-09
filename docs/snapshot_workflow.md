@@ -5,11 +5,9 @@ In this tutorial we will look at how to setup a developer workflow using snapsho
 We use the Eagle machine at NREL for the example, and we choose to develop both the `hypre` and `nalu-wind`
 projects for running on the GPU using CUDA. Starting from nothing, we first clone spack-manager:
 ```
-<pre>
-sample <b>sample</b> sample
-[user@el1 ~]$ <b>export SCRATCH=/scratch/${USER}</b>
-[user@el1 ~]$ <b>cd ${SCRATCH}</b>
-[user@el1 user]$ <b>git clone --recursive https://github.com/psakievich/spack-manager.git</b>
+[user@el1 ~]$ export SCRATCH=/scratch/${USER}
+[user@el1 ~]$ cd ${SCRATCH}
+[user@el1 user]$ git clone --recursive https://github.com/psakievich/spack-manager.git
 Cloning into 'spack-manager'...
 remote: Enumerating objects: 2610, done.
 remote: Counting objects: 100% (2610/2610), done.
@@ -24,7 +22,6 @@ remote: Total 354065 (delta 0), reused 0 (delta 0), pack-reused 354065
 Receiving objects: 100% (354065/354065), 155.14 MiB | 22.08 MiB/s, done.
 Resolving deltas: 100% (150589/150589), done.
 Submodule path 'spack': checked out '3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be'
-</pre>
 ```
 
 We then activate spack-manager:
@@ -104,13 +101,13 @@ Switched to a new branch 'update_golds_10_26_2021'
 
 Next, we decide how to take advantage of the prebuilt snapshots on the machine. Here we use the `spack manager external`
 command to specify a "view" in which we want to pull external packages into our environment. Snapshots are organized by date.
-In the future spack-manager will find the latest snapshot available on your machine automatically. Here we will use the latest snapshot through a symlink,
+With the `--latest` flag, spack-manager will find the latest snapshot available on your machine automatically. Here we will use the latest snapshot
 and one that is attributed to our GCC with CUDA configuration, called `gcc-cuda`. Views are typically organized by compiler,
 e.g. `intel`, `clang`, `gcc`, and
 `gcc-cuda`, etc. We will need to "blacklist" any packages we plan on developing locally, but this happens automatically for packages
 we have already set as develop specs.
 ```
-[user@el1 user]$ spack manager external /projects/exawind/exawind-snapshots/environment-latest external -v gcc-cuda
+[user@el1 user]$ spack manager external --latest -v gcc-cuda
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
 ```
 
