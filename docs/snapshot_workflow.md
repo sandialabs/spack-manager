@@ -136,6 +136,8 @@ concretize with the command (we almost always want to use the force with `-f`). 
 ```
 
 Once our environment is concretized, we don't have to concretize again unless we change some configuration in the `*.yaml` files.
+Concretization is also not explicity required for the next `spack install` command, but if any `*.yaml` files are changed, it is
+recommended to `spack concretize -f`.
 So now we are able to install our project with the simple command:
 ```
 [user@el1 user]$ spack install
