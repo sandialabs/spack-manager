@@ -138,3 +138,14 @@ The base command and it's help are echoed below:
   fi
   cmd "spack install"
 }
+
+# function to remove spack prompt from the shell
+function remove-spack-prompt() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
+  fi
+  if [[ -n "${SPACK_OLD_PS1}" ]]; then
+    PS1=${SPACK_OLD_PS1}
+    unset SPACK_OLD_PS1
+  fi
+}
