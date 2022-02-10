@@ -1,5 +1,18 @@
 #!/bin/bash
 
+########################################################
+# Tests same as start.sh for now
+########################################################
+if [[ -z ${SPACK_MANAGER} ]]; then
+  echo "ERROR: Env variable SPACK_MANAGER not set. You must set this variable."
+  return 1
+fi
+
+if [[ ! -x $(which python3) ]]; then
+  echo "WARNING: spack-manager is only designed to work with python 3."
+  echo "You may use spack, but spack-manager specific commands will fail."
+fi
+
 cmd() {
   echo "+ $@"
   eval "$@"
