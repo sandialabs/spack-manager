@@ -138,3 +138,17 @@ The base command and it's help are echoed below:
   fi
   cmd "spack install"
 }
+
+# function to remove spack prompt from the shell
+function remove_spack_prompt_old() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
+  fi
+  if [[ -z "$SPACK_OLD_PS1" ]]; then
+    PS1=$SPACK_OLD_PS1
+  fi
+}
+
+# have to use an alias unforunately function above set the environment variable
+# but doesn't actually change it in the shell
+alias remove_spack_prompt='PS1=$SPACK_OLD_PS1'
