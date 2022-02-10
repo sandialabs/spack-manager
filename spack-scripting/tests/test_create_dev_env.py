@@ -76,3 +76,13 @@ def test_nonConcreteSpecsDontGetCloned(mock_dev, tmpdir):
         assert 'nalu-wind' in e.yaml['spack']['specs']
         assert 'exawind@master' in e.yaml['spack']['specs']
         assert 'amr-wind' in e.yaml['spack']['specs']
+
+
+@patch('manager_cmds.create_dev_env.develop')
+def test_noSpecsIsNotAnErrorGivesBlankEnv(mock_develop, tmpdir):
+    with tmpdir.as_cwd():
+        manager('create-dev-env', '-d', tmpdir.strpath)
+        assert not mock_develop.called
+        e = ev.Environment(tmpdir.strpath)
+        assert len(e.user_specs) == 0
+        assert e.yaml['spack']['specs'] == []
