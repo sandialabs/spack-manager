@@ -5,24 +5,21 @@ cmd() {
   eval "$@"
 }
 
+########################################################
+# Tests
+########################################################
+if [[ -z ${SPACK_MANAGER} ]]; then
+    echo "Env variable SPACK_MANAGER not set. You must set this variable."
+    exit 125
+fi
+
+if [[ ! -x $(which python3) ]]; then
+    echo "Warning: spack-manager is only designed to work with python 3."
+    echo "You may use spack, but spack-manager specific commands will fail."
+fi
+ 
 # function to initialize spack-manager's spack instance
 function spack-start() {
-  ########################################################
-  # Tests
-  ########################################################
-  if [[ -z ${SPACK_MANAGER} ]]; then
-      echo "Env variable SPACK_MANAGER not set. You must set this variable."
-      exit 125
-  fi
-  
-  if [[ ! -x $(which python3) ]]; then
-      echo "Warning: spack-manager is only designed to work with python 3."
-      echo "You may use spack, but spack-manager specific commands will fail."
-  fi
-  
-  ########################################################
-  # Environment stuff
-  ########################################################
   if [[ -z ${SPACK_MANAGER_MACHINE} ]]; then
     export SPACK_ROOT=${SPACK_MANAGER}/spack
     export SPACK_DISABLE_LOCAL_CONFIG=true
@@ -178,3 +175,13 @@ The base command and it's help are echoed below:
   cmd "spack install"
 }
 
+# function to remove spack prompt from the shell
+function remove-spack-prompt() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
+  fi
+  if [[ -n "${SPACK_OLD_PS1}" ]]; then
+    PS1=${SPACK_OLD_PS1}
+    unset SPACK_OLD_PS1
+  fi
+}
