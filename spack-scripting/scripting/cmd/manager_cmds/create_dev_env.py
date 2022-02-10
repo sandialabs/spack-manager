@@ -3,6 +3,7 @@ import argparse
 import manager_cmds.create_env as create_env
 import manager_cmds.develop
 
+import spack.cmd
 import spack.environment as ev
 
 
@@ -21,9 +22,10 @@ def create_dev_env(parser, args):
     env_path = create_env.create_env(parser, args)
     env = ev.Environment(env_path)
     ev.activate(env)
-    for s in env.user_specs:
+    specs = spack.cmd.parse_specs(args.spec)
+    for s in specs:
         # check that all specs were concrete
-        if not s.concrete:
+        if not s.versions.concrete:
             print('\nWarning: {spec} is not concrete and will not '
                   'be setup as a develop spec.'
                   '\nAll specs must be concrete for '
@@ -32,6 +34,7 @@ def create_dev_env(parser, args):
                   ' available type \'spack info [package]\''
                   '\nSome common exawind versions are: exawind@master, '
                   'amr-wind@main and nalu-wind@master\n'.format(spec=s))
+            continue
         dev_args = []
         # kind of hacky, but spack will try to re-clone
         # if we don't give the --path argument even though

@@ -64,3 +64,15 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
         mock_dev.assert_called_with([
             '-rb', 'git@github.com:trilinos/trilinos.git',
             'master', 'trilinos@master'])
+
+
+@patch('manager_cmds.create_dev_env.develop')
+def test_nonConcreteSpecsDontGetCloned(mock_dev, tmpdir):
+    with tmpdir.as_cwd():
+        manager('create-dev-env', '-s', 'amr-wind', 'nalu-wind',
+                'exawind@master', '-d', tmpdir.strpath)
+        mock_dev.assert_called_once_with(['exawind@master'])
+        e = ev.Environment(tmpdir.strpath)
+        assert 'nalu-wind' in e.yaml['spack']['specs']
+        assert 'exawind@master' in e.yaml['spack']['specs']
+        assert 'amr-wind' in e.yaml['spack']['specs']
