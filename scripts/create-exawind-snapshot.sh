@@ -22,7 +22,7 @@ else
 fi
 
 printf "\nActivating Spack-Manager...\n"
-cmd "source ${SPACK_MANAGER}/start.sh"
+cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
 printf "\nRunning snapshot creator...\n"
 cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize"
