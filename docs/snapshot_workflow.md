@@ -28,7 +28,7 @@ Submodule path 'spack': checked out '3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be'
 
 We then activate spack-manager:
 ```
-[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh
+[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack-start
 ```
 
 Once spack-manager itself is activated, we create the Spack environment in which we will install and develop. 
@@ -315,7 +315,7 @@ Kokkos::Cuda[ 1 ] Tesla V100-PCIE-16GB capability 7.0, Total Global Memory: 15.7
 
 After the initial setup overhead is in place. The process for iterating in the code development can be summarized as such:
 ```
-[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack env activate -d ${SPACK_MANAGER}/environments/exawind
+[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack-start && spack env activate -d ${SPACK_MANAGER}/environments/exawind
 [user@el1 user]$ #edit code
 [user@el1 user]$ spack install
 [user@el1 user]$ spack cd -b package && spack build-env package ./exe
