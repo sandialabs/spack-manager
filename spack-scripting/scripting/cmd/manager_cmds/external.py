@@ -153,10 +153,6 @@ def external(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die('spack manager external requires an active environment')
-    # for now we have to use the original concretizer
-    # see: https://github.com/spack/spack/issues/28201
-    env.yaml['spack']['config'] = {'concretizer': 'original'}
-    env.write()
     if args.latest:
         snap_path = get_latest_dated_snapshot()
         if not snap_path:
@@ -170,8 +166,10 @@ def external(parser, args):
         snap_path = args.path
 
     # check that directory of ext view exists
-    if not ev.is_env_dir(snap_path):
-        tty.die('path must point to a spack environment')
+    if not snap_path or not ev.is_env_dir(snap_path):
+        tty.die('External path must point to a spack environment with a view. '
+                'Auto detection of the latest dated snapshot can be achived'
+                ' with the \'--latest\' flag.')
 
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
@@ -199,6 +197,12 @@ def external(parser, args):
     with open(inc_name_abs, 'w') as fout:
         syaml.dump_config(final, stream=fout,
                           default_flow_style=False)
+
+    # for now we have to use the original concretizer
+    # see: https://github.com/spack/spack/issues/28201
+    # do this last so we only change the concretizer if we created an external.yaml
+    env.yaml['spack']['config'] = {'concretizer': 'original'}
+    env.write()
 
 
 def add_command(parser, command_dict):
