@@ -26,10 +26,10 @@ function spack-start() {
   export SPACK_ROOT=${SPACK_MANAGER}/spack
   export SPACK_DISABLE_LOCAL_CONFIG=true
   export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/.cache
-if [ -z ${SPACK_MANAGER_MACHINE} ]; then
-  export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd:${SPACK_MANAGER}/spack-scripting/scripting
-  source ${SPACK_ROOT}/share/spack/setup-env.sh
- fi
+  if [[ -z ${SPACK_MANAGER_MACHINE} ]]; then
+    export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd:${SPACK_MANAGER}/spack-scripting/scripting
+    source ${SPACK_ROOT}/share/spack/setup-env.sh
+  fi
   
   # Clean Spack misc caches
   # Put this back in if outdated caches directory still causes problems when updating Spack submodule
