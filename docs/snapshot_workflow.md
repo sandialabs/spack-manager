@@ -2,6 +2,8 @@
 
 In this tutorial we will look at how to setup a developer workflow using snapshots if they are provided on your machine.
 
+## Setup
+
 We use the Eagle machine at NREL for the example, and we choose to develop both the `hypre` and `nalu-wind`
 projects for running on the GPU using CUDA. Starting from nothing, we first clone spack-manager:
 ```
@@ -111,6 +113,8 @@ we have already set as develop specs.
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
 ```
 
+## Building
+
 Once our externals and git clones are configured, we have the necessary `*.yaml` files in our `${SPACK_MANAGER}/environments/exawind` environment directory
 to "concretize" and (re)install our entire project. The `spack.yaml` file in this directory is the main yaml file in which the
 other yaml files are included. Concretizing is required to solve or map our loosely defined `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc` spec into "concrete" parameters of our dependency graph (or DAG). The concrete DAG is _exactly_ how Spack will fulfill the dependencies for your spec. We
@@ -177,6 +181,8 @@ So now we are able to install our project with the simple command:
 We notice that both `nalu-wind` and `hypre` are being rebuilt, while the rest of the dependency graph is fullfilled through the externals defined from
 the selected snapshot. Now that we have built and installed our first iteration of the development cycle. We can pursue editing of code
 and iterate easily on a simplified build process.
+
+## Editing Code
 
 We start by verifying our currently activated environment in Spack:
 ```
@@ -269,6 +275,8 @@ Next we can edit code in `nalu-wind` as well, and rebuild the project:
 ```
 Notice since nothing has changed in `hypre`, only `nalu-wind` was necessary to rebuild. We can continue to edit code and iterate simply by using the `spack install` command to rebuild the entire project concisely.
 
+## Running
+
 Lastly, to run the code we typically want to enter the build directory and run an executable using the environment in which it was built.
 We do this by doing the following where we run the `nalu-wind` unit tests as an example. While on a compute node on the Eagle machine:
 ```
@@ -301,4 +309,22 @@ Kokkos::Cuda[ 1 ] Tesla V100-PCIE-16GB capability 7.0, Total Global Memory: 15.7
 [       OK ] BasicKokkos.simple_views_2D (2 ms)
 [ RUN      ] BasicKokkos.parallel_for
 [       OK ] BasicKokkos.parallel_for (1 ms)
+```
+
+## Iterating
+
+After the initial setup overhead is in place. The process for iterating in the code development can be summarized as such:
+```
+[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack env activate -d ${SPACK_MANAGER}/environments/exawind
+[user@el1 user]$ #edit code
+[user@el1 user]$ spack install
+[user@el1 user]$ spack cd -b package && spack build-env package ./exe
+[user@el1 user]$ #edit code
+[user@el1 user]$ spack install
+[user@el1 user]$ spack cd -b package && spack build-env package ./exe
+[user@el1 user]$ #edit spack.yaml
+[user@el1 user]$ spack concretize -f
+[user@el1 user]$ spack install
+[user@el1 user]$ spack cd -b package && spack build-env package ./exe
+...
 ```
