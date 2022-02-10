@@ -32,15 +32,15 @@ So what are the benefits of Spack-Manager?
 
 
 - Spack-Mangager allows additional agility and coordination at the project level that can not be maintained for a larger tool such as spack. 
-This is done through heavy use of custom spack `package repositories <https://spack.readthedocs.io/en/latest/repositories.html>`_ and 
-spack's `custom extensions <https://spack.readthedocs.io/en/latest/extensions.html>`_ to allow for prototyping at the project level, as well as the option to 
-maintain features that are only intended for the project's development team.
+   This is done through heavy use of custom spack `package repositories <https://spack.readthedocs.io/en/latest/repositories.html>`_ and 
+   spack's `custom extensions <https://spack.readthedocs.io/en/latest/extensions.html>`_ to allow for prototyping at the project level, as well as the option to 
+   maintain features that are only intended for the project's development team.
 
 - Spack-Manager maximies overlap between the workflows of the three user profiles. 
-The main thought behind spack-manager is that the exact same infrastructure that the system administrators use to deploy binaries and modules on various machines
-can be recycled to run nightly tests, generate time stamped snapshots of binaries for developers to link against, and supply end users
-with production executables.
-This framework is stiched together through spack, but the end products (binares and modules) are designed to be as independent from spack as possible.
+   The main thought behind spack-manager is that the exact same infrastructure that the system administrators use to deploy binaries and modules on various machines
+   can be recycled to run nightly tests, generate time stamped snapshots of binaries for developers to link against, and supply end users
+   with production executables.
+   This framework is stiched together through spack, but the end products (binares and modules) are designed to be as independent from spack as possible.
 
 - Spack-Manager provides the benefits of spack by seeking to maintain as small of a wrapper layer as possible. Some of these benefits include:
    - Build reproducibiilty, and scalability
