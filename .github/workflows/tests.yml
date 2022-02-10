@@ -81,6 +81,7 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
+        spack-start
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_basic.yaml
@@ -107,6 +108,7 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
+        spack-start
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml
