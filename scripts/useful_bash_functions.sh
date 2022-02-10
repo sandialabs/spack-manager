@@ -140,7 +140,7 @@ The base command and it's help are echoed below:
 }
 
 # function to remove spack prompt from the shell
-function remove_spack_prompt() {
+function remove-spack-prompt() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
   fi
