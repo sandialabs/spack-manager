@@ -3,8 +3,6 @@ import argparse
 import manager_cmds.create_env as create_env
 import manager_cmds.develop
 
-import llnl.util.tty as tty
-
 import spack.environment as ev
 
 
@@ -20,24 +18,20 @@ def develop(args):
 
 
 def create_dev_env(parser, args):
-    if not args.spec:
-        tty.die(
-            '\nERROR: specs are a required argument for '
-            'spack manager create-dev-env.\n')
-    for s in args.spec:
-        # check that all specs were concrete
-        if '@' not in s:
-            tty.die(
-                '\nERROR: All specs must be concrete to use '
-                '\'spack manager create-dev-env\' i.e. at '
-                'least [package]@[version].\nTo learn what versions are'
-                ' available type \'spack info [package]\''
-                '\nSome common exawind versions are: exawind@master, '
-                'amr-wind@main and nalu-wind@master\n')
     env_path = create_env.create_env(parser, args)
     env = ev.Environment(env_path)
     ev.activate(env)
     for s in env.user_specs:
+        # check that all specs were concrete
+        if not s.concrete:
+            print('\nWarning: {spec} is not concrete and will not '
+                  'be setup as a develop spec.'
+                  '\nAll specs must be concrete for '
+                  '\'spack manager create-dev-env\' to clone for you i.e. at '
+                  'least [package]@[version].\nTo learn what versions are'
+                  ' available type \'spack info [package]\''
+                  '\nSome common exawind versions are: exawind@master, '
+                  'amr-wind@main and nalu-wind@master\n'.format(spec=s))
         dev_args = []
         # kind of hacky, but spack will try to re-clone
         # if we don't give the --path argument even though
