@@ -57,6 +57,7 @@ jobs:
       run: |
         # check our spack extension with spack's style guide
         source start.sh
+        spack-start
         spack style spack-scripting
   concretization-basic:
     runs-on: ${{matrix.os}}
