@@ -49,12 +49,14 @@ function spack-start() {
 
 # function to quickly activate an environment
 function quick-activate() {
+  cmd "spack-start"
   cmd "spack env activate -p -d $1"
 }
 
 # convenience function for quickly creating an environment
 # and activating it in the current shell
 function quick-create() {
+  cmd "spack-start"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
@@ -88,6 +90,7 @@ The base command and it's help are echoed below:
 # same as quick-create but calls create-env-dev instead
 # can be used to add externals
 function quick-create-dev() {
+  cmd "spack-start"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
@@ -121,6 +124,7 @@ The base command and it's help are echoed below:
 
 # function to create, activate, concretize and attempt to install a develop environment all in one step
 function quick-develop() {
+  cmd "spack-start"
   # since we want this to run in the active shell
   # we mush manually return instead of exiting with set -e
   if [[ $? != 0 ]]; then
@@ -172,4 +176,3 @@ The base command and it's help are echoed below:
   cmd "spack install"
 }
 
-spack-start
