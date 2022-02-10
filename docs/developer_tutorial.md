@@ -1,4 +1,4 @@
-# spack-manager: Developer Tutorial
+# Developer Tutorial
 
 In this tutorial we will look at how to setup a developer workflow using some helper scripts
 provided by spack-manager.

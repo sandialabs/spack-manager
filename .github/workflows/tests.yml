@@ -27,7 +27,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Run unit tests
-      run: ./run_tests.sh
+      run: ./scripts/run_tests.sh
   style-checks:
     runs-on: ubuntu-latest
     env:
@@ -57,6 +57,7 @@ jobs:
       run: |
         # check our spack extension with spack's style guide
         source start.sh
+        spack-start
         spack style spack-scripting
   concretization-basic:
     runs-on: ${{matrix.os}}
@@ -81,6 +82,7 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
+        spack-start
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_basic.yaml
@@ -107,6 +109,7 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
+        spack-start
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml

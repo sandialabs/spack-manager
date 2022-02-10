@@ -23,7 +23,7 @@ else
 fi
 
 printf "\nActivating Spack-Manager...\n"
-cmd "source ${SPACK_MANAGER}/start.sh"
+cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
 printf "\nGenerating test script for submission...\n"
 EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
