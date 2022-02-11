@@ -2,7 +2,7 @@
 
 Spack-manager has all the necessary components implemented to test and report results for a project to CDash each night. In the following section we will be using the Exawind project as an example to explain the testing process.
 
-# Cron Job
+## Cron Job
 
 Starting from the nightly cronjob, the Exawind testing job is invoked as such:
 ```
@@ -12,7 +12,7 @@ Starting from the nightly cronjob, the Exawind testing job is invoked as such:
 
 In the cron job specification, `SPACK_MANAGER` is set. Then the spack-manager repo used for the testing is updated each night with the changes to spack-manager so it's always up-to-date. Next the `run-exawind-nightly-tests.sh` script is run.
 
-# Test Invocation
+## Test Invocation
 
 The `run-exawind-nightly-tests.sh` script generates another script on the fly. This is done because depending on what machine it is on, it may need to submit a job to run the tests, which requires a script to be submitted. Spack-manager finds the machine it is running on and runs the generated test script using different methods for different machines.
 
