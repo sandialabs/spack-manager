@@ -57,6 +57,7 @@ Concretized
 --------------------------------
 zlib@1.2.11%gcc@11.2.0+optimize+pic+shared arch=darwin-catalina-skylake
 ```
+
 Therefore using the `spec` command helps us to understand specs and what Spack will do with a spec before we use them in other commands.
 Here is an example of a more complicated package:
 ```
@@ -95,7 +96,8 @@ amr-wind@main%apple-clang@12.0.0~cuda~fortran+hypre+internal-amrex~ipo~masa+mpi+
             ^libsigsegv@2.13%apple-clang@12.0.0 arch=darwin-catalina-skylake
         ^parallel-netcdf@1.12.2%apple-clang@12.0.0~burstbuffer+cxx+fortran+pic+shared arch=darwin-catalina-skylake
 ```
-It is obvious concretized specs can get large quite quickly. However, Spack is very good and standing on it's own without requirements
+
+It is obvious concretized specs can get large quite quickly. However, Spack is very good at standing on it's own without requirements
 from the existing system. Therefore it can be quite straightforward to build complicated packages on many machines. However, it can also be argued
 that this situation involves many packages with Spack will build that may already exist on the machine. While this is fair, we typically solve
 this by specifying `externals` which make Spack aware of packages already existing on the system and utilizing them in its DAG. Spack-manager
