@@ -8,7 +8,7 @@ This is just a spack environment that will build off a locally cloned copy of th
 You can make changes to this local repo and have these changes propagate downstream to the rest
 of the software stack you are developing.
 
-If you want to skip the explanations and just run some commands to get going jump to the [quick start](#quick-start)
+If you want to skip the explanations and just run some commands to get going jump to the quick start section.
 
 The advantages of using the scripts provided by spack-manager is that the configurations
 you will be using will match the nightly test process for machines you are using,
