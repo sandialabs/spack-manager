@@ -8,3 +8,4 @@
    spack_features
    snapshot_workflow
    developer_tutorial
+   nightly_testing
