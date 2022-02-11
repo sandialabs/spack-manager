@@ -5,5 +5,7 @@
 .. toctree::
    :maxdepth: 2
 
-   developer_tutorial
+   spack_features
    snapshot_workflow
+   developer_tutorial
+   nightly_testing
