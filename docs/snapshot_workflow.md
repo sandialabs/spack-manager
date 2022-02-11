@@ -311,6 +311,12 @@ Kokkos::Cuda[ 1 ] Tesla V100-PCIE-16GB capability 7.0, Total Global Memory: 15.7
 [       OK ] BasicKokkos.parallel_for (1 ms)
 ```
 
+One can also obtain a bash shell with the package's build environment for performing many tasks by doing:
+```
+spack cd -b nalu-wind
+bash -rcfile ../spack-build-env.txt
+```
+
 ## Iterating
 
 After the initial setup overhead is in place. The process for iterating in the code development can be summarized as such:
