@@ -10,80 +10,15 @@ packages:
   cmake:
     externals:
     - spec: cmake@3.22.2
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/cmake-3.22.2
-    buildable: false
-  ncurses:
-    externals:
-    - spec: ncurses@6.2%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/ncurses-6.2
-    buildable: false
-  openssl:
-    externals:
-    - spec: openssl@1.1.1m%gcc@4.8.5
-      prefix: /projects/wind/spack-manager/views/system/gcc-4.8.5/openssl-1.1.1m
-    buildable: false
-  zlib:
-    externals:
-    - spec: zlib@1.2.11%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/zlib-1.2.11
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cmake-3.22.2-s67tgoaqaw4ky5kmpuzxdg5une7xouvh/
     buildable: false
   mpich:
     externals:
     - spec: mpich@3.4.2%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/mpich-3.4.2
-    buildable: false
-  hwloc:
-    externals:
-    - spec: hwloc@2.7.0%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/hwloc-2.7.0
-    buildable: false
-  libpciaccess:
-    externals:
-    - spec: libpciaccess@0.16%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libpciaccess-0.16
-    buildable: false
-  libxml2:
-    externals:
-    - spec: libxml2@2.9.12%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libxml2-2.9.12
-    buildable: false
-  libiconv:
-    externals:
-    - spec: libiconv@1.16%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libiconv-1.16
-    buildable: false
-  xz:
-    externals:
-    - spec: xz@5.2.5%gcc@9.3.0~pic
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/xz-5.2.5
-    buildable: false
-  libfabric:
-    externals:
-    - spec: libfabric@1.14.0%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/libfabric-1.14.0
-    buildable: false
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/mpich-3.4.2-4h2muy6jlgfdahehxmxa4ybndfdb6gx2/
+    - spec: mpich@3.4.2%gcc@8.3.1
+      prefix: /projects/wind/spack-manager/views/system/gcc-8.3.1/mpich-3.4.2
   cuda:
     externals:
     - spec: cuda@11.2.2%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/cuda-11.2.2
-    buildable: false
-  binutils:
-    externals:
-    - spec: binutils@2.37%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/binutils-2.37
-    buildable: false
-  gettext:
-    externals:
-    - spec: gettext@0.21%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/gettext-0.21
-    buildable: false
-  bzip2:
-    externals:
-    - spec: bzip2@1.0.8%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/bzip2-1.0.8
-    buildable: false
-  tar:
-    externals:
-    - spec: tar@1.34%gcc@9.3.0
-      prefix: /projects/wind/spack-manager/views/system/gcc-9.3.0/tar-1.34
-    buildable: false
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cuda-11.2.2-wlah7an4q7rej4uylqlimczaa6z3zlq7/

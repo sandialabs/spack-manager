@@ -7,10 +7,10 @@ spack:
 
   - when: env['SPACK_MANAGER_MACHINE']=='ascicgpu'
     system_specs: [cuda@11.2.2%gcc@9.3.0]
+  - when: env['SPACK_MANAGER_MACHINE'] not 'darwin'
+    system_specs: [binutils+ld]
   specs:
   - $system_specs
-  - binutils
-  - cuda@11.2.2
   view:
     default:
       root: /projects/wind/spack-manager/views/system
