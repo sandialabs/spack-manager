@@ -191,7 +191,7 @@ function build-env-dive() {
     echo "This command will move to the build directory for the spec provided, and then dive into the build environment in a new subshell."
   fi
   if [[ -z ${SPACK_ENV} ]]; then
-    echo "You must have an active environment to use sm-dive."
+    echo "You must have an active environment to use build-env-dive."
     return 1
   fi
   cmd "spack cd -b $*"

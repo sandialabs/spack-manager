@@ -120,6 +120,11 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
 
     view_specs = [s for s in env._get_environment_specs()
                   if view.__contains__(s)]
+    if not view_specs:
+        raise ev.SpackEnvironmentError(
+            'No specs were found in the '
+            'view % s for env %s' % (view_key, path))
+
     data = "packages:\n"
 
     for s in view_specs:
