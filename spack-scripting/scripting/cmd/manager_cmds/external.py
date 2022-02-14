@@ -124,8 +124,8 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
         print(
             'WARNING: No specs in the view %s of environment %s. '
             '\nThe snapshot was not installed correctly'
-            ' and no externals will be added to your environment' %(view_key, path)
-        )
+            ' and no externals will be added to your environment' % (
+                view_key, path))
         exit()
     data = "packages:\n"
 
