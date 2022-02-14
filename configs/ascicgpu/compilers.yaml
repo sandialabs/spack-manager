@@ -2,10 +2,10 @@ compilers:
 - compiler:
     spec: gcc@9.3.0
     paths:
-      cc: /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-63a5fxv3jfmvgwr2gf4kqdtsa3k3bly6/bin/gcc
-      cxx: /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-63a5fxv3jfmvgwr2gf4kqdtsa3k3bly6/bin/g++
-      f77: /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-63a5fxv3jfmvgwr2gf4kqdtsa3k3bly6/bin/gfortran
-      fc: /projects/wind/spack-manager/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-63a5fxv3jfmvgwr2gf4kqdtsa3k3bly6/bin/gfortran
+      cc: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/gcc
+      cxx: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/g++
+      f77: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/gfortran
+      fc: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/gfortran
     flags: {}
     operating_system: rhel7
     target: x86_64
