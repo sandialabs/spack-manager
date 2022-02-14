@@ -172,7 +172,6 @@ The base command and it's help are echoed below:
     printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
-  cmd "spack install"
 }
 
 # function to remove spack prompt from the shell
