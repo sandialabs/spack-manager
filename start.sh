@@ -10,7 +10,7 @@ cmd() {
 ########################################################
 if [[ -z ${SPACK_MANAGER} ]]; then
   echo "Env variable SPACK_MANAGER not set. You must set this variable."
-  exit 125
+  return 125
 fi
 
 if [[ ! -x $(which python3) ]]; then
@@ -187,10 +187,9 @@ function remove-spack-prompt() {
 }
 
 # function for diving into the build environment from a spack build
-function sm-dive() {
+function build-env-dive() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    echo "sm-dive: Spack-Manager Dive
-    This command will move to the build directory for the spec provided, and then dive into the build environment in a new subshell."
+    echo "This command will move to the build directory for the spec provided, and then dive into the build environment in a new subshell."
   fi
   if [[ -z ${SPACK_ENV} ]]; then
     echo "You must have an active environment to use sm-dive."
