@@ -7,7 +7,7 @@ We've tried to minimize the required knowledge you need to retain for commands, 
 The most critical concepts to learn for development are:
 1. [Querying the Spack commands](querying-the-spack-commands): `spack info` and `--help`
 2. [Reading and writing Spack specs](reading-and-writing-spack-specs)
-3. The major steps of the build process
+3. [The major steps of the Spack build process](major-steps-of-the-spack-build-process)
 
 ## Querying the Spack commands
 
@@ -145,7 +145,7 @@ We provide an overview of what a spec is, and the parts that go into making a sp
 and an even more thorough description can be found in the 
 [spack documentation](https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies)
 
-A simple descrption of a spec for this seciont can be understood by looking at delimiters in a spec: `{name}@{version}%{compiler}{variants} ^{dependent specs}`.
+A simple descrption of a spec for this section can be understood by looking at delimiters in a spec: `{name}@{version}%{compiler}{variants} ^{dependent specs}`.
 - `name` is the package name.  This is what you query with the `spack info` and is typically the name of the software.
 - `version` is what immediately follows the `@` symbol.  This can be aligned to a github branch, tag, or a url (i.e. download a tar file). The details for the versions can be found via the `spack info command`
 - `compiler` specification is what immediately follows the `%` symbol, and typically also has a name and version i.e. `gcc@9.3.0`
@@ -156,3 +156,41 @@ We don't recommend developers use the `^` command at all since it makes things m
 It is addressed here for clarity and completeness, but you won't need them unless you intend to build multiple version of the same software in the 
 same environment.
 An example of this would be building multiple compilers, but this is typically a feature for system administrators, not standard development cycles.
+
+## Major steps of the Spack build process
+
+Spack-Manager uses [spack environments](https://spack.readthedocs.io/en/latest/environments.html) to manage your development builds.
+These environments are similar to Conda environments in concept, but they benifit from re-using software that you've built in previous environments.
+As such it is recommended that you maintain a single instance of Spack-Manager to organize and currate your builds, and create new environments when you want different builds.
+
+Understanding the steps that go into creating an environment is helpful for debugging and thinking about how to organize your workflow.
+Spack and Spack-Manager are also relatively easy to script in either bash or python, 
+but it is important to know the steps that need to be covered to write effective scripts.
+
+The major steps are, and associated commands are (don't forget to [query the commands](querying-the-spack-commands) to learn more about them):
+1. Create the environment (`spack manager create-env`)
+  - This generates a `spack.yaml` file which is how the environment is defined. Most of the following commands will be manipulating this file.
+2. Activate the environment (`spack env activate`)
+  - This sets the environment as active in your shell.
+3. Add root specs (`spack add`)
+  - Define the software that you want in the environment.  Spack will solve for the dependencies of all these root specs, and ensure that your environment meshes together. They just need the `name` as a minimum.
+4. Add develop specs (`spack develop`)
+  - Determine which root specs you want to develop.  These specs must have the `name` and `version` as a minimum. They are not going to be added to your environment by themselves, but rather serve as keys for the concretizer to determine if a spec should be treated as a develop spec or not.  Essentially, if the concretizer can determine that a root spec can be equivalenced with the develop spec, then it will use your source code and not spack's usual process for cloning/building/installing.  Think of this as a sort of dictionary. For instance `spack add trilinos` and `spack develop trilinos@develop` will mean that trilinos will use the source code, but if you had done `spack add trilinos@master` then it would not because `trilinos@develop` and `trilinos@master` can't be quivalenced.  It is recommended that you always just do `name@version` for your develop specs to get the broadest match possible. More documentation on this can be found in the [spack documentation](https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html).
+5. Concretize (`spack concretize`)
+  - This is how the spack determines what the dependency graph needs to look like for your environment.  It is a non-trivial problem to solve since you can use any combination of variants in each package in the [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph).  There are built in conflicts that the packages maintain, but anything that is not constrained by your spec or the software itself will fall to the default (once again look to `spack info` to see the defaults).
+6. Build/install (`spack install`)
+  - Now that you've decided what combination of software you want to build, what you want to develop, and what the dependency graph is all that is left is to build and install. Easy Peasy right?
+
+This may seem like a lot to go over, and this was not a very thorough description of each step.
+These steps are covered in great detail in the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_tutorial.html)
+where we walk through each step one at a time. 
+The intention of having this description is to serve as a reference going forward.  If you forget a step or command you can always come back to this page to see what it is and see a brief description of the whole process.
+It is also important to know that in your practical workflow you won't need to type out each command every time you want to use this software.
+Spack-Manager contains convenience scripts that wrap the steps together, and print them as they execute to help you remember them.
+
+The two most hands off commands are:
+
+- `quick-develop`: this will do steps 1-5 for you automatically if you provide specs with versions in the input arguments (stops at step 4 if you don't)
+- `quick-activate`: this will activate a previously created environment for you. You just pass the directory location to it.
+
+If you want to learn more about them... `quick-develop --help`.  Additional documentation to come soon.
