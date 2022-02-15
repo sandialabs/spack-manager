@@ -5,9 +5,9 @@ about Spack to effectively utilize the tool.
 We've tried to minimize the required knowledge you need to retain for commands, but it is important to understand the basic concepts of Spack to obtain autonomy in your basic workflow and communicate effectively when looking for help.
 
 The most critical concepts to learn for development are:
-1. [Querying the Spack commands](querying-the-spack-commands): `spack info` and `--help`
-2. [Reading and writing Spack specs](reading-and-writing-spack-specs)
-3. [The major steps of the Spack build process](major-steps-of-the-spack-build-process)
+1. [Querying the Spack commands](#querying-the-spack-commands): `spack info` and `--help`
+2. [Reading and writing Spack specs](#reading-and-writing-spack-specs)
+3. [The major steps of the Spack build process](#major-steps-of-the-spack-build-process)
 
 ## Querying the Spack commands
 
@@ -133,7 +133,7 @@ build_type [RelWithDebInfo]    --         Debug, Release,         CMake build ty
 ```
 which is saying `build_type=Debug` to the spec i.e. `amr-wind build_type=Debug` to get a debug build.  
 If you want to turn on masa, you can add `+masa`.  
-This will be covered in more detail in the [next section](reading-and-writing-spack-specs) when specs are discussed. 
+This will be covered in more detail in the [next section](#reading-and-writing-spack-specs) when specs are discussed. 
 For this section it is sufficient to know that `spack info` is the key to knowing what you need to write to customize your builds.
 
 ## Reading and writing Spack specs
@@ -167,7 +167,7 @@ Understanding the steps that go into creating an environment is helpful for debu
 Spack and Spack-Manager are also relatively easy to script in either bash or python, 
 but it is important to know the steps that need to be covered to write effective scripts.
 
-The major steps are, and associated commands are (don't forget to [query the commands](querying-the-spack-commands) to learn more about them):
+The major steps are, and associated commands are (don't forget to [query the commands](#querying-the-spack-commands) to learn more about them):
 1. Create the environment (`spack manager create-env`)
   - This generates a `spack.yaml` file which is how the environment is defined. Most of the following commands will be manipulating this file.
 2. Activate the environment (`spack env activate`)
