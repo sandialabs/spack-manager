@@ -8,5 +8,6 @@ This documentation is to help understand the basic requirements and workflow for
   :glob:
   :maxdepth: 2
 
+  developer_spack_minimum
   developer_tutorial
   snapshot_workflow

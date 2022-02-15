@@ -15,7 +15,7 @@ Spack manages directories by using hashes.  This is not convenient for just look
 The first thing to understand is that spack is going to build your software in a different environment than your active shell.  To run a command in this environment you can use `spack build-env [spec] [command]` and the `[command]` will be exectued for you in the build environment (don't forget to [navigate to the build directory](#where-is-my-build-directorywhere-is-my-install-directory) first!).
 Spack-Manager also provides a convenience function `build-env-dive [spec]` which will navigate to the build directory for you and launch a sub-shell using the build environment. You will need to type `exit` to get back to your original shell when you are done. The former is recommended for one-off commands, and the latter if you have a lot of commands to run in the environment.
 
-So you can either: 
+Please note that 
 ```
 spack build-env nalu-wind ctest -R ablNeutral
 ```
