@@ -14,5 +14,7 @@ The location of these module files on the major machines are:
 
 | Machine Name | Path |
 |--------------|------|
-| All Sandia Machines | `/projects/wind/spack-manager/modules` |
-| Eagle | `/projects/exawind/exawind-snapshots/modules` |
+| snl-hpc | `/projects/wind/spack-manager/modules` |
+| cee | `/projects/wind/spack-manager/modules` |
+| ascicgpu | `/projects/wind/spack-manager/modules` |
+| eagle | `/projects/exawind/exawind-snapshots/modules` |
