@@ -1,6 +1,6 @@
 #!/usr/bin/env spack-python
 from tempfile import TemporaryDirectory
-import manager_cmds.find_machine as find_machine
+from manager_cmds.find_machine import find_machine as find_machine
 from manager_cmds.find_machine import machine_list
 import spack.environment as env
 import spack.main
