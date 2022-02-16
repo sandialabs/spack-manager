@@ -26,19 +26,22 @@ def check_config_concretizations(name, ref_yaml):
 def run_tests(args):
     failure = False
     this_machine = find_machine(verbose=False)
+    machine_names = list(machine_list.keys())
+    matrix_test_machines = ['eagle', 'summit']
     if '_matrix.yaml' in args.yaml:
         machine_names = matrix_test_machines
     else:
         machine_names = list(
             set(machine_names) - set(matrix_test_machines))
-
     # only test darwin on matching ci platform
+    # and return early on darwin for matrix test
     if this_machine == 'darwin':
-        machine_names = ['darwin']
+        if 'darwin' in machine_names:
+            machine_names = ['darwin']
+        else:
+            return
     else:
-        machine_names = list(machine_list.keys())
         machine_names.remove('darwin')
-        matrix_test_machines = ['eagle', 'summit']
 
     for name in machine_names:
         try:
