@@ -43,7 +43,7 @@ Spack-Manager is currently focused on providing the needs of the `Exawind <https
 but the long term intent is to make it project agnostic.  
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    user_profiles/user_profiles
    general/general
