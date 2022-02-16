@@ -1,4 +1,4 @@
-# Developers: What you need to know about spack
+# Developers: What you need to know about Spack
 
 Developers who are using Spack-Manager as their build system need to know some basic things about Spack 
 to effectively utilize the tool.
