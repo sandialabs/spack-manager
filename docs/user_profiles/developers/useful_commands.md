@@ -37,7 +37,7 @@ to your shell prompt.
 Please note that these commands are principally constructing a valid `spack.yaml` file for you in your environment,
 and that file can be manipulated as needed after the commands are executed.
 
-(quick-create)=
+(#quick-create)=
 ### quick-create
 `quick-create` executes the [environment setup process](#environment-setup-process) and exits at step 4.
 If you supply specs with the `--spec` or `-s` flag then those will be added as root specs and you can effectively be at step 5
@@ -50,7 +50,7 @@ they are intending to develop.
 If these are desirable features then you will need to run the remaining steps of the [environment setup process](#environment-setup-process)
 manually.
 
-(quick-create-dev)=
+(#quick-create-dev)=
 ### quick-create-dev
 `quick-create-dev` executes the [environment setup process](#environment-setup-process) and exits at step 5.
 If you supply concrete specs, which means they have the name and version (i.e. `amr-wind@main`), then `spack-manager develop` will be called for you
@@ -65,7 +65,7 @@ A common scenario for this is if you are building with the non-standard view tha
 The first view listed in the parenthesis for the latest timestamped snapshot is the default. 
 If this one doesn't match your build needs then you will need to specifiy the correct one manually.
 
-(quick-develop)=
+(#quick-develop)=
 ### quick-develop
 `quick-develop` executes the [environment setup process](#environment-setup-process) and exits at step 7.
 This command is intended to execute the entire setup process for the default development environment on a given machine.
@@ -80,7 +80,7 @@ This is the fastest and least number of commands to get you started and should w
 ## Environment re-use commands
 These commands are designed to help you efficiently re-use an environment that has already been setup.
 
-(quick-activate)=
+(#quick-activate)=
 ### quick-activate
 `quick-activate` executes the first two steps of the [environment loading process](#environment-loading-process)
 i.e. `spack-start && spack env activate`.
@@ -91,7 +91,7 @@ and it will activate the environment and add the name of the environment to your
 Whenever you want to come back to an environment in a new shell.
 There are really no down-sides to this command unless you don't like the environment name being added to your prompt.
 
-(build-env-dive)=
+(#build-env-dive)=
 ### build-env-dive
 `build-env-dive` takes a spec as an argument and will move you to the location of the build directory for that spec and launch a sub-shell using the spec's build environment.
 This command allows developers to work as if they had built the software manually outside of spack.
@@ -109,7 +109,7 @@ In practice this has not been much of an issue.
 
 ## Other Commands
 
-(remove-spack-prompt)=
+(#remove-spack-prompt)=
 ### remove-spack-prompt
 This command takes no arguments unless you pass `-h` or `--help`.
 It simply removes the prompt with the environment name that the _quick-commands_ add.
