@@ -26,3 +26,35 @@ ctest -R ablNeutral
 exit
 ```
 are equivalent.
+
+## Should I worry about _Warning: included configuration files should be updated manually_?
+No, this is just a warning from Spack saying it won't automatically update the custom files we've created
+for dialing in machine specific data for your environment `include.yaml` or the list of externals we're using
+to provide pre-compiled binaries for you to link against `externals.yaml`.
+
+## Should I worry abour _Warning: the original concretizer is currently being used._?
+No, we are using the original concretizer when you use externals from snapshots as a stop gap until
+the Spack team fixes a bug for us.
+
+## How do I use the executables I built in my development environment?
+You need to activate the environment `quick-activate`, and then call `spack load [package]`.
+This will load the binaries you need into your `$PATH`.
+```
+# Example
+quick-activate $SPACK_MANAGER/environments/exawind
+spack load amr-wind
+mpirun -np 20 amr_wind -i [foo]
+```
+
+## What to do about _Error: Couldn't find patch for package exawind.hdf5_?
+Please let us know if you see this. We are trying to make sure you don't see it.
+To get rid of the error run `spack clean -m`
+
+## I'm getting an error saying there is a missing variant? Error: variant [foo] not found ...
+Typically this means your Spack submodule is out of date.  To check run
+```
+cd $SPACK_MANAGER
+git status
+```
+If you see `spack` in there then you need to re-sync the submodule. `git submodule update` etc
+
