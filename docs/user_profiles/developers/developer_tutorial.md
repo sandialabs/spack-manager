@@ -8,35 +8,28 @@ This is just a spack environment that will build off a locally cloned copy of th
 You can make changes to this local repo and have these changes propagate downstream to the rest
 of the software stack you are developing.
 
-If you want to skip the explanations and just run some commands to get going jump to the quick start section.
+If you want to skip the explanations and just run some commands to get going jump to the [quick start section](#quick-start).
 
 The advantages of using the scripts provided by spack-manager is that the configurations
 you will be using will match the nightly test process for machines you are using,
 and the convenience of setting things up quickly.
 
-First to setup spack-manager execute the following commands:
+First to setup spack-manager and prep your environment execute the following commands:
 ```
 git clone --recursive https://github.com/psakievich/spack-manager.git
 export SPACK_MANAGER=$PWD/spack-manager
-```
-
-It is advisable to set `SPACK_MANAGER` environment variable in your `bashrc` or `bash_profile`
-since most of the scripts rely on this environment variable to run correctly.
-
-Next you want to activate spack via spack manager.
-This can be done by sourcing the bash-script start.sh.
-
-```
 source $SPACK_MANAGER/start.sh
 ```
 
-Another convenience feature you can add to your `bashrc` to help with this in the future is
-```
-source $SPACK_MANAGER/scripts/useful_bash_functions.sh
-```
-This will give you access to several useful quick functions such as
+It is advisable to set `SPACK_MANAGER` environment variable in your `bashrc` or `bash_profile`
+since most of the scripts rely on this environment variable to run correctly.  It is also convenient
+to source `$SPACK_MANAGER/start.sh` in your `bashrc` or `bash_profile`.  This script contains
+environment variables and convenience functions, but does not actually load spack or do anything
+else to slow down shell initialization.
+
+Next you want to activate spack via spack-manager.  There are two convenience functions to help with this:
   1) `spack-start` to auto load spack for you
-  2) `quick-start` to auto load spack and activate an environment whose location you pass as the first argument`
+  2) `quick-activate` to auto load spack and activate an environment whose location you pass as the first argument`
 
 The steps up to this point have just served to activate spack in the active shell.
 Next we will setup a development environment.
@@ -51,7 +44,7 @@ Run the following command:
 
 `create_machine_spack_environment.py --directory demo --spec 'nalu-wind+cuda cuda_arch=70'`
 
-This command will create the directory `demo` and copy/create files that we need for the environment.
+This command will create the directory `demo` as a subdirectory of the current directory and copy/create files that we need for the environment.
 
 To activate this environment run:
 ```
@@ -116,11 +109,11 @@ You will notice that to add a spack develop spec you need the package name (`nal
 This tells spack what repo to clone if you are going to have spack clone it.
 You may also wonder why we are using `nalu-wind` instead of `nalu-wind`.
 `nalu-wind` is a package we've added in spack-manager to make it easier for developer workflow.
-We've also created `amr-wind` and `exawind` packages, but the none developer versions are also acceptable.
+We've also created `amr-wind` and `exawind` packages, but the non-developer versions are also acceptable.
 If you have any questions about the packages or can't remember the options for the spec's you can run `spack info [package]` to get information about any package.
 
 Now that we've added a develop spec we can concretize.
-This is how spack finalizes the environment withe the requirements and constraints communicated through the `spack.yaml` file.
+This is how spack finalizes the environment with the requirements and constraints communicated through the `spack.yaml` file.
 To concretize run:
 ```
 spack concretize
@@ -163,7 +156,7 @@ This command is telling `spack` to go to the build directory of the package you'
 It is extra helpful if you've re-concretized your environment and have build directories
 from multiple hashes in your environment.
 
-For item 2) it is importnant to remember that `spack` is building with a different environment 
+For item 2) it is important to remember that `spack` is building with a different environment 
 from the one you used to call the `spack install` command.
 The build shell has a unique environment that should be accessed to run tests.
 If you wish to run tests you will need to make sure you have that environment available to
@@ -190,7 +183,7 @@ If you source this file you can run any of the build or test commands and your e
 will match the build environment.
 You can also get the output of this file by running the `spack build-env` command without any arguments.
 More information on that command can be found via `spack build-env -h`.
-The main disadvandtage of sourcing the build envronment directly into your working shell
+The main disadvantage of sourcing the build envronment directly into your working shell
 is that unexpected changes might occur (python or git version may change).
 
 
@@ -205,7 +198,7 @@ export SPACK_MANAGER=$PWD/spack-manager
 source $SPACK_MANAGER/start.sh
 ```
 
-Setup an environment on ascicgpu:
+Setup an environment:
 ```
 create_machine_spack_environment.py --directory demo --spec 'nalu-wind+cuda cuda_arch=70'
 spacktivate demo
@@ -246,9 +239,9 @@ source $SPACK_MANAGER/start.sh # activate spack
 spacktivate [pathto]/demo # activate the development environment
 spack install # to build
 ```
-or if you use the `useful_bash_functions.sh`
+or if you use the convenience functions from `start.sh`
 ```
-quick-start [pathto]/demo
+quick-activate [pathto]/demo
 spack install
 ```
 
