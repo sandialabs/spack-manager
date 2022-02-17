@@ -5,7 +5,7 @@ In this tutorial we will look at how to setup a developer workflow using snapsho
 ## Setup
 
 We use the Eagle machine at NREL for the example, and we choose to develop both the `hypre` and `nalu-wind`
-projects for running on the GPU using CUDA. Starting from nothing, we first clone spack-manager:
+projects for running on the GPU using CUDA. Starting from nothing, we first clone Spack-Manager:
 ```
 [user@el1 ~]$ export SCRATCH=/scratch/${USER}
 [user@el1 ~]$ cd ${SCRATCH}
@@ -26,12 +26,12 @@ Resolving deltas: 100% (150589/150589), done.
 Submodule path 'spack': checked out '3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be'
 ```
 
-We then activate spack-manager:
+We then activate Spack-Manager:
 ```
 [user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack-start
 ```
 
-Once spack-manager itself is activated, we create the Spack environment in which we will install and develop. 
+Once Spack-Manager itself is activated, we create the Spack environment in which we will install and develop. 
 To do this we use the `spack manager create-env` command.
 Our environment will be called `exawind` using the `--name` argument. We will choose to focus on building Nalu-Wind using the spec
 `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc`, which means, `nalu-wind` at the `master` branch, with hypre
@@ -103,7 +103,7 @@ Switched to a new branch 'update_golds_10_26_2021'
 
 Next, we decide how to take advantage of the prebuilt snapshots on the machine. Here we use the `spack manager external`
 command to specify a "view" in which we want to pull external packages into our environment. Snapshots are organized by date.
-With the `--latest` flag, spack-manager will find the latest snapshot available on your machine automatically. Here we will use the latest snapshot
+With the `--latest` flag, Spack-Manager will find the latest snapshot available on your machine automatically. Here we will use the latest snapshot
 and one that is attributed to our GCC with CUDA configuration, called `gcc-cuda`. Views are typically organized by compiler,
 e.g. `intel`, `clang`, `gcc`, and
 `gcc-cuda`, etc. We will need to "blacklist" any packages we plan on developing locally, but this happens automatically for packages

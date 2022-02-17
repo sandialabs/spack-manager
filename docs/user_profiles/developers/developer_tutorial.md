@@ -1,20 +1,20 @@
 # Developer Tutorial
 
 In this tutorial we will look at how to setup a developer workflow using some helper scripts
-provided by spack-manager.
+provided by Spack-Manager.
 These helper scripts are not really necessary since in the end we are just using the
-[spack develop feature](https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html).
-This is just a spack environment that will build off a locally cloned copy of the package you're developing.
+[Spack develop feature](https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html).
+This is just a Spack environment that will build off a locally cloned copy of the package you're developing.
 You can make changes to this local repo and have these changes propagate downstream to the rest
 of the software stack you are developing.
 
 If you want to skip the explanations and just run some commands to get going jump to the [quick start section](#quick-start).
 
-The advantages of using the scripts provided by spack-manager is that the configurations
+The advantages of using the scripts provided by Spack-Manager is that the configurations
 you will be using will match the nightly test process for machines you are using,
 and the convenience of setting things up quickly.
 
-First to setup spack-manager and prep your environment execute the following commands:
+First to setup Spack-Manager and prep your environment execute the following commands:
 ```
 git clone --recursive https://github.com/psakievich/spack-manager.git
 export SPACK_MANAGER=$PWD/spack-manager
@@ -24,20 +24,20 @@ source $SPACK_MANAGER/start.sh
 It is advisable to set `SPACK_MANAGER` environment variable in your `bashrc` or `bash_profile`
 since most of the scripts rely on this environment variable to run correctly.  It is also convenient
 to source `$SPACK_MANAGER/start.sh` in your `bashrc` or `bash_profile`.  This script contains
-environment variables and convenience functions, but does not actually load spack or do anything
+environment variables and convenience functions, but does not actually load Spack or do anything
 else to slow down shell initialization.
 
-Next you want to activate spack via spack-manager.  There are two convenience functions to help with this:
-  1) `spack-start` to auto load spack for you
-  2) `quick-activate` to auto load spack and activate an environment whose location you pass as the first argument`
+Next you want to activate Spack via Spack-Manager.  There are two convenience functions to help with this:
+  1) `spack-start` to auto load Spack for you
+  2) `quick-activate` to auto load Spack and activate an environment whose location you pass as the first argument`
 
-The steps up to this point have just served to activate spack in the active shell.
+The steps up to this point have just served to activate Spack in the active shell.
 Next we will setup a development environment.
 
-To do this we can use the spack-manager convenience script `create_machine_spack_environment.py`.
-This script will populate a directory with the [yaml files](https://spack.readthedocs.io/en/latest/configuration.html) that will define the spack [environment](https://spack.readthedocs.io/en/latest/environments.html).
+To do this we can use the Spack-Manager convenience script `create_machine_spack_environment.py`.
+This script will populate a directory with the [yaml files](https://spack.readthedocs.io/en/latest/configuration.html) that will define the Spack [environment](https://spack.readthedocs.io/en/latest/environments.html).
 We will specify the compilers, packages and configuration settings that are going to control the build environment.
-Luckily, `create_machine_spack_environment.py` will leverage the collective knowledge stored in the spack-manager repository to setup these things for you.
+Luckily, `create_machine_spack_environment.py` will leverage the collective knowledge stored in the Spack-Manager repository to setup these things for you.
 
 So to let's create the build environment. Let's assume we are on one of the Sandia ascicgpu machines and we'd like to do some work in cuda for nalu-wind.
 Run the following command:
@@ -50,14 +50,14 @@ To activate this environment run:
 ```
 spack env activate -d demo
 ```
-or use the shorthand function provided by spack:
+or use the shorthand function provided by Spack:
 ```
 spacktivate demo
 ```
-Activating an environment restricts spack's functionality to specifically what is defined
+Activating an environment restricts Spack's functionality to specifically what is defined
 in the environment.
 
-The file that determines the spack environment is the `spack.yaml` file which you will see in
+The file that determines the Spack environment is the `spack.yaml` file which you will see in
 `demo/spack.yaml`.
 If you look at the contents of this file you will see:
 ```
@@ -79,7 +79,7 @@ These contain machine specific (in this case ascicgpu) and general
 configurations.
 The order they are listed in also determines the level of precedence the configuration files are given.
 These are copied from the machine specific configs directory stored in the
-spack-manager repository.
+Spack-Manager repository.
 Further details of these files are outside the scope of this tutorial but can be found
 in the [spack configuration files documentation](https://spack.readthedocs.io/en/latest/configuration.html).
 
@@ -87,11 +87,11 @@ The spec is what we set and determines how the packages will be built (TPLS, set
 Multiple specs can be added in a given environment but for the demo we will only have one.
 
 Next we will create a develop spec.
-Typically all of the packages that spack will install will be cached away inside spec and the 
+Typically all of the packages that Spack will install will be cached away inside spec and the 
 contents of the builds are not readily available or modifiable.
-However, a develop spec is one where you can control the source code location and when you make changes to it spack will do an incremental build.
+However, a develop spec is one where you can control the source code location and when you make changes to it Spack will do an incremental build.
 
-We can choose to let spack clone the git repo for us by running
+We can choose to let Spack clone the git repo for us by running
 
 ```
 spack develop nalu-wind@master
@@ -99,21 +99,21 @@ spack develop nalu-wind@master
 This will create the directory `demo/nalu-wind` that will be a clone of
 the `nalu-wind` source code.
 
-Or we can clone the repo ourselves and tell spack where to point to for the source code
+Or we can clone the repo ourselves and tell Spack where to point to for the source code
 ```
 git clone https://github.com/Exawind/nalu-wind.git
 spack develop --path nalu-wind nalu-wind@master
 ```
 
-You will notice that to add a spack develop spec you need the package name (`nalu-wind`) and a version (`master`).
-This tells spack what repo to clone if you are going to have spack clone it.
+You will notice that to add a Spack develop spec you need the package name (`nalu-wind`) and a version (`master`).
+This tells Spack what repo to clone if you are going to have Spack clone it.
 You may also wonder why we are using `nalu-wind` instead of `nalu-wind`.
-`nalu-wind` is a package we've added in spack-manager to make it easier for developer workflow.
+`nalu-wind` is a package we've added in Spack-Manager to make it easier for developer workflow.
 We've also created `amr-wind` and `exawind` packages, but the non-developer versions are also acceptable.
 If you have any questions about the packages or can't remember the options for the spec's you can run `spack info [package]` to get information about any package.
 
 Now that we've added a develop spec we can concretize.
-This is how spack finalizes the environment with the requirements and constraints communicated through the `spack.yaml` file.
+This is how Spack finalizes the environment with the requirements and constraints communicated through the `spack.yaml` file.
 To concretize run:
 ```
 spack concretize
@@ -187,11 +187,11 @@ The main disadvantage of sourcing the build envronment directly into your workin
 is that unexpected changes might occur (python or git version may change).
 
 
-To do incremental builds you can re-run `spack install`, or if you've already sourced `spack-build-env.txt` then you can navigate to the build directory and re-run `ninja` or `make` like it was a manual build outside of spack.
+To do incremental builds you can re-run `spack install`, or if you've already sourced `spack-build-env.txt` then you can navigate to the build directory and re-run `ninja` or `make` like it was a manual build outside of Spack.
 
 ## Quick Start
 
-Run these commands to install spack-manager and activate it:
+Run these commands to install Spack-Manager and activate it:
 ```
 git clone --recursive https://github.com/psakievich/spack-manager.git
 export SPACK_MANAGER=$PWD/spack-manager
@@ -244,8 +244,5 @@ or if you use the convenience functions from `start.sh`
 quick-activate [pathto]/demo
 spack install
 ```
-
-
-
 
 

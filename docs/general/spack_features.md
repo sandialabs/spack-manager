@@ -128,7 +128,7 @@ Another important idea in Spack is describing the configuration of a particular 
 
 ## Spack Commands
 
-Spack has many commands, many of which have great information when adding `-h` to them. Here we list a few of the most important commands for using within spack-manager.
+Spack has many commands, many of which have great information when adding `-h` to them. Here we list a few of the most important commands for using within Spack-Manager.
 
   - `spack spec -I <spec> `: solve the DAG for the spec and show packages in the DAG that are already installed
   - `spack location -i <spec> `: used for finding the specific location of an installed package
