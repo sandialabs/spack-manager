@@ -1,0 +1,1 @@
+# History and inspirations for Spack-Manager
