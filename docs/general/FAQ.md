@@ -50,7 +50,7 @@ mpirun -np 20 amr_wind -i [foo]
 Please let us know if you see this. We are trying to make sure you don't see it.
 To get rid of the error run `spack clean -m`
 
-## I'm getting an error saying there is a missing variant? Error: variant [foo] not found ...
+## I'm getting an error saying there is a missing variant? _Error: variant [foo] not found ..._
 Typically this means your Spack submodule is out of date.  To check run
 ```
 cd $SPACK_MANAGER
