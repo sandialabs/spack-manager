@@ -12,7 +12,7 @@ This sparked the idea for the central question behind Spack-Manager: **how much 
 Initial evaluations of Spack's develop features were that there was potential, but also room to grow.
 These features have since improved, but the other tenant of Spack-Manager was determined from this trial period:  **end products need to live as independent from Spack as possible**.
 This really comes down to the fact that Exawind stack was constantly changing and growing, along with Spack itself.
-In reality the entire HPC and computing framework is changing dramatically, and so our development frameworks need to be moving together, but still have room to independently flex as thing evolve.
+In reality the entire HPC and computing landscape is changing dramatically, and so our development frameworks need to be moving together, but still have room to independently flex as thing evolve.
 In this sense Spack-Manager acts as a buffer in between the larger Spack project, and the invidual software projects that are using Spack-Manager to curate their development process.
 
 Spack-Manager's development obtained a lot of inspiration from the [Exawind-Builder](https://github.com/Exawind/exawind-builder) project.
@@ -27,7 +27,7 @@ Choosing to conform to Spack infrastructure means accepting some of the limitati
 This is constantly becoming less of a sacrifice due to the quality of work done by the Spack development team.
 
 Spack-Manager is intended to be agile, and adapt to changes in Spack by embracing new features in Spack, and contributing back everything it can to the Spack project.
-In this sense we are able to harness the pro's of Spack, while still customizing our workflow and influencing the growth of Spack.
+In this sense we are able to harness the pro's of Spack, while still customizing our workflow and influencing the growth of Spack in the future.
 
 
 

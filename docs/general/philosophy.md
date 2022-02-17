@@ -1,1 +1,0 @@
-# Philosophy of Spack-Manager

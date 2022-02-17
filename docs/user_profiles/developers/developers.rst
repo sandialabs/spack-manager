@@ -10,4 +10,5 @@ This documentation is to help understand the basic requirements and workflow for
 
   developer_spack_minimum
   developer_tutorial
+  useful_commands
   snapshot_workflow

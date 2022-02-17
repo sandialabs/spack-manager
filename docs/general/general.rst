@@ -8,6 +8,5 @@ and documentation that is applicable to all users of this software.
    :glob:
    :maxdepth: 2
 
-   philosophy
    history
    spack_features
