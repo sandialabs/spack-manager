@@ -1,9 +1,16 @@
 # Useful Commands for Development
 
 In the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_tutorial.html) the granular Spack commands are shown to help youe become familiar with the process of building with Spack.
-Using these commands (along with familiatization with the [spack.yaml](https://spack.readthedocs.io/en/latest/environments.html#spack-yaml)) will allow you to create a fully customized build environments. 
+Using these commands (along with familiarization with the [spack.yaml](https://spack.readthedocs.io/en/latest/environments.html#spack-yaml)) will allow you to create a fully customized build environments. 
 
-The commands that are anticipated to be the most commonly used are:
+In practice many of these commands are redundant and unneccesary for standard development workflows.
+To assist with your workflow we've pre-scripted these commands in a set of _quick-commands_.
+These commands are available in your shell once you've sourced `$SPACK_MANAGER/start.sh`, and provide a drop off point in the workflows based on your needs.
+All of the _quick-commands_ will echo all the calls to spack (pre-pended with a `+ ` ) so you can see what is being called and can reproduce them execution outside these scripts as needed.
+
+Information on these commands are provided below. 
+
+For a quick reference: the commands that are anticipated to be the most commonly used are:
 - [`quick-activate`](#quick-activate)
 - [`quick-develop`](#quick-develop)
 - [`build-env-dive`](#build-env-dive)
@@ -20,15 +27,10 @@ As a reminder, the complete, granular list of steps to setup an environment afte
 8. `spack install`: build the software
 
 ## Environment Loading Process
-As a reminder, the complete, granular list of steps to re-use an environment after sourcing `$SPACK_MANAGER/start.sh` are:
+The complete, granular list of steps to re-use an environment after sourcing `$SPACK_MANAGER/start.sh` are:
 1. `spack-start`: load Spack in your current shell
 2. `spack env activate`: activate an environment
 3. `spack build env [package] [commands]` or `spack cd -b [spec] && bash -rcfile ../spack-build-env.txt`: run a command in the build environment or dive into the build environment in a subshell
-
-In practice many of these commands are redundant and unneccesary for standard development workflows.
-To assist with your workflow we've pre-scripted these commands in a set of _quick-commands_.
-These commands are available in your shell once you've sourced `$SPACK_MANAGER/start.sh`, and provide a drop off point in the workflows based on your needs.
-Information on these commands are provided below. 
 
 ## Environment setup commands
 The following commands are the convenience functions for setting up a development environment.
