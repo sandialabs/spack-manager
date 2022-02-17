@@ -8,6 +8,8 @@ def get_path_to_externals():
         return '/projects/wind/spack-manager'
     elif machine in ['eagle']:
         return '/projects/exawind/exawind-snapshots/spack-manager'
+    elif machine in ['summit']:
+        return '/gpfs/alpine/proj-shared/cfd116/jrood/spack-manager-summit'
     else:
         return
 
