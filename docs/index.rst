@@ -20,6 +20,11 @@ decreases as the user becomes further removed from the build process.  The three
 
 Separate documentation exists for each of these user profiles.
 
+.. toctree::
+   :maxdepth: 4
+
+   user_profiles/user_profiles
+
 So what are the benefits of Spack-Manager? 
 
 
@@ -43,7 +48,6 @@ Spack-Manager is currently focused on providing the needs of the `Exawind <https
 but the long term intent is to make it project agnostic.  
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   user_profiles/user_profiles
    general/general
