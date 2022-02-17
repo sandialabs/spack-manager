@@ -2,9 +2,14 @@
 
 In the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_tutorial.html) the granular Spack commands are shown to help youe become familiar with the process of building with Spack.
 Using these commands (along with familiatization with the [spack.yaml](https://spack.readthedocs.io/en/latest/environments.html#spack-yaml)) will allow you to create a fully customized build environments. 
-As a reminder, the complete, granular list of steps to setup an environment after sourcing `$SPACK_MANAGER/start.sh` are:
+
+The commands that are anticipated to be the most commonly used are:
+- [`quick-activate`](#quick-activate)
+- [`quick-develop`](#quick-develop)
+- [`build-env-dive`](#build-env-dive)
 
 ### Environment Setup Process
+As a reminder, the complete, granular list of steps to setup an environment after sourcing `$SPACK_MANAGER/start.sh` are:
 1. `spack-start`: activate Spack in your current shell
 2. `spack manager create-env`: create an environment
 3. `spack env activate`: activate the environment you created
@@ -15,6 +20,7 @@ As a reminder, the complete, granular list of steps to setup an environment afte
 8. `spack install`: build the software
 
 ### Environment Loading Process
+As a reminder, the complete, granular list of steps to re-use an environment after sourcing `$SPACK_MANAGER/start.sh` are:
 1. `spack-start`: load Spack in your current shell
 2. `spack env activate`: activate an environment
 3. `spack build env [package] [commands]` or `spack cd -b [spec] && bash -rcfile ../spack-build-env.txt`: run a command in the build environment or dive into the build environment in a subshell
@@ -57,7 +63,6 @@ A common scenario for this is if you are building with the non-standard view tha
 The first view listed in the parenthesis for the latest timestamped snapshot is the default. 
 If this one doesn't match your build needs then you will need to specifiy the correct one manually.
 
-
 ### quick-develop
 `quick-develop` executes the [environment setup process](#environment-setup-process) and exits at step 7.
 This command is intended to execute the entire setup process for the default development environment on a given machine.
@@ -69,4 +74,36 @@ The same requirement for valid concrete specs that was in [`quick-create-dev`](#
 `quick-develop` should be used if you want a rapid development environment without any need for customization.
 This is the fastest and least number of commands to get you started and should work for standard development needs.
 
+## Environment re-use commands
+These commands are designed to help you efficiently re-use an environment that has already been setup.
 
+### quick-activate
+`quick-activate` executes the first two steps of the [environment loading process](#environment-loading-process)
+i.e. `spack-start && spack env activate`.
+To use it you simply pass the directory path to the environment you wish to activate i.e. `quick-activate $SPACK_MANAGER/environments/exawind`
+and it will activate the environment and add the name of the environment to your shell prompt.
+
+***When should I use `quick-activate`?***  
+Whenever you want to come back to an environment in a new shell.
+There are really no down-sides to this command unless you don't like the environment name being added to your prompt.
+
+### build-env-dive
+`build-env-dive` takes a spec as an argument and will move you to the location of the build directory for that spec and launch a sub-shell using the spec's build environment.
+This command allows developers to work as if they had built the software manually outside of spack.
+You can call `make`, `make clean`, `make install`, `ctest` etc.
+Simply type `exit` to return to your original shell where you called `build-env-dive`.
+It should be cautioned that diving into this environment can do things like change the version of git/python in your shell.
+Also if you are doing a multi-compnent simply calling `make` will not update the entire stack like `spack install` will.
+
+***When should I use `build-env-dive`?***
+This command is most effective when you are just iterating on one software component and need to keep executing commands in that environment.
+For a one off like checking a test `spack build-env [spec] [command]` is probably more efficient, but it is also clunkier to use.
+In general `build-env-dive` command should be used freely as long as you are okay with it moving you to directories and are aware of the
+potential issues related to opening a sub-shell with potentially different configurations.
+In practice this has not been much of an issue.
+
+## Other Commands
+
+### remove-spack-prompt
+This command takes no arguments unless you pass `-h` or `--help`.
+It simply removes the prompt with the environment name that the _quick-commands_ add.
