@@ -28,7 +28,7 @@ Separate documentation exists for each of these user profiles.
 
    user_profiles/user_profiles
 
-Benifits of Spack-Manager
+Benefits of Spack-Manager
 =========================
 
 - Spack-Manager allows additional agility and coordination at the project level that can not be maintained for a larger tool/database such as Spack. 
