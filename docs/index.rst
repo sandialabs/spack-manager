@@ -19,6 +19,7 @@ decreases as the user becomes further removed from the build process.  The three
 - Analysts (zero exposure to spack)
 
 Separate documentation exists for each of these user profiles.
+
 .. toctree::
    :maxdepth: 4
 
