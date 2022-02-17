@@ -20,8 +20,12 @@ decreases as the user becomes further removed from the build process.  The three
 
 Separate documentation exists for each of these user profiles.
 
-So what are the benefits of Spack-Manager? 
+Useful links
+============
+* `Developer quick start <https://psakievich.github.io/spack-manager/user_profiles/developers/developer_tutorial.html#quick-start>`_
 
+Benefits of Spack-Manager
+=========================
 
 - Spack-Manager allows additional agility and coordination at the project level that can not be maintained for a larger tool/database such as spack. 
    This is done through heavy use of custom spack `package repositories <https://spack.readthedocs.io/en/latest/repositories.html>`_ and 
