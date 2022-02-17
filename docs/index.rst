@@ -11,14 +11,10 @@ The intent of this project is to maintain as thin of a wrapper as possible aroun
 improvements back to Spack on a regular basis to reduce the code that is maintained here.
 As such we do not try to fully mask Spack's workflow or commands from users, but rather expose them at a level appropriate for the user type.
 
-<<<<<<< HEAD
-Spack-Manager's design is intended to serve three separate user types in a software project, and the level of expected Spack exposure/knowledge required
-=======
 User Profiles
 =============
 
 Spack-Manager's design is intended to serve three separate user types in a software project, and the level of expected spack exposure/knowledge required
->>>>>>> WIP: Add some more intro documents
 decreases as the user becomes further removed from the build process.  The three user profiles are:
 
 - System administrators (Spack is heavily exposed and relied on)
@@ -32,7 +28,7 @@ Separate documentation exists for each of these user profiles.
 
    user_profiles/user_profiles
 
-Benefits of Spack-Manager
+Benifits of Spack-Manager
 =========================
 
 - Spack-Manager allows additional agility and coordination at the project level that can not be maintained for a larger tool/database such as Spack. 
