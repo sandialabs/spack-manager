@@ -13,7 +13,7 @@ The major ways of doing this are:
 - Externals: Manually specifying the path or module for a known installation of software
 
 All of these options were evaluated during the inception of Spack-Manager, but the first three were discarded for the same fundamental reason:
-the control over which software you get is not fully in your control.
+the control over which software you get is not stricitly yours.
 For all three cases you must rely on the concretizer to pick a compatible software installation for you.
 Externals are the only way to take explicit control and force Spack to use libraries from a specific location of your choosing.
 
