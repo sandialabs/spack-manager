@@ -50,7 +50,7 @@ def get_all_snapshots():
     return snapshots
 
 
-def get_latest_dated_snapshot():
+def get_ordered_dated_snapshots():
     """
     Get the path for the latest snapshot created by snapshot_creator.py
     based on the name/date created (not necessarily file creation date)
@@ -62,7 +62,7 @@ def get_latest_dated_snapshot():
         dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
         dates.sort(reverse=True, key=lambda date: datetime.strptime(
             date, "%Y-%m-%d"))
-        return os.path.join(base_dir, dates[0])
+        return list(dates)
     else:
         return
 
@@ -147,28 +147,42 @@ def create_external_yaml_from_env(path, view_key, black_list, white_list):
 
 
 def external(parser, args):
+    extern_dir = get_external_dir()
     if args.list:
-        extern_dir = get_external_dir()
         snaps = get_all_snapshots()
+        dated = get_ordered_dated_snapshots()
+        if snaps and dated:
+            non_dated = list(set(snaps) - set(dated))
+
+        def print_snapshots(snaps):
+            for s in snaps:
+                env_dir = os.path.join(extern_dir, s)
+                env = ev.Environment(env_dir)
+                views = ', '.join(env.views.keys())
+                print(' - {path} ({views})'.format(path=env_dir, views=views))
+
         print('Available snapshot directories (and views) are: ')
-        for s in snaps:
-            env_dir = os.path.join(extern_dir, s)
-            env = ev.Environment(env_dir)
-            views = ', '.join(env.views.keys())
-            print(' - {path} ({views})'.format(path=env_dir, views=views))
+        if dated:
+            print('***Dated Snapshots (ordered)***')
+            print_snapshots(dated)
+        if non_dated:
+            print('***Additional Snapshots (unordered)***')
+            print_snapshots(non_dated)
         return
     env = ev.active_environment()
     if not env:
         tty.die('spack manager external requires an active environment')
     if args.latest:
-        snap_path = get_latest_dated_snapshot()
-        if not snap_path:
+        snaps = get_ordered_dated_snapshots()
+        if not snaps:
             print('WARNING: No \'externals.yaml\' created because no valid '
                   'snapshots were found. \n'
                   '  If you are trying to use a system level snapshot make '
                   'sure you have SPACK_MANAGER_EXTERNAL pointing to '
                   'spack-manager directory for the system.\n')
             return
+        else:
+            snap_path = os.path.join(extern_dir, snaps[0])
     else:
         snap_path = args.path
 
