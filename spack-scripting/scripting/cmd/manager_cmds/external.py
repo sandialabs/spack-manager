@@ -161,12 +161,16 @@ def external(parser, args):
                 views = ', '.join(env.views.keys())
                 print(' - {path} ({views})'.format(path=env_dir, views=views))
 
-        print('Available snapshot directories (and views) are: ')
+        print('-' * 54)
+        print('Available snapshot directories (and views) are:')
+        print('-' * 54)
         if dated:
-            print('***Dated Snapshots (ordered)***')
+            print('\nDated Snapshots (ordered)')
+            print('-' * 54)
             print_snapshots(dated)
         if non_dated:
-            print('***Additional Snapshots (unordered)***')
+            print('\nAdditional Snapshots (unordered)')
+            print('-' * 54)
             print_snapshots(non_dated)
         return
     env = ev.active_environment()
