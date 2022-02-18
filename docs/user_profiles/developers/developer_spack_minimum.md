@@ -173,7 +173,7 @@ The major steps and associated commands for building software with Spack environ
    This generates a `spack.yaml` file which is how the environment is defined. Most of the following commands will be manipulating this file.
 2. **Activate the environment:** (`spack env activate`)  
    This sets the environment as active in your shell.
-3. *Add root specs:* (`spack add`)  
+3. **Add root specs:** (`spack add`)  
    Define the software that you want in the environment.  Spack will solve for the dependencies of all these root specs, and ensure that your environment meshes together. They just need the `name` as a minimum.
 4. **Add develop specs** (`spack develop`)  
    Determine which root specs you want to develop.  These specs must have the `name` and `version` as a minimum. They are not going to be added to your environment by themselves, but rather serve as keys for the concretizer to determine if a spec should be treated as a develop spec or not.  Essentially, if the concretizer can determine that a root spec can be equivalenced with the develop spec, then it will use your source code and not spack's usual process for cloning/building/installing.  Think of this as a sort of dictionary. For instance `spack add trilinos` and `spack develop trilinos@develop` will mean that trilinos will use the source code, but if you had done `spack add trilinos@master` then it would not because `trilinos@develop` and `trilinos@master` can't be quivalenced.  It is recommended that you always just do `name@version` for your develop specs to get the broadest match possible. More documentation on this can be found in the [spack documentation](https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html).

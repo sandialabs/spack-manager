@@ -38,7 +38,7 @@ def create_env(parser, args):
         if machine not in fm.machine_list.keys():
             raise Exception('Specified machine %s is not defined' % machine)
     else:
-        machine = find_machine()
+        machine = find_machine(verbose=False)
 
     if args.spec:
         if 'specs' in yaml['spack']:

@@ -11,8 +11,8 @@ All of the _quick-commands_ will echo all the calls to spack (pre-pended with a 
 Information on these commands are provided below. 
 
 For a quick reference: the commands that are anticipated to be the most commonly used are:
-- [`quick-activate`](#quick-activate)
 - [`quick-develop`](#quick-develop)
+- [`quick-activate`](#quick-activate)
 - [`build-env-dive`](#build-env-dive)
 
 ## Environment Setup Process
