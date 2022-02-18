@@ -8,6 +8,8 @@ def get_path_to_externals():
         return '/projects/wind/spack-manager'
     elif machine in ['eagle']:
         return '/projects/exawind/exawind-snapshots/spack-manager'
+    elif machine in ['rhodes']:
+        return '/projects/ecp/exawind/exawind-snapshots/spack-manager'
     elif machine in ['summit']:
         # This is currently on a project scratch directory and is
         # unfortunately subject to purge
