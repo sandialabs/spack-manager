@@ -157,6 +157,5 @@ function build-env-dive() {
     return 1
   fi
   cmd "spack build-env --dump ${SPACK_MANAGER}/.tmp/spack-build-env.txt $*"
-  cmd "bash --rcfile ${SPACK_MANAGER}/.tmp/spack-build-env.txt"
-  cmd "spack cd -b $*"
+  cmd "bash --rcfile <(echo '. ${SPACK_MANAGER}/.tmp/spack-build-env.txt; spack cd -b $*')"
 }
