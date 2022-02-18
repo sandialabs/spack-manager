@@ -42,11 +42,6 @@ The next typical steps after running this command are to add specs
 and calling spack manager develop to clone dev specs, adding externals
 etc.
 
-Please note that if you wish to specify multiple specs with spaces 
-as an input to this command you need to wrap them in quotes as follows:
-
-\"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'\"
-    
 The base command and it's help are echoed below:
     
 "
@@ -74,11 +69,6 @@ quick-create-dev sets up a developer environment
 where all specs are develop specs that will be automatically cloned
 from the default repos
 
-Please note that for specifying multiple specs with spaces you need to 
-wrap them in quotes as follows:
-
-\"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'\"
-    
 The next typical steps after running this command are to add externals if
 you want them, or run spack install.
     
@@ -118,11 +108,6 @@ with the caveat of accepting all the defaults for:
 - repo and branch cloned for your packages
 - latest external snapshot with the default compilers/configurations
 
-Please note that for specifying multiple specs with spaces you need to 
-wrap them in quotes as follows:
-
-\"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'\"
-    
 The base command and it's help are echoed below:
     
 "
@@ -165,13 +150,12 @@ function remove-spack-prompt() {
 # function for diving into the build environment from a spack build
 function build-env-dive() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    echo "This command will move to the build directory for the spec provided, and then dive into the build environment in a new subshell."
+    echo "This command willsetup and dive into the build environment of the spec provided in a new subshell, and then move into the build directory."
   fi
   if [[ -z ${SPACK_ENV} ]]; then
     echo "You must have an active environment to use build-env-dive."
     return 1
   fi
-  cmd "spack cd -b $*"
   cmd "spack build-env --dump ${SPACK_MANAGER}/.tmp/spack-build-env.txt $*"
-  cmd "bash --rcfile ${SPACK_MANAGER}/.tmp/spack-build-env.txt"
+  cmd "bash --rcfile <(echo '. ${SPACK_MANAGER}/.tmp/spack-build-env.txt; spack cd -b $*')"
 }
