@@ -42,11 +42,6 @@ The next typical steps after running this command are to add specs
 and calling spack manager develop to clone dev specs, adding externals
 etc.
 
-Please note that if you wish to specify multiple specs with spaces 
-as an input to this command you need to wrap them in quotes as follows:
-
-\"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'\"
-    
 The base command and it's help are echoed below:
     
 "
@@ -74,11 +69,6 @@ quick-create-dev sets up a developer environment
 where all specs are develop specs that will be automatically cloned
 from the default repos
 
-Please note that for specifying multiple specs with spaces you need to 
-wrap them in quotes as follows:
-
-\"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'\"
-    
 The next typical steps after running this command are to add externals if
 you want them, or run spack install.
     
@@ -118,11 +108,6 @@ with the caveat of accepting all the defaults for:
 - repo and branch cloned for your packages
 - latest external snapshot with the default compilers/configurations
 
-Please note that for specifying multiple specs with spaces you need to 
-wrap them in quotes as follows:
-
-\"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'\"
-    
 The base command and it's help are echoed below:
     
 "

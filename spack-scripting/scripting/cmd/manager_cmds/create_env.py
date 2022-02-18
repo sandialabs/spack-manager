@@ -10,6 +10,7 @@ import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
+import spack.cmd
 import spack.util.spack_yaml as syaml
 from spack.config import merge_yaml
 
@@ -41,10 +42,15 @@ def create_env(parser, args):
         machine = find_machine(verbose=False)
 
     if args.spec:
+        # parse the specs through spack to handles spaces
+        specs = spack.cmd.parse_specs(args.spec)
+        # print the specs, only defined quanties will be populated here
+        str_specs = [s.format('{name}{@version}{%compiler}'
+                              '{variants}{arch=architecture}') for s in specs]
         if 'specs' in yaml['spack']:
-            yaml['spack']['specs'].extend(args.spec)
+            yaml['spack']['specs'].extend(str_specs)
         else:
-            yaml['spack']['specs'] = args.spec
+            yaml['spack']['specs'] = str_specs
 
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
