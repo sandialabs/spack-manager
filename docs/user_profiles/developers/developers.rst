@@ -9,6 +9,6 @@ This documentation is to help understand the basic requirements and workflow for
   :maxdepth: 2
 
   developer_spack_minimum
+  snapshot_workflow
   useful_commands
   external
-  snapshot_workflow
