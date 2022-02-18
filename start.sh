@@ -156,7 +156,7 @@ function build-env-dive() {
     echo "You must have an active environment to use build-env-dive."
     return 1
   fi
-  cmd "spack cd -b $*"
   cmd "spack build-env --dump ${SPACK_MANAGER}/.tmp/spack-build-env.txt $*"
   cmd "bash --rcfile ${SPACK_MANAGER}/.tmp/spack-build-env.txt"
+  cmd "spack cd -b $*"
 }
