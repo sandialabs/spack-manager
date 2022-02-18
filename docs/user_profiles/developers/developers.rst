@@ -6,7 +6,7 @@ This documentation is to help understand the basic requirements and workflow for
 
 .. toctree::
   :glob:
-  :maxdepth: 2
+  :maxdepth: 4
 
   developer_spack_minimum
   snapshot_workflow

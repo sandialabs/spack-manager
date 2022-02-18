@@ -15,7 +15,7 @@ For a quick reference: the commands that are anticipated to be the most commonly
 - [`quick-activate`](#quick-activate)
 - [`build-env-dive`](#build-env-dive)
 
-## Environment Setup Process
+## Environment setup process
 As a reminder, the complete, granular list of steps to setup an environment after sourcing `$SPACK_MANAGER/start.sh` are:
 1. `spack-start`: activate Spack in your current shell
 2. `spack manager create-env`: create an environment
@@ -26,7 +26,7 @@ As a reminder, the complete, granular list of steps to setup an environment afte
 7. `spack concretize`: solve the dependency graph for your environment
 8. `spack install`: build the software
 
-## Environment Loading Process
+## Environment loading process
 The complete, granular list of steps to re-use an environment after sourcing `$SPACK_MANAGER/start.sh` are:
 1. `spack-start`: load Spack in your current shell
 2. `spack env activate`: activate an environment
