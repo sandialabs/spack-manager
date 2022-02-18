@@ -150,7 +150,7 @@ function remove-spack-prompt() {
 # function for diving into the build environment from a spack build
 function build-env-dive() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    echo "This command will move to the build directory for the spec provided, and then dive into the build environment in a new subshell."
+    echo "This command willsetup and dive into the build environment of the spec provided in a new subshell, and then move into the build directory."
   fi
   if [[ -z ${SPACK_ENV} ]]; then
     echo "You must have an active environment to use build-env-dive."
