@@ -28,12 +28,14 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
     for arch in CudaPackage.cuda_arch_values:
         depends_on('hypre+cuda cuda_arch=%s @2.20.0:' % arch,
                    when='+cuda cuda_arch=%s' % arch)
-    #for arch in ROCmPackage.amdgpu_targets:
-    #    depends_on('hypre+rocm amdgpu_target=%s' % arch,
-    #               when='+rocm amdgpu_target=%s' % arch)
+    for arch in ROCmPackage.amdgpu_targets:
+        depends_on('hypre+rocm amdgpu_target=%s' % arch,
+                   when='+rocm amdgpu_target=%s' % arch)
 
     def cmake_args(self):
         args = [
+            self.define('HYPRE_DIR', spec['hypre'].prefix),
+            self.define('YAML_ROOT_DIR', spec['yaml-cpp'].prefix),
             self.define_from_variant('ENABLE_CUDA', 'cuda'),
             self.define_from_variant('ENABLE_HIP', 'rocm'),
         ]
