@@ -31,6 +31,8 @@ packages:
     externals:
       - spec: llvm-amdgpu@4.5.0
         prefix: /opt/rocm-4.5.0/llvm
+        modules:
+          - craype-accel-amd-gfx908
   all:
     compiler:
       - gcc@9.3.0
