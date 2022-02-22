@@ -12,7 +12,7 @@ class Trilinos(bTrilinos):
         spec = self.spec
         if '+cuda' in spec and '+wrapper' in spec:
             if spec.variants['build_type'].value == 'RelWithDebInfo' or spec.variants['build_type'].value == 'Debug':
-                env.set('CXXFLAGS', '-lineinfo')
+                env.set('CXXFLAGS', '-Xcompiler -rdynamic -lineinfo')
             if '+mpi' in spec:
                 env.set('OMPI_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
                 env.set('MPICH_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
