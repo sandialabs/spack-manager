@@ -1,13 +1,15 @@
 packages:
   cray-mpich:
-    version: [8.1.10]
+    version: [8.1.12]
     buildable: false
     externals:
-      - spec: "cray-mpich@8.1.10%gcc@9.3.0"
+      - spec: "cray-mpich@8.1.12%gcc@9.3.0"
         modules:
-          - cray-mpich/8.1.10
+          - cray-mpich/8.1.12
           - gcc/9.3.0
           - libfabric/1.11.0.4.75
+          - craype-network-ofi
+          - craype-accel-amd-gfx908
   hip:
     version: [4.5.0]
     buildable: false
@@ -30,6 +32,6 @@ packages:
     compiler:
       - gcc@9.3.0
     providers:
-      mpi: [cray-mpich@8.1.10]
+      mpi: [cray-mpich@8.1.12]
       blas: [openblas]
       lapack: [openblas]

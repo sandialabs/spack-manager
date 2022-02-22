@@ -12,5 +12,8 @@ compilers:
       modules:
       - PrgEnv-gnu
       - gcc/9.3.0
+      - libfabric/1.11.0.4.75
+      - craype-network-ofi
+      - craype-accel-amd-gfx908
       environment: {}
       extra_rpaths: []
