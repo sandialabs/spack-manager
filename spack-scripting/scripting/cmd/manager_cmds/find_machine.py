@@ -57,7 +57,7 @@ machine_list = {
     'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
                          'spock.olcf.ornl.gov'),
     'crusher': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'crusher',
-                         'crusher.olcf.ornl.gov'),
+                           'crusher.olcf.ornl.gov'),
     # JLSE
     'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
                             'arcticus.alcf.anl.gov'),
