@@ -2,7 +2,7 @@ from spack import *
 from spack.pkg.builtin.hypre import Hypre as bHypre
 import os
 
-class Hypre(bHypre):
+class Hypre(bHypre, ROCmPackage):
 
     conflicts('+rocm', when='+int64')
     conflicts('+rocm', when='@:2.23.0')
