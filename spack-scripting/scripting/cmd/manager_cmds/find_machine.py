@@ -60,7 +60,7 @@ machine_list = {
                          'crusher.olcf.ornl.gov'),
     # JLSE
     'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
-                            'arcticus.alcf.anl.gov')
+                            'arcticus.alcf.anl.gov'),
     # General
     'darwin': MachineData(lambda: sys.platform == 'darwin',
                           'darwin.nodomain.gov'),
