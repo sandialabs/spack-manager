@@ -14,7 +14,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     depends_on('trilinos gotype=long')
 
     for _arch in ROCmPackage.amdgpu_targets:
-        depends_on('trilinos@master: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm~rocm_rdc amdgpu_target={0}'.format(_arch),
+        depends_on('trilinos@master: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm+rocm_rdc amdgpu_target={0}'.format(_arch),
                    when='+rocm amdgpu_target={0}'.format(_arch))
 
     cxxstd=['14', '17']
