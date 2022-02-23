@@ -51,16 +51,19 @@ machine_list = {
                          'eagle.hpc.nrel.gov'),
     'rhodes': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
                           'rhodes.hpc.nrel.gov'),
-    'darwin': MachineData(lambda: sys.platform == 'darwin',
-                          'darwin.hpc.nrel.gov'),
     # OLCF
     'summit': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
                           'summit.olcf.ornl.gov'),
     'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
                          'spock.olcf.ornl.gov'),
+    'crusher': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'crusher',
+                         'crusher.olcf.ornl.gov'),
     # JLSE
     'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
                             'arcticus.alcf.anl.gov')
+    # General
+    'darwin': MachineData(lambda: sys.platform == 'darwin',
+                          'darwin.nodomain.gov'),
 }
 
 
