@@ -65,9 +65,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if spec.satisfies('dev_path=*'):
             args.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
-        if spec['mpi'].name == 'openmpi':
-            args.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
-        args.append(define('MPI_ROOT', spec['mpi'].prefix))
+        args.append(define('MPI_HOME', spec['mpi'].prefix))
 
         if spec.satisfies('+cuda'):
             args.append(define('EXAWIND_ENABLE_CUDA', True))
