@@ -4,7 +4,7 @@ spack:
   concretization: separately
   view: false
   specs:
-    #- 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=gfx90a ^nalu-wind+hypre ^amr-wind~hypre'
+    - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=gfx90a'
     #- 'exawind+hypre~amr_wind_gpu~nalu_wind_gpu'
-    - 'nalu-wind+rocm amdgpu_target=gfx90a'
-    - 'amr-wind+rocm amdgpu_target=gfx90a'
+    #- 'nalu-wind+rocm amdgpu_target=gfx90a'
+    #- 'amr-wind+rocm amdgpu_target=gfx90a'
