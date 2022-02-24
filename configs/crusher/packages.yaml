@@ -1,0 +1,117 @@
+packages:
+  cray-mpich:
+    version: [8.1.12]
+    buildable: false
+    externals:
+      - spec: "cray-mpich@8.1.12%gcc@9.3.0"
+        modules:
+          - cray-mpich/8.1.12
+          - gcc/9.3.0
+          - libfabric/1.15.0.0
+          - craype-network-ofi
+          - cray-pmi/6.0.16
+          - cray-pmi-lib/6.0.16
+      - spec: "cray-mpich@8.1.12%clang@13.0.0"
+        modules:
+          - cray-mpich/8.1.12
+          - rocm/4.5.0
+          - libfabric/1.15.0.0
+          - craype-network-ofi
+          - cray-pmi/6.0.16
+          - cray-pmi-lib/6.0.16
+      - spec: "cray-mpich@8.1.12%cce@13.0.0"
+        modules:
+          - cray-mpich/8.1.12
+          - cce/13.0.0
+          - libfabric/1.15.0.0
+          - craype-network-ofi
+          - cray-pmi/6.0.16
+          - cray-pmi-lib/6.0.16
+  hip:
+    version: [4.5.0]
+    buildable: false
+    externals:
+      - spec: hip@4.5.0
+        prefix: /opt/rocm-4.5.0/hip
+        modules:
+          - craype-accel-amd-gfx90a
+  hsa-rocr-dev:
+    version: [4.5.0]
+    buildable: false
+    externals:
+      - spec: hsa-rocr-dev@4.5.0
+        prefix: /opt/rocm-4.5.0/hsa
+        modules:
+          - craype-accel-amd-gfx90a
+  llvm-amdgpu:
+    version: [4.5.0]
+    buildable: false
+    externals:
+      - spec: llvm-amdgpu@4.5.0
+        prefix: /opt/rocm-4.5.0/llvm
+        modules:
+          - craype-accel-amd-gfx90a
+  boost:
+    version: [1.78.0]
+    buildable: false
+    externals:
+      - spec: boost@1.78.0
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/cce-13.0.0/boost-1.78.0-wwjqmixjhylb3acvdzbrt4enbzqum7bw
+        modules:
+          - boost/1.78.0
+  hdf5:
+    version: [1.10.7]
+    buildable: false
+    externals:
+      - spec: hdf5@1.10.7
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/cce-13.0.0/hdf5-1.10.7-jw3y6rbxsufen3v5hxtlfa2av27vntm4
+        modules:
+          - hdf5/1.10.7
+  parallel-netcdf:
+    version: [1.12.2]
+    buildable: false
+    externals:
+      - spec: parallel-netcdf@1.12.2
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/cce-13.0.0/parallel-netcdf-1.12.2-frkbmhvz6bmsa6odhymfdtam3dwnvnxb
+        modules:
+          - parallel-netcdf/1.12.2
+  cmake:
+    version: [3.22.1]
+    buildable: false
+    externals:
+      - spec: cmake@3.22.1
+        prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.22.1-wd2ptgormfxhkw3fiac75fiznbzcvpah
+        modules:
+          - cmake/3.22.1
+  zlib:
+    version: [1.2.11]
+    buildable: false
+    externals:
+      - spec: zlib@1.2.11
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/cce-13.0.0/zlib-1.2.11-qx5p4iereg4sjvfi5uwk6jn56o6se2q4
+        modules:
+          - zlib/1.2.11
+  perl:
+    version: [5.34.0]
+    buildable: false
+    externals:
+      - spec: perl@5.34.0
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/cce-13.0.0/perl-5.34.0-5gp2wnll4zkwmbetzz2id35z7owk3hlb
+        modules:
+          - perl/5.34.0
+  openblas:
+    version: [0.3.17]
+    buildable: false
+    externals:
+      - spec: openblas@0.3.17
+        prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/openblas-0.3.17-54x7v5e4i6yxqs6j5nebrbztpy4lftj4
+        modules:
+          - openblas/0.3.17
+  all:
+    compiler:
+      #- gcc@9.3.0
+      - clang@13.0.0
+    providers:
+      mpi: [cray-mpich@8.1.12]
+      blas: [openblas]
+      lapack: [openblas]

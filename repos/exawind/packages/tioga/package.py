@@ -5,7 +5,7 @@ import sys
 
 class Tioga(bTioga):
 
-    patch('iargc_cce.patch', when='%cce@12:')
+    patch('iargc.patch')
 
     def cmake_args(self):
         spec = self.spec

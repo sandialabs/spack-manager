@@ -1,0 +1,10 @@
+spack:
+  include:
+  - include.yaml
+  concretization: separately
+  view: false
+  specs:
+    - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=gfx90a'
+    #- 'exawind+hypre~amr_wind_gpu~nalu_wind_gpu'
+    #- 'nalu-wind+rocm amdgpu_target=gfx90a'
+    #- 'amr-wind+rocm amdgpu_target=gfx90a'
