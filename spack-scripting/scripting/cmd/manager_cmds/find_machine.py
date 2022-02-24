@@ -41,11 +41,11 @@ match
 machine_list = {
     # SNL
     'cee': MachineData(lambda: is_cee(socket.gethostname()),
-                       'cee.snl.gov'),
+                       socket.gethostname()),
     'snl-hpc': MachineData(lambda: is_snl_hpc(socket.gethostname()),
-                           'snl-hpc.snl.gov'),
+                           socket.gethostname()),
     'ascicgpu': MachineData(lambda: 'ascicgpu' in socket.gethostname(),
-                            'ascicgpu.snl.gov'),
+                            socket.gethostname()),
     # NREL
     'eagle': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'eagle',
                          'eagle.hpc.nrel.gov'),
