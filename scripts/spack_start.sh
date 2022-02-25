@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ -z ${SPACK_MANAGER_MACHINE} ]]; then
+if [[ $(type -t _spack_start_called) != function ]]; then
   export SPACK_ROOT=${SPACK_MANAGER}/spack
   export SPACK_DISABLE_LOCAL_CONFIG=true
   export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/.cache
@@ -23,4 +23,9 @@ if [[ -z ${SPACK_MANAGER_MACHINE} ]]; then
     export SPACK_MANAGER_EXTERNAL=$(${SPACK_MANAGER}/scripts/supported_external_paths.py)
   fi
   export PATH=${PATH}:${SPACK_MANAGER}/scripts
+  # define a function since environment variables are sometimes preserved in a subshell but functions aren't
+  # see https://github.com/psakievich/spack-manager/issues/210
+  function _spack_start_called(){
+    echo "TRUE"
+  }
 fi
