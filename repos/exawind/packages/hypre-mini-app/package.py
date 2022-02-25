@@ -34,14 +34,17 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
 
     def cmake_args(self):
         args = [
-            self.define('HYPRE_DIR', spec['hypre'].prefix),
-            self.define('YAML_ROOT_DIR', spec['yaml-cpp'].prefix),
+            self.define('HYPRE_DIR', self.spec['hypre'].prefix),
+            self.define('YAML_ROOT_DIR', self.spec['yaml-cpp'].prefix),
             self.define_from_variant('ENABLE_CUDA', 'cuda'),
             self.define_from_variant('ENABLE_HIP', 'rocm'),
         ]
 
         args.append(self.define_from_variant('ENABLE_UMPIRE', 'umpire'))
-        if '+umpire' in spec:
-            args.append(self.define('UMPIRE_DIR', spec['umpire'].prefix))
+        if '+umpire' in self.spec:
+            args.append(self.define('UMPIRE_DIR', self.spec['umpire'].prefix))
+
+        if '+rocm' in self.spec:
+            args.append(self.define('CMAKE_CXX_COMPILER', self.spec['hip'].hipcc))
 
         return args
