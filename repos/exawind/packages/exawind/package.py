@@ -16,7 +16,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
-    version('master', branch='main', submodules=True)
+    version('master', branch='main', submodules=False)
 
     variant('asan', default=False,
             description='turn on address sanitizer')
@@ -72,8 +72,12 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
 
         if spec.satisfies('+rocm'):
+            targets = self.spec.variants['amdgpu_target'].value
             args.append(define('EXAWIND_ENABLE_ROCM', True))
             args.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
+            args.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+            args.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            args.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
 
         return args
 
