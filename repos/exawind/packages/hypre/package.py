@@ -10,8 +10,8 @@ class Hypre(bHypre, ROCmPackage):
 
     def _configure_args(self):
         spec = self.spec
-        options = super(Hypre, self)._configure_args()                        
-                                                                           
+        options = super(Hypre, self)._configure_args()
+
         if '+cuda' in self.spec:
             options.append('--enable-cusparse')
 
