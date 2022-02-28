@@ -16,7 +16,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
-    version('master', branch='main', submodules=False)
+    version('master', branch='main', submodules=True)
 
     variant('asan', default=False,
             description='turn on address sanitizer')
@@ -85,6 +85,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if '+asan' in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, 'sup.asan')))
         if '+rocm+amr_wind_gpu~nalu_wind_gpu' in self.spec:
+            # Manually turn off device defines to solve Kokkos issues in Nalu-Wind headers
             env.append_flags("CXXFLAGS", "-U__HIP_DEVICE_COMPILE__ -DDESUL_HIP_RDC")
 
     @run_after('cmake')
