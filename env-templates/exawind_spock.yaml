@@ -5,4 +5,3 @@ spack:
   view: false
   specs:
     - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=gfx908'
-    - 'exawind+hypre~amr_wind_gpu~nalu_wind_gpu'
