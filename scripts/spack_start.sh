@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $(type -t _spack_start_called) != function ]]; then
+if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   export SPACK_ROOT=${SPACK_MANAGER}/spack
   export SPACK_DISABLE_LOCAL_CONFIG=true
   export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/.cache
