@@ -14,7 +14,10 @@ compilers:
 #      - /sw/summit/gcc/10.2.0/lib
 #      - /sw/summit/gcc/10.2.0/lib64
 #      - /sw/summit/gcc/10.2.0/libexec
-#    flags: {}
+#    flags:
+#      cflags: -march=generic -mtune=generic
+#      cxxflags: -march=generic -mtune=generic 
+#      fflags: -march=generic -mtune=generic
 #    spec: gcc@10.2.0
 - compiler:
     paths:
@@ -31,5 +34,9 @@ compilers:
       - /sw/summit/gcc/9.3.0-1/lib
       - /sw/summit/gcc/9.3.0-1/lib64
       - /sw/summit/gcc/9.3.0-1/libexec
-    flags: {}
+    # Avoid SIMD problems in Trilinos on Summit
+    flags:
+      cflags: -march=generic -mtune=generic
+      cxxflags: -march=generic -mtune=generic 
+      fflags: -march=generic -mtune=generic
     spec: gcc@9.3.0
