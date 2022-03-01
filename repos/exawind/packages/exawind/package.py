@@ -72,14 +72,21 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
 
         if spec.satisfies('+rocm'):
+            targets = self.spec.variants['amdgpu_target'].value
             args.append(define('EXAWIND_ENABLE_ROCM', True))
             args.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
+            args.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+            args.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            args.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
 
         return args
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, 'sup.asan')))
+        if '+rocm+amr_wind_gpu~nalu_wind_gpu' in self.spec:
+            # Manually turn off device defines to solve Kokkos issues in Nalu-Wind headers
+            env.append_flags("CXXFLAGS", "-U__HIP_DEVICE_COMPILE__ -DDESUL_HIP_RDC")
 
     @run_after('cmake')
     def copy_compile_commands(self):

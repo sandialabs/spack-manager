@@ -42,6 +42,9 @@ class AmrWind(bAmrWind, ROCmPackage):
             cmake_options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
             cmake_options.append(define('AMR_WIND_ENABLE_ROCM', True))
             cmake_options.append('-DAMReX_AMD_ARCH=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
 
         if spec['mpi'].name == 'openmpi':
             cmake_options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
