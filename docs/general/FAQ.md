@@ -1,5 +1,20 @@
 # Frequently Asked Questions:
 
+
+## I'm getting lots of weird Spack errors, what should I do?
+If you have another Spack instance you've used in the past conflicts can occur due to the `~/.spack` directory.
+The first step we recommend is deleting this directory and trying again.
+
+## What is Clingo and why is Spack saying it is __bootstrapping__ it?
+
+[Clingo](https://potassco.org/clingo/) is a powerful answer-set solver that Spack uses to solve your software dependency DAG
+during concretization.
+Spack first tries to bootstrap the install from pre-built binaries to avoid making you build Clingo
+and all of it's dependencies when you use a new instance of Spack.
+If you wish to build it yourself, or are having issues with the bootstrap process you can run `spack bootstrap disable`.
+There are several options here which you can learn about by running `spack bootstrap --help`.
+Further information about bootstrapping can be found in the Spack documentation.
+
 ## What are the ^ in the specs?
 ^ characters in a spec such as `nalu-wind ^trilinos` are spec delimiters.  Using this character allows you to specify the details of dependencies of the root spec.  So `nalu-wind ^trilinos build_type=Debug` is saying I want to build `nalu-wind` and I want the build of Trilinos to be a debug build.
 

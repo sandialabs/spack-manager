@@ -2,13 +2,16 @@
 
 In this section we will go over the developer work flow in Spack-Manager using the [quick-functions](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html). 
 
-We will cover this in 4 stages:  
+This tutorial assumes you are familiar with the [3 things developers need to know](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html).
+If you are unfamiliar with these 3 things then please review the documentation before proceeding.
+
+The developer workflow will be covered in 4 stages:  
 1) [Setting up Spack-Manager](#setup-spack-manager)
 2) [Create an environment for development](#creating-an-environment)
 3) [Building and making code changes](#building-and-making-code-changes)
 4) [Running tests and coming back](#running-tests-and-coming-back)
 
-There is also the [quick start] below that just lists all the commands for you in a row.
+There is also the [quick start](#quick-start) below that just lists all the commands for you in a row.
 
 ## Setup Spack-Manager
 Setting up Spack-Manager should be a 1 time thing on a given machine.
@@ -22,7 +25,7 @@ git clone --recursive git@github.com:psakievich/spack-manager.git
 In order for Spack-Manager to work you need to define the `SPACK_MANAGER` environment variable,
 and it should provide the absolute path to your Spack-Manager directory. To have access to the
 commands we will use in this tutorial you need to source `$SPACK_MANAGER/start.sh`.
-This script enables all the functions in Spack-Manager but it does not activate Spack.
+This script enables all the shell functions in Spack-Manager but it does not activate Spack.
 We do this to allow you to add these lines to your `bash_profile` without any penalty
 since sourcing Spack adds an unacceptable level of overhead for standard shell spawning,
 
@@ -92,28 +95,32 @@ To set up a build of the exawind driver where we are developing `amr-wind` and `
 ```console
 quick-create-dev -n example-env -s exawind@master nalu-wind@master amr-wind@main
 ```
-If you don't want to develop in one of these packages (say you're only focused on `amr-wind`) then just ommit the software you don't
-plan to develop in from the spec list in the command above.
+If you don't want to develop one of these packages (say you're only focused on `amr-wind`) then just ommit the software you don't
+plan to develop in from the spec list in the command above. Please note that these specs need to be concrete specs, meaning they have the name
+(`amr-wind`) and the version from spack (`main`), and that **that the version is not necessarily the same thing as the branch**.
+This is covered in the [things developers need to know about Spack](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html) for those needing a refresher.
 
 The `-n` flag can be replaced with `-d` if we want to setup an environment in a different location than `$SPACK_MANAGER/environments` (see the help message above).
-This will execute all the stages in the table above including cloning the repos from github for the software.
+The `quick-create-dev` command will execute all the stages in the table above including cloning the repos from github for the software.
 These clones of the source code default to the environment directory you specified with the `-d` or `-n` flags.
-If we wish to work off specific branches then we can use `git add remote` inside each of the clones before building.
+If we wish to work off specific branches then we can use `git add remote`, `git fetch` and `git checkout` to get the branches we want
+inside each of the clones before building.
 
-If you wish to pre-clone your repos you can simply create a directory, pre-clone the software you want to develop with names that match the package names and run your `quick-create-dev` without either of the `-d` or `-n` flags.
+If you wish to pre-clone your repos you can simply create a directory, pre-clone the software you want to develop with names that match the package names and run your `quick-create-dev` inside the directory you created without either of the `-d` or `-n` flags.
 This is because the default behavior of the command is to create the environment files, and clone repos in the current
 working directory.
 
 For example:
 ```console
 mkdir test && cd test
+# note that we name the clone of exawind-driver 'exawind' in the clone process to match the spack package name
 git clone --recursive --branch main git@github.com:Exawind/exawind-driver.git exawind
 git clone --recursive --branch master git@github.com:Exawind/nalu-wind.git
 git clone --recursive --branch main git@github.com:Exawind/amr-wind.git
 quick-create-dev -s exawind@main amr-wind@main nalu-wind@master
 + spack-start
-+ spack manager create-dev-env -s exawind@main amr-wind@main nalu-wind@master
-==> Configuring spec exawind@main for development at path exawind
++ spack manager create-dev-env -s exawind@master amr-wind@main nalu-wind@master
+==> Configuring spec exawind@master for development at path exawind
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
 ==> Configuring spec amr-wind@main for development at path amr-wind
 ==> Configuring spec nalu-wind@master for development at path nalu-wind
@@ -126,7 +133,7 @@ quick-create-dev -d test -s exawind@master nalu-wind@master amr-wind@main
 However, adding in the extra pre-clone steps gives you a little more control over your environment.
 
 At this point in the process your environment is active and all setup.
-You can confirm that it is active with `spack env status` to see what the active environment is.
+You can confirm that it is active with `spack env status` which displays the active environment.
 
 ## Building and Making Code Changes
 Once the environment is setup and active you can simply run
@@ -148,7 +155,7 @@ In this environment if you make a change in `amr-wind` it will also trigger a re
 
 To run tests in a one off manner you can use the `spack build-env` command to run commands in a sub-shell with the build environment.
 This is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html#running).
-We also have a function `build-env-dive` that is a beta feature you can use to launch this same subshell in your terminal and dive into it.
+We also have a function `build-env-dive` which is a beta feature that launches this same subshell in your terminal and dives into it.
 It is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html#build-env-dive).
 
 If you wish to come back to an environment later, or in a new shell you can just run
@@ -159,15 +166,21 @@ and this will do all the activation for the environment for you.
 You will be able to come back at anytime and pick up where you left off.
 
 ## Quick Start
-These are the commands needed to set up a development build for the exawind-driver with the intention of editing `nalu-wind` and `amr-wind` at the same time.
+These are the commands needed to set up Spack-Manager and a development build for the exawind-driver with the intention of editing `nalu-wind` and `amr-wind` at the same time.
 
 ```console
+# setup Spack-Manager
 git clone --recursive git@github.com:psakievich/spack-manager.git
 export SPACK_MANAGER=$(pwd)/spack-manager
 source $SPACK_MANAGER/start.sh
+# setup environment
 quick-create-dev -n demo -s exawind@master amr-wind@main nalu-wind@master
+# build code
 spack install
 # code changes
+# ....
+# re-build
 spack install
+# run all the overset regression tests in nalu-wind
 spack build-env nalu-wind ctest -R overset
 ```
