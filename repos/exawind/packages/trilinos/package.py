@@ -5,7 +5,7 @@ import os
 class Trilinos(bTrilinos):
     variant('stk_unit_tests', default=False,
             description='turn on STK unit tests')
-    variant('stk-simd', default=False,
+    variant('stk_simd', default=False,
             description='Enable SIMD in STK')
 
     patch('kokkos.patch', when='+cuda')
@@ -32,7 +32,7 @@ class Trilinos(bTrilinos):
             if '+stk' in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
                 env.append_flags('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE')
-                if '~stk-simd' in spec:
+                if '~stk_simd' in spec:
                     env.append_flags('CXXFLAGS', '-DUSE_STK_SIMD_NONE')
 
     def setup_dependent_package(self, module, dependent_spec):
