@@ -9,6 +9,7 @@ This documentation is to help understand the basic requirements and workflow for
   :maxdepth: 4
 
   developer_spack_minimum
+  developer_workflow
   snapshot_workflow
   useful_commands
   external
