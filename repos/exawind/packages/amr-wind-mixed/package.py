@@ -8,7 +8,7 @@
 from spack import *
 
 
-class AmrWind(CMakePackage, CudaPackage, ROCmPackage):
+class AmrWindMixed(CMakePackage, CudaPackage, ROCmPackage):
     """AMR-Wind is a massively parallel, block-structured adaptive-mesh,
     incompressible flow sover for wind turbine and wind farm simulations. """
 
