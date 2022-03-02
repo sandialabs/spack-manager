@@ -12,7 +12,7 @@ class Trilinos(bTrilinos):
         spec = self.spec
         if '+cuda' in spec and '+wrapper' in spec:
             if spec.variants['build_type'].value == 'RelWithDebInfo' or spec.variants['build_type'].value == 'Debug':
-                env.set('CXXFLAGS', '-Xcompiler -rdynamic -lineinfo')
+                env.append_flags('CXXFLAGS', '-Xcompiler -rdynamic -lineinfo')
             if '+mpi' in spec:
                 env.set('OMPI_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
                 env.set('MPICH_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
@@ -29,7 +29,7 @@ class Trilinos(bTrilinos):
                 env.set('CXX', self.spec['hip'].hipcc)
             if '+stk' in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
-                env.set('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE')
+                env.append_flags('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE -DUSE_STK_SIMD_NONE')
 
     def setup_dependent_package(self, module, dependent_spec):
         if '+wrapper' in self.spec:
