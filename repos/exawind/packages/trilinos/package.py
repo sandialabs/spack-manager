@@ -43,6 +43,9 @@ class Trilinos(bTrilinos):
         define = CMakePackage.define
         options = super(Trilinos, self).cmake_args()
 
-        options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
+        if '+stk' in spec:
+            options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
+            options.append(define('STK_ENABLE_STKSimd', False))
+            options.append(define('Trilinos_ENABLE_STKSimd', False))
 
         return options
