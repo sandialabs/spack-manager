@@ -62,11 +62,6 @@ HELP MESSAGE:
 quick-create-dev sets up a developer environment
 where all specs are develop specs that will be automatically cloned
 from the default repos
-
-Please note that for specifying multiple specs with spaces you need to 
-wrap them in quotes as follows:
-
-"'amr-wind@main build_type=Debug' nalu-wind@master 'exawind@master build_type=Debug'"
     
 The next typical steps after running this command are to add externals if
 you want them, or run spack install.
@@ -95,7 +90,7 @@ The main flags to use for standard developer workflow are the `--name` or `--dir
 To set up a build of the exawind driver where we are developing `amr-wind` and `nalu-wind` too we would run:
 
 ```console
-quick-create-dev -n example-env -s exawind@main nalu-wind@master amr-wind@main
+quick-create-dev -n example-env -s exawind@master nalu-wind@master amr-wind@main
 ```
 If you don't want to develop in one of these packages (say you're only focused on `amr-wind`) then just ommit the software you don't
 plan to develop in from the spec list in the command above.
