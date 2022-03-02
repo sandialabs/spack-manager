@@ -9,6 +9,8 @@ class NaluWind(bNaluWind, ROCmPackage):
 
     variant('asan', default=False,
             description='Turn on address sanitizer')
+    variant('stk-simd', default=False,
+            description='Enable SIMD in STK')
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')
@@ -25,7 +27,8 @@ class NaluWind(bNaluWind, ROCmPackage):
         depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
 
     def setup_build_environment(self, env):
-        env.append_flags('CXXFLAGS', '-DUSE_STK_SIMD_NONE')
+        if '~stk-simd' in self.spec:
+            env.append_flags('CXXFLAGS', '-DUSE_STK_SIMD_NONE')
         if '+asan' in self.spec:
             env.append_flags('CXXFLAGS', '-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}'.format(join_path(self.package_dir, 'blacklist.asan')))
             env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, 'sup.asan')))
