@@ -47,13 +47,20 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('amr-wind+hypre', when='+hypre~amr_wind_gpu~nalu_wind_gpu')
     depends_on('amr-wind-mixed+hypre', when='+hypre+amr_wind_gpu~nalu_wind_gpu')
     for arch in CudaPackage.cuda_arch_values:
-        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
-        depends_on('amr-wind-mixed+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu~nalu_wind_gpu+cuda cuda_arch=%s' % arch)
-        depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
-        depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind+cuda cuda_arch=%s' % arch,
+                   when='+amr_wind_gpu+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind-mixed+cuda cuda_arch=%s' % arch,
+                   when='+amr_wind_gpu~nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('nalu-wind+cuda cuda_arch=%s' % arch,
+                   when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('trilinos+cuda cuda_arch=%s' % arch,
+                   when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
 
     for arch in ROCmPackage.amdgpu_targets:
-        depends_on('amr-wind+rocm amdgpu_target=%s' % arch, when='+amr_wind_gpu+rocm amdgpu_target=%s' % arch)
+        depends_on('amr-wind+rocm amdgpu_target=%s' % arch,
+                   when='+amr_wind_gpu+nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
+        depends_on('amr-wind-mixed+rocm amdgpu_target=%s' % arch,
+                   when='+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
 
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
