@@ -38,11 +38,11 @@ There are three `quick-commands` for creating environments: `quick-create`, `qui
 They all exit the process of setting up an environment at different points in the process as outlined below:
 
 | Step | quick-create | quick-create-dev | quick-develop |
--------------------------------------------------------------
+|:-----|:------------:|:----------------:|:-------------:|
 | spack-start | x | x | x |
 | Create an environment | x | x | x|
 | Activate an environment | x | x | x |
 | Add root specs | x | x | x|
 | Add develop specs | | x | x |
 | Add externals | | | x | 
-
+| Concretize and install | | | |
