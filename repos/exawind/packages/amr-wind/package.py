@@ -5,12 +5,12 @@ from shutil import copyfile
 
 class AmrWind(bAmrWind, ROCmPackage):
 
-    depends_on('hypre2+unified-memory', when='+hypre+cuda')
+    depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('py-matplotlib', when='+masa')
     depends_on('py-pandas', when='+masa')
 
     for _arch in ROCmPackage.amdgpu_targets:
-        depends_on('hypre2~int64+rocm amdgpu_target={0}'.format(_arch), when='+hypre+rocm amdgpu_target={0}'.format(_arch))
+        depends_on('hypre~int64+rocm amdgpu_target={0}'.format(_arch), when='+hypre+rocm amdgpu_target={0}'.format(_arch))
 
     variant('asan', default=False,
             description='Turn on address sanitizer')
