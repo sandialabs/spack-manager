@@ -17,6 +17,8 @@ packages:
     version: [develop]
   hypre:
     version: [develop]
+  hypre-mixed:
+    version: [develop]
   yaml-cpp:
     version: [0.6.3]
   trilinos:

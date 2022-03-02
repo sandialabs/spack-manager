@@ -24,7 +24,10 @@ compilers:
         cxx: CC
         f77: ftn
         fc: ftn
-      flags: {}
+      flags:
+        cflags: -mtune=x86-64 -march=x86-64
+        cxxflags: -mtune=x86-64 -march=x86-64
+        fflags: -mtune=x86-64 -march=x86-64
       operating_system: sles15
       target: any
       modules:

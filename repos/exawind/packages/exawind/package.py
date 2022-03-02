@@ -1,5 +1,4 @@
 from spack import *
-#from spack.pkg.builtin.exawind import Exawind as bExawind
 from shutil import copyfile
 import os
 
@@ -31,30 +30,36 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     conflicts('+amr_wind_gpu', when='~cuda~rocm')
     conflicts('+nalu_wind_gpu', when='~cuda~rocm')
-    conflicts('+amr_wind_gpu~nalu_wind_gpu', when='^amr-wind+hypre')
 
+    depends_on('nalu-wind+tioga')
+    depends_on('amr-wind+netcdf+mpi', when='+amr_wind_gpu+nalu_wind_gpu')
+    depends_on('amr-wind+netcdf+mpi', when='~amr_wind_gpu~nalu_wind_gpu')
+    depends_on('amr-wind-mixed+netcdf+mpi', when='+amr_wind_gpu~nalu_wind_gpu')
+    depends_on('tioga+shared~nodegid')
+    depends_on('yaml-cpp@0.6:')
+    depends_on('nalu-wind+openfast', when='+openfast')
+    depends_on('amr-wind+openfast', when='+openfast+amr_wind_gpu+nalu_wind_gpu')
+    depends_on('amr-wind+openfast', when='+openfast~amr_wind_gpu~nalu_wind_gpu')
+    depends_on('amr-wind-mixed+openfast', when='+openfast+amr_wind_gpu~nalu_wind_gpu')
+    depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
+    depends_on('nalu-wind+hypre', when='+hypre')
+    depends_on('amr-wind+hypre', when='+hypre+amr_wind_gpu+nalu_wind_gpu')
+    depends_on('amr-wind+hypre', when='+hypre~amr_wind_gpu~nalu_wind_gpu')
+    depends_on('amr-wind-mixed+hypre', when='+hypre+amr_wind_gpu~nalu_wind_gpu')
     for arch in CudaPackage.cuda_arch_values:
-        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
+        depends_on('amr-wind-mixed+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu~nalu_wind_gpu+cuda cuda_arch=%s' % arch)
         depends_on('nalu-wind+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
         depends_on('trilinos+cuda cuda_arch=%s' % arch, when='+nalu_wind_gpu+cuda cuda_arch=%s' % arch)
 
     for arch in ROCmPackage.amdgpu_targets:
         depends_on('amr-wind+rocm amdgpu_target=%s' % arch, when='+amr_wind_gpu+rocm amdgpu_target=%s' % arch)
 
-    depends_on('nalu-wind+tioga')
-    depends_on('amr-wind+netcdf+mpi')
-    depends_on('tioga+shared~nodegid')
-    depends_on('yaml-cpp@0.6:')
-    depends_on('nalu-wind+openfast', when='+openfast')
-    depends_on('amr-wind+openfast', when='+openfast')
-    depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
-    depends_on('nalu-wind+hypre', when='+hypre')
-    depends_on('amr-wind+hypre', when='+hypre')
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on('trilinos')
     depends_on('cmake')
-    depends_on('hypre', when='+hypre')
+    #depends_on('hypre', when='+hypre')
 
     def cmake_args(self):
         spec = self.spec
