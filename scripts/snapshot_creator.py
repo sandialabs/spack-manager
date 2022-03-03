@@ -148,8 +148,8 @@ def add_spec(env, extension, data, create_modules):
     view_dict = {data.id: {
         'root': view_path, 'exclude': excludes,
         'projections': {'all': '{compiler.name}-{compiler.version}/{name}/{version}',
-                        '+cuda': '{compiler.name}-{compiler.version}-cuda/{name}/{version}',
-                        '+rocm': '{compiler.name}-{compiler.version}-rocm/{name}/{version}'},
+                        '^cuda': '{compiler.name}-{compiler.version}-{^cuda.name}-{^cuda.version}/{name}/{version}',
+                        '^rocm': '{compiler.name}-{compiler.version}-{^rocm.name}-{^rocm.version}/{name}/{version}'},
         'link_type': 'hard'
     }}
     with open(env.manifest_path, 'r') as f:
