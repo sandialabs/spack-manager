@@ -26,7 +26,7 @@ def is_snl_hpc(hostname):
 
 
 def is_jlse(hostname):
-    known_hosts = ('arcticus')
+    known_hosts = ('arcticus',)
     for k in known_hosts:
         if k in hostname:
             return True
