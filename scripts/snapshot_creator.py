@@ -147,6 +147,9 @@ def add_spec(env, extension, data, create_modules):
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
         'root': view_path, 'exclude': excludes,
+        'projections': {'all': '{compiler.name}-{compiler.version}/{name}/{version}',
+                        '+cuda': '{compiler.name}-{compiler.version}-cuda/{name}/{version}',
+                        '+rocm': '{compiler.name}-{compiler.version}-rocm/{name}/{version}'},
         'link_type': 'hard'
     }}
     with open(env.manifest_path, 'r') as f:
