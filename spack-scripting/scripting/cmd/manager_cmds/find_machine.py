@@ -58,6 +58,9 @@ machine_list = {
                          'spock.olcf.ornl.gov'),
     'crusher': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'crusher',
                            'crusher.olcf.ornl.gov'),
+    # NERSC
+    'perlmutter': MachineData(lambda: os.environ['NERSC_HOST'] == 'perlmutter',
+                          'perlmutter-p1.nersc.gov'),
     # JLSE
     'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
                             'arcticus.alcf.anl.gov'),
