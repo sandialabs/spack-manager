@@ -43,6 +43,7 @@ if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || \
    [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ] || \
    [ "${SPACK_MANAGER_MACHINE}" == 'frontier' ] || \
    [ "${SPACK_MANAGER_MACHINE}" == 'sunspot' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'perlmutter' ] || \
    [ "${SPACK_MANAGER_MACHINE}" == 'azure' ]; then
   cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 else
