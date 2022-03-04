@@ -29,9 +29,11 @@ if [[ -f "${ENV_SCRIPT}" ]]; then
 fi
 
 printf "\nCreating Spack environment...\n"
-if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
+if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_matrix.yaml -d ${SPACK_MANAGER}/environments/exawind"
-elif [ "${SPACK_MANAGER_MACHINE}" == 'spock' ] || [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ]; then
+elif [ "${SPACK_MANAGER_MACHINE}" == 'spock' ] ||
+     [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ] ||
+     [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
   cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind"
 else
   cmd "spack manager create-env -s exawind+hypre+openfast -d ${SPACK_MANAGER}/environments/exawind"
