@@ -5,6 +5,8 @@ import os
 class Trilinos(bTrilinos):
     variant('stk_unit_tests', default=False,
             description='turn on STK unit tests')
+    variant('stk_simd', default=False,
+            description='Enable SIMD in STK')
 
     patch('kokkos.patch', when='+cuda')
 
@@ -12,7 +14,7 @@ class Trilinos(bTrilinos):
         spec = self.spec
         if '+cuda' in spec and '+wrapper' in spec:
             if spec.variants['build_type'].value == 'RelWithDebInfo' or spec.variants['build_type'].value == 'Debug':
-                env.set('CXXFLAGS', '-Xcompiler -rdynamic -lineinfo')
+                env.append_flags('CXXFLAGS', '-Xcompiler -rdynamic -lineinfo')
             if '+mpi' in spec:
                 env.set('OMPI_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
                 env.set('MPICH_CXX', spec["kokkos-nvcc-wrapper"].kokkos_cxx)
@@ -29,7 +31,9 @@ class Trilinos(bTrilinos):
                 env.set('CXX', self.spec['hip'].hipcc)
             if '+stk' in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
-                env.set('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE')
+                env.append_flags('CXXFLAGS', '-DSTK_NO_BOOST_STACKTRACE')
+                if '~stk_simd' in spec:
+                    env.append_flags('CXXFLAGS', '-DUSE_STK_SIMD_NONE')
 
     def setup_dependent_package(self, module, dependent_spec):
         if '+wrapper' in self.spec:
@@ -43,6 +47,7 @@ class Trilinos(bTrilinos):
         define = CMakePackage.define
         options = super(Trilinos, self).cmake_args()
 
-        options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
+        if '+stk' in spec:
+            options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
 
         return options
