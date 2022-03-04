@@ -1,9 +1,0 @@
-spack:
-  include:
-  - include.yaml
-  concretization: separately
-  view: false
-  specs:
-    - 'exawind+hypre+amr_wind_gpu+nalu_wind_gpu+cuda cuda_arch=70 target=ppc64le'
-    - 'exawind+hypre~amr_wind_gpu~nalu_wind_gpu~cuda target=ppc64le'
-    - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+cuda cuda_arch=70 ^nalu-wind+hypre ^amr-wind~hypre target=ppc64le'
