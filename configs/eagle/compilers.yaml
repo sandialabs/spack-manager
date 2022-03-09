@@ -194,10 +194,10 @@ compilers:
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/llvm-8.0.0-3jy3xmhkzsku2y4hb6tihki4wp26bsuv/lib
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/llvm-8.0.0-3jy3xmhkzsku2y4hb6tihki4wp26bsuv/lib/clang/8.0.0/lib/linux
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-8.4.0-2a3vha6hlw4xc5ja3jyhr7huzaxuw2kt/lib64
-    flags:
-      cflags: -mtune=skylake-avx512 -march=skylake-avx512
-      cxxflags: -mtune=skylake-avx512 -march=skylake-avx512
-      fflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #flags:
+    #  cflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #  cxxflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #  fflags: -mtune=skylake-avx512 -march=skylake-avx512
     modules: []
     operating_system: centos7
     paths:
@@ -215,10 +215,10 @@ compilers:
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/llvm-9.0.1-yn4chleei5viwbmfm4ya6th5mtr6jcm5/lib
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/llvm-9.0.1-yn4chleei5viwbmfm4ya6th5mtr6jcm5/lib/clang/9.0.1/lib/linux
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-8.4.0-2a3vha6hlw4xc5ja3jyhr7huzaxuw2kt/lib64
-    flags:
-      cflags: -mtune=skylake-avx512 -march=skylake-avx512
-      cxxflags: -mtune=skylake-avx512 -march=skylake-avx512
-      fflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #flags:
+    #  cflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #  cxxflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #  fflags: -mtune=skylake-avx512 -march=skylake-avx512
     modules: []
     operating_system: centos7
     paths:
@@ -236,10 +236,10 @@ compilers:
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/llvm-10.0.0-rdkkzyvtbotoq4xjatwsb5eqyindy4sr/lib
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/llvm-10.0.0-rdkkzyvtbotoq4xjatwsb5eqyindy4sr/lib/clang/10.0.0/lib/linux
      - /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/gcc-8.4.0-2a3vha6hlw4xc5ja3jyhr7huzaxuw2kt/lib64
-    flags:
-      cflags: -mtune=skylake-avx512 -march=skylake-avx512
-      cxxflags: -mtune=skylake-avx512 -march=skylake-avx512
-      fflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #flags:
+    #  cflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #  cxxflags: -mtune=skylake-avx512 -march=skylake-avx512
+    #  fflags: -mtune=skylake-avx512 -march=skylake-avx512
     modules: []
     operating_system: centos7
     paths:
