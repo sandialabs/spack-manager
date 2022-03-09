@@ -36,6 +36,7 @@ class NaluWind(bNaluWind, ROCmPackage):
         if '+cuda' in self.spec:
             env.set("CUDA_LAUNCH_BLOCKING", "1")
             env.set("CUDA_MANAGED_FORCE_DEVICE_ALLOC", "1")
+            env.set('MPICH_CXX', self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
 
     def cmake_args(self):
         spec = self.spec
