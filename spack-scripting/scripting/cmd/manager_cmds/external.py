@@ -98,7 +98,7 @@ def write_spec(view, spec):
     return template.format(
         name=spec.name,
         short_spec=spec.format(
-            '{name}{@version}{%compiler}{variants}{arch=architecture}'),
+            '{name}{@version}{%compiler}{variants}'),
         prefix=view.get_projection_for_spec(spec))
 
 
