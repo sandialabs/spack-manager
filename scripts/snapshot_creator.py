@@ -153,7 +153,7 @@ def add_spec(env, extension, data, create_modules):
                         '{^cuda.name}-{^cuda.version}/{name}/{version}',
                         '^rocm': '{compiler.name}-{compiler.version}-'
                         '{^rocm.name}-{^rocm.version}/{name}/{version}'},
-        'link_type': 'symlink'
+        'link_type': 'hardlink'
     }}
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
