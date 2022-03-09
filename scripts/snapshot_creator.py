@@ -120,7 +120,12 @@ def parse(stream):
     parser.add_argument('--num_threads', '-nt', type=int, default=1,
                         help='number of threads to use for calling spack '
                         'install (parallel DAG install)')
-    parser.set_defaults(modules=False, use_develop=False, stop_after='install')
+    parser.add_argument('--link_type', '-lt', required=False, choices=[
+                        'symlink', 'soft', 'hardlink', 'hard,' 'copy',
+                        'relocate'], help='set the type of'
+                        ' linking used in view creation')
+    parser.set_defaults(modules=False, use_develop=False,
+                        stop_after='install', link_type='hardlink')
 
     return parser.parse_args(stream)
 
@@ -138,7 +143,7 @@ def view_excludes(snap_spec):
     return snap_spec.exclusions.copy()
 
 
-def add_spec(env, extension, data, create_modules):
+def add_spec(env, extension, data, link_type, create_modules):
     ev.activate(env)
     add(data.spec)
     ev.deactivate()
@@ -147,7 +152,13 @@ def add_spec(env, extension, data, create_modules):
         os.environ['SPACK_MANAGER'], 'views', extension, data.id)
     view_dict = {data.id: {
         'root': view_path, 'exclude': excludes,
-        'link_type': 'hard'
+        'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
+                        '{version}',
+                        '^cuda': '{compiler.name}-{compiler.version}-'
+                        '{^cuda.name}-{^cuda.version}/{name}/{version}',
+                        '^rocm': '{compiler.name}-{compiler.version}-'
+                        '{^rocm.name}-{^rocm.version}/{name}/{version}'},
+        'link_type': link_type
     }}
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
@@ -317,7 +328,7 @@ def create_snapshots(args):
     spec_data = machine_specs[machine]
 
     for s in spec_data:
-        add_spec(e, extension, s, args.modules)
+        add_spec(e, extension, s, args.link_type, args.modules)
 
     top_specs = get_top_level_specs(e)
 
