@@ -21,6 +21,14 @@ def git_clone(branch, repo, path, shallow, all_branches):
     git(*git_args)
 
 
+def git_remote_add(path, name, repo):
+    """
+    git remote add wrapper
+    """
+    git = spack.util.executable.which('git')
+    git('-C', path, 'remote', 'add', name, repo)
+
+
 def _redundant_code_from_spack_develop(args):
     """
     Re-use the path and spec checking from spack.cmd.develop
@@ -81,6 +89,12 @@ def manager_develop(parser, args):
 
     spack_develop.develop(None, args)
 
+    if args.add_remote:
+        # a clone must have taken place at this point so we can
+        # safely add a repo
+        remote_name, remote_repo = args.add_remote
+        git_remote_add(path, remote_name, remote_repo)
+
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser('develop', help='a more intuitieve interface for '
@@ -95,5 +109,8 @@ def add_command(parser, command_dict):
     subparser.add_argument('--all-branches', '-ab', required=False,
                            action='set_true', help='clone all branches '
                            'of the repo', default=False)
+    subparser.add_argument('--add-remote', nargs=2, metavar=('remote_name',
+                           'remote_repo'), required=False,
+                           help='add a remote as part of the clone')
 
     command_dict['develop'] = manager_develop
