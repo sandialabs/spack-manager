@@ -63,7 +63,7 @@ cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 
 printf "\nUpdating git repos in selected stage directories...\n"
 cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
-cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
+#cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
 cmd "spack env deactivate"
 
 printf "\nUninstall nightly test packages...\n"
@@ -73,8 +73,10 @@ cmd "spack uninstall -a -y amr-wind-nightly || true"
 cmd "spack uninstall -a -y trilinos || true"
 cmd "spack uninstall -a -y hypre || true"
 
-printf "\nConcretizing environment...\n"
+printf "\nActivating environment...\n"
 cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
+
+printf "\nConcretizing environment...\n"
 cmd "spack concretize -f"
 
 # Develop spec stuff that isn't working as desired
@@ -92,9 +94,8 @@ cmd "spack concretize -f"
 #fi
 
 printf "\nTests started at: $(date)\n\n"
-printf "spack install --dont-restage --keep-stage\n"
-time (for i in {1..4}; do spack install --dont-restage --keep-stage & done; wait)
-#cmd "time spack install --dont-restage --keep-stage"
+printf "spack install \n"
+time (for i in {1..4}; do spack install & done; wait)
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
@@ -102,14 +103,17 @@ DATE=$(date +%Y-%m-%d-%H-%M)
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
 
-STAGE_DIR=$(spack location -S)
-if [ ! -z "${STAGE_DIR}" ]; then
-  #Haven't been able to find another robust way to rm with exclude
-  printf "\nRemoving all unused staged directories...\n"
-  cmd "cd ${STAGE_DIR} && rm -rf resource* spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-h* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-nc* spack-stage-net* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-ti* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
-  #Would like something like this
-  #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "spack-stage-trilinos*" -exec rm -r {} \;
-fi
+printf "\nClean stage directory...\n"
+cmd "spack clean -s || true"
+
+#STAGE_DIR=$(spack location -S)
+#if [ ! -z "${STAGE_DIR}" ]; then
+#  #Haven't been able to find another robust way to rm with exclude
+#  printf "\nRemoving all unused staged directories...\n"
+#  cmd "cd ${STAGE_DIR} && rm -rf resource* spack-stage-b* spack-stage-c* spack-stage-d* spack-stage-f* spack-stage-g* spack-stage-h* spack-stage-i* spack-stage-j* spack-stage-k* spack-stage-l* spack-stage-m* spack-stage-nc* spack-stage-net* spack-stage-o* spack-stage-p* spack-stage-q* spack-stage-r* spack-stage-s* spack-stage-tar* spack-stage-ti* spack-stage-u* spack-stage-v* spack-stage-w* spack-stage-x* spack-stage-y* spack-stage-z*"
+#  #Would like something like this
+#  #find ${STAGE_DIR}/ -maxdepth 0 -type d -not -name "spack-stage-trilinos*" -exec rm -r {} \;
+#fi
 
 printf "\nDeactivating environment...\n"
 cmd "spack env deactivate"
