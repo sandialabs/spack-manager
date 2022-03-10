@@ -95,11 +95,21 @@ def write_spec(view, spec):
       prefix: {prefix}
     buildable: false\n"""
 
+    pruned_spec = _spec_string_minus_dev_path(spec)
+
     return template.format(
         name=spec.name,
-        short_spec=spec.format(
-            '{name}{@version}{%compiler}{variants}{arch=architecture}'),
+        short_spec=pruned_spec,
         prefix=view.get_projection_for_spec(spec))
+
+
+def _spec_string_minus_dev_path(spec):
+    full_spec = spec.format(
+        '{name}{@version}{%compiler}{variants}{arch=architecture}')
+    spec_components = full_spec.split(' ')
+    pruned_componets = [x for x in spec_components if 'dev_path=' not in x]
+    pruned_spec = ' '.join(pruned_componets)
+    return pruned_spec
 
 
 def create_external_yaml_from_env(path, view_key, black_list, white_list):
