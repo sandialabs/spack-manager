@@ -63,7 +63,7 @@ cmd "spack manager create-env -y ${YAML_FILE} -d ${EXAWIND_ENV_DIR}"
 
 printf "\nUpdating git repos in selected stage directories...\n"
 cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
-cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
+#cmd "${SPACK_MANAGER}/scripts/stage-updater.py -e ${SPACK_MANAGER}/environments/exawind"
 cmd "spack env deactivate"
 
 printf "\nUninstall nightly test packages...\n"
@@ -92,9 +92,8 @@ cmd "spack concretize -f"
 #fi
 
 printf "\nTests started at: $(date)\n\n"
-printf "spack install --dont-restage --keep-stage\n"
-time (for i in {1..4}; do spack install --dont-restage --keep-stage & done; wait)
-#cmd "time spack install --dont-restage --keep-stage"
+printf "spack install \n"
+time (for i in {1..4}; do spack install & done; wait)
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
