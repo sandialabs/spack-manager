@@ -9,9 +9,24 @@ import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
 from spack.environment import config_dict
+from spack.spec import Spec
 
 env = spack.main.SpackCommand('env')
 manager = spack.main.SpackCommand('manager')
+
+
+@pytest.mark.parametrize('spec_str',
+                         ['amr-wind@main dev_path=/amr-wind',
+                          'nalu-wind@master+cuda cuda_arch=70 '
+                          'dev_path=/nalu-wind',
+                          'exawind@master dev_path=/exawind '
+                          '^nalu-wind@master dev_path=/nalu-wind'
+                          ' ^amr-wind@main dev_path=/amr-wind'])
+def test_stripDevPathFromExternals(spec_str):
+    assert 'dev_path' in spec_str
+    s = Spec(spec_str)
+    pruned_string = manager_cmds.external._spec_string_minus_dev_path(s)
+    assert 'dev_path' not in pruned_string
 
 
 def test_mustHaveActiveEnvironment(tmpdir):
