@@ -84,7 +84,7 @@ def manager_develop(parser, args):
 
     if args.repo_branch and clone:
         repo, branch = args.repo_branch
-        git_clone(branch, repo, path, args.shallow, args.full_clone)
+        git_clone(branch, repo, path, args.shallow, args.all_branches)
         args.clone = False
 
     spack_develop.develop(None, args)
@@ -107,7 +107,7 @@ def add_command(parser, command_dict):
     subparser.add_argument('--shallow', required=False, action='store_true',
                            help='performa a shallow clone of the repo')
     subparser.add_argument('--all-branches', '-ab', required=False,
-                           action='set_true', help='clone all branches '
+                           action='store_true', help='clone all branches '
                            'of the repo', default=False)
     subparser.add_argument('--add-remote', nargs=2, metavar=('remote_name',
                            'remote_repo'), required=False,
