@@ -7,13 +7,13 @@ import spack.util.executable
 from spack.error import SpackError
 
 
-def git_clone(branch, repo, path, shallow, full_repo):
+def git_clone(branch, repo, path, shallow, all_branches):
     """
     git clone wrapper to help with mocking
     """
     git = spack.util.executable.which('git')
     git_args = ['clone', '--recursive']
-    if not full_repo:
+    if not all_branches:
         git_args.append('--single-branch')
     if shallow:
         git_args.extend(['--depth', '1'])
@@ -92,7 +92,7 @@ def add_command(parser, command_dict):
                              help='git repo to clone from')
     subparser.add_argument('--shallow', required=False, action='store_true',
                            help='performa a shallow clone of the repo')
-    subparser.add_argument('--full-clone', '-fc', required=False,
+    subparser.add_argument('--all-branches', '-ab', required=False,
                            action='set_true', help='clone all branches '
                            'of the repo', default=False)
 
