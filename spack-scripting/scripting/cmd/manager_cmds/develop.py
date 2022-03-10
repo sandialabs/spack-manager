@@ -7,16 +7,26 @@ import spack.util.executable
 from spack.error import SpackError
 
 
-def git_clone(branch, repo, path, shallow):
+def git_clone(branch, repo, path, shallow, all_branches):
     """
     git clone wrapper to help with mocking
     """
     git = spack.util.executable.which('git')
-    git_args = ['clone', '--single-branch', '--recursive']
+    git_args = ['clone', '--recursive']
+    if not all_branches:
+        git_args.append('--single-branch')
     if shallow:
         git_args.extend(['--depth', '1'])
     git_args.extend(['--branch', branch, repo, path])
     git(*git_args)
+
+
+def git_remote_add(path, name, repo):
+    """
+    git remote add wrapper
+    """
+    git = spack.util.executable.which('git')
+    git('-C', path, 'remote', 'add', name, repo)
 
 
 def _redundant_code_from_spack_develop(args):
@@ -74,10 +84,16 @@ def manager_develop(parser, args):
 
     if args.repo_branch and clone:
         repo, branch = args.repo_branch
-        git_clone(branch, repo, path, args.shallow)
+        git_clone(branch, repo, path, args.shallow, args.all_branches)
         args.clone = False
 
     spack_develop.develop(None, args)
+
+    if args.add_remote:
+        # a clone must have taken place at this point so we can
+        # safely add a repo
+        remote_name, remote_repo = args.add_remote
+        git_remote_add(path, remote_name, remote_repo)
 
 
 def add_command(parser, command_dict):
@@ -90,5 +106,11 @@ def add_command(parser, command_dict):
                              help='git repo to clone from')
     subparser.add_argument('--shallow', required=False, action='store_true',
                            help='performa a shallow clone of the repo')
+    subparser.add_argument('--all-branches', required=False,
+                           action='store_true', help='clone all branches '
+                           'of the repo', default=False)
+    subparser.add_argument('--add-remote', nargs=2, metavar=('remote_name',
+                           'remote_repo'), required=False,
+                           help='add a remote as part of the clone')
 
     command_dict['develop'] = manager_develop
