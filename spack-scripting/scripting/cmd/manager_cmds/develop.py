@@ -106,7 +106,7 @@ def add_command(parser, command_dict):
                              help='git repo to clone from')
     subparser.add_argument('--shallow', required=False, action='store_true',
                            help='performa a shallow clone of the repo')
-    subparser.add_argument('--all-branches', '-ab', required=False,
+    subparser.add_argument('--all-branches', required=False,
                            action='store_true', help='clone all branches '
                            'of the repo', default=False)
     subparser.add_argument('--add-remote', nargs=2, metavar=('remote_name',
