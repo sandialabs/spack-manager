@@ -6,6 +6,7 @@ from manager_utils import base_extension
 
 import llnl.util.tty as tty
 
+import spack
 import spack.config
 import spack.environment as ev
 import spack.util.spack_yaml as syaml
@@ -88,7 +89,7 @@ def add_include_entry(env, inc, prepend=True):
     env.write()
 
 
-def write_spec(view, spec):
+def write_spec(env, spec):
     template = """  {name}:
     externals:
     - spec: {short_spec}
@@ -96,11 +97,22 @@ def write_spec(view, spec):
     buildable: false\n"""
 
     pruned_spec = _spec_string_minus_dev_path(spec)
-
+    view = _get_first_view_containing_spec(env, spec)
+    if view:
+        # use a view if we have it for simplified paths
+        prefix = view.get_projection_for_spec(spec)
+    else:
+        # ideally we could pull the install path off the spec
+        # but I haven't figured out if that is possible
+        print('WARNING: The following spec exists in the externals environment'
+        ' but is not captured in a view.'
+        ' It will be omitted from your available externals\n - %s' % pruned_spec)
+        return
+    
     return template.format(
         name=spec.name,
         short_spec=pruned_spec,
-        prefix=view.get_projection_for_spec(spec))
+        prefix=prefix)
 
 
 def _spec_string_minus_dev_path(spec):
@@ -121,25 +133,30 @@ def create_external_yaml_from_env(env, black_list, white_list):
             if s.name in black_list:
                 continue
             else:
-                for view in env.views.values():
-                    if view.__contains__(s):
-                        data += write_spec(view, s)
-                        continue
+                spec_entry = write_spec(env, s)
+                if spec_entry:
+                    data += spec_entry
+
         elif white_list:
             if s.name in white_list:
-                for view in env.views.values():
-                    if view.__contains__(s):
-                        data += write_spec(view, s)
-                        continue
+                spec_entry = write_spec(env, s)
+                if spec_entry:
+                    data += spec_entry
         else:
             # auto blacklist all develops specs in the env
             # externaling a dev spec will always be an error
             if not active_env.is_develop(s):
-                for view in env.views.values():
-                    if view.__contains__(s):
-                        data += write_spec(view, s)
-                        continue
+                spec_entry = write_spec(env, s)
+                if spec_entry:
+                    data += spec_entry
+
     return syaml.load_config(data)
+
+def _get_first_view_containing_spec(env, spec):
+    for view in env.views.values():
+        if view.__contains__(spec):
+            return view
+    return None
 
 
 def external(parser, args):
@@ -191,12 +208,16 @@ def external(parser, args):
                 'Auto detection of the latest dated snapshot can be achived'
                 ' with the \'--latest\' flag.')
 
+    snap_env = ev.Environment(snap_path)
+    snap_env.check_views()
+
+    if not snap_env.views:
+        tty.die('Environments used to create externals must have at least 1'
+        ' associated view')
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        snap_env = ev.Environment(snap_path)
-        snap_env.check_views()
         src = create_external_yaml_from_env(
                 snap_env, args.blacklist, args.whitelist)
             
