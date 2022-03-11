@@ -105,10 +105,10 @@ def write_spec(env, spec):
         # ideally we could pull the install path off the spec
         # but I haven't figured out if that is possible
         print('WARNING: The following spec exists in the externals environment'
-        ' but is not captured in a view.'
-        ' It will be omitted from your available externals\n - %s' % pruned_spec)
+              ' but is not captured in a view.'
+              ' It will be omitted from your available externals\n - %s' % pruned_spec)
         return
-    
+
     return template.format(
         name=spec.name,
         short_spec=pruned_spec,
@@ -152,6 +152,7 @@ def create_external_yaml_from_env(env, black_list, white_list):
 
     return syaml.load_config(data)
 
+
 def _get_first_view_containing_spec(env, spec):
     for view in env.views.values():
         if view.__contains__(spec):
@@ -170,7 +171,6 @@ def external(parser, args):
         def print_snapshots(snaps):
             for s in snaps:
                 env_dir = os.path.join(extern_dir, s)
-                env = ev.Environment(env_dir)
                 print(' - {path}'.format(path=env_dir))
 
         print('-' * 54)
@@ -213,14 +213,12 @@ def external(parser, args):
 
     if not snap_env.views:
         tty.die('Environments used to create externals must have at least 1'
-        ' associated view')
+                ' associated view')
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        src = create_external_yaml_from_env(
-                snap_env, args.blacklist, args.whitelist)
-            
+        src = create_external_yaml_from_env(snap_env, args.blacklist, args.whitelist)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
 
