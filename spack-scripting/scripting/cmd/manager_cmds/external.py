@@ -6,6 +6,7 @@ from manager_utils import base_extension
 
 import llnl.util.tty as tty
 
+import spack
 import spack.config
 import spack.environment as ev
 import spack.util.spack_yaml as syaml
@@ -88,7 +89,7 @@ def add_include_entry(env, inc, prepend=True):
     env.write()
 
 
-def write_spec(view, spec):
+def write_spec(env, spec):
     template = """  {name}:
     externals:
     - spec: {short_spec}
@@ -96,11 +97,22 @@ def write_spec(view, spec):
     buildable: false\n"""
 
     pruned_spec = _spec_string_minus_dev_path(spec)
+    view = _get_first_view_containing_spec(env, spec)
+    if view:
+        # use a view if we have it for simplified paths
+        prefix = view.get_projection_for_spec(spec)
+    else:
+        # ideally we could pull the install path off the spec
+        # but I haven't figured out if that is possible
+        print('WARNING: The following spec exists in the externals environment'
+              ' but is not captured in a view.'
+              ' It will be omitted from your available externals\n - %s' % pruned_spec)
+        return
 
     return template.format(
         name=spec.name,
         short_spec=pruned_spec,
-        prefix=view.get_projection_for_spec(spec))
+        prefix=prefix)
 
 
 def _spec_string_minus_dev_path(spec):
@@ -112,48 +124,40 @@ def _spec_string_minus_dev_path(spec):
     return pruned_spec
 
 
-def create_external_yaml_from_env(path, view_key, black_list, white_list):
+def create_external_yaml_from_env(env, black_list, white_list):
     active_env = ev.active_environment()
-    env = ev.Environment(path)
-
-    env.check_views()
-    if view_key is None:
-        # get the first view that was added to the environment as the default
-        view_key = list(env.views.keys())[0]
-
-    try:
-        view = env.views[view_key]
-    except KeyError:
-        # not sure why I can't find SpackEnvironmentViewError from the module
-        raise ev.SpackEnvironmentError(
-            'Requested view %s does not exist in %s' % (view_key, path))
-
-    view_specs = [s for s in env._get_environment_specs()
-                  if view.__contains__(s)]
-    if not view_specs:
-        print(
-            'WARNING: No specs in the view %s of environment %s. '
-            '\nThe snapshot was not installed correctly'
-            ' and no externals will be added to your environment' % (
-                view_key, path))
-        exit()
     data = "packages:\n"
 
-    for s in view_specs:
+    for s in env._get_environment_specs():
         if black_list:
             if s.name in black_list:
                 continue
             else:
-                data += write_spec(view, s)
+                spec_entry = write_spec(env, s)
+                if spec_entry:
+                    data += spec_entry
+
         elif white_list:
             if s.name in white_list:
-                data += write_spec(view, s)
+                spec_entry = write_spec(env, s)
+                if spec_entry:
+                    data += spec_entry
         else:
             # auto blacklist all develops specs in the env
             # externaling a dev spec will always be an error
             if not active_env.is_develop(s):
-                data += write_spec(view, s)
+                spec_entry = write_spec(env, s)
+                if spec_entry:
+                    data += spec_entry
+
     return syaml.load_config(data)
+
+
+def _get_first_view_containing_spec(env, spec):
+    for view in env.views.values():
+        if view.__contains__(spec):
+            return view
+    return None
 
 
 def external(parser, args):
@@ -167,12 +171,10 @@ def external(parser, args):
         def print_snapshots(snaps):
             for s in snaps:
                 env_dir = os.path.join(extern_dir, s)
-                env = ev.Environment(env_dir)
-                views = ', '.join(env.views.keys())
-                print(' - {path} ({views})'.format(path=env_dir, views=views))
+                print(' - {path}'.format(path=env_dir))
 
         print('-' * 54)
-        print('Available snapshot directories (and views) are:')
+        print('Available snapshot directories are:')
         print('-' * 54)
         if dated:
             print('\nDated Snapshots (ordered)')
@@ -206,12 +208,17 @@ def external(parser, args):
                 'Auto detection of the latest dated snapshot can be achived'
                 ' with the \'--latest\' flag.')
 
+    snap_env = ev.Environment(snap_path)
+    snap_env.check_views()
+
+    if not snap_env.views:
+        tty.die('Environments used to create externals must have at least 1'
+                ' associated view')
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        src = create_external_yaml_from_env(
-            snap_path, args.view, args.blacklist, args.whitelist)
+        src = create_external_yaml_from_env(snap_env, args.blacklist, args.whitelist)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
 
@@ -249,11 +256,6 @@ def add_command(parser, command_dict):
                      '--name', required=False,
                      help='name the new include file for the '
                      'externals with this name')
-    ext.add_argument('-v', '--view', required=False,
-                     help='name of view to use in the environment.\n'
-                     'This will default to the first view in the environment\n'
-                     'i.e. the first view listed in "spack manager external --list"'
-                     ' command')
     ext.add_argument('-m', '--merge', required=False,
                      action='store_true', help='merge existing yaml files '
                      'together')
@@ -274,9 +276,7 @@ def add_command(parser, command_dict):
     ext.add_argument('--latest', action='store_true',
                      help='use the latest snapshot available')
     ext.add_argument('--list', action='store_true',
-                     help='print a list of the available externals to use.\n'
-                     'Values in parenthesis are the view names for each '
-                     'external')
+                     help='print a list of the available externals to use.')
     ext.set_defaults(merge=False,
                      name='externals.yaml', latest=False, list=False)
 

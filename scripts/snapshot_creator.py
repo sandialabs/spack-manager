@@ -143,15 +143,11 @@ def view_excludes(snap_spec):
     return snap_spec.exclusions.copy()
 
 
-def add_spec(env, extension, data, link_type, create_modules):
-    ev.activate(env)
-    add(data.spec)
-    ev.deactivate()
-    excludes = view_excludes(data)
+def add_view(env, extension, link_type):
     view_path = os.path.join(
-        os.environ['SPACK_MANAGER'], 'views', extension, data.id)
-    view_dict = {data.id: {
-        'root': view_path, 'exclude': excludes,
+        os.environ['SPACK_MANAGER'], 'views', extension, 'snapshot')
+    view_dict = {'snapshot': {
+        'root': view_path,
         'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
                         '{version}',
                         '^cuda': '{compiler.name}-{compiler.version}-'
@@ -168,6 +164,19 @@ def add_spec(env, extension, data, link_type, create_modules):
         yaml['spack']['view'].update(view_dict)
     except AttributeError:
         yaml['spack']['view'] = view_dict
+
+    with open(env.manifest_path, 'w') as f:
+        syaml.dump(yaml, stream=f, default_flow_style=False)
+
+
+def add_spec(env, extension, data, create_modules):
+    ev.activate(env)
+    add(data.spec)
+    ev.deactivate()
+    excludes = view_excludes(data)
+
+    with open(env.manifest_path, 'r') as f:
+        yaml = syaml.load(f)
 
     if create_modules:
         module_excludes = excludes.copy()
@@ -319,16 +328,19 @@ def create_snapshots(args):
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
     print('\nCreating snapshot environment')
+
     command(manager, 'create-env', '-d', env_path)
+
     e = ev.Environment(env_path)
+
     with e.write_transaction():
         e.yaml['spack']['concretization'] = 'separately'
         e.write()
 
     spec_data = machine_specs[machine]
-
+    add_view(e, extension, args.link_type)
     for s in spec_data:
-        add_spec(e, extension, s, args.link_type, args.modules)
+        add_spec(e, extension, s, args.modules)
 
     top_specs = get_top_level_specs(e)
 
