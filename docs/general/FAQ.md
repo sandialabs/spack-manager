@@ -73,3 +73,8 @@ git status
 ```
 If you see `spack` in there then you need to re-sync the submodule. `git submodule update` etc
 
+## Permissions issues on NREL's Eagle machine: __[Errno 13] Permission denied:__ 
+To build successfully on Eagle, in general you want the following in your `.bashrc` to avoid issues with `tmp` directories:
+```
+mkdir -p /scratch/${USER}/.tmp && export TMPDIR=/scratch/${USER}/.tmp
+```
