@@ -33,6 +33,14 @@ class AmrWind(bAmrWind):
         if spec.satisfies('dev_path=*'):
             cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
+        if '+rocm' in self.spec:
+            # Used as an optimization to only list the single specified
+            # arch in the offload-arch compile line, but not explicitly necessary
+            targets = self.spec.variants['amdgpu_target'].value
+            cmake_options.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+
         if '+tests' in spec:
             saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
             current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
