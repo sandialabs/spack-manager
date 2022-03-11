@@ -3,11 +3,7 @@ from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
 from shutil import copyfile
 
-class AmrWind(bAmrWind, ROCmPackage):
-
-    depends_on('hypre+unified-memory', when='+hypre+cuda')
-    depends_on('py-matplotlib', when='+masa')
-    depends_on('py-pandas', when='+masa')
+class AmrWind(bAmrWind):
 
     variant('asan', default=False,
             description='Turn on address sanitizer')
@@ -34,26 +30,16 @@ class AmrWind(bAmrWind, ROCmPackage):
         if '+clangtidy' in spec:
             cmake_options.append(define('AMR_WIND_ENABLE_CLANG_TIDY', True))
 
-        if '+cuda' in spec:
-            cmake_options.append(define('BUILD_SHARED_LIBS', False))
-
-        if '+rocm' in self.spec:
-            targets = self.spec.variants['amdgpu_target'].value
-            cmake_options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
-            cmake_options.append(define('AMR_WIND_ENABLE_ROCM', True))
-            cmake_options.append('-DAMReX_AMD_ARCH=' + ';'.join(str(x) for x in targets))
-            cmake_options.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
-            cmake_options.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
-            cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
-
-        if spec['mpi'].name == 'openmpi':
-            cmake_options.append(define('MPIEXEC_PREFLAGS', '--oversubscribe'))
-
         if spec.satisfies('dev_path=*'):
             cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
-        if '+mpi' in spec:
-            cmake_options.append(define('MPI_ROOT', spec['mpi'].prefix))
+        if '+rocm' in self.spec:
+            # Used as an optimization to only list the single specified
+            # arch in the offload-arch compile line, but not explicitly necessary
+            targets = self.spec.variants['amdgpu_target'].value
+            cmake_options.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
 
         if '+tests' in spec:
             saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
