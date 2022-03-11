@@ -328,9 +328,9 @@ def create_snapshots(args):
         os.environ['SPACK_MANAGER'], 'environments', extension)
 
     print('\nCreating snapshot environment')
-    
+
     command(manager, 'create-env', '-d', env_path)
-    
+
     e = ev.Environment(env_path)
 
     with e.write_transaction():
