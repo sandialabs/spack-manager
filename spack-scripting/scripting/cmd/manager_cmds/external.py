@@ -8,7 +8,10 @@ import llnl.util.tty as tty
 
 import spack
 import spack.config
+import spack.detection
+from spack.detection.common import _pkg_config_dict
 import spack.environment as ev
+from spack.spec import Spec
 import spack.util.spack_yaml as syaml
 from spack.environment import config_dict
 
@@ -89,30 +92,44 @@ def add_include_entry(env, inc, prepend=True):
     env.write()
 
 
-def write_spec(env, spec):
-    template = """  {name}:
-    externals:
-    - spec: {short_spec}
-      prefix: {prefix}
-    buildable: false\n"""
-
-    pruned_spec = _spec_string_minus_dev_path(spec)
+def create_external_detected_spec(env, spec):
     view = _get_first_view_containing_spec(env, spec)
-    if view:
-        # use a view if we have it for simplified paths
-        prefix = view.get_projection_for_spec(spec)
-    else:
-        # ideally we could pull the install path off the spec
-        # but I haven't figured out if that is possible
-        print('WARNING: The following spec exists in the externals environment'
-              ' but is not captured in a view.'
-              ' It will be omitted from your available externals\n - %s' % pruned_spec)
-        return
+    pruned_spec = _spec_string_minus_dev_path(spec)
+    prefix = view.get_projection_for_spec(spec)
+    return spack.detection.DetectedPackage(Spec.from_detection(pruned_spec), prefix)
 
-    return template.format(
-        name=spec.name,
-        short_spec=pruned_spec,
-        prefix=prefix)
+
+def assemble_dict_of_detected_externals(env, black_list, white_list):
+    external_spec_dict = {}
+    active_env = ev.active_environment()
+
+    def update_dictionary(env, spec):
+        if spec.name in external_spec_dict:
+            external_spec_dict[spec.name].append(create_external_detected_spec(env, spec))
+        else:
+            external_spec_dict[spec.name]=[create_external_detected_spec(env, spec)]
+
+    for spec in env.all_specs():
+        if black_list:
+            if spec.name not in black_list:
+                update_dictionary(env, spec)
+        elif white_list:
+            if spec.name in white_list:
+                update_dictionary(env, spec)
+        else:
+            if not active_env.is_develop(spec):
+                update_dictionary(env, spec)
+    return external_spec_dict
+
+
+def create_yaml_from_detected_externals(ext_dict):
+    formatted_dict = {}
+    for name, entries in ext_dict.items():
+        config = _pkg_config_dict(entries)
+        config['buildable'] = False
+        formatted_dict[name] = config
+
+    return syaml.syaml_dict({'packages':formatted_dict}) 
 
 
 def _spec_string_minus_dev_path(spec):
@@ -122,36 +139,6 @@ def _spec_string_minus_dev_path(spec):
     pruned_componets = [x for x in spec_components if 'dev_path=' not in x]
     pruned_spec = ' '.join(pruned_componets)
     return pruned_spec
-
-
-def create_external_yaml_from_env(env, black_list, white_list):
-    active_env = ev.active_environment()
-    data = "packages:\n"
-
-    for s in env.all_specs():
-        print(s.name, s.full_hash())
-        if black_list:
-            if s.name in black_list:
-                continue
-            else:
-                spec_entry = write_spec(env, s)
-                if spec_entry:
-                    data += spec_entry
-
-        elif white_list:
-            if s.name in white_list:
-                spec_entry = write_spec(env, s)
-                if spec_entry:
-                    data += spec_entry
-        else:
-            # auto blacklist all develops specs in the env
-            # externaling a dev spec will always be an error
-            if not active_env.is_develop(s):
-                spec_entry = write_spec(env, s)
-                if spec_entry:
-                    data += spec_entry
-
-    return syaml.load_config(data)
 
 
 def _get_first_view_containing_spec(env, spec):
@@ -219,7 +206,8 @@ def external(parser, args):
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        src = create_external_yaml_from_env(snap_env, args.blacklist, args.whitelist)
+        detected = assemble_dict_of_detected_externals(snap_env, args.blacklist, args.whitelist)
+        src = create_yaml_from_detected_externals(detected)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
 
