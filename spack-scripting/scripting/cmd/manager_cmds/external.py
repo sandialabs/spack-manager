@@ -9,11 +9,11 @@ import llnl.util.tty as tty
 import spack
 import spack.config
 import spack.detection
-from spack.detection.common import _pkg_config_dict
 import spack.environment as ev
-from spack.spec import Spec
 import spack.util.spack_yaml as syaml
+from spack.detection.common import _pkg_config_dict
 from spack.environment import config_dict
+from spack.spec import Spec
 
 
 def get_external_dir():
@@ -105,9 +105,10 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
 
     def update_dictionary(env, spec):
         if spec.name in external_spec_dict:
-            external_spec_dict[spec.name].append(create_external_detected_spec(env, spec))
+            external_spec_dict[spec.name].append(
+                create_external_detected_spec(env, spec))
         else:
-            external_spec_dict[spec.name]=[create_external_detected_spec(env, spec)]
+            external_spec_dict[spec.name] = [create_external_detected_spec(env, spec)]
 
     for spec in env.all_specs():
         if black_list:
@@ -129,7 +130,7 @@ def create_yaml_from_detected_externals(ext_dict):
         config['buildable'] = False
         formatted_dict[name] = config
 
-    return syaml.syaml_dict({'packages':formatted_dict}) 
+    return syaml.syaml_dict({'packages': formatted_dict})
 
 
 def _spec_string_minus_dev_path(spec):
@@ -206,7 +207,8 @@ def external(parser, args):
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        detected = assemble_dict_of_detected_externals(snap_env, args.blacklist, args.whitelist)
+        detected = assemble_dict_of_detected_externals(
+            snap_env, args.blacklist, args.whitelist)
         src = create_yaml_from_detected_externals(detected)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
