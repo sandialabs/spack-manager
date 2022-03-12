@@ -150,9 +150,9 @@ def add_view(env, extension, link_type):
         'root': view_path,
         'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
                         '{version}',
-                        '^cuda': '{compiler.name}-{compiler.version}-'
+                        '+cuda': '{compiler.name}-{compiler.version}-'
                         '{^cuda.name}-{^cuda.version}/{name}/{version}',
-                        '^rocm': '{compiler.name}-{compiler.version}-'
+                        '+rocm': '{compiler.name}-{compiler.version}-'
                         '{^rocm.name}-{^rocm.version}/{name}/{version}'},
         'link_type': link_type
     }}

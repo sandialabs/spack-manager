@@ -128,7 +128,8 @@ def create_external_yaml_from_env(env, black_list, white_list):
     active_env = ev.active_environment()
     data = "packages:\n"
 
-    for s in env._get_environment_specs():
+    for s in env.all_specs():
+        print(s.name, s.full_hash())
         if black_list:
             if s.name in black_list:
                 continue
