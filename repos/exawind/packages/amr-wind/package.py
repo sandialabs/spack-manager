@@ -46,7 +46,7 @@ class AmrWind(bAmrWind):
             current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
-            cmake_options.append(define('AMR_WIND_TEST_WITH_FCOMPARE', True)
+            cmake_options.append(define('AMR_WIND_TEST_WITH_FCOMPARE', True))
             cmake_options.append(define('AMR_WIND_SAVE_GOLDS', True))
             cmake_options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
             cmake_options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
