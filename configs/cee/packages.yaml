@@ -2,15 +2,18 @@ packages:
   all:
     compiler: [gcc, intel]
     providers:
-      mpi:
-      - openmpi
+      mpi: [mpich, openmpi]
     variants: +mpi build_type=Release
     target: [x86_64]
+  cmake:
+    externals:
+    - spec: cmake@3.22.2
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cmake-3.22.2-s67tgoaqaw4ky5kmpuzxdg5une7xouvh/
+    buildable: false
   openmpi:
     version: [4.0.5]
-    buildable: false
     externals:
-    - spec: openmpi@4.0.5
+    - spec: openmpi@4.0.5%gcc@7.2.o
       prefix: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.5-gcc-7.2.0-RHEL7/
   pkg-config:
     buildable: false
@@ -32,11 +35,9 @@ packages:
     externals:
     - spec: bzip2@1.6.0
       prefix: /usr/
-  cmake:
-    externals:
-    - spec: cmake@3.20.0
-      modules:
-      - sierra-cmake/3.20.0
-      prefix: /projects/sierra/linux_rh7/install/cmake/3.20.0/bin/cmake
   openblas:
     version: [0.3.10]
+  mpich:
+    externals:
+    - spec: mpich@3.4.2%gcc@9.3.0
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/mpich-3.4.2-4h2muy6jlgfdahehxmxa4ybndfdb6gx2/
