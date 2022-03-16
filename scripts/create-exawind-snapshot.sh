@@ -35,8 +35,13 @@ printf "\nActivating snapshot environment...\n"
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind/snapshots/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
 
 printf "\nInstalling environment...\n"
+cmd "export SPACK_MANAGER_CLEAN_HYPRE=true"
+# Shouldn't use parallel DAG unless git hash installs work or hypre uses CMake
+# due to hypre using autotools which can't handle multiple concurrent builds
 time (
-  for i in {1..4}; do nice -n19 spack install & done
+  for i in {1..1}; do
+    nice -n19 spack install &
+  done
   wait
 )
 
