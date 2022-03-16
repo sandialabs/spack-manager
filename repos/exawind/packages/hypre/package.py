@@ -13,7 +13,7 @@ class Hypre(bHypre):
 
     def clean(self, spec, prefix):
         with working_dir('src'):
-            if os.environ.get('SPACK_MANAGER_CLEAN_HYPRE') is not None:
+            if 'SPACK_MANAGER_CLEAN_HYPRE' in os.environ:
                 make('clean')
 
     def _configure_args(self):
