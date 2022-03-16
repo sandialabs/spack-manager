@@ -3,13 +3,15 @@ packages:
     version: [8.1.13]
     buildable: false
     externals:
-      - spec: "cray-mpich@8.1.13%gcc@9.3.0"
+      - spec: "cray-mpich@8.1.13%gcc@10.3.0"
         modules:
           - cray-mpich/8.1.13
-          - gcc/9.3.0
+          - gcc/10.3.0
           - libfabric/1.11.0.4.75
           - craype-network-ofi
           - xpmem/2.2.40-2.1_3.9__g3cf3325.shasta
+          - craype-x86-milan
+          - xalt/2.10.2
   cuda:
     version: [11.2.2]
     buildable: false
@@ -28,7 +30,7 @@ packages:
           - cmake/3.22.0
   all:
     compiler:
-      - gcc@9.3.0
+      - gcc@10.3.0
     providers:
       mpi: [cray-mpich@8.1.13]
       blas: [netlib-lapack]

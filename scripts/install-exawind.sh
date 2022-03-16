@@ -52,6 +52,9 @@ printf "\nConcretizing environment...\n"
 cmd "spack concretize -f"
 
 printf "\nInstalling environment...\n"
-for i in {1..2}; do
-  cmd "nice spack install" &
-done; wait
+time (
+  for i in {1..4}; do
+    nice -n19 spack install &
+  done
+  wait
+)
