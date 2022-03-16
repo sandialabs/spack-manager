@@ -35,7 +35,7 @@ fi
 cmd "spack manager create-env --name exawind --spec '${SPEC}'"
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind"
 cmd "${DEV_COMMAND}"
-cmd "spack manager external ${SNAPSHOT_DIR} --latest"
+cmd "spack manager external --latest"
 cmd "spack concretize -f"
 cmd "spack install"
 
