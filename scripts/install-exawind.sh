@@ -30,15 +30,15 @@ fi
 
 printf "\nCreating Spack environment...\n"
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
-  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_matrix.yaml -d ${SPACK_MANAGER}/environments/exawind"
+  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_matrix.yaml -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 elif [ "${SPACK_MANAGER_MACHINE}" == 'spock' ] || [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ]; then
-  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind"
+  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 else
-  cmd "spack manager create-env -s exawind+hypre+openfast -d ${SPACK_MANAGER}/environments/exawind"
+  cmd "spack manager create-env -s exawind+hypre+openfast -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 fi
 
 printf "\nActivating Spack environment...\n"
-cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind"
+cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 
 # This should happen automatically with no compilers so we could probably remove this
 if [ "${SPACK_MANAGER_MACHINE}" == 'darwin' ]; then
@@ -49,6 +49,6 @@ printf "\nConcretizing environment...\n"
 cmd "spack concretize -f"
 
 printf "\nInstalling environment...\n"
-for i in {1..2}; do
+for i in {1..4}; do
   cmd "nice spack install" &
 done; wait
