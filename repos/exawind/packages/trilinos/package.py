@@ -50,4 +50,12 @@ class Trilinos(bTrilinos):
         if '+stk' in spec:
             options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
 
+        if '+rocm' in self.spec:
+            # Used as an optimization to only list the single specified
+            # arch in the offload-arch compile line, but not explicitly necessary
+            targets = self.spec.variants['amdgpu_target'].value
+            options.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+            options.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+
         return options
