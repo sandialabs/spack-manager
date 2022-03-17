@@ -3,53 +3,47 @@ packages:
     version: [8.1.12]
     buildable: false
     externals:
-      - spec: "cray-mpich@8.1.12%gcc@9.3.0"
-        modules:
-          - cray-mpich/8.1.12
-          - gcc/9.3.0
-          - libfabric/1.15.0.0
-          - craype-network-ofi
-          - cray-pmi/6.0.16
-          - cray-pmi-lib/6.0.16
+      #- spec: "cray-mpich@8.1.12%gcc@9.3.0"
+      #  prefix: /opt/cray/pe/mpich/8.1.12/ofi/gnu/9.1
+      #  modules:
+      #    - cray-mpich/8.1.12
+      #    - craype-network-ofi
       - spec: "cray-mpich@8.1.12%clang@13.0.0"
+        prefix: /opt/cray/pe/mpich/8.1.12/ofi/amd/4.4
         modules:
           - cray-mpich/8.1.12
-          - rocm/4.5.0
-          - libfabric/1.15.0.0
           - craype-network-ofi
-          - cray-pmi/6.0.16
-          - cray-pmi-lib/6.0.16
-      - spec: "cray-mpich@8.1.12%cce@13.0.0"
-        modules:
-          - cray-mpich/8.1.12
-          - cce/13.0.0
-          - libfabric/1.15.0.0
-          - craype-network-ofi
-          - cray-pmi/6.0.16
-          - cray-pmi-lib/6.0.16
+      #- spec: "cray-mpich@8.1.12%cce@13.0.0"
+      #  prefix: /opt/cray/pe/mpich/8.1.12/ofi/cray/10.0
+      #  modules:
+      #    - cray-mpich/8.1.12
+      #    - craype-network-ofi
   hip:
-    version: [4.5.0]
+    version: [5.0.2]
     buildable: false
     externals:
-      - spec: hip@4.5.0
-        prefix: /opt/rocm-4.5.0/hip
+      - spec: hip@5.0.2
+        prefix: /opt/rocm-5.0.2/hip
         modules:
+          - rocm/5.0.2
           - craype-accel-amd-gfx90a
   hsa-rocr-dev:
-    version: [4.5.0]
+    version: [5.0.2]
     buildable: false
     externals:
-      - spec: hsa-rocr-dev@4.5.0
-        prefix: /opt/rocm-4.5.0/hsa
+      - spec: hsa-rocr-dev@5.0.2
+        prefix: /opt/rocm-5.0.2/hsa
         modules:
+          - rocm/5.0.2
           - craype-accel-amd-gfx90a
   llvm-amdgpu:
-    version: [4.5.0]
+    version: [5.0.2]
     buildable: false
     externals:
-      - spec: llvm-amdgpu@4.5.0
-        prefix: /opt/rocm-4.5.0/llvm
+      - spec: llvm-amdgpu@5.0.2
+        prefix: /opt/rocm-5.0.2/llvm
         modules:
+          - rocm/5.0.2
           - craype-accel-amd-gfx90a
   boost:
     version: [1.78.0]
@@ -110,6 +104,7 @@ packages:
   all:
     compiler:
       #- gcc@9.3.0
+      #- cce@13.0.0
       - clang@13.0.0
     providers:
       mpi: [cray-mpich@8.1.12]
