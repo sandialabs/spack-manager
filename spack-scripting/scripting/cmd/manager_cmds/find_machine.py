@@ -45,7 +45,7 @@ machine_list = {
     'snl-hpc': MachineData(lambda: is_snl_hpc(socket.gethostname()),
                            socket.gethostname()),
     'ascic': MachineData(lambda: 'ascic' in socket.gethostname(),
-                            socket.gethostname()),
+                         socket.gethostname()),
     'ascicgpu': MachineData(lambda: 'ascicgpu' in socket.gethostname(),
                             socket.gethostname()),
     # NREL
