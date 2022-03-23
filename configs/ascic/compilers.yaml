@@ -1,0 +1,27 @@
+compilers:
+- compiler:
+    spec: gcc@9.3.0
+    paths:
+      cc: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/gcc
+      cxx: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/g++
+      f77: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/gfortran
+      fc: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-9.3.0-tg7stm4b2owxiisgsu4rltm5im7pe7wz/bin/gfortran
+    flags: {}
+    operating_system: rhel7
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+- compiler:
+    environment: {}
+    extra_rpaths:
+    - /opt/rh/devtoolset-8/root/usr/lib64
+    modules: []
+    flags: {}
+    operating_system: rhel7
+    paths:
+      cc: /opt/rh/devtoolset-8/root/usr/bin/gcc
+      cxx: /opt/rh/devtoolset-8/root/usr/bin/g++
+      f77: /opt/rh/devtoolset-8/root/usr/bin/gfortran
+      fc: /opt/rh/devtoolset-8/root/usr/bin/gfortran
+    spec: gcc@8.3.1
