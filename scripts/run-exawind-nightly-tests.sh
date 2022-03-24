@@ -93,18 +93,18 @@ cmd "spack concretize -f"
 #  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
 #fi
 
+printf "\nClean old stage directories...\n"
+cmd "spack clean -s || true"
+
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
-time (for i in {1..4}; do spack install & done; wait)
+time (for i in {1..4}; do spack install --keep-stage & done; wait)
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
 cmd "tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
-
-printf "\nClean stage directory...\n"
-cmd "spack clean -s || true"
 
 #STAGE_DIR=$(spack location -S)
 #if [ ! -z "${STAGE_DIR}" ]; then
