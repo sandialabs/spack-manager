@@ -31,7 +31,11 @@ class AmrWind(bAmrWind):
             cmake_options.append(define('AMR_WIND_ENABLE_CLANG_TIDY', True))
 
         if spec.satisfies('dev_path=*'):
-            cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+            cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS', True))
+
+        if '+cuda' in self.spec:
+            targets = self.spec.variants['cuda_arch'].value
+            cmake_options.append('-DCMAKE_CUDA_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified
