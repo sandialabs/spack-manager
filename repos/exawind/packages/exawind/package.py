@@ -48,7 +48,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('tioga+shared~nodegid')
     depends_on('yaml-cpp@0.6:')
     depends_on('nalu-wind+openfast', when='+openfast')
-    depends_on('openfast+cxx+shared@2.6.0', when='+openfast')
+    depends_on('openfast+cxx+share@2.6.0:', when='+openfast')
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
     # not required but added so these get picked up as a
