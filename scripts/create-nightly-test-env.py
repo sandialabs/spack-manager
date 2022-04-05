@@ -35,7 +35,7 @@ def variant_factory(spec_string):
     if '+openfast' in spec_string:
         add_spec('openfast')
         print('cloning openfast')
-        manager('develop', 'openfast@2.6.0')
+        manager('develop', 'openfast@master')
 
     if '+hypre' in spec_string:
         add_spec('hypre')
