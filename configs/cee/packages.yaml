@@ -13,7 +13,7 @@ packages:
   openmpi:
     version: [4.0.5]
     externals:
-    - spec: openmpi@4.0.5%gcc@7.2.o
+    - spec: openmpi@4.0.5%gcc@7.2.0
       prefix: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.5-gcc-7.2.0-RHEL7/
   pkg-config:
     buildable: false
