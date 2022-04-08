@@ -42,6 +42,11 @@ exit
 ```
 are equivalent.
 
+> **Note**: When running the tests through `ctest`, it is the developer's responsibility to ensure that the gold files, located in `${SPACK_MANAGER}/golds/current`, have been populated. This can typically be done by copying the gold files from `${SPACK_MANAGER}/golds/tmp` (generated from an initial `ctest` run). For example, populating the gold files for Nalu-Wind for Linux entails:
+```
+cp -r ${SPACK_MANAGER}/tmp/nalu-wind/Linux ${SPACK_MANAGER}/golds/current/nalu-wind/
+```
+
 ## Should I worry about _Warning: included configuration files should be updated manually_?
 No, this is just a warning from Spack saying it won't automatically update the custom files we've created
 for dialing in machine specific data for your environment `include.yaml` or the list of externals we're using
