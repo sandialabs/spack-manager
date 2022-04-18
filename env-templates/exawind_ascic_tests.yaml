@@ -4,4 +4,8 @@ spack:
   concretization: separately
   view: false
   specs:
-    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast abs_tol=1e100 rel_tol=1e100 %gcc@9.3.0'
+    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@9.3.0 extra_name=-gcc@9.3.0+tioga+hypre+openfast'
+    - 'nalu-wind-nightly %gcc@9.3.0 extra_name=-gcc@9.3.0'
+    - 'nalu-wind-nightly %gcc@9.3.0 buildType=Debug extra_name=-gcc@9.3.0-Debug'
+    - 'nalu-wind-nightly %intel@20.0.2 extra_name=-intel@20.0.2'
+    - 'nalu-wind-nightly %clang@10.0.0 extra_name=-clang@10.0.0'
