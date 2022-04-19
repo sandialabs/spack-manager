@@ -10,7 +10,7 @@ class MachineData:
 
 
 def is_cee(hostname):
-    known_hosts = ('cee', 'ews', 'ecs', 'hpws')
+    known_hosts = ('cee', 'ews', 'ecw', 'ecs', 'hpws')
     for k in known_hosts:
         if k in hostname:
             return True
@@ -31,6 +31,13 @@ def is_jlse(hostname):
         if k in hostname:
             return True
     return False
+
+
+def is_e4s():
+    if 'E4S_MACHINE' in os.environ:
+        return True
+    else:
+        return False
 
 
 """
@@ -64,6 +71,8 @@ machine_list = {
     # JLSE
     'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
                             'arcticus.alcf.anl.gov'),
+    # E4S
+    'e4s': MachineData(lambda: is_e4s(), 'e4s.nodomain.gov'),
     # General
     'darwin': MachineData(lambda: sys.platform == 'darwin',
                           'darwin.nodomain.gov'),
