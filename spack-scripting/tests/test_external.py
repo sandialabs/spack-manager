@@ -25,7 +25,8 @@ manager = spack.main.SpackCommand('manager')
 def test_stripDevPathFromExternals(spec_str):
     assert 'dev_path' in spec_str
     s = Spec(spec_str)
-    pruned_string = manager_cmds.external._spec_string_minus_dev_path(s)
+    pruned_string = manager_cmds.external._well_posed_spec_string_minus_dev_path(
+        s)
     assert 'dev_path' not in pruned_string
 
 
