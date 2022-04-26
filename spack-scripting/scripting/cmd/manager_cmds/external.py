@@ -94,7 +94,7 @@ def add_include_entry(env, inc, prepend=True):
 
 def create_external_detected_spec(env, spec):
     view = _get_first_view_containing_spec(env, spec)
-    pruned_spec = _spec_string_minus_dev_path(spec)
+    pruned_spec = _well_posed_spec_string_minus_dev_path(spec)
     prefix = view.get_projection_for_spec(spec)
     return spack.detection.DetectedPackage(Spec.from_detection(pruned_spec), prefix)
 
@@ -108,7 +108,8 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
             external_spec_dict[spec.name].append(
                 create_external_detected_spec(env, spec))
         else:
-            external_spec_dict[spec.name] = [create_external_detected_spec(env, spec)]
+            external_spec_dict[spec.name] = [
+                create_external_detected_spec(env, spec)]
 
     for spec in env.all_specs():
         if black_list:
@@ -133,12 +134,20 @@ def create_yaml_from_detected_externals(ext_dict):
     return syaml.syaml_dict({'packages': formatted_dict})
 
 
-def _spec_string_minus_dev_path(spec):
+def _well_posed_spec_string_minus_dev_path(spec):
     full_spec = spec.format(
         '{name}{@version}{%compiler}{variants}{arch=architecture}')
     spec_components = full_spec.split(' ')
-    pruned_componets = [x for x in spec_components if 'dev_path=' not in x]
-    pruned_spec = ' '.join(pruned_componets)
+    variants_to_omit = ('dev_path=', 'patches=')
+
+    def filter_func(entry):
+        for v in variants_to_omit:
+            if v in entry:
+                return False
+        return True
+    pruned_components = list(filter(filter_func, spec_components))
+
+    pruned_spec = ' '.join(pruned_components)
     return pruned_spec
 
 
@@ -231,10 +240,6 @@ def external(parser, args):
         syaml.dump_config(final, stream=fout,
                           default_flow_style=False)
 
-    # for now we have to use the original concretizer
-    # see: https://github.com/spack/spack/issues/28201
-    # do this last so we only change the concretizer if we created an external.yaml
-    env.yaml['spack']['config'] = {'concretizer': 'original'}
     env.write()
 
 
