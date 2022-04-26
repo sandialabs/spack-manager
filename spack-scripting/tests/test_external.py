@@ -30,6 +30,21 @@ def test_stripDevPathFromExternals(spec_str):
     assert 'dev_path' not in pruned_string
 
 
+@pytest.mark.parametrize('spec_str',
+                         ['amr-wind@main patches=abscdef',
+                          'nalu-wind@master+cuda cuda_arch=70 '
+                          'patches=asldfkjas',
+                          'exawind@master patches=fxfdcx '
+                          '^nalu-wind@master patches=dtafwuf'
+                          ' ^amr-wind@main patches=windenergy'])
+def test_stripPatchesFromExternals(spec_str):
+    assert 'patches' in spec_str
+    s = Spec(spec_str)
+    pruned_string = manager_cmds.external._well_posed_spec_string_minus_dev_path(
+        s)
+    assert 'patches' not in pruned_string
+
+
 def test_mustHaveActiveEnvironment(tmpdir):
     with tmpdir.as_cwd():
         with pytest.raises(spack.main.SpackCommandError):

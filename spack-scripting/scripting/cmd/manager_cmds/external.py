@@ -108,7 +108,8 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
             external_spec_dict[spec.name].append(
                 create_external_detected_spec(env, spec))
         else:
-            external_spec_dict[spec.name] = [create_external_detected_spec(env, spec)]
+            external_spec_dict[spec.name] = [
+                create_external_detected_spec(env, spec)]
 
     for spec in env.all_specs():
         if black_list:
@@ -239,10 +240,6 @@ def external(parser, args):
         syaml.dump_config(final, stream=fout,
                           default_flow_style=False)
 
-    # for now we have to use the original concretizer
-    # see: https://github.com/spack/spack/issues/28201
-    # do this last so we only change the concretizer if we created an external.yaml
-    env.yaml['spack']['config'] = {'concretizer': 'original'}
     env.write()
 
 
