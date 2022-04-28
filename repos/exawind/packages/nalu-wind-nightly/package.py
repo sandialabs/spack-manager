@@ -30,6 +30,9 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     variant('host_name', default='default')
     variant('extra_name', default='default')
 
+    variant('snl', default=False, description='Reports to SNL dashboard')
+    patch('snl_ctest.patch', when='+snl')
+
     phases = ['test']
 
     def ctest_args(self):
@@ -78,10 +81,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         ctest_options.append('-VV')
         ctest_options.append('-S')
         ctest_options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
-        if 'ascic' in machine:
-            ctest_options.append(define('CTEST_DROP_METHOD', 'https'))
-            ctest_options.append(define('CTEST_DROP_SITE', 'sierra-cdash.sandia.gov'))
-            ctest_options.append(define('CTEST_NIGHTLY_START_TIME', '18:00:00 MDT'))
 
         return ctest_options
 
