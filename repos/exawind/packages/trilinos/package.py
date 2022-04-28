@@ -8,8 +8,6 @@ class Trilinos(bTrilinos):
     variant('stk_simd', default=False,
             description='Enable SIMD in STK')
 
-    patch('kokkos.patch', when='+cuda')
-
     def setup_build_environment(self, env):
         spec = self.spec
         if '+cuda' in spec and '+wrapper' in spec:
