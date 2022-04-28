@@ -15,18 +15,18 @@ packages:
           - gcc/9.3.0
           - spectrum-mpi/10.4.0.3-20210112
   cuda:
-    version: [11.0.3]
+    version: [11.4.2]
     buildable: false
     externals:
-      #- spec: "cuda@11.4.0%gcc"
-      #  modules:
-      #    - cuda/11.4.0
+      - spec: "cuda@11.4.2%gcc"
+        modules:
+          - cuda/11.4.2
       #- spec: "cuda@11.3.1%gcc"
       #  modules:
       #    - cuda/11.3.1
-      - spec: "cuda@11.0.3%gcc"
-        modules:
-          - cuda/11.0.3
+      #- spec: "cuda@11.0.3%gcc"
+      #  modules:
+      #    - cuda/11.0.3
   hdf5:
     version: [1.10.7]
     buildable: false
