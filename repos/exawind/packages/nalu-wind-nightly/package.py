@@ -29,6 +29,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     variant('host_name', default='default')
     variant('extra_name', default='default')
+    variant('dashboard_name', default='default')
 
     variant('snl', default=False, description='Reports to SNL dashboard')
     patch('snl_ctest.patch', when='+snl')
@@ -54,6 +55,13 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-trilinos@' + str(spec['trilinos'].version)
             if '+cuda' in spec:
                 spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
+
+        if spec.variants['dashboard_name'].value != 'default':
+            spec.variants['extra_name'].value = spec.format('-{compiler}')
+            if '+cuda' in spec:
+                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
+            spec.variants['extra_name'].value = spec.variants['extra_name'].value + spec.variants['dashboard_name'].value
+
 
         # Cmake options for ctest
         cmake_options = self.std_cmake_args
