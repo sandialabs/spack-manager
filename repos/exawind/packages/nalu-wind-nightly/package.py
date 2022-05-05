@@ -17,7 +17,7 @@ def variant_peeler(var_str):
         output+='+{v}'.format(v=var_str[match.start(): match.end()])
     # extract build type
     for match in re.finditer('r(?<=build_type=)(a-zA-Z)', var_str):
-        output = var_str[match.start():match.end()] + ' ' + output
+        output = var_str[match.start():match.end()] + output
     return output
 
 
@@ -60,8 +60,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             extra_name = '-' + compilers
             if '+snl' in spec:
                 variants = variant_peeler(spec.format('{variants}')
-                extra_name = extra_name + ' ' + variants
-            extra_name = extra_name + ' ^' + trilinos
+                extra_name = extra_name + '-' + variants
+            extra_name = extra_name + '^' + trilinos
             spec.variants['extra_name'].value = extra_name
 
         # Cmake options for ctest
