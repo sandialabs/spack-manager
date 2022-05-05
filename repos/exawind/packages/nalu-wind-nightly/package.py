@@ -53,15 +53,15 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             if '+cuda' in spec:
                 compilers += '-cuda@' + str(spec['cuda'].version)
                 if '+uvm' in spec['trilinos']:
-                    trilinos += '+uvm'
+                    trilinos = trilinos + '+uvm'
                 else:
-                    trilinos += '~uvm'
+                    trilinos = trilinos + '~uvm'
 
             extra_name = '-' + compilers
             if '+snl' in spec:
                 variants = variant_peeler(spec.format('{variants}')
-                extra_name += ' ' + variants
-            extra_name += ' ^' + trilinos
+                extra_name = extra_name + ' ' + variants
+            extra_name = extra_name + ' ^' + trilinos
             spec.variants['extra_name'].value = extra_name
 
         # Cmake options for ctest
