@@ -27,9 +27,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     version('master', branch='master', submodules=True)
 
-    variant('host_name', default='default')
-    variant('extra_name', default='default')
-    variant('dashboard_name', default='default')
+    variant('host_name', default=None)
+    variant('extra_name', default=None)
 
     variant('snl', default=False, description='Reports to SNL dashboard')
     patch('snl_ctest.patch', when='+snl')
@@ -41,27 +40,28 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         define = CMakePackage.define
         machine = find_machine(verbose=False, full_machine_name=True)
 
-        if spec.variants['host_name'].value == 'default':
+        if spec.variants['host_name'].value is None:
             if machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
                 spec.variants['host_name'].value = machine
 
-        if spec.variants['extra_name'].value == 'default':
-            spec.variants['extra_name'].value = spec.format('-{compiler}')
-            #var = spec.format('{variants}')
-            #temp = variant_peeler(var)
-            #spec.variants['extra_name'].value = spec.variants['extra_name'].value + temp
-            spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-trilinos@' + str(spec['trilinos'].version)
-            if '+cuda' in spec:
-                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
+        if spec.variants['extra_name'].value is None:
+            compilers = spec.format('{compiler}')
+            trilinos = 'trilinos@' + str(spec['trilinos'].version)
 
-        if spec.variants['dashboard_name'].value != 'default':
-            spec.variants['extra_name'].value = spec.format('-{compiler}')
             if '+cuda' in spec:
-                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
-            spec.variants['extra_name'].value = spec.variants['extra_name'].value + spec.variants['dashboard_name'].value
+                compilers += '-cuda@' + str(spec['cuda'].version)
+                if '+uvm' in spec['trilinos']:
+                    trilinos += '+uvm'
+                else:
+                    trilinos += '~uvm'
 
+            spec.variants['extra_name'].value  = '-' + compilers
+            if '+snl' in spec:
+                variants = variant_peeler(spec.format('{variants}')
+                spec.variants['extra_name'].value += ' ' + variants
+            spec.variants['extra_name'].value += ' ^' + trilinos
 
         # Cmake options for ctest
         cmake_options = self.std_cmake_args
