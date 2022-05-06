@@ -59,7 +59,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
             extra_name = '-' + compilers
             if '+snl' in spec:
-                variants = variant_peeler(spec.format('{variants}')
+                variants = variant_peeler(spec.format('{variants}'))
                 extra_name = extra_name + '-' + variants
             extra_name = extra_name + '^' + trilinos
             spec.variants['extra_name'].value = extra_name
