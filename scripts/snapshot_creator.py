@@ -284,7 +284,7 @@ def use_latest_git_hashes(env, top_specs, blacklist=blacklist):
                 if dep.name not in blacklist:
                     hash_dict[dep.name] = find_latest_git_hash(dep)
 
-            #yaml['spack']['specs'][i] = replace_versions_with_hashes(
+            # yaml['spack']['specs'][i] = replace_versions_with_hashes(
             #    roots[i].build_spec, hash_dict)
             yaml['spack']['specs'][i] = str(roots[i].build_spec)
 
