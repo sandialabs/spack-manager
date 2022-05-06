@@ -4,9 +4,9 @@ spack:
   concretization: separately
   view: false
   specs:
-    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 dashboard_name="-release+uvm+fftw+tioga+hypre+openfast" ^trilinos+uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 dashboard_name="-release+uvm" ^trilinos+uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug dashboard_name="-debug+uvm" ^trilinos+uvm'
-    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 dashboard_name="-release~uvm+fftw+tioga+hypre+openfast" ^trilinos~uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 dashboard_name="-release~uvm" ^trilinos~uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug dashboard_name="-debug~uvm" ^trilinos~uvm'
+    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^trilinos+uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 ^trilinos+uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^trilinos+uvm'
+    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^trilinos~uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 ^trilinos~uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^trilinos~uvm'

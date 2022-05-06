@@ -17,7 +17,7 @@ def variant_peeler(var_str):
         output+='+{v}'.format(v=var_str[match.start(): match.end()])
     # extract build type
     for match in re.finditer('r(?<=build_type=)(a-zA-Z)', var_str):
-        output = var_str[match.start():match.end()] + ' ' + output
+        output = var_str[match.start():match.end()] + output
     return output
 
 
@@ -29,7 +29,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     variant('host_name', default='default')
     variant('extra_name', default='default')
-    variant('dashboard_name', default='default')
 
     variant('snl', default=False, description='Reports to SNL dashboard')
     patch('snl_ctest.patch', when='+snl')
@@ -48,20 +47,22 @@ class NaluWindNightly(bNaluWind, CudaPackage):
                 spec.variants['host_name'].value = machine
 
         if spec.variants['extra_name'].value == 'default':
-            spec.variants['extra_name'].value = spec.format('-{compiler}')
-            #var = spec.format('{variants}')
-            #temp = variant_peeler(var)
-            #spec.variants['extra_name'].value = spec.variants['extra_name'].value + temp
-            spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-trilinos@' + str(spec['trilinos'].version)
-            if '+cuda' in spec:
-                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
+            compilers = spec.format('{compiler}')
+            trilinos = 'trilinos@' + str(spec['trilinos'].version)
 
-        if spec.variants['dashboard_name'].value != 'default':
-            spec.variants['extra_name'].value = spec.format('-{compiler}')
             if '+cuda' in spec:
-                spec.variants['extra_name'].value = spec.variants['extra_name'].value + '-cuda@' + str(spec['cuda'].version)
-            spec.variants['extra_name'].value = spec.variants['extra_name'].value + spec.variants['dashboard_name'].value
+                compilers += '-cuda@' + str(spec['cuda'].version)
+                if '+uvm' in spec['trilinos']:
+                    trilinos = trilinos + '+uvm'
+                else:
+                    trilinos = trilinos + '~uvm'
 
+            extra_name = '-' + compilers
+            if '+snl' in spec:
+                variants = variant_peeler(spec.format('{variants}'))
+                extra_name = extra_name + '-' + variants
+            extra_name = extra_name + '^' + trilinos
+            spec.variants['extra_name'].value = extra_name
 
         # Cmake options for ctest
         cmake_options = self.std_cmake_args
