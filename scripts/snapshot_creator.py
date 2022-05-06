@@ -68,7 +68,8 @@ class SnapshotSpec:
 machine_specs = {
     'darwin': [SnapshotSpec(exclusions=['%intel'])],
     'cee': [SnapshotSpec()],
-    'e4s': [SnapshotSpec()],
+    'e4s': [SnapshotSpec(), SnapshotSpec(id='amr-standalone',
+                                         spec='amr-wind+hypre+openfast+masa')],
     'rhodes': [SnapshotSpec('gcc',
                             base_spec + '%gcc', ['%clang', '%intel']),
                SnapshotSpec('clang',
