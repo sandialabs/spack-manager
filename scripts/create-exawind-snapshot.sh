@@ -24,10 +24,15 @@ fi
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
+cmd "export SPACK_MANAGER_CLEAN_HYPRE=true"
+# Shouldn't use parallel DAG unless git hash installs work or hypre uses CMake
+# due to hypre using autotools which can't handle multiple concurrent builds
+
 printf "\nRunning snapshot creator...\n"
 if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
   cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize --link_type soft"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
+  cmd "unset SPACK_MANAGER_CLEAN_HYPRE"
   cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --modules --use_machine_name --stop_after concretize --link_type soft"
 else
   cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize"
@@ -37,9 +42,6 @@ printf "\nActivating snapshot environment...\n"
 cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind/snapshots/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
 
 printf "\nInstalling environment...\n"
-cmd "export SPACK_MANAGER_CLEAN_HYPRE=true"
-# Shouldn't use parallel DAG unless git hash installs work or hypre uses CMake
-# due to hypre using autotools which can't handle multiple concurrent builds
 time (
   for i in {1..1}; do
     nice -n19 spack install &
