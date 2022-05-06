@@ -27,6 +27,8 @@ cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 printf "\nRunning snapshot creator...\n"
 if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
   cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize --link_type soft"
+elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
+  cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --modules --use_machine_name --stop_after concretize --link_type soft"
 else
   cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize"
 fi
