@@ -27,8 +27,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     version('master', branch='master', submodules=True)
 
-    variant('host_name', default=None)
-    variant('extra_name', default=None)
+    variant('host_name', default='default')
+    variant('extra_name', default='default')
 
     variant('snl', default=False, description='Reports to SNL dashboard')
     patch('snl_ctest.patch', when='+snl')
@@ -40,13 +40,13 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         define = CMakePackage.define
         machine = find_machine(verbose=False, full_machine_name=True)
 
-        if spec.variants['host_name'].value is None:
+        if spec.variants['host_name'].value == 'default':
             if machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
                 spec.variants['host_name'].value = machine
 
-        if spec.variants['extra_name'].value is None:
+        if spec.variants['extra_name'].value == 'default':
             compilers = spec.format('{compiler}')
             trilinos = 'trilinos@' + str(spec['trilinos'].version)
 
