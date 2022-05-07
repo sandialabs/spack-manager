@@ -151,11 +151,13 @@ def add_view(env, extension, link_type):
     view_dict = {'snapshot': {
         'root': view_path,
         'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
-                        '{version}',
+                        '{version}-{hash:4}',
                         '^cuda': '{compiler.name}-{compiler.version}-'
-                        '{^cuda.name}-{^cuda.version}/{name}/{version}',
+                        '{^cuda.name}-{^cuda.version}/{name}/{version}'
+                        '-{hash:4}',
                         '^rocm': '{compiler.name}-{compiler.version}-'
-                        '{^rocm.name}-{^rocm.version}/{name}/{version}'},
+                        '{^rocm.name}-{^rocm.version}/{name}/{version}'
+                        '-{hash:4}'},
         'link_type': link_type
     }}
     with open(env.manifest_path, 'r') as f:
