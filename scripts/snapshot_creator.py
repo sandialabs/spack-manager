@@ -68,7 +68,8 @@ class SnapshotSpec:
 machine_specs = {
     'darwin': [SnapshotSpec(exclusions=['%intel'])],
     'cee': [SnapshotSpec()],
-    'e4s': [SnapshotSpec()],
+    'e4s': [SnapshotSpec(), SnapshotSpec(id='amr-standalone',
+                                         spec='amr-wind+hypre+openfast+masa')],
     'rhodes': [SnapshotSpec('gcc',
                             base_spec + '%gcc', ['%clang', '%intel']),
                SnapshotSpec('clang',
@@ -150,11 +151,13 @@ def add_view(env, extension, link_type):
     view_dict = {'snapshot': {
         'root': view_path,
         'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
-                        '{version}',
+                        '{version}-{hash:4}',
                         '^cuda': '{compiler.name}-{compiler.version}-'
-                        '{^cuda.name}-{^cuda.version}/{name}/{version}',
+                        '{^cuda.name}-{^cuda.version}/{name}/{version}'
+                        '-{hash:4}',
                         '^rocm': '{compiler.name}-{compiler.version}-'
-                        '{^rocm.name}-{^rocm.version}/{name}/{version}'},
+                        '{^rocm.name}-{^rocm.version}/{name}/{version}'
+                        '-{hash:4}'},
         'link_type': link_type
     }}
     with open(env.manifest_path, 'r') as f:
@@ -283,8 +286,9 @@ def use_latest_git_hashes(env, top_specs, blacklist=blacklist):
                 if dep.name not in blacklist:
                     hash_dict[dep.name] = find_latest_git_hash(dep)
 
-            yaml['spack']['specs'][i] = replace_versions_with_hashes(
-                roots[i].build_spec, hash_dict)
+            # yaml['spack']['specs'][i] = replace_versions_with_hashes(
+            #    roots[i].build_spec, hash_dict)
+            yaml['spack']['specs'][i] = str(roots[i].build_spec)
 
     with open(env.manifest_path, 'w') as fout:
         syaml.dump_config(yaml, stream=fout,
