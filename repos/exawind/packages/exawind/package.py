@@ -49,6 +49,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('yaml-cpp@0.6:')
     depends_on('nalu-wind+openfast', when='+openfast')
     depends_on('openfast+cxx+shared@2.6.0:', when='+openfast')
+    depends_on('openfast+cxx+shared@2.6.0:', when='^nalu-wind+openfast')
+    depends_on('openfast+cxx+shared@2.6.0:', when='^amr-wind+openfast')
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
     # not required but added so these get picked up as a
@@ -56,6 +58,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('trilinos')
     depends_on('cmake')
     depends_on('hypre', when='+hypre')
+    depends_on('netcdf-c', when='^amr-wind+netcdf')
+    depends_on('mpi')
 
     def cmake_args(self):
         spec = self.spec
