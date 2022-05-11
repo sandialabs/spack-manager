@@ -11,6 +11,8 @@ class AmrWind(bAmrWind):
             description='Turn on cppcheck')
     variant('clangtidy', default=False,
             description='Turn on clang-tidy')
+    variant('hdf5', default=False,
+            description='Enable HDF5 plots with ZFP compression')
     variant('ascent', default=False,
             description='Enable Ascent')
 
@@ -19,6 +21,10 @@ class AmrWind(bAmrWind):
     for arch in CudaPackage.cuda_arch_values:
         depends_on('ascent+cuda cuda_arch=%s' % arch,
                    when='+ascent+cuda cuda_arch=%s' % arch)
+
+    depends_on('hdf5~mpi', when='+hdf5~mpi')
+    depends_on('hdf5+mpi', when='+hdf5+mpi')
+    depends_on('h5z-zfp', when='+hdf5')
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
@@ -47,6 +53,10 @@ class AmrWind(bAmrWind):
         if '+cuda' in self.spec:
             targets = self.spec.variants['cuda_arch'].value
             cmake_options.append('-DCMAKE_CUDA_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
+
+        if '+hdf5' in spec:
+            cmake_options.append(define('AMR_WIND_ENABLE_HDF5', True))
+            cmake_options.append(define('AMR_WIND_ENABLE_HDF5_ZFP', True))
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified

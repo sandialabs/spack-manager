@@ -44,7 +44,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         depends_on('amr-wind+rocm amdgpu_target=%s' % arch, when='+amr_wind_gpu+rocm amdgpu_target=%s' % arch)
 
     depends_on('nalu-wind+tioga')
-    depends_on('amr-wind+netcdf+mpi')
+    depends_on('amr-wind+hdf5+netcdf+mpi')
     depends_on('tioga+shared~nodegid')
     depends_on('yaml-cpp@0.6:')
     depends_on('nalu-wind+openfast', when='+openfast')
