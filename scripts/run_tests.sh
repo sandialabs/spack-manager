@@ -4,4 +4,4 @@
 export SPACK_MANAGER=$(pwd)
 source ${SPACK_MANAGER}/start.sh
 spack-start
-spack unit-test --extension scripting
+spack -C ${SPACK_MANAGER}/configs/base unit-test --extension scripting
