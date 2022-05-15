@@ -2,7 +2,14 @@ import os
 import pytest
 
 
-def test_can_read_exawind_repo(create_package):
-    package = create_package('nalu-wind-nightly')
-    #package.ctest_args()  # test chokes on setting CMAKE_CXX_COMPILER from mpi spec ...
-    assert package.spec.variants['extra_name'].value == 'default'
+def test_package_name(packages):
+    package = packages.create('nalu-wind-nightly')
+    assert package.name == 'nalu-wind-nightly'
+
+def test_package_picks_up_variants(packages):
+    package = packages.create('nalu-wind-nightly+snl')
+    assert package.spec.variants['snl'].value
+
+def test_package_picks_up_default_variants(packages):
+    package = packages.create('nalu-wind-nightly')
+    assert not package.spec.variants['snl'].value

@@ -14,12 +14,23 @@ def builtin_repo_path():
 def exawind_repo_path():
     yield os.path.join(os.environ['SPACK_MANAGER'], 'repos', 'exawind')
 
-@pytest.fixture(scope='session')
-def create_package(builtin_repo_path, exawind_repo_path):
-    def create(spec):
-        with spack.repo.use_repositories(exawind_repo_path, builtin_repo_path) as exawind_repo:
-            spec = Spec('nalu-wind-nightly')
-            spec.concretize()
-            return spec.package
 
-    return create
+class PackageMap:
+    def __init__(self, *paths):
+        self.paths = paths
+        self.packages = {}
+
+    def create(self, spec):
+        if spec not in self.packages:
+            self.packages[spec] = self._create_new(spec)
+        return self.packages[spec]
+
+    def _create_new(self, spec):
+        with spack.repo.use_repositories(*self.paths):
+            spec_obj = Spec(spec)
+            spec_obj.concretize()
+            return spec_obj.package
+
+@pytest.fixture(scope='session')
+def packages(builtin_repo_path, exawind_repo_path):
+    return PackageMap(builtin_repo_path, exawind_repo_path)
