@@ -2,13 +2,14 @@ import os
 import pytest
 
 import spack.repo
+import spack.paths
 from spack.spec import Spec
 from spack.test.conftest import *  # noqa: F401
 
 
 @pytest.fixture(scope='session')
 def builtin_repo_path():
-    yield os.path.join(os.environ['SPACK_MANAGER'], 'spack', 'var', 'spack', 'repos', 'builtin')
+    yield spack.paths.packages_path
 
 @pytest.fixture(scope='session')
 def exawind_repo_path():
