@@ -27,9 +27,7 @@ class PackageMap:
 
     def _create_new(self, spec):
         with spack.repo.use_repositories(*self.paths):
-            spec_obj = Spec(spec)
-            spec_obj.concretize()
-            return spec_obj.package
+            return Spec(spec).package
 
 @pytest.fixture(scope='session')
 def packages(builtin_repo_path, exawind_repo_path):

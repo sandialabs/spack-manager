@@ -12,4 +12,4 @@ def test_package_picks_up_variants(packages):
 
 def test_package_picks_up_default_variants(packages):
     package = packages.create('nalu-wind-nightly')
-    assert not package.spec.variants['snl'].value
+    assert 'snl' not in package.spec.variants
