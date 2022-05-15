@@ -1,3 +1,10 @@
+# Copyright (c) 2022, National Technology & Engineering Solutions of Sandia,
+# LLC (NTESS). Under the terms of Contract DE-NA0003525 with NTESS, the U.S.
+# Government retains certain rights in this software.
+#
+# This software is released under the BSD 3-clause license. See LICENSE file
+# for more details.
+
 from spack import *
 #from spack.pkg.builtin.exawind import Exawind as bExawind
 from shutil import copyfile
@@ -49,6 +56,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('yaml-cpp@0.6:')
     depends_on('nalu-wind+openfast', when='+openfast')
     depends_on('openfast+cxx+shared@2.6.0:', when='+openfast')
+    depends_on('openfast+cxx+shared@2.6.0:', when='^nalu-wind+openfast')
+    depends_on('openfast+cxx+shared@2.6.0:', when='^amr-wind+openfast')
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
     # not required but added so these get picked up as a
@@ -56,6 +65,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('trilinos')
     depends_on('cmake')
     depends_on('hypre', when='+hypre')
+    depends_on('netcdf-c', when='^amr-wind+netcdf')
+    depends_on('mpi')
 
     def cmake_args(self):
         spec = self.spec
