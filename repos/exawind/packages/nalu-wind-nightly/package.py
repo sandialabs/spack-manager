@@ -42,6 +42,12 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     phases = ['test']
 
+    def dashboard_compilers(self):
+        compilers = self.spec.format('{compiler}')
+        if 'cuda' in self.spec:
+            compilers = '{}-cuda@{}'.format(compilers, self.spec['cuda'].version)
+        return compilers
+
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
