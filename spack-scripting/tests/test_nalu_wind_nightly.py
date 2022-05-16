@@ -29,3 +29,28 @@ def test_dashboard_compilers_gcc_compiler_with_cuda(create_package):
 def test_dashboard_compilers_cuda_version_pulled_from_spec(create_package):
     package = create_package('nalu-wind-nightly%gcc@9.3.0^cuda@11.4.2')
     assert package.dashboard_compilers() == 'gcc@9.3.0-cuda@11.4.2'
+
+
+def test_dashboard_trilinos_develop(create_package):
+    package = create_package('nalu-wind-nightly ^trilinos@develop')
+    assert package.dashboard_trilinos() == 'trilinos@develop'
+
+
+def test_dashboard_trilinos_master(create_package):
+    package = create_package('nalu-wind-nightly ^trilinos@master')
+    assert package.dashboard_trilinos() == 'trilinos@master'
+
+
+def test_dashboard_trilinos_no_cuda_no_uvm_option(create_package):
+    package = create_package('nalu-wind-nightly ^trilinos@develop~uvm')
+    assert package.dashboard_trilinos() == 'trilinos@develop'
+
+
+def test_dashboard_trilinos_cuda_uvm(create_package):
+    package = create_package('nalu-wind-nightly ^cuda@11.2.2 ^trilinos@develop+uvm')
+    assert package.dashboard_trilinos() == 'trilinos@develop+uvm'
+
+
+def test_dashboard_trilinos_cuda_no_uvm(create_package):
+    package = create_package('nalu-wind-nightly ^cuda@10.1.243 ^trilinos@develop~uvm')
+    assert package.dashboard_trilinos() == 'trilinos@develop~uvm'

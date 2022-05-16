@@ -48,6 +48,12 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             compilers = '{}-cuda@{}'.format(compilers, self.spec['cuda'].version)
         return compilers
 
+    def dashboard_trilinos(self):
+        trilinos = 'trilinos@{}'.format(self.spec['trilinos'].version)
+        if 'cuda' in self.spec:
+            trilinos = '{}{}'.format(trilinos, self.spec['trilinos'].format('{variants.uvm}'))
+        return trilinos
+
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
