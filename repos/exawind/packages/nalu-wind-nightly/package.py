@@ -42,6 +42,9 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     phases = ['test']
 
+    def dashboard_build_name(self):
+        return '-{}^{}'.format(self.dashboard_compilers(), self.dashboard_trilinos())
+
     def dashboard_compilers(self):
         compilers = self.spec.format('{compiler}')
         if 'cuda' in self.spec:

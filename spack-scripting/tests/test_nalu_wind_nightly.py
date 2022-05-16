@@ -11,6 +11,18 @@ def test_package_name(create_package):
     assert package.name == 'nalu-wind-nightly'
 
 
+def test_nrel_build_names(create_package):
+    package = create_package(
+            'nalu-wind-nightly +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^cuda@11.2.2 ^trilinos@develop+uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2^trilinos@develop+uvm'
+    package = create_package('nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@9.3.0 ^trilinos@develop')
+    assert package.dashboard_build_name() == '-gcc@9.3.0^trilinos@develop'
+    package = create_package('nalu-wind-nightly +fftw+tioga+hypre+openfast %intel@20.0.2 ^trilinos@develop')
+    assert package.dashboard_build_name() == '-intel@20.0.2^trilinos@develop'
+    package = create_package('nalu-wind-nightly +fftw+tioga+hypre+openfast+asan build_type=Debug %clang@10.0.0 ^trilinos@develop')
+    assert package.dashboard_build_name() == '-clang@10.0.0^trilinos@develop'
+
+
 def test_dashboard_compilers_gcc_compiler(create_package):
     package = create_package('nalu-wind-nightly%gcc@9.3.0')
     assert package.dashboard_compilers() == 'gcc@9.3.0'
