@@ -4,12 +4,12 @@ packages:
       read: group
       group: wg-sierra-users
     compiler:
+    - gcc@7.2.0
     - intel@19.0.3.199
-    - gcc@8.3.1
     providers:
       mpi:
-      - mpich
       - openmpi
+      - mpich
       blas:
       - netlib-lapack
       lapack:
@@ -28,6 +28,11 @@ packages:
     variants: +mlx5-dv+optimizations
   openmpi:
     variants: ~vt+pmi schedulers=slurm fabrics=auto legacylaunchers=true 
+    buildable: false
+    externals:
+    - spec: openmpi@3.1.6 %gcc@7.2.0
+      modules:
+      - cde/prod/gcc/7.2.0/openmpi/3.1.6
   slurm:
     externals:
     - spec: slurm@20.02.6
