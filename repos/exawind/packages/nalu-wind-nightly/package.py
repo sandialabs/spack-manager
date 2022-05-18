@@ -36,16 +36,17 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return '-{}{}^{}'.format(self.dashboard_compilers(), variants, self.dashboard_trilinos())
 
     def dashboard_compilers(self):
-        compilers = self.spec.format('{compiler}')
-        if 'cuda' in self.spec:
-            compilers = '{}-cuda@{}'.format(compilers, self.spec['cuda'].version)
-        return compilers
+        compiler = self.spec.format('{compiler}')
+        cuda = '-' + self.name_and_version('cuda') if 'cuda' in self.spec else ''
+        return compiler + cuda
 
     def dashboard_trilinos(self):
-        trilinos = 'trilinos@{}'.format(self.spec['trilinos'].version)
-        if 'cuda' in self.spec:
-            trilinos = '{}{}'.format(trilinos, self.spec['trilinos'].format('{variants.uvm}'))
-        return trilinos
+        trilinos = self.name_and_version('trilinos')
+        uvm = self.spec['trilinos'].format('{variants.uvm}') if 'cuda' in self.spec else ''
+        return trilinos + uvm
+
+    def name_and_version(self, package):
+        return self.spec[package].format('{name}{@version}')
 
     def dashboard_variants(self):
         blacklist = ['build_type', 'snl', 'pic', 'cuda', 'cuda_arch', 'tests']
