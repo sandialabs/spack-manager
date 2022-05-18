@@ -57,6 +57,15 @@ class NaluWindNightly(bNaluWind, CudaPackage):
             trilinos = '{}{}'.format(trilinos, self.spec['trilinos'].format('{variants.uvm}'))
         return trilinos
 
+    def dashboard_variants(self):
+        blacklist = ['build_type', 'snl', 'pic', 'cuda', 'tests']
+        printable = [v for v in self.spec.variants if v not in blacklist]
+        enabled = [v for v in printable if self.spec.variants[v].value]
+
+        build_type = self.spec.format('{variants.build_type}').split('=')[1]
+        formatted = ''.join([self.spec.format('{variants.' + variant + '}') for variant in enabled])
+        return build_type + formatted
+
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define

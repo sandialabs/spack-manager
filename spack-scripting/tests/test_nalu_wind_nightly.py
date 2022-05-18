@@ -66,3 +66,48 @@ def test_dashboard_trilinos_cuda_uvm(create_package):
 def test_dashboard_trilinos_cuda_no_uvm(create_package):
     package = create_package('nalu-wind-nightly ^cuda@10.1.243 ^trilinos@develop~uvm')
     assert package.dashboard_trilinos() == 'trilinos@develop~uvm'
+
+
+def test_dashboard_variants_build_type_release(create_package):
+    package = create_package('nalu-wind-nightly build_type=Release')
+    assert package.dashboard_variants() == 'Release'
+
+
+def test_dashboard_variants_build_type_debug(create_package):
+    package = create_package('nalu-wind-nightly build_type=Debug')
+    assert package.dashboard_variants() == 'Debug'
+
+
+def test_dashboard_variants_contains_enabled(create_package):
+    package = create_package('nalu-wind-nightly+hypre build_type=Release')
+    assert package.dashboard_variants() == 'Release+hypre'
+
+
+def test_dashboard_variants_contains_multiple_enabled(create_package):
+    package = create_package('nalu-wind-nightly+hypre+tioga+openfast build_type=Release')
+    assert package.dashboard_variants() == 'Release+hypre+tioga+openfast'
+
+
+def test_dashboard_variants_doesnt_contain_snl(create_package):
+    package = create_package('nalu-wind-nightly+hypre+tioga+openfast+snl build_type=Release')
+    assert package.dashboard_variants() == 'Release+hypre+tioga+openfast'
+
+
+def test_dashboard_variants_doesnt_contain_pic(create_package):
+    package = create_package('nalu-wind-nightly+pic+hypre+tioga build_type=Release')
+    assert package.dashboard_variants() == 'Release+hypre+tioga'
+
+
+def test_dashboard_variants_doesnt_contain_cuda(create_package):
+    package = create_package('nalu-wind-nightly+cuda+openfast build_type=Release')
+    assert package.dashboard_variants() == 'Release+openfast'
+
+
+def test_dashboard_variants_doesnt_contain_tests(create_package):
+    package = create_package('nalu-wind-nightly+tests build_type=Release')
+    assert package.dashboard_variants() == 'Release'
+
+
+def test_dashboard_variants_doesnt_contain_disabled(create_package):
+    package = create_package('nalu-wind-nightly+fftw~hypre+tioga~openfast build_type=Release')
+    assert package.dashboard_variants() == 'Release+fftw+tioga'
