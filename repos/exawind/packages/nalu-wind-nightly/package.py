@@ -43,7 +43,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     phases = ['test']
 
     def dashboard_build_name(self):
-        return '-{}^{}'.format(self.dashboard_compilers(), self.dashboard_trilinos())
+        variants = '-' + self.dashboard_variants() if '+snl' in self.spec else ''
+        return '-{}{}^{}'.format(self.dashboard_compilers(), variants, self.dashboard_trilinos())
 
     def dashboard_compilers(self):
         compilers = self.spec.format('{compiler}')
@@ -58,7 +59,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return trilinos
 
     def dashboard_variants(self):
-        blacklist = ['build_type', 'snl', 'pic', 'cuda', 'tests']
+        blacklist = ['build_type', 'snl', 'pic', 'cuda', 'cuda_arch', 'tests']
         printable = [v for v in self.spec.variants if v not in blacklist]
         enabled = [v for v in printable if self.spec.variants[v].value]
 

@@ -23,6 +23,27 @@ def test_nrel_build_names(create_package):
     assert package.dashboard_build_name() == '-clang@10.0.0^trilinos@develop'
 
 
+def test_snl_build_names(create_package):
+    package = create_package('nalu-wind-nightly+snl +fftw+tioga+hypre+openfast %gcc@9.3.0 build_type=Release ^trilinos@develop')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-Release+fftw+tioga+hypre+openfast^trilinos@develop'
+    package = create_package('nalu-wind-nightly+snl %gcc@9.3.0 build_type=Release ^trilinos@develop')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-Release^trilinos@develop'
+    package = create_package('nalu-wind-nightly+snl %gcc@9.3.0 build_type=Debug ^trilinos@develop')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-Debug^trilinos@develop'
+    package = create_package('nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 build_type=Release ^cuda@11.2.2 ^trilinos@develop+uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2-Release+fftw+tioga+hypre+openfast^trilinos@develop+uvm'
+    package = create_package('nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Release ^cuda@11.2.2 ^trilinos@develop+uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2-Release^trilinos@develop+uvm'
+    package = create_package('nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^cuda@11.2.2 ^trilinos@develop+uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2-Debug^trilinos@develop+uvm'
+    package = create_package('nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 build_type=Release ^cuda@11.2.2 ^trilinos@develop~uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2-Release+fftw+tioga+hypre+openfast^trilinos@develop~uvm'
+    package = create_package('nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Release ^cuda@11.2.2 ^trilinos@develop~uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2-Release^trilinos@develop~uvm'
+    package = create_package('nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^cuda@11.2.2 ^trilinos@develop~uvm')
+    assert package.dashboard_build_name() == '-gcc@9.3.0-cuda@11.2.2-Debug^trilinos@develop~uvm'
+
+
 def test_dashboard_compilers_gcc_compiler(create_package):
     package = create_package('nalu-wind-nightly%gcc@9.3.0')
     assert package.dashboard_compilers() == 'gcc@9.3.0'
@@ -100,6 +121,11 @@ def test_dashboard_variants_doesnt_contain_pic(create_package):
 
 def test_dashboard_variants_doesnt_contain_cuda(create_package):
     package = create_package('nalu-wind-nightly+cuda+openfast build_type=Release')
+    assert package.dashboard_variants() == 'Release+openfast'
+
+
+def test_dashboard_variants_doesnt_contain_cuda_arch(create_package):
+    package = create_package('nalu-wind-nightly+cuda+openfast cuda_arch=70 build_type=Release')
     assert package.dashboard_variants() == 'Release+openfast'
 
 
