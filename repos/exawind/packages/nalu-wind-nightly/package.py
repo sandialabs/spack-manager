@@ -16,17 +16,6 @@ from spack.util.executable import ProcessError
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 
-def variant_peeler(var_str):
-    """strip out everything but + variants and build types"""
-    output = ''
-    # extract all the + variants
-    for match in re.finditer(r'(?<=\+)([a-z0-9]*)', var_str):
-        output+='+{v}'.format(v=var_str[match.start(): match.end()])
-    # extract build type
-    for match in re.finditer('r(?<=build_type=)(a-zA-Z)', var_str):
-        output = var_str[match.start():match.end()] + output
-    return output
-
 
 class NaluWindNightly(bNaluWind, CudaPackage):
     """Extension of Nalu-Wind for nightly build and test"""
@@ -42,6 +31,32 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     phases = ['test']
 
+    def dashboard_build_name(self):
+        variants = '-' + self.dashboard_variants() if '+snl' in self.spec else ''
+        return '-{}{}^{}'.format(self.dashboard_compilers(), variants, self.dashboard_trilinos())
+
+    def dashboard_compilers(self):
+        compiler = self.spec.format('{compiler}')
+        cuda = '-' + self.name_and_version('cuda') if 'cuda' in self.spec else ''
+        return compiler + cuda
+
+    def dashboard_trilinos(self):
+        trilinos = self.name_and_version('trilinos')
+        uvm = self.spec['trilinos'].format('{variants.uvm}') if 'cuda' in self.spec else ''
+        return trilinos + uvm
+
+    def name_and_version(self, package):
+        return self.spec[package].format('{name}{@version}')
+
+    def dashboard_variants(self):
+        blacklist = ['build_type', 'snl', 'pic', 'cuda', 'cuda_arch', 'tests']
+        printable = [v for v in self.spec.variants if v not in blacklist]
+        enabled = [v for v in printable if self.spec.variants[v].value]
+
+        build_type = self.spec.format('{variants.build_type}').split('=')[1]
+        formatted = ''.join([self.spec.format('{variants.' + variant + '}') for variant in enabled])
+        return build_type + formatted
+
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
@@ -54,22 +69,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
                 spec.variants['host_name'].value = machine
 
         if spec.variants['extra_name'].value == 'default':
-            compilers = spec.format('{compiler}')
-            trilinos = 'trilinos@' + str(spec['trilinos'].version)
-
-            if '+cuda' in spec:
-                compilers += '-cuda@' + str(spec['cuda'].version)
-                if '+uvm' in spec['trilinos']:
-                    trilinos = trilinos + '+uvm'
-                else:
-                    trilinos = trilinos + '~uvm'
-
-            extra_name = '-' + compilers
-            if '+snl' in spec:
-                variants = variant_peeler(spec.format('{variants}'))
-                extra_name = extra_name + '-' + variants
-            extra_name = extra_name + '^' + trilinos
-            spec.variants['extra_name'].value = extra_name
+            spec.variants['extra_name'].value = self.dashboard_build_name()
 
         # Cmake options for ctest
         cmake_options = self.std_cmake_args
