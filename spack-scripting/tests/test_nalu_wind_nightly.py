@@ -137,35 +137,15 @@ def test_dashboard_variants_contains_enabled(create_package):
 
 def test_dashboard_variants_contains_multiple_enabled(create_package):
     package = create_package(
-        'nalu-wind-nightly+hypre+tioga+openfast build_type=Release')
-    assert package.dashboard_variants() == 'Release+hypre+tioga+openfast'
+        'nalu-wind-nightly+fftw+hypre+tioga+openfast build_type=Release')
+    assert package.dashboard_variants() == 'Release+fftw+hypre+tioga+openfast'
 
 
-def test_dashboard_variants_doesnt_contain_snl(create_package):
+def test_dashboard_variants_doesnt_contain_non_whitelisted(create_package):
     package = create_package(
-        'nalu-wind-nightly+hypre+tioga+openfast+snl build_type=Release')
-    assert package.dashboard_variants() == 'Release+hypre+tioga+openfast'
-
-
-def test_dashboard_variants_doesnt_contain_pic(create_package):
-    package = create_package('nalu-wind-nightly+pic+hypre+tioga build_type=Release')
-    assert package.dashboard_variants() == 'Release+hypre+tioga'
-
-
-def test_dashboard_variants_doesnt_contain_cuda(create_package):
-    package = create_package('nalu-wind-nightly+cuda+openfast build_type=Release')
-    assert package.dashboard_variants() == 'Release+openfast'
-
-
-def test_dashboard_variants_doesnt_contain_cuda_arch(create_package):
-    package = create_package(
-        'nalu-wind-nightly+cuda+openfast cuda_arch=70 build_type=Release')
-    assert package.dashboard_variants() == 'Release+openfast'
-
-
-def test_dashboard_variants_doesnt_contain_tests(create_package):
-    package = create_package('nalu-wind-nightly+tests build_type=Release')
-    assert package.dashboard_variants() == 'Release'
+        '''nalu-wind-nightly+fftw+hypre+tioga+openfast+snl+cuda
+        cuda_arch=70 abs_tol=1e-15 build_type=Release''')
+    assert package.dashboard_variants() == 'Release+fftw+hypre+tioga+openfast'
 
 
 def test_dashboard_variants_doesnt_contain_disabled(create_package):
