@@ -49,8 +49,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return self.spec[package].format('{name}{@version}')
 
     def dashboard_variants(self):
-        blacklist = ['build_type', 'snl', 'pic', 'cuda', 'cuda_arch', 'tests']
-        printable = [v for v in self.spec.variants if v not in blacklist]
+        whitelist = ['fftw', 'hypre', 'tioga', 'openfast']
+        printable = [v for v in self.spec.variants if v in whitelist]
         enabled = [v for v in printable if self.spec.variants[v].value]
 
         build_type = self.spec.format('{variants.build_type}').split('=')[1]
