@@ -64,6 +64,10 @@ class AmrWind(bAmrWind):
         if '+hdf5' in spec:
             cmake_options.append(define('AMR_WIND_ENABLE_HDF5', True))
             cmake_options.append(define('AMR_WIND_ENABLE_HDF5_ZFP', True))
+            if '+mpi' in spec:
+                cmake_options.append(define('HDF5_IS_PARALLEL', True))
+            else:
+                cmake_options.append(define('HDF5_IS_PARALLEL', False))
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified
