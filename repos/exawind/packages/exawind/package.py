@@ -49,6 +49,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     for arch in ROCmPackage.amdgpu_targets:
         depends_on('amr-wind+rocm amdgpu_target=%s' % arch, when='+amr_wind_gpu+rocm amdgpu_target=%s' % arch)
+        depends_on('nalu-wind+rocm amdgpu_target=%s' % arch, when='+nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
+        depends_on('trilinos+rocm amdgpu_target=%s' % arch, when='+nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
 
     depends_on('nalu-wind+tioga')
     depends_on('amr-wind+netcdf+mpi')
@@ -101,6 +103,10 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if '+rocm+amr_wind_gpu~nalu_wind_gpu' in self.spec:
             # Manually turn off device defines to solve Kokkos issues in Nalu-Wind headers
             env.append_flags("CXXFLAGS", "-U__HIP_DEVICE_COMPILE__ -DDESUL_HIP_RDC")
+        if '+rocm' in self.spec:
+            env.set('OMPI_CXX', self.spec['hip'].hipcc)
+            env.set('MPICH_CXX', self.spec['hip'].hipcc)
+            env.set('MPICXX_CXX', self.spec['hip'].hipcc)
 
     @run_after('cmake')
     def copy_compile_commands(self):
