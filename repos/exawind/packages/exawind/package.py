@@ -103,7 +103,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if '+rocm+amr_wind_gpu~nalu_wind_gpu' in self.spec:
             # Manually turn off device defines to solve Kokkos issues in Nalu-Wind headers
             env.append_flags("CXXFLAGS", "-U__HIP_DEVICE_COMPILE__ -DDESUL_HIP_RDC")
-        if '+rocm' in spec:
+        if '+rocm' in self.spec:
             env.set('OMPI_CXX', self.spec['hip'].hipcc)
             env.set('MPICH_CXX', self.spec['hip'].hipcc)
             env.set('MPICXX_CXX', self.spec['hip'].hipcc)
