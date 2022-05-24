@@ -49,6 +49,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     for arch in ROCmPackage.amdgpu_targets:
         depends_on('amr-wind+rocm amdgpu_target=%s' % arch, when='+amr_wind_gpu+rocm amdgpu_target=%s' % arch)
+        depends_on('nalu-wind+rocm amdgpu_target=%s' % arch, when='+nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
+        depends_on('trilinos+rocm amdgpu_target=%s' % arch, when='+nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
 
     depends_on('nalu-wind+tioga')
     depends_on('amr-wind+netcdf+mpi')
