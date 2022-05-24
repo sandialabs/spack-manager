@@ -63,9 +63,6 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
     depends_on('hypre', when='+hypre')
-    depends_on('netcdf-c', when='^amr-wind+netcdf')
-    depends_on('hdf5', when='^amr-wind+hdf5')
-    depends_on('h5z-zfp', when='^amr-wind+hdf5')
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on('trilinos')
