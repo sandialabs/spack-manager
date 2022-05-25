@@ -3,7 +3,7 @@ packages:
     version: [1.76.0]
     variants: cxxstd=14
   hdf5:
-    version: [1.12.2]
+    version: [1.10.7]
     variants: +cxx+hl
   netcdf-c:
     version: [4.7.4]
@@ -12,7 +12,7 @@ packages:
     version: [master]
     variants: +cxx
   parallel-netcdf:
-    version: [1.10.7]
+    version: [1.12.2]
   tioga:
     version: [develop]
   hypre:
