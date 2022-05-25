@@ -64,6 +64,8 @@ class AmrWind(bAmrWind):
         if '+hdf5' in spec:
             cmake_options.append(define('AMR_WIND_ENABLE_HDF5', True))
             cmake_options.append(define('AMR_WIND_ENABLE_HDF5_ZFP', True))
+            # Help AMReX understand if HDF5 is parallel or not.
+            # Building HDF5 with CMake as Spack does, causes this inspection to break.
             if '+mpi' in spec:
                 cmake_options.append(define('HDF5_IS_PARALLEL', True))
             else:
