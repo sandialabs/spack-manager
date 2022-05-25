@@ -1,0 +1,15 @@
+diff --git a/cmake/h5z_zfp-config.cmake.in b/cmake/h5z_zfp-config.cmake.in
+index 0bf8b52..4b1f41e 100644
+--- a/cmake/h5z_zfp-config.cmake.in
++++ b/cmake/h5z_zfp-config.cmake.in
+@@ -40,7 +40,9 @@ if(H5Z_ZFP_FOUND)
+   find_package(HDF5 MODULE REQUIRED COMPONENTS C)
+   find_package(ZFP REQUIRED CONFIG)
+   if(H5Z_ZFP_USE_STATIC_LIBS)
+-    add_library(h5z_zfp::h5z_zfp STATIC IMPORTED)
++    if(NOT TARGET h5z_zfp::h5z_zfp)
++      add_library(h5z_zfp::h5z_zfp STATIC IMPORTED)
++    endif()
+   else()
+     add_library(h5z_zfp::h5z_zfp SHARED IMPORTED)
+   endif()

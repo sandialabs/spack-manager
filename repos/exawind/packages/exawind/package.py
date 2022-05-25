@@ -53,7 +53,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         depends_on('trilinos+rocm amdgpu_target=%s' % arch, when='+nalu_wind_gpu+rocm amdgpu_target=%s' % arch)
 
     depends_on('nalu-wind+tioga')
-    depends_on('amr-wind+netcdf+mpi')
+    depends_on('amr-wind+hdf5+netcdf+mpi')
     depends_on('tioga+shared~nodegid')
     depends_on('yaml-cpp@0.6:')
     depends_on('nalu-wind+openfast', when='+openfast')
@@ -62,12 +62,11 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('openfast+cxx+shared@2.6.0:', when='^amr-wind+openfast')
     depends_on('nalu-wind+hypre', when='+hypre')
     depends_on('amr-wind+hypre', when='+hypre')
+    depends_on('hypre', when='+hypre')
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on('trilinos')
     depends_on('cmake')
-    depends_on('hypre', when='+hypre')
-    depends_on('netcdf-c', when='^amr-wind+netcdf')
     depends_on('mpi')
 
     def cmake_args(self):
@@ -92,6 +91,9 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             args.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
             args.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
             args.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+
+        if spec.satisfies('^amr-wind+hdf5'):
+            args.append(define('H5Z_ZFP_USE_STATIC_LIBS', True))
 
         return args
 
