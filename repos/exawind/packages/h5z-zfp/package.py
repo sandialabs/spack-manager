@@ -23,6 +23,8 @@ class H5zZfp(CMakePackage):
     depends_on('mpi',          when='^hdf5+mpi')
     depends_on('zfp bsws=8')
 
+    patch('skip_add_library.patch')
+
     def cmake_args(self):
         args = [
             self.define_from_variant('FORTRAN_INTERFACE', 'fortran')
