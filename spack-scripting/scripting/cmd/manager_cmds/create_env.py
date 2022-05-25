@@ -12,21 +12,35 @@ on a given machine
 
 import os
 
+from external import attr
+
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
+import spack
 import spack.cmd
 import spack.util.spack_yaml as syaml
 from spack.config import merge_yaml
+
+
+# temporary fix for warnining supression if people
+# are using old environments or haven't updated the spack
+# submodule
+spack_version = attr.VersionInfo(*spack.spack_version_info)
+
+concretization_string = '  concretization: together'
+
+if(spack_version >= attr.VersionInfo(0, 18, 0, 'dev0')):
+    concretization_string = '  unify: when_possible'
 
 default_env_file = (
     """
 spack:
   include: []
-  concretization: together
+  {concretization}
   view: false
-  specs: []""")
+  specs: []""".format(concretization=concretization_string))
 
 
 def create_env(parser, args):
