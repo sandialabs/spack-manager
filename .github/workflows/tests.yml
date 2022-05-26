@@ -168,7 +168,7 @@ jobs:
       run: |
         source start.sh
         spack-start
-        snapshot_creator.py --stop_after concretize --name test --use_modules --link_type soft --use_machine_name
+        snapshot_creator.py --stop_after concretize --name test --modules --link_type soft --use_machine_name
 
 
 
