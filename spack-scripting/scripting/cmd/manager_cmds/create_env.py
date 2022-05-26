@@ -12,76 +12,18 @@ on a given machine
 
 import os
 
-from external import attr
-
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
 import spack
 import spack.cmd
+import spack.cmd.env
+import spack.environment.environment as environment
 import spack.util.spack_yaml as syaml
-from spack.config import merge_yaml
-
-
-# temporary fix for warnining supression if people
-# are using old environments or haven't updated the spack
-# submodule
-spack_version = attr.VersionInfo(*spack.spack_version_info)
-
-concretization_string = '  concretization: together'
-
-if(spack_version >= attr.VersionInfo(0, 18, 0, 'dev0')):
-    concretization_string = '  unify: when_possible'
-
-default_env_file = (
-    """
-spack:
-  include: []
-  {concretization}
-  view: false
-  specs: []""".format(concretization=concretization_string))
 
 
 def create_env(parser, args):
-    if args.yaml:
-        assert(os.path.isfile(args.yaml))
-        with open(args.yaml, 'r') as fyaml:
-            user_yaml = syaml.load_config(fyaml)
-        # merge defaults and user yaml files precedent to user specified
-        defaults = syaml.load_config(default_env_file)
-        yaml = merge_yaml(defaults, user_yaml)
-    else:
-        yaml = syaml.load_config(default_env_file)
-
-    if args.machine is not None:
-        machine = args.machine
-        if machine not in fm.machine_list.keys():
-            raise Exception('Specified machine %s is not defined' % machine)
-    else:
-        machine = find_machine(verbose=False)
-
-    if args.spec:
-        # parse the specs through spack to handles spaces
-        specs = spack.cmd.parse_specs(args.spec)
-        # print the specs, only defined quanties will be populated here
-        str_specs = [s.format('{name}{@version}{%compiler}'
-                              '{variants}{arch=architecture}') for s in specs]
-        if 'specs' in yaml['spack']:
-            yaml['spack']['specs'].extend(str_specs)
-        else:
-            yaml['spack']['specs'] = str_specs
-
-    inc_creator = IncludesCreator()
-    genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
-    inc_creator.add_scope('base', genPath)
-    hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
-
-    if os.path.exists(hostPath):
-        inc_creator.add_scope('machine', hostPath)
-    else:
-        print('Host not setup in spack-manager: %s' % hostPath)
-
     if args.directory is not None:
         if os.path.exists(args.directory) is False:
             print("making", args.directory)
@@ -97,6 +39,45 @@ def create_env(parser, args):
     else:
         theDir = os.getcwd()
 
+    if args.yaml:
+        assert(os.path.isfile(args.yaml))
+        with open(args.yaml, 'r') as fyaml:
+            print(fyaml)
+            user_yaml = syaml.load_config(fyaml)
+            user_view = environment.config_dict(user_yaml).get('view')
+            if user_view:
+                has_view = True
+            else:
+                has_view = False
+            env = spack.cmd.env._env_create(
+                theDir, init_file=args.yaml, dir=True, with_view=has_view,
+                keep_relative=True)
+    else:
+        env = spack.cmd.env._env_create(
+            theDir, init_file=None, dir=True, with_view=False, keep_relative=True)
+    yaml = env.yaml
+
+    if args.machine is not None:
+        machine = args.machine
+        if machine not in fm.machine_list.keys():
+            raise Exception('Specified machine %s is not defined' % machine)
+    else:
+        machine = find_machine(verbose=False)
+
+    if args.spec:
+        for s in args.spec:
+            env.add(s)
+
+    inc_creator = IncludesCreator()
+    genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
+    inc_creator.add_scope('base', genPath)
+    hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
+
+    if os.path.exists(hostPath):
+        inc_creator.add_scope('machine', hostPath)
+    else:
+        print('Host not setup in spack-manager: %s' % hostPath)
+
     include_file_name = 'include.yaml'
     include_file = os.path.join(theDir, include_file_name)
     inc_creator.write_includes(include_file)
@@ -105,8 +86,7 @@ def create_env(parser, args):
     else:
         yaml['spack']['include'] = [include_file_name]
 
-    with open(os.path.join(theDir, 'spack.yaml'), 'w') as f:
-        syaml.dump_config(yaml, stream=f, default_flow_style=False)
+    env.write()
 
     fpath = os.path.join(os.environ['SPACK_MANAGER'], '.tmp')
 

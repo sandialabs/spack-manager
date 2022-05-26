@@ -76,6 +76,7 @@ spack:
         env_root = str(tmpdir.join('dev'))
         os.makedirs(env_root)
 
+        assert os.path.isfile('test.yaml')
         manager('create-env', '-d', env_root, '-m', 'darwin',
                 '-y', 'test.yaml', '-s', 'amr-wind', 'nalu-wind')
 
@@ -85,4 +86,28 @@ spack:
         assert e.yaml['spack']['develop']['amr-wind']['spec'] == 'amr-wind@main'
         assert e.yaml['spack']['develop']['amr-wind']['path'] == '/tst/dir'
         assert not e.yaml['spack']['view']
-        assert e.yaml['spack']['concretization'] == 'together'
+
+
+def test_existingYamlViewIsNotOverwritten(tmpdir):
+    with tmpdir.as_cwd():
+        preset_yaml = """
+spack:
+  view: true
+  develop:
+    amr-wind:
+      spec: amr-wind@main
+      path: /tst/dir"""
+
+        with open('test.yaml', 'w') as fyaml:
+            fyaml.write(preset_yaml)
+
+        env_root = str(tmpdir.join('dev'))
+        os.makedirs(env_root)
+
+        assert os.path.isfile('test.yaml')
+
+        manager('create-env', '-d', env_root, '-m', 'darwin',
+                '-y', 'test.yaml', '-s', 'amr-wind', 'nalu-wind')
+
+        e = env.Environment(env_root)
+        assert e.yaml['spack']['view']
