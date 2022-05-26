@@ -1,7 +1,8 @@
 spack:
   include:
   - include.yaml
-  concretization: separately
+  concretizer:
+    unify: when_possible
   view: false
   specs:
     - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=gfx90a ^nalu-wind+hypre ^amr-wind~hypre'

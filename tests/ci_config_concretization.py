@@ -42,13 +42,15 @@ def run_tests(args):
             set(machine_names) - set(matrix_test_machines))
     # only test darwin on matching ci platform
     # and return early on darwin for matrix test
+
     if this_machine == 'darwin':
         if 'darwin' in machine_names:
             machine_names = ['darwin']
         else:
             return
     else:
-        machine_names.remove('darwin')
+        if 'darwin' in machine_names:
+            machine_names.remove('darwin')
 
     for name in machine_names:
         try:

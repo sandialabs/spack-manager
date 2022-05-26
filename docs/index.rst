@@ -3,11 +3,11 @@
 ===============
 
 
-`Spack-Manager <https://github.com/psakievich/spack-manager>`_ is a lite-weight wrapper around 
+`Spack-Manager <https://github.com/psakievich/spack-manager>`_ is a light-weight extension to 
 `Spack <https://github.com/spack/spack>`_ that is intended to streamline the software development and deployment cycle
 for individual software projects on specific machines.
 
-The intent of this project is to maintain as thin of a wrapper as possible around Spack, and to be pushing ideas and workflow
+The intent of this project is to maintain as thin of a buffer as possible between software packages and Spack, and to be pushing ideas and workflow
 improvements back to Spack on a regular basis to reduce the code that is maintained here.
 As such we do not try to fully mask Spack's workflow or commands from users, but rather expose them at a level appropriate for the user type.
 
