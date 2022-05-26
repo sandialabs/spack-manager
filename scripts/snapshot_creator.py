@@ -346,7 +346,7 @@ def create_snapshots(args):
     e = ev.Environment(env_path)
 
     with e.write_transaction():
-        e.yaml['spack']['concretization'] = 'separately'
+        e.yaml['spack']['concretizer'] = {'unify': 'when_possible'}
         e.write()
 
     spec_data = machine_specs[machine]
