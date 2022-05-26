@@ -114,3 +114,63 @@ jobs:
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml
+  quick-commands:
+    runs-on: ubuntu-latest
+    env:
+      SPACK_MANAGER: ${{github.workspace}}
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: [3.7]
+        os: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Test quick-commands
+      run: |
+        source start.sh
+        quick-create --name quick-create --spec exawind
+        spack env deactivate
+        quick-create-dev --name quick-create-dev --spec amr-wind@main
+        spack env deactivate
+        quick-activate ${SPACK_MANAGER}/environments/quick-create-dev
+        spack env deactivate
+  snapshot-workflow:
+    runs-on: ubuntu-latest
+    env:
+      SPACK_MANAGER: ${{github.workspace}}
+      E4S_MACHINE: true
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: [3.7]
+        os: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Test snapshot command
+      run: |
+        source start.sh
+        spack-start
+        snapshot_creator.py --stop_after concretize --name test --use_modules --link_type soft --use_machine_name
+
+
+
+        
+    
