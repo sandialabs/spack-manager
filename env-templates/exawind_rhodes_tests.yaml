@@ -1,7 +1,8 @@
 spack:
   include:
   - include.yaml
-  concretization: separately
+  concretizer:
+    unify: when_possible
   view: false
   specs:
     #- 'exawind-nightly +hypre+openfast %gcc@9.3.0'

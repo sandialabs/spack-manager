@@ -1,4 +1,6 @@
 spack:
+  concretizer:
+    unify: when_possible
   specs:
   - amr-wind+openfast ^netcdf-c+parallel-netcdf ^openfast@master
   - py-stk
