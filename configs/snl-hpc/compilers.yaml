@@ -55,7 +55,7 @@ compilers:
     target: x86_64
     modules: []
     environment: {}
-    extra_rpaths: [
+    extra_rpaths: []
 - compiler:
     environment: {}
     extra_rpaths:
