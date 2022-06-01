@@ -15,13 +15,75 @@ compilers:
 - compiler:
     environment: {}
     extra_rpaths:
-    - /opt/rh/devtoolset-8/root/usr/lib64
-    modules: []
+    - /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/lib64
+    - /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/lib
+    - /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/libexec
     flags: {}
+    modules: []
     operating_system: rhel7
     paths:
-      cc: /opt/rh/devtoolset-8/root/usr/bin/gcc
-      cxx: /opt/rh/devtoolset-8/root/usr/bin/g++
-      f77: /opt/rh/devtoolset-8/root/usr/bin/gfortran
-      fc: /opt/rh/devtoolset-8/root/usr/bin/gfortran
-    spec: gcc@8.3.1
+      cc: /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/bin/gcc
+      cxx: /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/bin/g++
+      f77: /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/bin/gfortran
+      fc: /projects/sierra/linux_rh7/SDK/compilers/gcc/7.2.0-RHEL6/bin/gfortran
+    spec: gcc@7.2.0
+    target: x86_64
+- compiler:
+    spec: gcc@10.3.0
+    paths:
+      cc: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gcc
+      cxx: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/g++
+      f77: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gfortran
+      fc: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gfortran
+    flags: {}
+    operating_system: rhel7
+    target: x86_64
+    modules: []
+    environment:
+      set:
+        http_proxy: http://proxy.sandia.gov:80/
+        https_proxy: http://proxy.sandia.gov:80/
+    extra_rpaths: []
+- compiler:
+    spec: intel@2021.1.2
+    paths:
+      cc: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/icc
+      cxx: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/icpc
+      f77: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/ifort
+      fc: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/ifort
+    flags:
+      cflags: -gcc-name=/projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gcc
+        -O2
+      cxxflags: -gxx-name=/projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/g++
+        -O2
+      fflags: -gcc-name=/projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gcc
+        -O2
+    operating_system: rhel7
+    target: x86_64
+    modules: []
+    environment:
+      prepend_path:
+        LD_LIBRARY_PATH: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/lib:/projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/lib64:/usr/lib/x86_64-redhat-linux6E/lib64
+        LIBRARY_PATH: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/lib:/projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/lib64:/usr/lib/x86_64-redhat-linux6E/lib64
+        PATH: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin
+        C_INCLUDE_PATH: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/include
+        CPLUS_INCLUDE_PATH: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/include
+        INCLUDE: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/include
+        CMAKE_PREFIX_PATH: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/
+        I_MPI_CC: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/icc
+        I_MPI_CXX: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/icpc
+        I_MPI_FC: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/intel-oneapi-compilers-2021.1.2-lufoj3442adjwmyj2djuozq5aec3ofn2/compiler/2021.1.2/linux/bin/intel64/ifort
+    extra_rpaths: []
+- compiler:
+    spec: clang@12.0.1
+    paths:
+      cc: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/llvm-12.0.1-q2emwmczahi2fqpc7nmelpn2vcjguuqt/bin/clang
+      cxx: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/llvm-12.0.1-q2emwmczahi2fqpc7nmelpn2vcjguuqt/bin/clang++
+      f77: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gfortran
+      fc: /projects/cde/dev/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.3.0-5syrderfben3b5m3soj5pg56ufredeoj/bin/gfortran
+    flags: {}
+    operating_system: rhel7
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []

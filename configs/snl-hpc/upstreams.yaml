@@ -1,0 +1,3 @@
+upstreams:
+  cde-v3:
+    install_tree: /projects/cde/dev/v3/develop/tlcc2/spack/opt/spack/
