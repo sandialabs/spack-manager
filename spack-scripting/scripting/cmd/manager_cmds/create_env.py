@@ -65,7 +65,8 @@ def create_env(parser, args):
         machine = find_machine(verbose=False)
 
     if args.spec:
-        for s in args.spec:
+        spec_list = spack.cmd.parse_specs(args.spec)
+        for s in spec_list:
             env.add(s)
 
     inc_creator = IncludesCreator()
