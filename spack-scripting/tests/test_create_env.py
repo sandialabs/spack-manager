@@ -111,3 +111,9 @@ spack:
 
         e = env.Environment(env_root)
         assert e.yaml['spack']['view']
+
+
+def test_specs_can_have_spaces(tmpdir):
+    with tmpdir.as_cwd():
+        manager('create-env',
+                '-s', 'nalu-wind', 'build_type=Release', '%gcc')

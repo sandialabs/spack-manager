@@ -143,6 +143,7 @@ jobs:
         spack env deactivate
         quick-activate ${SPACK_MANAGER}/environments/quick-create-dev
         spack env deactivate
+        quick-create --name spec-with-spaces --spec exawind+hypre build_type=Debug ^amr-wind
   snapshot-workflow:
     runs-on: ubuntu-latest
     env:
