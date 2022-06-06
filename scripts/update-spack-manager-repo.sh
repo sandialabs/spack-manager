@@ -13,4 +13,4 @@
 printf "Job is running on ${HOSTNAME}\n"
 printf "\nRun at $(date)\n"
 printf "\nUpdating spack-manager repo...\n"
-(set -x; pwd && git fetch --all && git reset --hard origin/main && git clean -df && git submodule update && git status -uno) 2>&1
+(set -x; pwd; git fetch --all; git reset --hard origin/main; git clean -df; git submodule update; git status -uno) 2>&1
