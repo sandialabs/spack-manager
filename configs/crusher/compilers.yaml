@@ -1,23 +1,6 @@
 compilers:
-#  - compiler:
-#      spec: gcc@9.3.0
-#      paths:
-#        cc: cc
-#        cxx: CC
-#        f77: ftn
-#        fc: ftn
-#      flags: {}
-#      operating_system: sles15
-#      target: any
-#      modules:
-#      - PrgEnv-gnu/8.2.0
-#      - gcc/9.3.0
-#      - libfabric
-#      - craype-x86-trento
-#      environment: {}
-#      extra_rpaths: []
   - compiler:
-      spec: clang@13.0.0
+      spec: clang@14.0.0
       paths:
         cc: cc
         cxx: CC
@@ -27,26 +10,9 @@ compilers:
       operating_system: sles15
       target: any
       modules:
-      - PrgEnv-amd/8.2.0
-      - rocm/5.0.2
+      - PrgEnv-amd/8.3.3
+      - rocm/5.1.0
       - libfabric
       - craype-x86-trento
       environment: {}
       extra_rpaths: []
-#  - compiler:
-#      spec: cce@13.0.0
-#      paths:
-#        cc: cc
-#        cxx: CC
-#        f77: ftn
-#        fc: ftn
-#      flags: {}
-#      operating_system: sles15
-#      target: any
-#      modules:
-#      - PrgEnv-cray/8.2.0
-#      - cce/13.0.0
-#      - libfabric
-#      - craype-x86-trento
-#      environment: {}
-#      extra_rpaths: []

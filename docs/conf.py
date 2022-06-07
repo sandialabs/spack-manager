@@ -7,7 +7,6 @@ copyright = u'Phil Sakievich'
 author = u'Phil Sakievich'
 version = u'0.1'
 release = u'0.1'
-language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 todo_include_todos = False
