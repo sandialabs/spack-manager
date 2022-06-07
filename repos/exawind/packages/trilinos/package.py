@@ -59,6 +59,8 @@ class Trilinos(bTrilinos):
 
         if '+stk' in spec:
             options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
+            options.append('-DSEACAS_ENABLE_SEACASSupes=OFF')
+            options.append('-DTrilinos_ENABLE_SEACASSupes=OFF')
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified
