@@ -5,9 +5,9 @@ spack:
     unify: when_possible
   view: false
   specs:
-    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^trilinos+uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 ^trilinos+uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^trilinos+uvm'
-    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^trilinos~uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 ^trilinos~uvm'
-    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^trilinos~uvm'
+    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^trilinos@develop+uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 ^trilinos@develop+uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^trilinos@develop+uvm'
+    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda cuda_arch=70 %gcc@9.3.0 ^trilinos@develop~uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 ^trilinos@develop~uvm'
+    - 'nalu-wind-nightly+snl +cuda cuda_arch=70 %gcc@9.3.0 build_type=Debug ^trilinos@develop~uvm'
