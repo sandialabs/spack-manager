@@ -95,6 +95,10 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if spec.satisfies('^amr-wind+hdf5'):
             args.append(define('H5Z_ZFP_USE_STATIC_LIBS', True))
 
+        if spec.satisfies('^amr-wind+ascent'):
+            # Necessary on Crusher to successfully find OpenMP
+            args.append(define('CMAKE_EXE_LINKER_FLAGS', self.compiler.openmp_flag))
+
         return args
 
     def setup_build_environment(self, env):
