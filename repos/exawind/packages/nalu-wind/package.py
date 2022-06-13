@@ -65,8 +65,9 @@ class NaluWind(bNaluWind, ROCmPackage):
             cmake_options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
 
         if spec.satisfies('+tests') or self.run_tests or spec.satisfies('dev_path=*'):
-            saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'nalu-wind')
-            current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'nalu-wind')
+            spack_manager_local_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds')
+            saved_golds = os.path.join(os.getenv('SPACK_MANAGER_GOLDS', default=spack_manager_local_golds), 'tmp', 'nalu-wind')
+            current_golds = os.path.join(spack_manager_local_golds, 'current', 'nalu-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
             cmake_options.append(define('NALU_WIND_SAVE_GOLDS', True))

@@ -30,6 +30,13 @@ else
     printf "\nSPACK_MANAGER set to ${SPACK_MANAGER}\n"
 fi
 
+if [[ -z ${SPACK_MANAGER_GOLDS} ]]; then
+    printf "\nSPACK_MANAGER_GOLDS not set so setting it to ${SPACK_MANAGER}/golds\n"
+    cmd "export SPACK_MANAGER_GOLDS=${SPACK_MANAGER}/golds"
+else
+    printf "\nSPACK_MANAGER_GOLDS set to ${SPACK_MANAGER_GOLDS}\n"
+fi
+
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
@@ -57,12 +64,12 @@ if [[ -f "${ENV_SCRIPT}" ]]; then
 fi
 
 printf "\nSetting up gold files directories...\n"
-cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/amr-wind"
-cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/amr-wind"
-cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/amr-wind"
-cmd "rm -rf ${SPACK_MANAGER}/golds/tmp/nalu-wind"
-cmd "mkdir -p ${SPACK_MANAGER}/golds/tmp/nalu-wind"
-cmd "mkdir -p ${SPACK_MANAGER}/golds/archived/nalu-wind"
+cmd "rm -rf ${SPACK_MANAGER_GOLDS}/tmp/amr-wind"
+cmd "mkdir -p ${SPACK_MANAGER_GOLDS}/tmp/amr-wind"
+cmd "mkdir -p ${SPACK_MANAGER_GOLDS}/archived/amr-wind"
+cmd "rm -rf ${SPACK_MANAGER_GOLDS}/tmp/nalu-wind"
+cmd "mkdir -p ${SPACK_MANAGER_GOLDS}/tmp/nalu-wind"
+cmd "mkdir -p ${SPACK_MANAGER_GOLDS}/archived/nalu-wind"
 
 printf "\nSetting up Spack environoment...\n"
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
@@ -111,8 +118,8 @@ printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
-cmd "tar -czf ${SPACK_MANAGER}/golds/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/amr-wind ."
-cmd "tar -czf ${SPACK_MANAGER}/golds/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER}/golds/tmp/nalu-wind ."
+cmd "tar -czf ${SPACK_MANAGER_GOLDS}/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER_GOLDS}/tmp/amr-wind ."
+cmd "tar -czf ${SPACK_MANAGER_GOLDS}/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER_GOLDS}/tmp/nalu-wind ."
 
 #STAGE_DIR=$(spack location -S)
 #if [ ! -z "${STAGE_DIR}" ]; then
