@@ -1,4 +1,10 @@
 packages:
+  amr-wind:
+    variants: +ascent
+  ascent:
+    variants: ~fortran
+  conduit:
+    variants: ~fortran~hdf5_compat
   boost:
     version: [1.76.0]
     variants: cxxstd=14
