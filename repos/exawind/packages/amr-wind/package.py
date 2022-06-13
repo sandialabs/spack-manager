@@ -80,8 +80,9 @@ class AmrWind(bAmrWind):
             cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
 
         if '+tests' in spec:
-            saved_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'tmp', 'amr-wind')
-            current_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds', 'current', 'amr-wind')
+            spack_manager_local_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds')
+            saved_golds = os.path.join(os.getenv('SPACK_MANAGER_GOLDS_DIR', default=spack_manager_local_golds), 'tmp', 'amr-wind')
+            current_golds = os.path.join(spack_manager_local_golds, 'current', 'amr-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
             cmake_options.append(define('AMR_WIND_TEST_WITH_FCOMPARE', True))
