@@ -181,6 +181,8 @@ spack install
 # ....
 # re-build
 spack install
+# go to build directory
+spack cd -b nalu-wind
 # run all the overset regression tests in nalu-wind
 spack build-env nalu-wind ctest -R overset
 ```
