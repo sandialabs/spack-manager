@@ -92,7 +92,7 @@ printf "\nActivating environment...\n"
 cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
 
 printf "\nConcretizing environment...\n"
-cmd "spack concretize -f"
+cmd "spack concretize -f --fresh"
 
 # Develop spec stuff that isn't working as desired
 #DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly

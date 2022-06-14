@@ -5,6 +5,6 @@ spack:
     unify: when_possible
   view: false
   specs:
-    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast %gcc@9.3.0 ^trilinos@develop'
-    - 'nalu-wind-nightly+snl %gcc@9.3.0 ^trilinos@develop'
-    - 'nalu-wind-nightly+snl %gcc@9.3.0 build_type=Debug ^trilinos@develop'
+    - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast %gcc@9.3.0 build_type=Release ^trilinos@develop'
+    - 'nalu-wind-nightly+snl ~fftw~tioga~hypre~openfast %gcc@9.3.0 build_type=Release ^trilinos@develop'
+    - 'nalu-wind-nightly+snl ~fftw~tioga~hypre~openfast %gcc@9.3.0 build_type=Debug ^trilinos@develop'
