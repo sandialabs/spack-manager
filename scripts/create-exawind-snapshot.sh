@@ -38,6 +38,7 @@ cmd "export SPACK_MANAGER_CLEAN_HYPRE=true"
 
 printf "\nRunning snapshot creator...\n"
 if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
+  cmd "unset SPACK_MANAGER_CLEAN_HYPRE"
   cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize --link_type soft"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
   cmd "unset SPACK_MANAGER_CLEAN_HYPRE"
