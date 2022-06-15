@@ -119,6 +119,8 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
                 create_external_detected_spec(env, spec)]
 
     for spec in env.all_specs():
+        if spec.external:
+            continue
         if black_list:
             if spec.name not in black_list:
                 update_dictionary(env, spec)
