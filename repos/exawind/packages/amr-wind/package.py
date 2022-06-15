@@ -81,8 +81,9 @@ class AmrWind(bAmrWind):
 
         if '+tests' in spec:
             spack_manager_local_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds')
-            saved_golds = os.path.join(os.getenv('SPACK_MANAGER_GOLDS_DIR', default=spack_manager_local_golds), 'tmp', 'amr-wind')
-            current_golds = os.path.join(spack_manager_local_golds, 'current', 'amr-wind')
+            spack_manager_golds_dir = os.getenv('SPACK_MANAGER_GOLDS_DIR', default=spack_manager_local_golds)
+            saved_golds = os.path.join(spack_manager_golds_dir, 'tmp', 'amr-wind')
+            current_golds = os.path.join(spack_manager_golds_dir, 'current', 'amr-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
             cmake_options.append(define('AMR_WIND_TEST_WITH_FCOMPARE', True))

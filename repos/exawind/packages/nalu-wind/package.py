@@ -66,8 +66,9 @@ class NaluWind(bNaluWind, ROCmPackage):
 
         if spec.satisfies('+tests') or self.run_tests or spec.satisfies('dev_path=*'):
             spack_manager_local_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds')
-            saved_golds = os.path.join(os.getenv('SPACK_MANAGER_GOLDS_DIR', default=spack_manager_local_golds), 'tmp', 'nalu-wind')
-            current_golds = os.path.join(spack_manager_local_golds, 'current', 'nalu-wind')
+            spack_manager_golds_dir = os.getenv('SPACK_MANAGER_GOLDS_DIR', default=spack_manager_local_golds)
+            saved_golds = os.path.join(spack_manager_golds_dir, 'tmp', 'nalu-wind')
+            current_golds = os.path.join(spack_manager_golds_dir, 'current', 'nalu-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
             cmake_options.append(define('NALU_WIND_SAVE_GOLDS', True))
