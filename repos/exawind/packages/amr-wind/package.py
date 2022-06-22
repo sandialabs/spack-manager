@@ -32,6 +32,7 @@ class AmrWind(bAmrWind):
     depends_on('hdf5~mpi', when='+hdf5~mpi')
     depends_on('hdf5+mpi', when='+hdf5+mpi')
     depends_on('h5z-zfp', when='+hdf5')
+    depends_on('zfp', when='+hdf5')
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:
