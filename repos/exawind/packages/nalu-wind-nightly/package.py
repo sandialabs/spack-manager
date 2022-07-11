@@ -60,13 +60,14 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     def ctest_args(self):
         spec = self.spec
         define = CMakePackage.define
-        machine = find_machine(verbose=False, full_machine_name=True)
+        machine = find_machine(verbose=False)
+        full_machine = find_machine(verbose=False, full_machine_name=True)
 
         if spec.variants['host_name'].value == 'default':
-            if machine == 'NOT-FOUND':
+            if full_machine == 'NOT-FOUND':
                 spec.variants['host_name'].value = spec.format('{architecture}')
             else:
-                spec.variants['host_name'].value = machine
+                spec.variants['host_name'].value = full_machine
 
         if spec.variants['extra_name'].value == 'default':
             spec.variants['extra_name'].value = self.dashboard_build_name()
@@ -78,7 +79,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         cmake_options.remove('Unix Makefiles') # The space causes problems for ctest
         if '%intel' in spec and '-DBoost_NO_BOOST_CMAKE=ON' in cmake_options:
             cmake_options.remove('-DBoost_NO_BOOST_CMAKE=ON') # Avoid dashboard warning
-        if machine == 'eagle.hpc.nrel.gov':
+        if full_machine == 'eagle.hpc.nrel.gov':
             cmake_options.append(define('TEST_ABS_TOL', '1e-10'))
             cmake_options.append(define('TEST_REL_TOL', '1e-8'))
 
@@ -87,7 +88,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
             define('NALU_DIR', self.stage.source_path),
             define('BUILD_DIR', self.build_directory)])
-        if machine == 'eagle.hpc.nrel.gov':
+        if full_machine == 'eagle.hpc.nrel.gov' or machine == 'ascicgpu':
             ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
             ctest_options.append(define('UNSET_TMPDIR_VAR', True))
         ctest_options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
