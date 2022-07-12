@@ -56,7 +56,7 @@ def create_env(parser, args):
                 and 'concretizer' in yaml['spack']
                 and 'unify' in yaml['spack']['concretizer'])
 
-    if not args.yaml or _unify_already_set(yaml):
+    if not args.yaml or not _unify_already_set(yaml):
         yaml['spack']['concretizer'] = {'unify': True}
         with env.write_transaction():
             env.write()

@@ -123,4 +123,20 @@ spack:
 def test_specs_can_have_spaces(tmpdir):
     with tmpdir.as_cwd():
         manager('create-env',
-                '-s', 'nalu-wind', 'build_type=Release', '%gcc')
+                '-s', 'nalu-wind ', ' build_type=Release', '%gcc')
+
+
+def test_unify_in_yaml_preserved(tmpdir):
+    with tmpdir.as_cwd():
+        preset_yaml = """
+spack:
+    specs: [amr-wind, nalu-wind]
+    concretizer:
+        unify: when_possible"""
+
+        with open('template.yaml', 'w') as f:
+            f.write(preset_yaml)
+
+        manager('create-env', '-y', 'template.yaml')
+        e = env.Environment(tmpdir.strpath)
+        assert 'when_possible' == e.yaml['spack']['concretizer']['unify']
