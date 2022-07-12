@@ -113,7 +113,7 @@ cmd "spack clean -s || true"
 
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
-time (for i in {1..4}; do spack install --keep-stage & done; wait)
+time (spack install --keep-stage)
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
