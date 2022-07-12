@@ -13,16 +13,23 @@ import pytest
 
 import spack.environment as env
 import spack.main
+import spack.util.spack_yaml as syaml
 
 manager = spack.main.SpackCommand('manager')
 envcmd = spack.main.SpackCommand('env')
 
 
-def test_basicDirectoryProperties():
-    with TemporaryDirectory() as tmpdir:
-        manager('create-env', '-d', tmpdir, '-m', 'darwin', '-s', 'binutils')
-        assert os.path.isfile(os.path.join(tmpdir, 'spack.yaml'))
-        assert os.path.isfile(os.path.join(tmpdir, 'include.yaml'))
+def test_basicDirectoryProperties(tmpdir):
+    with tmpdir.as_cwd():
+        manager('create-env', '-d', tmpdir.strpath,
+                '-m', 'darwin', '-s', 'binutils')
+        assert os.path.isfile('spack.yaml')
+        assert os.path.isfile('include.yaml')
+
+        with open('spack.yaml', 'r') as f:
+            yaml = syaml.load(f)
+            assert 'concretizer' in yaml['spack']
+            assert yaml['spack']['concretizer']['unify'] is True
 
 
 def test_failsWithAnUnregisteredMachine():
@@ -116,4 +123,20 @@ spack:
 def test_specs_can_have_spaces(tmpdir):
     with tmpdir.as_cwd():
         manager('create-env',
-                '-s', 'nalu-wind', 'build_type=Release', '%gcc')
+                '-s', 'nalu-wind ', ' build_type=Release', '%gcc')
+
+
+def test_unify_in_yaml_preserved(tmpdir):
+    with tmpdir.as_cwd():
+        preset_yaml = """
+spack:
+    specs: [amr-wind, nalu-wind]
+    concretizer:
+        unify: when_possible"""
+
+        with open('template.yaml', 'w') as f:
+            f.write(preset_yaml)
+
+        manager('create-env', '-y', 'template.yaml')
+        e = env.Environment(tmpdir.strpath)
+        assert 'when_possible' == e.yaml['spack']['concretizer']['unify']
