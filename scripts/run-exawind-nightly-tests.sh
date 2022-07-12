@@ -113,7 +113,11 @@ cmd "spack clean -s || true"
 
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
-time (spack install --keep-stage)
+if [ "${SPACK_MANAGER_MACHINE}" == 'ascicgpu' ]; then
+  time (spack install --keep-stage)
+else
+  time (for i in {1..4}; do spack install --keep-stage & done; wait)
+fi
 printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
