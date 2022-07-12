@@ -18,7 +18,6 @@ from manager_cmds.includes_creator import IncludesCreator
 
 import spack
 import spack.cmd
-import spack.cmd.env
 import spack.environment.environment as environment
 import spack.util.spack_yaml as syaml
 
@@ -39,6 +38,7 @@ def create_env(parser, args):
     else:
         theDir = os.getcwd()
 
+    has_view = False
     if args.yaml:
         assert(os.path.isfile(args.yaml))
         with open(args.yaml, 'r') as fyaml:
@@ -47,15 +47,19 @@ def create_env(parser, args):
             user_view = environment.config_dict(user_yaml).get('view')
             if user_view:
                 has_view = True
-            else:
-                has_view = False
-            env = spack.cmd.env._env_create(
-                theDir, init_file=args.yaml, dir=True, with_view=has_view,
-                keep_relative=True)
-    else:
-        env = spack.cmd.env._env_create(
-            theDir, init_file=None, dir=True, with_view=False, keep_relative=True)
+    env = environment.Environment(theDir, init_file=args.yaml,
+                                  with_view=has_view, keep_relative=True)
     yaml = env.yaml
+
+    def _unify_already_set(yaml):
+        return ('spack' in yaml
+                and 'concretizer' in yaml['spack']
+                and 'unify' in yaml['spack']['concretizer'])
+
+    if not args.yaml or _unify_already_set(yaml):
+        yaml['spack']['concretizer'] = {'unify': True}
+        with env.write_transaction():
+            env.write()
 
     if args.machine is not None:
         machine = args.machine

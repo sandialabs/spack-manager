@@ -13,16 +13,23 @@ import pytest
 
 import spack.environment as env
 import spack.main
+import spack.util.spack_yaml as syaml
 
 manager = spack.main.SpackCommand('manager')
 envcmd = spack.main.SpackCommand('env')
 
 
-def test_basicDirectoryProperties():
-    with TemporaryDirectory() as tmpdir:
-        manager('create-env', '-d', tmpdir, '-m', 'darwin', '-s', 'binutils')
-        assert os.path.isfile(os.path.join(tmpdir, 'spack.yaml'))
-        assert os.path.isfile(os.path.join(tmpdir, 'include.yaml'))
+def test_basicDirectoryProperties(tmpdir):
+    with tmpdir.as_cwd():
+        manager('create-env', '-d', tmpdir.strpath,
+                '-m', 'darwin', '-s', 'binutils')
+        assert os.path.isfile('spack.yaml')
+        assert os.path.isfile('include.yaml')
+
+        with open('spack.yaml', 'r') as f:
+            yaml = syaml.load(f)
+            assert 'concretizer' in yaml['spack']
+            assert yaml['spack']['concretizer']['unify'] is True
 
 
 def test_failsWithAnUnregisteredMachine():
