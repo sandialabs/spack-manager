@@ -8,6 +8,8 @@
 from spack.pkg.builtin.openfast import Openfast as bOpenfast
 
 class Openfast(bOpenfast):
+    variant('netcdf', default=False, description='Use netcdf')
+    depends_on('netcdf-c', when='+netcdf')
     # Avoid using HDF5's installed CMake config with hdf5-shared library names
     def cmake_args(self):
         options = super(Openfast, self).cmake_args()
