@@ -3,13 +3,7 @@ packages:
     permissions:
       read: group
       group: wg-sierra-users
-    compiler:
-    - intel@19.0.3.199
-    - gcc@8.3.1
     providers:
-      mpi:
-      - mpich
-      - openmpi
       blas:
       - netlib-lapack
       lapack:

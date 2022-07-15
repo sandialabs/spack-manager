@@ -26,6 +26,11 @@ if [[ ! -x $(which python3) ]]; then
   echo "You may use spack, but spack-manager specific commands will fail."
 fi
 
+# convenience function for getting to the spack-manager directory
+function go-to-sm(){
+  cd ${SPACK_MANAGER}
+}
+
 # function to initialize spack-manager's spack instance
 function spack-start() {
   source $SPACK_MANAGER/scripts/spack_start.sh
@@ -45,13 +50,13 @@ function quick-create() {
     echo "*************************************************************
 HELP MESSAGE:
 quick-create sets up a basic spack environment
-    
+
 The next typical steps after running this command are to add specs
 and calling spack manager develop to clone dev specs, adding externals
 etc.
 
 The base command and it's help are echoed below:
-    
+
 "
     cmd "spack manager create-env $@"
     echo "*************************************************************"
@@ -79,9 +84,9 @@ from the default repos
 
 The next typical steps after running this command are to add externals if
 you want them, or run spack install.
-    
+
 The base command and it's help are echoed below:
-    
+
 "
     cmd "spack manager create-dev-env $@"
     echo "*************************************************************"
@@ -109,7 +114,7 @@ function quick-develop() {
     echo "*************************************************************
 HELP MESSAGE:
 quick-develop sets up a developer environment and installs it
-    
+
 This command is designed to require minimal arguments and simple setup
 with the caveat of accepting all the defaults for:
 
@@ -117,7 +122,7 @@ with the caveat of accepting all the defaults for:
 - latest external snapshot with the default compilers/configurations
 
 The base command and it's help are echoed below:
-    
+
 "
     cmd "spack manager create-dev-env $@"
     echo "*************************************************************"
