@@ -26,7 +26,7 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('mpi')
     depends_on('hypre+mpi@2.20.0:')
     depends_on('yaml-cpp@0.6.2:')
-    depends_on('umpire', when='+umpire')
+    depends_on('hypre+umpire', when='+umpire')
     for arch in CudaPackage.cuda_arch_values:
         depends_on('hypre+cuda cuda_arch=%s @2.20.0:' % arch,
                    when='+cuda cuda_arch=%s' % arch)
