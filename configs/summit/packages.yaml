@@ -148,3 +148,11 @@ packages:
       - spec: "boost@1.76.0%gcc"
         modules:
           - boost/1.76.0
+  umpire:
+    version: [6.0.0]
+    buildable: false
+    externals:
+      - spec: "umpire@6.0.0-no_omp-shared%gcc"
+        prefix: "/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-10.2.0/umpire-6.0.0-5qtgtts7nz2zunae7w7eeqgiqclb6uuv"
+        modules:
+          - umpire/6.0.0-no_omp-shared
