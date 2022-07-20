@@ -2,7 +2,10 @@
 
 
 ## I'm getting lots of weird Spack errors, what should I do?
-If you have multiple spack instances or have recently updated spack things can get a little mangled.
+If you have multiple Spack instances or have recently updated spack things can get a little mangled.
+For example if you have used Spack in the past or have more than one instance then both pull configs
+from the `~/.spack` directory. 
+This is a common source of user issues.
 Please try the `sm-clean` function (available after `source $SPACK_MANAGER/start.sh`)  and see if it solves your issue.
 If this doesn't work then raise/create an issue on slack/github and we will help you figure it out.
 
