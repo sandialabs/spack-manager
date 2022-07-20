@@ -2,8 +2,9 @@
 
 
 ## I'm getting lots of weird Spack errors, what should I do?
-If you have another Spack instance you've used in the past conflicts can occur due to the `~/.spack` directory.
-The first step we recommend is deleting this directory and trying again.
+If you have multiple spack instances or have recently updated spack things can get a little mangled.
+Please try the `sm-clean` function (available after `source $SPACK_MANAGER/start.sh`)  and see if it solves your issue.
+If this doesn't work then raise/create an issue on slack/github and we will help you figure it out.
 
 ## What is Clingo and why is Spack saying it is __bootstrapping__ it?
 
