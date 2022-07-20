@@ -27,17 +27,29 @@ if [[ ! -x $(which python3) ]]; then
 fi
 
 # convenience function for getting to the spack-manager directory
-function go-to-sm(){
+function cd-sm(){
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Convenience function for navigating to the spack-manager directory"
+    return
+  fi
   cd ${SPACK_MANAGER}
 }
 
 # function to initialize spack-manager's spack instance
 function spack-start() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "This function loads spack into your active shell"
+    return
+  fi
   source $SPACK_MANAGER/scripts/spack_start.sh
 }
 
 # function to quickly activate an environment
 function quick-activate() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "This function loads spack and activates the spack environment whose directory you provide as an argument"
+    return
+  fi
   cmd "spack-start"
   cmd "spack env activate -p -d $1"
 }
@@ -153,6 +165,7 @@ The base command and it's help are echoed below:
 function remove-spack-prompt() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
+    return
   fi
   if [[ -n "${SPACK_OLD_PS1}" ]]; then
     PS1=${SPACK_OLD_PS1}
@@ -163,7 +176,8 @@ function remove-spack-prompt() {
 # function for diving into the build environment from a spack build
 function build-env-dive() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    echo "This command willsetup and dive into the build environment of the spec provided in a new subshell, and then move into the build directory."
+    echo "This command will setup and dive into the build environment of the spec provided in a new subshell, and then move into the build directory."
+    return
   fi
   if [[ -z ${SPACK_ENV} ]]; then
     echo "You must have an active environment to use build-env-dive."
@@ -171,4 +185,18 @@ function build-env-dive() {
   fi
   cmd "spack build-env --dump ${SPACK_MANAGER}/.tmp/spack-build-env.txt $*"
   cmd "bash --rcfile <(echo '. ${SPACK_MANAGER}/.tmp/spack-build-env.txt; spack cd -b $*')"
+}
+
+# function for cleaning spack-manager and spack directories
+function sm-clean(){
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "This command will clean out spack and spack-manager caches and other problematic directories"
+    return
+  fi
+  echo 'Remove user cache of configs:'
+  cmd "rm -rf ~/.spack"
+  echo 'Use spack's native clean system:
+  cmd "spack clean --all"
+  echo 'Cleaning out pycache from spack-manager repos:'
+  cmd "find ${SPACK_MANAGER}/repos -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete"
 }
