@@ -2,7 +2,7 @@ packages:
   all:
     target: [ppc64le]
     compiler:
-      - gcc@9.3.0
+      - gcc@10.2.0
     providers:
       mpi:
         - spectrum-mpi@10.4
@@ -10,9 +10,9 @@ packages:
     version: [10.4]
     buildable: false
     externals:
-      - spec: "spectrum-mpi@10.4%gcc@9.3.0"
+      - spec: "spectrum-mpi@10.4%gcc@10.2.0"
         modules:
-          - gcc/9.3.0
+          - gcc/10.2.0
           - spectrum-mpi/10.4.0.3-20210112
   cuda:
     version: [11.4.2]
