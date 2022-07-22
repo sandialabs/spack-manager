@@ -91,6 +91,14 @@ packages:
         prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/openblas-0.3.17-54x7v5e4i6yxqs6j5nebrbztpy4lftj4
         modules:
           - openblas/0.3.17
+  umpire:
+    version: [6.0.0]
+    buildable: false
+    externals:
+      - spec: umpire@6.0.0
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/cce-14.0.0/umpire-6.0.0-k6euxcfvl642cbaixqy4g2yircaobnot
+        modules:
+          - umpire/6.0.0
   all:
     compiler:
       - clang@14.0.0
