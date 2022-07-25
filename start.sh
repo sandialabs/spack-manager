@@ -70,11 +70,11 @@ etc.
 The base command and it's help are echoed below:
 
 "
-    cmd "spack manager create_env $@"
+    cmd "spack manager create-env $@"
     echo "*************************************************************"
     return
   fi
-  cmd "spack manager create_env $@"
+  cmd "spack manager create-env $@"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick_create prematurely\n"
     return 1
@@ -83,7 +83,7 @@ The base command and it's help are echoed below:
   cmd "spack env activate --dir ${EPATH} --prompt"
 }
 
-# same as quick_create but calls create_env-dev instead
+# same as quick_create but calls create_env_dev instead
 # can be used to add externals
 function quick_create_dev() {
   cmd "spack_start"
