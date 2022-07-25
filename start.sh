@@ -100,11 +100,11 @@ you want them, or run spack install.
 The base command and it's help are echoed below:
 
 "
-    cmd "spack manager create_dev_env $@"
+    cmd "spack manager create-dev-env $@"
     echo "*************************************************************"
     return
   fi
-  cmd "spack manager create_dev_env $@"
+  cmd "spack manager create-dev-env $@"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick_create prematurely\n"
     return 1
@@ -136,11 +136,11 @@ with the caveat of accepting all the defaults for:
 The base command and it's help are echoed below:
 
 "
-    cmd "spack manager create_dev_env $@"
+    cmd "spack manager create-dev-env $@"
     echo "*************************************************************"
     return
   fi
-  cmd "spack manager create_dev_env $*"
+  cmd "spack manager create-dev-env $*"
   if [[ $? != 0 ]]; then
     printf "\nERROR: Exiting quick_develop prematurely\n"
     return 1
