@@ -26,7 +26,7 @@ else
 fi
 
 printf "\nActivating Spack-Manager...\n"
-cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
+cmd "source ${SPACK_MANAGER}/start.sh && spack_start"
 
 printf "\nMachine detected as: ${SPACK_MANAGER_MACHINE}\n"
 

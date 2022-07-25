@@ -27,7 +27,7 @@ if [[ ! -x $(which python3) ]]; then
 fi
 
 # convenience function for getting to the spack-manager directory
-function cd-sm(){
+function cd_sm() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "Convenience function for navigating to the spack-manager directory"
     return
@@ -36,32 +36,32 @@ function cd-sm(){
 }
 
 # function to initialize spack-manager's spack instance
-function spack-start() {
+function spack_start() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This function loads spack into your active shell"
     return
   fi
-  source $SPACK_MANAGER/scripts/spack_start.sh
+  source ${SPACK_MANAGER}/scripts/spack_start.sh
 }
 
 # function to quickly activate an environment
-function quick-activate() {
+function quick_activate() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This function loads spack and activates the spack environment whose directory you provide as an argument"
     return
   fi
-  cmd "spack-start"
+  cmd "spack_start"
   cmd "spack env activate -p -d $1"
 }
 
 # convenience function for quickly creating an environment
 # and activating it in the current shell
-function quick-create() {
-  cmd "spack-start"
+function quick_create() {
+  cmd "spack_start"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
-quick-create sets up a basic spack environment
+quick_create sets up a basic spack environment
 
 The next typical steps after running this command are to add specs
 and calling spack manager develop to clone dev specs, adding externals
@@ -70,27 +70,27 @@ etc.
 The base command and it's help are echoed below:
 
 "
-    cmd "spack manager create-env $@"
+    cmd "spack manager create_env $@"
     echo "*************************************************************"
     return
   fi
-  cmd "spack manager create-env $@"
+  cmd "spack manager create_env $@"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-create prematurely\n"
+    printf "\nERROR: Exiting quick_create prematurely\n"
     return 1
   fi
-  EPATH=$(cat $SPACK_MANAGER/.tmp/created_env_path.txt)
+  EPATH=$(cat ${SPACK_MANAGER}/.tmp/created_env_path.txt)
   cmd "spack env activate --dir ${EPATH} --prompt"
 }
 
-# same as quick-create but calls create-env-dev instead
+# same as quick_create but calls create_env-dev instead
 # can be used to add externals
-function quick-create-dev() {
-  cmd "spack-start"
+function quick_create_dev() {
+  cmd "spack_start"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
-quick-create-dev sets up a developer environment
+quick_create_dev sets up a developer environment
 where all specs are develop specs that will be automatically cloned
 from the default repos
 
@@ -100,32 +100,32 @@ you want them, or run spack install.
 The base command and it's help are echoed below:
 
 "
-    cmd "spack manager create-dev-env $@"
+    cmd "spack manager create_dev_env $@"
     echo "*************************************************************"
     return
   fi
-  cmd "spack manager create-dev-env $@"
+  cmd "spack manager create_dev_env $@"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-create prematurely\n"
+    printf "\nERROR: Exiting quick_create prematurely\n"
     return 1
   fi
-  EPATH=$(cat $SPACK_MANAGER/.tmp/created_env_path.txt)
+  EPATH=$(cat ${SPACK_MANAGER}/.tmp/created_env_path.txt)
   cmd "spack env activate --dir ${EPATH} --prompt"
 }
 
 # function to create, activate, concretize and attempt to install a develop environment all in one step
-function quick-develop() {
-  cmd "spack-start"
+function quick_develop() {
+  cmd "spack_start"
   # since we want this to run in the active shell
   # we mush manually return instead of exiting with set -e
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-develop prematurely\n"
+    printf "\nERROR: Exiting quick_develop prematurely\n"
     return 1
   fi
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
-quick-develop sets up a developer environment and installs it
+quick_develop sets up a developer environment and installs it
 
 This command is designed to require minimal arguments and simple setup
 with the caveat of accepting all the defaults for:
@@ -136,33 +136,33 @@ with the caveat of accepting all the defaults for:
 The base command and it's help are echoed below:
 
 "
-    cmd "spack manager create-dev-env $@"
+    cmd "spack manager create_dev_env $@"
     echo "*************************************************************"
     return
   fi
-  cmd "spack manager create-dev-env $*"
+  cmd "spack manager create_dev_env $*"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-develop prematurely\n"
+    printf "\nERROR: Exiting quick_develop prematurely\n"
     return 1
   fi
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     return
   fi
-  EPATH=$(cat $SPACK_MANAGER/.tmp/created_env_path.txt)
+  EPATH=$(cat ${SPACK_MANAGER}/.tmp/created_env_path.txt)
   cmd "spack env activate --dir ${EPATH} --prompt"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-develop prematurely\n"
+    printf "\nERROR: Exiting quick_develop prematurely\n"
     return 1
   fi
   cmd "spack manager external --latest"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick-develop prematurely\n"
+    printf "\nERROR: Exiting quick_develop prematurely\n"
     return 1
   fi
 }
 
 # function to remove spack prompt from the shell
-function remove-spack-prompt() {
+function remove_spack_prompt() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
     return
@@ -174,13 +174,13 @@ function remove-spack-prompt() {
 }
 
 # function for diving into the build environment from a spack build
-function build-env-dive() {
+function build_env_dive() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command will setup and dive into the build environment of the spec provided in a new subshell, and then move into the build directory."
     return
   fi
   if [[ -z ${SPACK_ENV} ]]; then
-    echo "You must have an active environment to use build-env-dive."
+    echo "You must have an active environment to use build_env_dive."
     return 1
   fi
   cmd "spack build-env --dump ${SPACK_MANAGER}/.tmp/spack-build-env.txt $*"
@@ -188,7 +188,7 @@ function build-env-dive() {
 }
 
 # function for cleaning spack-manager and spack directories
-function sm-clean(){
+function sm_clean(){
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command will clean out spack and spack-manager caches and other problematic directories"
     return
