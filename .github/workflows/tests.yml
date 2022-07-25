@@ -139,7 +139,7 @@ jobs:
         source start.sh
         quick_create --name quick_create --spec exawind
         spack env deactivate
-        quick_create-dev --name quick_create_dev --spec amr-wind@main
+        quick_create_dev --name quick_create_dev --spec amr-wind@main
         spack env deactivate
         quick_activate ${SPACK_MANAGER}/environments/quick_create_dev
         spack env deactivate
