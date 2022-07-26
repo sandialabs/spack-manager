@@ -200,3 +200,13 @@ function sm_clean(){
   echo "Cleaning out pycache from spack-manager repos:"
   cmd "find ${SPACK_MANAGER}/repos -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete"
 }
+
+alias cd-sm='cd_sm'
+alias spack-start='spack-start'
+alias quick-activate='quick_activate'
+alias quick-create='quick_create'
+alias quick-create-dev='quick_create_dev'
+alias quick-develop='quick_develop'
+alias remove-spack-prompt='remove_spack_prompt'
+alias build-env-dive='build_env_dive'
+alias sm-clean='sm_clean'
