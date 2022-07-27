@@ -72,8 +72,8 @@ you want them, or run spack install.
 The base command and it's help are echoed below:
     
 
-+ spack manager create_dev_env -h
-usage: spack manager create_dev_env [-h] [-m MACHINE] [-d DIRECTORY | -n NAME] [-y YAML] [-s SPEC [SPEC ...]]
++ spack manager create-dev-env -h
+usage: spack manager create-dev-env [-h] [-m MACHINE] [-d DIRECTORY | -n NAME] [-y YAML] [-s SPEC [SPEC ...]]
 
 optional arguments:
   -d DIRECTORY, --directory DIRECTORY
@@ -119,7 +119,7 @@ git clone --recursive --branch master git@github.com:Exawind/nalu-wind.git
 git clone --recursive --branch main git@github.com:Exawind/amr-wind.git
 quick_create_dev -s exawind@main amr-wind@main nalu-wind@master
 + spack_start
-+ spack manager create_dev_env -s exawind@master amr-wind@main nalu-wind@master
++ spack manager create-dev-env -s exawind@master amr-wind@main nalu-wind@master
 ==> Configuring spec exawind@master for development at path exawind
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
 ==> Configuring spec amr-wind@main for development at path amr-wind
