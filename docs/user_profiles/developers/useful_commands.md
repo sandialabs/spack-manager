@@ -18,7 +18,7 @@ For a quick reference: the commands that are anticipated to be the most commonly
 ## Environment setup process
 As a reminder, the complete, granular list of steps to setup an environment after sourcing `$SPACK_MANAGER/start.sh` are:
 1. `spack_start`: activate Spack in your current shell
-2. `spack manager create_env`: create an environment
+2. `spack manager create-env`: create an environment
 3. `spack env activate`: activate the environment you created
 4. `spack add`: add root specs to the environment
 5. `spack manager develop`: setup the source code you want to edit and configure the environment to use that code

@@ -169,7 +169,7 @@ Spack and Spack-Manager are also relatively easy to script in either bash or pyt
 but it is important to understand the build process to write effective scripts.
 
 The major steps and associated commands for building software with Spack environments are (don't forget to [query the commands](#querying-the-spack-commands) to learn more about them):
-1. **Create the environment:** (`spack manager create_env`)  
+1. **Create the environment:** (`spack manager create-env`)  
    This generates a `spack.yaml` file which is how the environment is defined. Most of the following commands will be manipulating this file.
 2. **Activate the environment:** (`spack env activate`)  
    This sets the environment as active in your shell.

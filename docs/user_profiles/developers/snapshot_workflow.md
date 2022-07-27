@@ -32,12 +32,12 @@ We then activate Spack-Manager:
 ```
 
 Once Spack-Manager itself is activated, we create the Spack environment in which we will install and develop. 
-To do this we use the `spack manager create_env` command.
+To do this we use the `spack manager create-env` command.
 Our environment will be called `exawind` using the `--name` argument. We will choose to focus on building Nalu-Wind using the spec
 `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc`, which means, `nalu-wind` at the `master` branch, with hypre
 enabled (`+hypre`), and CUDA (`+cuda cuda_arch=70`), using the GCC compiler (`%gcc`, which without a version, selects the default compiler version).
 ```
-[user@el1 user]$ spack manager create_env --name exawind --spec 'nalu-wind@master+hypre+cuda cuda_arch=70 %gcc'
+[user@el1 user]$ spack manager create-env --name exawind --spec 'nalu-wind@master+hypre+cuda cuda_arch=70 %gcc'
 making /scratch/user/spack-manager/environments/exawind
 ```
 
