@@ -180,7 +180,7 @@ function _build_env_dive() {
     return
   fi
   if [[ -z ${SPACK_ENV} ]]; then
-    echo "You must have an active environment to use build_env_dive."
+    echo "You must have an active environment to use build-env-dive."
     return 1
   fi
   cmd "spack build-env --dump ${SPACK_MANAGER}/.tmp/spack-build-env.txt $*"
