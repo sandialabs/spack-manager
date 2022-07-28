@@ -28,7 +28,7 @@ Submodule path 'spack': checked out '3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be'
 
 We then activate Spack-Manager:
 ```
-[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack_start
+[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack-start
 ```
 
 Once Spack-Manager itself is activated, we create the Spack environment in which we will install and develop. 
@@ -45,7 +45,7 @@ Once the environment is created, we need to activate it:
 ```
 [user@el1 user]$ spack env activate -d ${SPACK_MANAGER}/environments/exawind
 ```
-Both of the previous steps can be combined into one with `quick_create_env -n exawind -s 'nalu-wind@master+hypre+cuda cuda_arch=70%gcc'`.
+Both of the previous steps can be combined into one with `quick-create-env -n exawind -s 'nalu-wind@master+hypre+cuda cuda_arch=70%gcc'`.
 
 Next, we will turn `nalu-wind` and `hypre` into "develop specs" with a command that tells Spack we want to edit the code for these packages
 locally and always rebuild with our local clones of the packages. We do this with the `spack manager develop` command:
@@ -321,7 +321,7 @@ bash -rcfile ../spack-build-env.txt
 
 After the initial setup overhead is in place. The process for iterating in the code development can be summarized as such:
 ```
-[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack_start && spack env activate -d ${SPACK_MANAGER}/environments/exawind
+[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager && source ${SPACK_MANAGER}/start.sh && spack-start && spack env activate -d ${SPACK_MANAGER}/environments/exawind
 [user@el1 user]$ #edit code
 [user@el1 user]$ spack install
 [user@el1 user]$ spack cd -b package && spack build-env package ./exe

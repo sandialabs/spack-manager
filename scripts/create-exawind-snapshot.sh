@@ -30,7 +30,7 @@ else
 fi
 
 printf "\nActivating Spack-Manager...\n"
-cmd "source ${SPACK_MANAGER}/start.sh && spack_start"
+cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
 cmd "export SPACK_MANAGER_CLEAN_HYPRE=true"
 # Shouldn't use parallel DAG unless git hash installs work or hypre uses CMake

@@ -6,7 +6,7 @@ If you have multiple Spack instances or have recently updated spack things can g
 For example if you have used Spack in the past or have more than one instance then both pull configs
 from the `~/.spack` directory. 
 This is a common source of user issues.
-Please try the `sm_clean` function (available after `source $SPACK_MANAGER/start.sh`)  and see if it solves your issue.
+Please try the `sm-clean` function (available after `source $SPACK_MANAGER/start.sh`)  and see if it solves your issue.
 If this doesn't work then raise/create an issue on slack/github and we will help you figure it out.
 
 ## What is Clingo and why is Spack saying it is __bootstrapping__ it?
@@ -32,7 +32,7 @@ Spack manages directories by using hashes.  This is not convenient for just look
 
 ## How do I run tests after building the software?
 The first thing to understand is that Spack is going to build your software in a different environment than your active shell.  To run a command in this environment you can use `spack build-env [spec] [command]` and the `[command]` will be exectued for you in the build environment (don't forget to [navigate to the build directory](#where-is-my-build-directorywhere-is-my-install-directory) first!).
-Spack-Manager also provides a convenience function `build_env_dive [spec]` which will navigate to the build directory for you and launch a sub-shell using the build environment. You will need to type `exit` to get back to your original shell when you are done. The former is recommended for one-off commands, and the latter if you have a lot of commands to run in the environment.
+Spack-Manager also provides a convenience function `build-env-dive [spec]` which will navigate to the build directory for you and launch a sub-shell using the build environment. You will need to type `exit` to get back to your original shell when you are done. The former is recommended for one-off commands, and the latter if you have a lot of commands to run in the environment.
 
 Please note that 
 ```
@@ -40,7 +40,7 @@ spack build-env nalu-wind ctest -R ablNeutral
 ```
 and
 ```
-build_env_dive nalu-wind
+build-env-dive nalu-wind
 ctest -R ablNeutral
 exit
 ```
@@ -61,11 +61,11 @@ No, we are using the original concretizer when you use externals from snapshots 
 the Spack team fixes a bug for us.
 
 ## How do I use the executables I built in my development environment?
-You need to activate the environment `quick_activate`, and then call `spack load [package]`.
+You need to activate the environment `quick-activate`, and then call `spack load [package]`.
 This will load the binaries you need into your `$PATH`.
 ```
 # Example
-quick_activate $SPACK_MANAGER/environments/exawind
+quick-activate $SPACK_MANAGER/environments/exawind
 spack load amr-wind
 mpirun -np 20 amr_wind -i [foo]
 ```

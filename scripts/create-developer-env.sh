@@ -27,7 +27,7 @@ else
 fi
 
 printf "\nActivating Spack-Manager...\n"
-cmd "source ${SPACK_MANAGER}/start.sh && spack_start"
+cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
 printf "\nCreating developer environment...\n"
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then

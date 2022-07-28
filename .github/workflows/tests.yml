@@ -57,7 +57,7 @@ jobs:
       run: |
         # check our spack extension with spack's style guide
         source start.sh
-        spack_start
+        spack-start
         spack style spack-scripting
   concretization-basic:
     runs-on: ${{matrix.os}}
@@ -82,7 +82,7 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
-        spack_start
+        spack-start
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_basic.yaml
@@ -110,7 +110,7 @@ jobs:
     - name: Run concretization tests
       run: |
         source start.sh
-        spack_start
+        spack-start
         # test and make sure the solver is working for env using clingo
         spack solve exawind 1> /dev/null 
         tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml
@@ -137,13 +137,13 @@ jobs:
     - name: Test quick-commands
       run: |
         source start.sh
-        quick_create --name quick_create --spec exawind
+        quick-create --name quick-create --spec exawind
         spack env deactivate
-        quick_create_dev --name quick_create_dev --spec amr-wind@main
+        quick-create-dev --name quick-create-dev --spec amr-wind@main
         spack env deactivate
-        quick_activate ${SPACK_MANAGER}/environments/quick_create_dev
+        quick-activate ${SPACK_MANAGER}/environments/quick-create-dev
         spack env deactivate
-        quick_create --name spec-with-spaces --spec exawind+hypre build_type=Debug ^amr-wind
+        quick-create --name spec-with-spaces --spec exawind+hypre build_type=Debug ^amr-wind
   snapshot-workflow:
     runs-on: ubuntu-latest
     env:
@@ -168,6 +168,10 @@ jobs:
     - name: Test snapshot command
       run: |
         source start.sh
-        spack_start
+        spack-start
         snapshot_creator.py --stop_after concretize --name test --modules --link_type soft --use_machine_name
 
+
+
+        
+    

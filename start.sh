@@ -27,7 +27,7 @@ if [[ ! -x $(which python3) ]]; then
 fi
 
 # convenience function for getting to the spack-manager directory
-function cd_sm() {
+function _cd_sm() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "Convenience function for navigating to the spack-manager directory"
     return
@@ -36,7 +36,7 @@ function cd_sm() {
 }
 
 # function to initialize spack-manager's spack instance
-function spack_start() {
+function _spack_start() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This function loads spack into your active shell"
     return
@@ -45,23 +45,23 @@ function spack_start() {
 }
 
 # function to quickly activate an environment
-function quick_activate() {
+function _quick_activate() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This function loads spack and activates the spack environment whose directory you provide as an argument"
     return
   fi
-  cmd "spack_start"
+  cmd "_spack_start"
   cmd "spack env activate -p -d $1"
 }
 
 # convenience function for quickly creating an environment
 # and activating it in the current shell
-function quick_create() {
-  cmd "spack_start"
+function _quick_create() {
+  cmd "_spack_start"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
-quick_create sets up a basic spack environment
+quick-create sets up a basic spack environment
 
 The next typical steps after running this command are to add specs
 and calling spack manager develop to clone dev specs, adding externals
@@ -76,21 +76,21 @@ The base command and it's help are echoed below:
   fi
   cmd "spack manager create-env $@"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick_create prematurely\n"
+    printf "\nERROR: Exiting quick-create prematurely\n"
     return 1
   fi
   EPATH=$(cat ${SPACK_MANAGER}/.tmp/created_env_path.txt)
   cmd "spack env activate --dir ${EPATH} --prompt"
 }
 
-# same as quick_create but calls create_env_dev instead
+# same as quick-create but calls create-env-dev instead
 # can be used to add externals
-function quick_create_dev() {
-  cmd "spack_start"
+function _quick_create_dev() {
+  cmd "_spack_start"
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
-quick_create_dev sets up a developer environment
+quick-create-dev sets up a developer environment
 where all specs are develop specs that will be automatically cloned
 from the default repos
 
@@ -106,7 +106,7 @@ The base command and it's help are echoed below:
   fi
   cmd "spack manager create-dev-env $@"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick_create prematurely\n"
+    printf "\nERROR: Exiting quick-create prematurely\n"
     return 1
   fi
   EPATH=$(cat ${SPACK_MANAGER}/.tmp/created_env_path.txt)
@@ -114,18 +114,18 @@ The base command and it's help are echoed below:
 }
 
 # function to create, activate, concretize and attempt to install a develop environment all in one step
-function quick_develop() {
-  cmd "spack_start"
+function _quick_develop() {
+  cmd "_spack_start"
   # since we want this to run in the active shell
   # we mush manually return instead of exiting with set -e
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick_develop prematurely\n"
+    printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "*************************************************************
 HELP MESSAGE:
-quick_develop sets up a developer environment and installs it
+quick-develop sets up a developer environment and installs it
 
 This command is designed to require minimal arguments and simple setup
 with the caveat of accepting all the defaults for:
@@ -151,18 +151,18 @@ The base command and it's help are echoed below:
   EPATH=$(cat ${SPACK_MANAGER}/.tmp/created_env_path.txt)
   cmd "spack env activate --dir ${EPATH} --prompt"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick_develop prematurely\n"
+    printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
   cmd "spack manager external --latest"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick_develop prematurely\n"
+    printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
 }
 
 # function to remove spack prompt from the shell
-function remove_spack_prompt() {
+function _remove_spack_prompt() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command removes a spack added shell prompt (if it exists) that signifies the current environment name."
     return
@@ -174,7 +174,7 @@ function remove_spack_prompt() {
 }
 
 # function for diving into the build environment from a spack build
-function build_env_dive() {
+function _build_env_dive() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command will setup and dive into the build environment of the spec provided in a new subshell, and then move into the build directory."
     return
@@ -188,7 +188,7 @@ function build_env_dive() {
 }
 
 # function for cleaning spack-manager and spack directories
-function sm_clean(){
+function _sm_clean(){
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "This command will clean out spack and spack-manager caches and other problematic directories"
     return
@@ -201,12 +201,12 @@ function sm_clean(){
   cmd "find ${SPACK_MANAGER}/repos -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete"
 }
 
-alias cd-sm='cd_sm'
-alias spack-start='spack-start'
-alias quick-activate='quick_activate'
-alias quick-create='quick_create'
-alias quick-create-dev='quick_create_dev'
-alias quick-develop='quick_develop'
-alias remove-spack-prompt='remove_spack_prompt'
-alias build-env-dive='build_env_dive'
-alias sm-clean='sm_clean'
+alias cd-sm='_cd_sm'
+alias spack-start='_spack-start'
+alias quick-activate='_quick_activate'
+alias quick-create='_quick_create'
+alias quick-create-dev='_quick_create_dev'
+alias quick-develop='_quick_develop'
+alias remove-spack-prompt='_remove_spack_prompt'
+alias build-env-dive='_build_env_dive'
+alias sm-clean='_sm_clean'

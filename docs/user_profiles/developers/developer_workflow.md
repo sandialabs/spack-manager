@@ -39,12 +39,12 @@ source $SPACK_MANAGER/start.sh
 
 With the Spack development workflow we are going to create an environment similar to a Conda environment.
 Setting up the environments is a multistep process that is outlined in greater detail [here](https://psakievich.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html) and [here](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html#environment-setup-process).
-There are three `quick-commands` for creating environments: `quick_create`, `quick_create_dev` and `quick_develop`.
+There are three `quick-commands` for creating environments: `quick-create`, `quick-create-dev` and `quick-develop`.
 They all exit the process of setting up an environment at different points in the process as outlined below:
 
-| Step | quick_create | quick_create_dev | quick_develop |
+| Step | quick-create | quick-create-dev | quick-develop |
 |:-----|:------------:|:----------------:|:-------------:|
-| spack_start | x | x | x |
+| spack-start | x | x | x |
 | Create an environment | x | x | x|
 | Activate an environment | x | x | x |
 | Add root specs | x | x | x|
@@ -52,17 +52,17 @@ They all exit the process of setting up an environment at different points in th
 | Add externals | | | x | 
 | Concretize and install | | | |
 
-For developers we recommend using `quick_create_dev` and `quick_develop` depending on if you want to use externals or not.
+For developers we recommend using `quick-create-dev` and `quick-develop` depending on if you want to use externals or not.
 
-The interface for both of these commands is exactly the same.  Moving forward we will use `quick_create_dev` in this example.
+The interface for both of these commands is exactly the same.  Moving forward we will use `quick-create-dev` in this example.
 To see the options for the command we can run it with the `--help` command.
 
 ```console
-quick_create_dev -h
-+ spack_start
+quick-create-dev -h
++ spack-start
 *************************************************************
 HELP MESSAGE:
-quick_create_dev sets up a developer environment
+quick-create-dev sets up a developer environment
 where all specs are develop specs that will be automatically cloned
 from the default repos
     
@@ -93,7 +93,7 @@ The main flags to use for standard developer workflow are the `--name` or `--dir
 To set up a build of the exawind driver where we are developing `amr-wind` and `nalu-wind` too we would run:
 
 ```console
-quick_create_dev -n example-env -s exawind@master nalu-wind@master amr-wind@main
+quick-create-dev -n example-env -s exawind@master nalu-wind@master amr-wind@main
 ```
 If you don't want to develop one of these packages (say you're only focused on `amr-wind`) then just ommit the software you don't
 plan to develop in from the spec list in the command above. Please note that these specs need to be concrete specs, meaning they have the name
@@ -101,12 +101,12 @@ plan to develop in from the spec list in the command above. Please note that the
 This is covered in the [things developers need to know about Spack](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html) for those needing a refresher.
 
 The `-n` flag can be replaced with `-d` if we want to setup an environment in a different location than `$SPACK_MANAGER/environments` (see the help message above).
-The `quick_create_dev` command will execute all the stages in the table above including cloning the repos from github for the software.
+The `quick-create-dev` command will execute all the stages in the table above including cloning the repos from github for the software.
 These clones of the source code default to the environment directory you specified with the `-d` or `-n` flags.
 If we wish to work off specific branches then we can use `git add remote`, `git fetch` and `git checkout` to get the branches we want
 inside each of the clones before building.
 
-If you wish to pre-clone your repos you can simply create a directory, pre-clone the software you want to develop with names that match the package names and run your `quick_create_dev` inside the directory you created without either of the `-d` or `-n` flags.
+If you wish to pre-clone your repos you can simply create a directory, pre-clone the software you want to develop with names that match the package names and run your `quick-create-dev` inside the directory you created without either of the `-d` or `-n` flags.
 This is because the default behavior of the command is to create the environment files, and clone repos in the current
 working directory.
 
@@ -117,8 +117,8 @@ mkdir test && cd test
 git clone --recursive --branch main git@github.com:Exawind/exawind-driver.git exawind
 git clone --recursive --branch master git@github.com:Exawind/nalu-wind.git
 git clone --recursive --branch main git@github.com:Exawind/amr-wind.git
-quick_create_dev -s exawind@main amr-wind@main nalu-wind@master
-+ spack_start
+quick-create-dev -s exawind@main amr-wind@main nalu-wind@master
++ spack-start
 + spack manager create-dev-env -s exawind@master amr-wind@main nalu-wind@master
 ==> Configuring spec exawind@master for development at path exawind
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
@@ -128,7 +128,7 @@ quick_create_dev -s exawind@main amr-wind@main nalu-wind@master
 ```
 does the same thing as 
 ```console
-quick_create_dev -d test -s exawind@master nalu-wind@master amr-wind@main
+quick-create-dev -d test -s exawind@master nalu-wind@master amr-wind@main
 ```
 However, adding in the extra pre-clone steps gives you a little more control over your environment.
 
@@ -155,12 +155,12 @@ In this environment if you make a change in `amr-wind` it will also trigger a re
 
 To run tests in a one off manner you can use the `spack build-env` command to run commands in a sub-shell with the build environment.
 This is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html#running).
-We also have a function `build_env_dive` which is a beta feature that launches this same subshell in your terminal and dives into it.
-It is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html#build_env_dive).
+We also have a function `build-env-dive` which is a beta feature that launches this same subshell in your terminal and dives into it.
+It is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html#build-env-dive).
 
 If you wish to come back to an environment later, or in a new shell you can just run
 ```console
-quick_activate /path/to/the/environment/you/wish/to/activate
+quick-activate /path/to/the/environment/you/wish/to/activate
 ```
 and this will do all the activation for the environment for you.
 You will be able to come back at anytime and pick up where you left off.
@@ -174,7 +174,7 @@ git clone --recursive git@github.com:psakievich/spack-manager.git
 export SPACK_MANAGER=$(pwd)/spack-manager
 source $SPACK_MANAGER/start.sh
 # setup environment
-quick_create_dev -n demo -s exawind@master amr-wind@main nalu-wind@master
+quick-create-dev -n demo -s exawind@master amr-wind@main nalu-wind@master
 # build code
 spack install
 # code changes
