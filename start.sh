@@ -202,7 +202,7 @@ function _sm_clean(){
 }
 
 alias cd-sm='_cd_sm'
-alias spack-start='_spack-start'
+alias spack-start='_spack_start'
 alias quick-activate='_quick_activate'
 alias quick-create='_quick_create'
 alias quick-create-dev='_quick_create_dev'
