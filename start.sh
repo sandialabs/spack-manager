@@ -142,7 +142,7 @@ The base command and it's help are echoed below:
   fi
   cmd "spack manager create-dev-env $*"
   if [[ $? != 0 ]]; then
-    printf "\nERROR: Exiting quick_develop prematurely\n"
+    printf "\nERROR: Exiting quick-develop prematurely\n"
     return 1
   fi
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
