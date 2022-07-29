@@ -13,8 +13,6 @@ import sys
 class Tioga(bTioga):
     git      = "https://github.com/jrood-nrel/tioga.git"
 
-    #patch('iargc.patch')
-
     variant('asan', default=False,
             description='turn on address sanitizer')
 
