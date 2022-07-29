@@ -11,8 +11,12 @@ import os
 import sys
 
 class Tioga(bTioga):
+    git      = "https://github.com/jrood-nrel/tioga.git"
 
-    patch('iargc.patch')
+    #patch('iargc.patch')
+
+    variant('asan', default=False,
+            description='turn on address sanitizer')
 
     def cmake_args(self):
         spec = self.spec
@@ -32,6 +36,9 @@ class Tioga(bTioga):
 
         return options
 
+    def setup_build_environment(self, env):
+        if '+asan' in self.spec:
+            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, 'sup.asan')))
 
     @run_after('cmake')
     def copy_compile_commands(self):
