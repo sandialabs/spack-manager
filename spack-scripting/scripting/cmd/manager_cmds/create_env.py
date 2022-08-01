@@ -40,7 +40,7 @@ def create_env(parser, args):
 
     has_view = False
     if args.yaml:
-        assert(os.path.isfile(args.yaml))
+        assert (os.path.isfile(args.yaml))
         with open(args.yaml, 'r') as fyaml:
             print(fyaml)
             user_yaml = syaml.load_config(fyaml)

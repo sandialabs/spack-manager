@@ -38,7 +38,7 @@ class IncludesCreator():
                 for scope in self.config.scopes.values():
                     if scope.get_section(s) is not None:
                         has_data = True
-                if(has_data):
+                if (has_data):
                     temp = self.config.get_config(s)
                     data[s] = temp
         except (yaml.YAMLError, IOError):

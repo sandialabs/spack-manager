@@ -100,13 +100,13 @@ def find_machine(parser=None, args=None, verbose=True, full_machine_name=False):
                     return data.full_machine_name
                 else:
                     return machine_name
-        except(KeyError):
+        except (KeyError):
             """
             expect key errors when an environment variable is not defined
             so these are skipped
             """
             pass
-        except(Exception):
+        except (Exception):
             """
             all other errors will be raised and kill the program
             we can add more excpetions to the pass list as needed
