@@ -55,7 +55,7 @@ def run_tests(args):
     for name in machine_names:
         try:
             check_config_concretizations(name, args.yaml)
-        except(Exception) as e:
+        except (Exception) as e:
             print(e)
             failure = True
             continue
