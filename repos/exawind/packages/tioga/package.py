@@ -11,7 +11,7 @@ import os
 import sys
 
 class Tioga(bTioga):
-    git      = "https://github.com/jrood-nrel/tioga.git"
+    git = "https://github.com/Exawind/tioga.git"
 
     variant('asan', default=False,
             description='turn on address sanitizer')
