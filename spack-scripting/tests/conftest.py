@@ -10,9 +10,9 @@ import os
 
 import pytest
 
-from spack.cmd import parse_specs
 import spack.paths
 import spack.repo
+from spack.cmd import parse_specs
 from spack.spec import Spec
 from spack.test.conftest import *  # noqa: F401
 
