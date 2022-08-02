@@ -12,6 +12,7 @@ import pytest
 
 import spack.paths
 import spack.repo
+from spack.cmd import parse_specs
 from spack.spec import Spec
 from spack.test.conftest import *  # noqa: F401
 
@@ -37,6 +38,8 @@ def create_package(builtin_repo_path, exawind_repo_path):
 
     def _create_new(spec):
         with spack.repo.use_repositories(builtin_repo_path, exawind_repo_path):
-            return Spec(spec).package
+            specs = parse_specs(spec)
+            pkg_class = spack.repo.path.get_pkg_class(str(specs[0].name))
+            return pkg_class(Spec(spec))
 
     return _create
