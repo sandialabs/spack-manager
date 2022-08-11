@@ -40,6 +40,9 @@ fi
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
+printf "\nCleaning Spack installation...\n"
+cmd "sm-clean"
+
 printf "\nGenerating test script for submission...\n"
 EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
 cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
@@ -107,9 +110,6 @@ cmd "spack concretize -f"
 #else
 #  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
 #fi
-
-printf "\nClean old stage directories...\n"
-cmd "spack clean -s || true"
 
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
