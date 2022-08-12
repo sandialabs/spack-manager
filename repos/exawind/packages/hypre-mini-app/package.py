@@ -23,10 +23,14 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
     variant('umpire', default=False,
             description='Enable Umpire')
 
+    variant('unified-memory', default=False,
+            description='Enable Unified Memory in hypre')
+
     depends_on('mpi')
     depends_on('hypre+mpi@2.20.0:')
     depends_on('yaml-cpp@0.6.2:')
     depends_on('hypre+umpire', when='+umpire')
+    depends_on('hypre+unified-memory', when='+unified-memory')
     for arch in CudaPackage.cuda_arch_values:
         depends_on('hypre+cuda cuda_arch=%s @2.20.0:' % arch,
                    when='+cuda cuda_arch=%s' % arch)
