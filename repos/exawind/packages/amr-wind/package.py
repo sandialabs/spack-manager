@@ -20,14 +20,6 @@ class AmrWind(bAmrWind):
             description='Turn on clang-tidy')
     variant('hdf5', default=False,
             description='Enable HDF5 plots with ZFP compression')
-    variant('ascent', default=False,
-            description='Enable Ascent')
-
-    depends_on('ascent', when='+ascent')
-    depends_on('ascent+mpi', when='+ascent+mpi')
-    for arch in CudaPackage.cuda_arch_values:
-        depends_on('ascent+cuda cuda_arch=%s' % arch,
-                   when='+ascent+cuda cuda_arch=%s' % arch)
 
     depends_on('hdf5~mpi', when='+hdf5~mpi')
     depends_on('hdf5+mpi', when='+hdf5+mpi')
@@ -46,9 +38,6 @@ class AmrWind(bAmrWind):
         define = CMakePackage.define
         cmake_options = super(AmrWind, self).cmake_args()
 
-        if '+ascent' in spec:
-            cmake_options.append(define('AMR_WIND_ENABLE_ASCENT', True))
-        
         if '+cppcheck' in spec:
             cmake_options.append(define('AMR_WIND_ENABLE_CPPCHECK', True))
 
