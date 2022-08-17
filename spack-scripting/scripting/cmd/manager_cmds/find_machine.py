@@ -17,7 +17,7 @@ class MachineData:
 
 
 def is_cee(hostname):
-    known_hosts = ('cee', 'ews', 'ecw', 'ecs', 'hpws')
+    known_hosts = ("cee", "ews", "ecw", "ecs", "hpws")
     for k in known_hosts:
         if k in hostname:
             return True
@@ -25,7 +25,7 @@ def is_cee(hostname):
 
 
 def is_snl_hpc(hostname):
-    known_hosts = ('skybridge', 'ghost', 'attaway', 'chama')
+    known_hosts = ("skybridge", "ghost", "attaway", "chama")
     for k in known_hosts:
         if k in hostname:
             return True
@@ -33,7 +33,7 @@ def is_snl_hpc(hostname):
 
 
 def is_jlse(hostname):
-    known_hosts = ('arcticus',)
+    known_hosts = ("arcticus",)
     for k in known_hosts:
         if k in hostname:
             return True
@@ -41,7 +41,7 @@ def is_jlse(hostname):
 
 
 def is_e4s():
-    if 'E4S_MACHINE' in os.environ:
+    if "E4S_MACHINE" in os.environ:
         return True
     else:
         return False
@@ -54,35 +54,30 @@ match
 """
 machine_list = {
     # SNL
-    'cee': MachineData(lambda: is_cee(socket.gethostname()),
-                       socket.gethostname()),
-    'snl-hpc': MachineData(lambda: is_snl_hpc(socket.gethostname()),
-                           socket.gethostname()),
-    'ascic': MachineData(lambda: 'ascic' in socket.gethostname()
-                         and 'gpu' not in socket.gethostname(),
-                         socket.gethostname()),
-    'ascicgpu': MachineData(lambda: 'ascicgpu' in socket.gethostname(),
-                            socket.gethostname()),
+    "cee": MachineData(lambda: is_cee(socket.gethostname()), socket.gethostname()),
+    "snl-hpc": MachineData(lambda: is_snl_hpc(socket.gethostname()), socket.gethostname()),
+    "ascic": MachineData(
+        lambda: "ascic" in socket.gethostname() and "gpu" not in socket.gethostname(),
+        socket.gethostname(),
+    ),
+    "ascicgpu": MachineData(lambda: "ascicgpu" in socket.gethostname(), socket.gethostname()),
     # NREL
-    'eagle': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'eagle',
-                         'eagle.hpc.nrel.gov'),
-    'rhodes': MachineData(lambda: os.environ['NREL_CLUSTER'] == 'rhodes',
-                          'rhodes.hpc.nrel.gov'),
+    "eagle": MachineData(lambda: os.environ["NREL_CLUSTER"] == "eagle", "eagle.hpc.nrel.gov"),
+    "rhodes": MachineData(lambda: os.environ["NREL_CLUSTER"] == "rhodes", "rhodes.hpc.nrel.gov"),
     # OLCF
-    'summit': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'summit',
-                          'summit.olcf.ornl.gov'),
-    'spock': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'spock',
-                         'spock.olcf.ornl.gov'),
-    'crusher': MachineData(lambda: os.environ['LMOD_SYSTEM_NAME'] == 'crusher',
-                           'crusher.olcf.ornl.gov'),
+    "summit": MachineData(
+        lambda: os.environ["LMOD_SYSTEM_NAME"] == "summit", "summit.olcf.ornl.gov"
+    ),
+    "spock": MachineData(lambda: os.environ["LMOD_SYSTEM_NAME"] == "spock", "spock.olcf.ornl.gov"),
+    "crusher": MachineData(
+        lambda: os.environ["LMOD_SYSTEM_NAME"] == "crusher", "crusher.olcf.ornl.gov"
+    ),
     # JLSE
-    'arcticus': MachineData(lambda: is_jlse(socket.gethostname()),
-                            'arcticus.alcf.anl.gov'),
+    "arcticus": MachineData(lambda: is_jlse(socket.gethostname()), "arcticus.alcf.anl.gov"),
     # E4S
-    'e4s': MachineData(lambda: is_e4s(), 'e4s.nodomain.gov'),
+    "e4s": MachineData(lambda: is_e4s(), "e4s.nodomain.gov"),
     # General
-    'darwin': MachineData(lambda: sys.platform == 'darwin',
-                          'darwin.nodomain.gov'),
+    "darwin": MachineData(lambda: sys.platform == "darwin", "darwin.nodomain.gov"),
 }
 
 
@@ -114,11 +109,10 @@ def find_machine(parser=None, args=None, verbose=True, full_machine_name=False):
             """
             raise
     if verbose:
-        print('NOT-FOUND')
-    return 'NOT-FOUND'
+        print("NOT-FOUND")
+    return "NOT-FOUND"
 
 
 def add_command(parser, command_dict):
-    parser.add_parser('find-machine',
-                      help='get the current machine detected by spack-manager')
-    command_dict['find-machine'] = find_machine
+    parser.add_parser("find-machine", help="get the current machine detected by spack-manager")
+    command_dict["find-machine"] = find_machine

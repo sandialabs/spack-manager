@@ -15,7 +15,7 @@ import spack.config
 import spack.util.spack_yaml as syaml
 
 
-class IncludesCreator():
+class IncludesCreator:
     def __init__(self):
         self.config = spack.config.Configuration()
 
@@ -38,12 +38,11 @@ class IncludesCreator():
                 for scope in self.config.scopes.values():
                     if scope.get_section(s) is not None:
                         has_data = True
-                if (has_data):
+                if has_data:
                     temp = self.config.get_config(s)
                     data[s] = temp
         except (yaml.YAMLError, IOError):
             raise spack.config.ConfigError("Error reading configuration: %s" % s)
 
-        with open(abspath, 'w') as fout:
-            syaml.dump_config(data,
-                              stream=fout, default_flow_style=False, blame=False)
+        with open(abspath, "w") as fout:
+            syaml.dump_config(data, stream=fout, default_flow_style=False, blame=False)

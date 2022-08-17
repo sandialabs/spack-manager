@@ -18,13 +18,13 @@ def git_clone(branch, repo, path, shallow, all_branches):
     """
     git clone wrapper to help with mocking
     """
-    git = spack.util.executable.which('git')
-    git_args = ['clone', '--recursive']
+    git = spack.util.executable.which("git")
+    git_args = ["clone", "--recursive"]
     if not all_branches:
-        git_args.append('--single-branch')
+        git_args.append("--single-branch")
     if shallow:
-        git_args.extend(['--depth', '1'])
-    git_args.extend(['--branch', branch, repo, path])
+        git_args.extend(["--depth", "1"])
+    git_args.extend(["--branch", branch, repo, path])
     git(*git_args)
 
 
@@ -32,8 +32,8 @@ def git_remote_add(path, name, repo):
     """
     git remote add wrapper
     """
-    git = spack.util.executable.which('git')
-    git('-C', path, 'remote', 'add', name, repo)
+    git = spack.util.executable.which("git")
+    git("-C", path, "remote", "add", name, repo)
 
 
 def _redundant_code_from_spack_develop(args):
@@ -41,7 +41,7 @@ def _redundant_code_from_spack_develop(args):
     Re-use the path and spec checking from spack.cmd.develop
     https://github.com/spack/spack/blob/b56f464c29c3e316c3afbbde52bf2597ad5351f1/lib/spack/spack/cmd/develop.py#L65-L95
     """
-    env = spack.cmd.require_active_env(cmd_name='develop')
+    env = spack.cmd.require_active_env(cmd_name="develop")
 
     specs = spack.cmd.parse_specs(args.spec)
     if len(specs) > 1:
@@ -104,20 +104,40 @@ def manager_develop(parser, args):
 
 
 def add_command(parser, command_dict):
-    subparser = parser.add_parser('develop', help='a more intuitieve interface for '
-                                  'spack develop', conflict_handler='resolve')
+    subparser = parser.add_parser(
+        "develop",
+        help="a more intuitieve interface for " "spack develop",
+        conflict_handler="resolve",
+    )
     spack_develop.setup_parser(subparser)
     clone_group = subparser.add_mutually_exclusive_group()
-    clone_group.add_argument('-rb', '--repo-branch', nargs=2,
-                             metavar=('repo', 'branch'), required=False,
-                             help='git repo to clone from')
-    subparser.add_argument('--shallow', required=False, action='store_true',
-                           help='performa a shallow clone of the repo')
-    subparser.add_argument('--all-branches', required=False,
-                           action='store_true', help='clone all branches '
-                           'of the repo', default=False)
-    subparser.add_argument('--add-remote', nargs=2, metavar=('remote_name',
-                           'remote_repo'), required=False,
-                           help='add a remote as part of the clone')
+    clone_group.add_argument(
+        "-rb",
+        "--repo-branch",
+        nargs=2,
+        metavar=("repo", "branch"),
+        required=False,
+        help="git repo to clone from",
+    )
+    subparser.add_argument(
+        "--shallow",
+        required=False,
+        action="store_true",
+        help="performa a shallow clone of the repo",
+    )
+    subparser.add_argument(
+        "--all-branches",
+        required=False,
+        action="store_true",
+        help="clone all branches " "of the repo",
+        default=False,
+    )
+    subparser.add_argument(
+        "--add-remote",
+        nargs=2,
+        metavar=("remote_name", "remote_repo"),
+        required=False,
+        help="add a remote as part of the clone",
+    )
 
-    command_dict['develop'] = manager_develop
+    command_dict["develop"] = manager_develop

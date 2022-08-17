@@ -15,53 +15,51 @@ import spack.environment as env
 import spack.main
 import spack.util.spack_yaml as syaml
 
-manager = spack.main.SpackCommand('manager')
-envcmd = spack.main.SpackCommand('env')
+manager = spack.main.SpackCommand("manager")
+envcmd = spack.main.SpackCommand("env")
 
 
 def test_basicDirectoryProperties(tmpdir):
     with tmpdir.as_cwd():
-        manager('create-env', '-d', tmpdir.strpath,
-                '-m', 'darwin', '-s', 'binutils')
-        assert os.path.isfile('spack.yaml')
-        assert os.path.isfile('include.yaml')
+        manager("create-env", "-d", tmpdir.strpath, "-m", "darwin", "-s", "binutils")
+        assert os.path.isfile("spack.yaml")
+        assert os.path.isfile("include.yaml")
 
-        with open('spack.yaml', 'r') as f:
+        with open("spack.yaml", "r") as f:
             yaml = syaml.load(f)
-            assert 'concretizer' in yaml['spack']
-            assert yaml['spack']['concretizer']['unify'] is True
+            assert "concretizer" in yaml["spack"]
+            assert yaml["spack"]["concretizer"]["unify"] is True
 
 
 def test_failsWithAnUnregisteredMachine():
     with TemporaryDirectory() as tmpdir:
         with pytest.raises(Exception):
-            manager('create-env', '-d', tmpdir, '-m', 'theGOAT_HPC')
+            manager("create-env", "-d", tmpdir, "-m", "theGOAT_HPC")
 
 
 def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
-    TESTMACHINE = 'test_machine'
+    TESTMACHINE = "test_machine"
     with TemporaryDirectory() as tmpdir:
         # setup a mirror configuration of spack-manager
-        link_dir = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
+        link_dir = os.path.join(os.environ["SPACK_MANAGER"], "configs", "base")
 
-        os.mkdir(os.path.join(tmpdir, 'configs'))
-        os.symlink(link_dir,
-                   os.path.join(tmpdir, 'configs', 'base'))
-        os.mkdir(os.path.join(tmpdir, 'configs', TESTMACHINE))
+        os.mkdir(os.path.join(tmpdir, "configs"))
+        os.symlink(link_dir, os.path.join(tmpdir, "configs", "base"))
+        os.mkdir(os.path.join(tmpdir, "configs", TESTMACHINE))
 
         # monkeypatches
-        envVars = {'SPACK_MANAGER': tmpdir}
-        monkeypatch.setattr(os, 'environ', envVars)
+        envVars = {"SPACK_MANAGER": tmpdir}
+        monkeypatch.setattr(os, "environ", envVars)
 
         def MockFindMachine(verbose=True):
             if verbose:
                 print(TESTMACHINE)
             return TESTMACHINE
 
-        monkeypatch.setattr(create_env, 'find_machine', MockFindMachine)
+        monkeypatch.setattr(create_env, "find_machine", MockFindMachine)
 
         # create spack.yaml
-        manager('create-env', '-d', tmpdir)
+        manager("create-env", "-d", tmpdir)
 
         # ensure that this environment can be created
         # missing includes will cause a failure
@@ -77,22 +75,32 @@ spack:
       spec: amr-wind@main
       path: /tst/dir"""
 
-        with open('test.yaml', 'w') as fyaml:
+        with open("test.yaml", "w") as fyaml:
             fyaml.write(preset_yaml)
 
-        env_root = str(tmpdir.join('dev'))
+        env_root = str(tmpdir.join("dev"))
         os.makedirs(env_root)
 
-        assert os.path.isfile('test.yaml')
-        manager('create-env', '-d', env_root, '-m', 'darwin',
-                '-y', 'test.yaml', '-s', 'amr-wind', 'nalu-wind')
+        assert os.path.isfile("test.yaml")
+        manager(
+            "create-env",
+            "-d",
+            env_root,
+            "-m",
+            "darwin",
+            "-y",
+            "test.yaml",
+            "-s",
+            "amr-wind",
+            "nalu-wind",
+        )
 
         e = env.Environment(env_root)
-        assert e.yaml['spack']['specs'][0] == 'amr-wind'
-        assert e.yaml['spack']['specs'][1] == 'nalu-wind'
-        assert e.yaml['spack']['develop']['amr-wind']['spec'] == 'amr-wind@main'
-        assert e.yaml['spack']['develop']['amr-wind']['path'] == '/tst/dir'
-        assert not e.yaml['spack']['view']
+        assert e.yaml["spack"]["specs"][0] == "amr-wind"
+        assert e.yaml["spack"]["specs"][1] == "nalu-wind"
+        assert e.yaml["spack"]["develop"]["amr-wind"]["spec"] == "amr-wind@main"
+        assert e.yaml["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
+        assert not e.yaml["spack"]["view"]
 
 
 def test_existingYamlViewIsNotOverwritten(tmpdir):
@@ -105,25 +113,34 @@ spack:
       spec: amr-wind@main
       path: /tst/dir"""
 
-        with open('test.yaml', 'w') as fyaml:
+        with open("test.yaml", "w") as fyaml:
             fyaml.write(preset_yaml)
 
-        env_root = str(tmpdir.join('dev'))
+        env_root = str(tmpdir.join("dev"))
         os.makedirs(env_root)
 
-        assert os.path.isfile('test.yaml')
+        assert os.path.isfile("test.yaml")
 
-        manager('create-env', '-d', env_root, '-m', 'darwin',
-                '-y', 'test.yaml', '-s', 'amr-wind', 'nalu-wind')
+        manager(
+            "create-env",
+            "-d",
+            env_root,
+            "-m",
+            "darwin",
+            "-y",
+            "test.yaml",
+            "-s",
+            "amr-wind",
+            "nalu-wind",
+        )
 
         e = env.Environment(env_root)
-        assert e.yaml['spack']['view']
+        assert e.yaml["spack"]["view"]
 
 
 def test_specs_can_have_spaces(tmpdir):
     with tmpdir.as_cwd():
-        manager('create-env',
-                '-s', 'nalu-wind ', ' build_type=Release', '%gcc')
+        manager("create-env", "-s", "nalu-wind ", " build_type=Release", "%gcc")
 
 
 def test_unify_in_yaml_preserved(tmpdir):
@@ -134,9 +151,9 @@ spack:
     concretizer:
         unify: when_possible"""
 
-        with open('template.yaml', 'w') as f:
+        with open("template.yaml", "w") as f:
             f.write(preset_yaml)
 
-        manager('create-env', '-y', 'template.yaml')
+        manager("create-env", "-y", "template.yaml")
         e = env.Environment(tmpdir.strpath)
-        assert 'when_possible' == e.yaml['spack']['concretizer']['unify']
+        assert "when_possible" == e.yaml["spack"]["concretizer"]["unify"]

@@ -24,20 +24,19 @@ from spack.spec import Spec
 
 
 def get_external_dir():
-    if 'SPACK_MANAGER_EXTERNAL' in os.environ:
-        manager_root = os.environ['SPACK_MANAGER_EXTERNAL']
+    if "SPACK_MANAGER_EXTERNAL" in os.environ:
+        manager_root = os.environ["SPACK_MANAGER_EXTERNAL"]
     else:
-        manager_root = os.environ['SPACK_MANAGER']
-    external_machine = os.path.join(
-        manager_root, 'environments', base_extension(True))
-    external_arch = os.path.join(
-        manager_root, 'environments', base_extension(False))
+        manager_root = os.environ["SPACK_MANAGER"]
+    external_machine = os.path.join(manager_root, "environments", base_extension(True))
+    external_arch = os.path.join(manager_root, "environments", base_extension(False))
 
     if os.path.isdir(external_machine) and os.path.isdir(external_arch):
         raise Exception(
-            'ERROR: Snapshots based on arch and machine are both valid. '
-            'Please contact system admins and spack-manager maintainers'
-            ' to sort this out')
+            "ERROR: Snapshots based on arch and machine are both valid. "
+            "Please contact system admins and spack-manager maintainers"
+            " to sort this out"
+        )
 
     if os.path.isdir(external_arch):
         external = external_arch
@@ -56,8 +55,7 @@ def get_all_snapshots():
         # if no snapshots have been created the directory may not exist
         return
     # get environment directories, make sure we're only pulling in directories
-    snapshots = [s for s in os.listdir(base_dir)
-                 if os.path.isdir(os.path.join(base_dir, s))]
+    snapshots = [s for s in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, s))]
     return snapshots
 
 
@@ -70,16 +68,15 @@ def get_ordered_dated_snapshots():
     base_dir = get_external_dir()
     # remove anything that isn't a date stamp i.e. (custom snapshots)
     if base_dir and snapshots:
-        dates = [d for d in snapshots if re.search(r'\d{4}-\d{2}-\d{2}', d)]
-        dates.sort(reverse=True, key=lambda date: datetime.strptime(
-            date, "%Y-%m-%d"))
+        dates = [d for d in snapshots if re.search(r"\d{4}-\d{2}-\d{2}", d)]
+        dates.sort(reverse=True, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
         return list(dates)
     else:
         return
 
 
 def include_entry_exists(env, name):
-    includes = config_dict(env.yaml).get('include', [])
+    includes = config_dict(env.yaml).get("include", [])
     for entry in includes:
         if entry == name:
             return True
@@ -87,11 +84,11 @@ def include_entry_exists(env, name):
 
 
 def add_include_entry(env, inc, prepend=True):
-    include = config_dict(env.yaml).get('include', [])
+    include = config_dict(env.yaml).get("include", [])
     if len(include) == 0:
         # includes is missing, need to add it
-        env.yaml['spack'].insert(0, 'include', [])
-        include = config_dict(env.yaml).get('include', [])
+        env.yaml["spack"].insert(0, "include", [])
+        include = config_dict(env.yaml).get("include", [])
     if prepend:
         include.insert(0, inc)
     else:
@@ -112,11 +109,9 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
 
     def update_dictionary(env, spec):
         if spec.name in external_spec_dict:
-            external_spec_dict[spec.name].append(
-                create_external_detected_spec(env, spec))
+            external_spec_dict[spec.name].append(create_external_detected_spec(env, spec))
         else:
-            external_spec_dict[spec.name] = [
-                create_external_detected_spec(env, spec)]
+            external_spec_dict[spec.name] = [create_external_detected_spec(env, spec)]
 
     for spec in env.all_specs():
         if spec.external:
@@ -137,26 +132,26 @@ def create_yaml_from_detected_externals(ext_dict):
     formatted_dict = {}
     for name, entries in ext_dict.items():
         config = _pkg_config_dict(entries)
-        config['buildable'] = False
+        config["buildable"] = False
         formatted_dict[name] = config
 
-    return syaml.syaml_dict({'packages': formatted_dict})
+    return syaml.syaml_dict({"packages": formatted_dict})
 
 
 def _well_posed_spec_string_minus_dev_path(spec):
-    full_spec = spec.format(
-        '{name}{@version}{%compiler}{variants}{arch=architecture}')
-    spec_components = full_spec.split(' ')
-    variants_to_omit = ('dev_path=', 'patches=')
+    full_spec = spec.format("{name}{@version}{%compiler}{variants}{arch=architecture}")
+    spec_components = full_spec.split(" ")
+    variants_to_omit = ("dev_path=", "patches=")
 
     def filter_func(entry):
         for v in variants_to_omit:
             if v in entry:
                 return False
         return True
+
     pruned_components = list(filter(filter_func, spec_components))
 
-    pruned_spec = ' '.join(pruned_components)
+    pruned_spec = " ".join(pruned_components)
     return pruned_spec
 
 
@@ -178,31 +173,33 @@ def external(parser, args):
         def print_snapshots(snaps):
             for s in snaps:
                 env_dir = os.path.join(extern_dir, s)
-                print(' - {path}'.format(path=env_dir))
+                print(" - {path}".format(path=env_dir))
 
-        print('-' * 54)
-        print('Available snapshot directories are:')
-        print('-' * 54)
+        print("-" * 54)
+        print("Available snapshot directories are:")
+        print("-" * 54)
         if dated:
-            print('\nDated Snapshots (ordered)')
-            print('-' * 54)
+            print("\nDated Snapshots (ordered)")
+            print("-" * 54)
             print_snapshots(dated)
         if non_dated:
-            print('\nAdditional Snapshots (unordered)')
-            print('-' * 54)
+            print("\nAdditional Snapshots (unordered)")
+            print("-" * 54)
             print_snapshots(non_dated)
         return
     env = ev.active_environment()
     if not env:
-        tty.die('spack manager external requires an active environment')
+        tty.die("spack manager external requires an active environment")
     if args.latest:
         snaps = get_ordered_dated_snapshots()
         if not snaps:
-            print('WARNING: No \'externals.yaml\' created because no valid '
-                  'snapshots were found. \n'
-                  '  If you are trying to use a system level snapshot make '
-                  'sure you have SPACK_MANAGER_EXTERNAL pointing to '
-                  'spack-manager directory for the system.\n')
+            print(
+                "WARNING: No 'externals.yaml' created because no valid "
+                "snapshots were found. \n"
+                "  If you are trying to use a system level snapshot make "
+                "sure you have SPACK_MANAGER_EXTERNAL pointing to "
+                "spack-manager directory for the system.\n"
+            )
             return
         else:
             snap_path = os.path.join(extern_dir, snaps[0])
@@ -211,22 +208,22 @@ def external(parser, args):
 
     # check that directory of ext view exists
     if not snap_path or not ev.is_env_dir(snap_path):
-        tty.die('External path must point to a spack environment with a view. '
-                'Auto detection of the latest dated snapshot can be achived'
-                ' with the \'--latest\' flag.')
+        tty.die(
+            "External path must point to a spack environment with a view. "
+            "Auto detection of the latest dated snapshot can be achived"
+            " with the '--latest' flag."
+        )
 
     snap_env = ev.Environment(snap_path)
     snap_env.check_views()
 
     if not snap_env.views:
-        tty.die('Environments used to create externals must have at least 1'
-                ' associated view')
+        tty.die("Environments used to create externals must have at least 1" " associated view")
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        detected = assemble_dict_of_detected_externals(
-            snap_env, args.blacklist, args.whitelist)
+        detected = assemble_dict_of_detected_externals(snap_env, args.blacklist, args.whitelist)
         src = create_yaml_from_detected_externals(detected)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
@@ -236,7 +233,8 @@ def external(parser, args):
             # merge the existing includes with the new one
             # giving precedent to the new data coming in
             dest = spack.config.read_config_file(
-                inc_name_abs, spack.config.section_schemas['packages'])
+                inc_name_abs, spack.config.section_schemas["packages"]
+            )
             combined = spack.config.merge_yaml(src, dest)
             final = combined
         else:
@@ -245,44 +243,54 @@ def external(parser, args):
         add_include_entry(env, args.name)
         final = src
 
-    with open(inc_name_abs, 'w') as fout:
-        syaml.dump_config(final, stream=fout,
-                          default_flow_style=False)
+    with open(inc_name_abs, "w") as fout:
+        syaml.dump_config(final, stream=fout, default_flow_style=False)
 
     env.write()
 
 
 def add_command(parser, command_dict):
-    ext = parser.add_parser('external',
-                            help='tools for configuring precompiled'
-                            ' binaries', conflict_handler='resolve')
+    ext = parser.add_parser(
+        "external",
+        help="tools for configuring precompiled" " binaries",
+        conflict_handler="resolve",
+    )
 
-    ext.add_argument('-n',
-                     '--name', required=False,
-                     help='name the new include file for the '
-                     'externals with this name')
-    ext.add_argument('-m', '--merge', required=False,
-                     action='store_true', help='merge existing yaml files '
-                     'together')
+    ext.add_argument(
+        "-n",
+        "--name",
+        required=False,
+        help="name the new include file for the " "externals with this name",
+    )
+    ext.add_argument(
+        "-m",
+        "--merge",
+        required=False,
+        action="store_true",
+        help="merge existing yaml files " "together",
+    )
 
     select = ext.add_mutually_exclusive_group()
 
-    select.add_argument('-w',
-                        '--whitelist', nargs='*', required=False,
-                        help='(not implemeted) specs that should '
-                        'be added (omit all others)')
-    select.add_argument('-b',
-                        '--blacklist', nargs='*', required=False,
-                        help='(not implemented) specs that should '
-                        'be omitted (add all others)')
-    ext.add_argument('path', nargs='?',
-                     help='The location of the external install '
-                     'directory')
-    ext.add_argument('--latest', action='store_true',
-                     help='use the latest snapshot available')
-    ext.add_argument('--list', action='store_true',
-                     help='print a list of the available externals to use.')
-    ext.set_defaults(merge=False,
-                     name='externals.yaml', latest=False, list=False)
+    select.add_argument(
+        "-w",
+        "--whitelist",
+        nargs="*",
+        required=False,
+        help="(not implemeted) specs that should " "be added (omit all others)",
+    )
+    select.add_argument(
+        "-b",
+        "--blacklist",
+        nargs="*",
+        required=False,
+        help="(not implemented) specs that should " "be omitted (add all others)",
+    )
+    ext.add_argument("path", nargs="?", help="The location of the external install " "directory")
+    ext.add_argument("--latest", action="store_true", help="use the latest snapshot available")
+    ext.add_argument(
+        "--list", action="store_true", help="print a list of the available externals to use."
+    )
+    ext.set_defaults(merge=False, name="externals.yaml", latest=False, list=False)
 
-    command_dict['external'] = external
+    command_dict["external"] = external
