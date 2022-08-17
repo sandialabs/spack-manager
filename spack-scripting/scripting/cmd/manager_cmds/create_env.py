@@ -30,8 +30,7 @@ def create_env(parser, args):
 
         theDir = args.directory
     elif args.name is not None:
-        theDir = os.path.join(
-            os.environ['SPACK_MANAGER'], 'environments', args.name)
+        theDir = os.path.join(os.environ["SPACK_MANAGER"], "environments", args.name)
         if os.path.exists(theDir) is False:
             print("making", theDir)
             os.makedirs(theDir)
@@ -40,31 +39,34 @@ def create_env(parser, args):
 
     has_view = False
     if args.yaml:
-        assert (os.path.isfile(args.yaml))
-        with open(args.yaml, 'r') as fyaml:
+        assert os.path.isfile(args.yaml)
+        with open(args.yaml, "r") as fyaml:
             print(fyaml)
             user_yaml = syaml.load_config(fyaml)
-            user_view = environment.config_dict(user_yaml).get('view')
+            user_view = environment.config_dict(user_yaml).get("view")
             if user_view:
                 has_view = True
-    env = environment.Environment(theDir, init_file=args.yaml,
-                                  with_view=has_view, keep_relative=True)
+    env = environment.Environment(
+        theDir, init_file=args.yaml, with_view=has_view, keep_relative=True
+    )
     yaml = env.yaml
 
     def _unify_already_set(yaml):
-        return ('spack' in yaml
-                and 'concretizer' in yaml['spack']
-                and 'unify' in yaml['spack']['concretizer'])
+        return (
+            "spack" in yaml
+            and "concretizer" in yaml["spack"]
+            and "unify" in yaml["spack"]["concretizer"]
+        )
 
     if not args.yaml or not _unify_already_set(yaml):
-        yaml['spack']['concretizer'] = {'unify': True}
+        yaml["spack"]["concretizer"] = {"unify": True}
         with env.write_transaction():
             env.write()
 
     if args.machine is not None:
         machine = args.machine
         if machine not in fm.machine_list.keys():
-            raise Exception('Specified machine %s is not defined' % machine)
+            raise Exception("Specified machine %s is not defined" % machine)
     else:
         machine = find_machine(verbose=False)
 
@@ -74,54 +76,63 @@ def create_env(parser, args):
             env.add(s)
 
     inc_creator = IncludesCreator()
-    genPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', 'base')
-    inc_creator.add_scope('base', genPath)
-    hostPath = os.path.join(os.environ['SPACK_MANAGER'], 'configs', machine)
+    genPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "base")
+    inc_creator.add_scope("base", genPath)
+    hostPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", machine)
 
     if os.path.exists(hostPath):
-        inc_creator.add_scope('machine', hostPath)
+        inc_creator.add_scope("machine", hostPath)
     else:
-        print('Host not setup in spack-manager: %s' % hostPath)
+        print("Host not setup in spack-manager: %s" % hostPath)
 
-    include_file_name = 'include.yaml'
+    include_file_name = "include.yaml"
     include_file = os.path.join(theDir, include_file_name)
     inc_creator.write_includes(include_file)
-    if 'include' in yaml['spack']:
-        yaml['spack']['include'].append(include_file_name)
+    if "include" in yaml["spack"]:
+        yaml["spack"]["include"].append(include_file_name)
     else:
-        yaml['spack']['include'] = [include_file_name]
+        yaml["spack"]["include"] = [include_file_name]
 
     env.write()
 
-    fpath = os.path.join(os.environ['SPACK_MANAGER'], '.tmp')
+    fpath = os.path.join(os.environ["SPACK_MANAGER"], ".tmp")
 
     os.makedirs(fpath, exist_ok=True)
 
-    storage = os.path.join(fpath, 'created_env_path.txt')
+    storage = os.path.join(fpath, "created_env_path.txt")
 
-    with open(storage, 'w') as f:
+    with open(storage, "w") as f:
         f.write(theDir)
 
     return theDir
 
 
 def setup_parser_args(sub_parser):
-    sub_parser.add_argument('-m', '--machine', required=False,
-                            help='Machine to match configs')
+    sub_parser.add_argument("-m", "--machine", required=False, help="Machine to match configs")
     name_group = sub_parser.add_mutually_exclusive_group()
-    name_group.add_argument('-d', '--directory', required=False,
-                            help='Directory to copy files')
-    name_group.add_argument('-n', '--name', required=False,
-                            help='Name of directory to copy files that will be in '
-                            '$SPACK_MANAGER/environments')
-    sub_parser.add_argument('-y', '--yaml', required=False,
-                            help='Reference spack.yaml to copy to directory')
-    sub_parser.add_argument('-s', '--spec', required=False, default=[], nargs='+',
-                            help='Specs to populate the environment with')
+    name_group.add_argument("-d", "--directory", required=False, help="Directory to copy files")
+    name_group.add_argument(
+        "-n",
+        "--name",
+        required=False,
+        help="Name of directory to copy files that will be in " "$SPACK_MANAGER/environments",
+    )
+    sub_parser.add_argument(
+        "-y", "--yaml", required=False, help="Reference spack.yaml to copy to directory"
+    )
+    sub_parser.add_argument(
+        "-s",
+        "--spec",
+        required=False,
+        default=[],
+        nargs="+",
+        help="Specs to populate the environment with",
+    )
 
 
 def add_command(parser, command_dict):
-    sub_parser = parser.add_parser('create-env', help='convenience script'
-                                   ' for setting up a spack environment')
+    sub_parser = parser.add_parser(
+        "create-env", help="convenience script" " for setting up a spack environment"
+    )
     setup_parser_args(sub_parser)
-    command_dict['create-env'] = create_env
+    command_dict["create-env"] = create_env

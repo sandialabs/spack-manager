@@ -17,17 +17,17 @@ from spack.spec import Spec
 from spack.test.conftest import *  # noqa: F401
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def builtin_repo_path():
     yield spack.paths.packages_path
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def exawind_repo_path():
-    yield os.path.join(os.environ['SPACK_MANAGER'], 'repos', 'exawind')
+    yield os.path.join(os.environ["SPACK_MANAGER"], "repos", "exawind")
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def create_package(builtin_repo_path, exawind_repo_path):
     packages = {}
 
