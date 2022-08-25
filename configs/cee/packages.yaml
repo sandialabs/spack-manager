@@ -15,6 +15,7 @@ packages:
     externals:
     - spec: openmpi@4.0.5%gcc@7.2.0
       prefix: /projects/sierra/linux_rh7/SDK/mpi/openmpi/4.0.5-gcc-7.2.0-RHEL7/
+    buildable: false
   pkg-config:
     buildable: false
     externals:
@@ -41,3 +42,4 @@ packages:
     externals:
     - spec: mpich@3.4.2%gcc@9.3.0
       prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/mpich-3.4.2-4h2muy6jlgfdahehxmxa4ybndfdb6gx2/
+    buildable: false

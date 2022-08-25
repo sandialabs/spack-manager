@@ -18,3 +18,4 @@ packages:
       prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/mpich-3.4.2-4h2muy6jlgfdahehxmxa4ybndfdb6gx2/
     - spec: mpich@3.4.2%gcc@8.3.1
       prefix: /projects/wind/spack-manager/views/system/gcc-8.3.1/mpich-3.4.2
+    buildable: false
