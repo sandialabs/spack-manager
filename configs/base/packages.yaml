@@ -1,6 +1,4 @@
 packages:
-  amr-wind:
-    variants: +ascent
   ascent:
     variants: ~fortran
   conduit:
