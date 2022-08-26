@@ -14,7 +14,7 @@ import spack.paths
 import spack.repo
 from spack.cmd import parse_specs
 from spack.spec import Spec
-from spack.test.conftest import *  # noqa: F401
+from spack.test.conftest import *  # noqa: F401 F403
 
 
 @pytest.fixture(scope="session")
