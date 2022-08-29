@@ -20,6 +20,7 @@ class NaluWind(bNaluWind, ROCmPackage):
             description='Enable SIMD in STK')
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
+    depends_on('hypre+rocm', when='+hypre+rocm')
     depends_on('trilinos gotype=long')
 
     for _arch in ROCmPackage.amdgpu_targets:

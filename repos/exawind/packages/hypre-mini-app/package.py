@@ -26,11 +26,23 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
     variant('unified-memory', default=False,
             description='Enable Unified Memory in hypre')
 
+    variant('gpu-aware-mpi', default=False,
+            description='gpu-aware-mpi')
+
+    variant('rocblas', default=False,
+            description='use rocblas')
+
+    variant('cublas', default=False,
+            description='use cublas')
+
     depends_on('mpi')
     depends_on('hypre+mpi@2.20.0:')
     depends_on('yaml-cpp@0.6.2:')
     depends_on('hypre+umpire', when='+umpire')
     depends_on('hypre+unified-memory', when='+unified-memory')
+    depends_on('hypre+gpu-aware-mpi', when='+gpu-aware-mpi')
+    depends_on('hypre+rocblas', when='+rocblas')
+    depends_on('hypre+cublas', when='+cublas')
     for arch in CudaPackage.cuda_arch_values:
         depends_on('hypre+cuda cuda_arch=%s @2.20.0:' % arch,
                    when='+cuda cuda_arch=%s' % arch)
