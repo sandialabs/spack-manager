@@ -7,6 +7,10 @@ class Hypre(bHypre):
     phases = ['autoreconf', 'distclean', 'configure', 'clean', 'build', 'install']
 
     variant('gpu-aware-mpi', default=False, description='Use gpu-aware mpi')
+    variant('rocblas', default=False, description='use rocblas')
+    variant('cublas', default=False, description='use cublas')
+    conflicts('+cublas', when='~cuda', msg='cublas requires cuda to be enabled')
+    conflicts('+rocblas', when='~rocm', msg='rocblas requires rocm to be enabled')
     variant('umpire', default=False, description='Use Umpire')
     depends_on("umpire", when='+umpire')
     depends_on("umpire+rocm", when='+umpire+rocm')
@@ -28,6 +32,12 @@ class Hypre(bHypre):
 
         if '+gpu-aware-mpi' in spec:
             options.append('--enable-gpu-aware-mpi')
+
+        if '+rocblas' in spec:
+            options.append('--enable-rocblas')
+
+        if '+cublas' in spec:
+            options.append('--enable-cublas')
 
         if '+umpire' in spec:
             if  (('+cuda' in spec or '+rocm' in spec) and "--enable-device-memory-pool" in options):
