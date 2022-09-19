@@ -183,7 +183,7 @@ The major steps and associated commands for building software with Spack environ
    Now that you've decided what combination of software you want to build, what elements you want to develop, and what the dependency graph is all that is left is to build and install. Easy right?
 
 This may seem like a lot to go over, and this was not a very thorough description of each step.
-These steps are covered with a workflow example in [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
+These steps are covered with a workflow example in the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
 where we walk through each step one at a time. 
 The intention of this page is to serve as an introduction and a reference going forward.
 If you forget a step or command you can always come back to this page to see what it is and see a brief description of the whole process.
