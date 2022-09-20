@@ -1,0 +1,12 @@
+diff --git a/modules/openfoam/src/OpenFOAM.f90 b/modules/openfoam/src/OpenFOAM.f90
+index af7c853..d1cb2e5 100644
+--- a/modules/openfoam/src/OpenFOAM.f90
++++ b/modules/openfoam/src/OpenFOAM.f90
+@@ -167,6 +167,7 @@ SUBROUTINE Init_OpFM( InitInp, p_FAST, AirDens, u_AD14, u_AD, initOut_AD, y_AD,
+    ALLOCATE( OpFM%m%ActForceLoadsPoints(OpFM%p%NMappings), OpFM%m%Line2_to_Point_Loads(OpFM%p%NMappings), OpFM%m%Line2_to_Point_Motions(OpFM%p%NMappings),STAT=ErrStat2)
+ 
+    do k=1,OpFM%p%NMappings
++      print*, 'print statement so we dont segfault with clang@12.0.1 with -O2 optimizations'
+       call MeshCopy (  SrcMesh  = OpFM%m%ActForceMotions(k)  &
+            , DestMesh = OpFM%m%ActForceLoads(k) &
+            , CtrlCode = MESH_SIBLING          &
