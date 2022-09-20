@@ -24,9 +24,7 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   fi
   
   # need to add exawind repo so all packages are available to environments during creation 
-  if ! spack info nalu-wind-nightly >/dev/null 2>&1; then
-    spack repo add ${SPACK_MANAGER}/repos/exawind
-  fi
+  spack repo add ${SPACK_MANAGER}/repos/exawind >/dev/null 2>&1
   
   if [[ -z $(spack config --scope site blame bootstrap | grep spack-bootstrap-store) ]]; then
     if [[ "${SPACK_MANAGER_MACHINE}" == *"ascic"* || "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
