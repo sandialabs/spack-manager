@@ -11,6 +11,7 @@ class Openfast(bOpenfast):
     variant('netcdf', default=False, description='Use netcdf')
     depends_on('netcdf-c', when='+netcdf')
     patch('hub_seg_fault.patch')
+    patch('segfault_message.patch', when='%clang@12.0.1 build_type=RelWithDebInfo')
     # Avoid using HDF5's installed CMake config with hdf5-shared library names
     def cmake_args(self):
         options = super(Openfast, self).cmake_args()
