@@ -16,12 +16,13 @@ import os
 import sys
 from manager_cmds.find_machine import find_machine
 import multiprocessing
-from manager_utils import path_extension
+from manager_utils import path_extension, pruned_spec_string
 
 import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
 import spack.util.executable
+from spack.version import GitVersion, Version
 import spack.cmd.install
 
 
@@ -217,7 +218,7 @@ def add_spec(env, extension, data, create_modules):
 def get_top_level_specs(env, blacklist=blacklist):
     ev.activate(env)
     print('\nInitial concretize')
-    command(concretize)
+    command(concretize, '-f')
     top_specs = []
     for root in env.roots():
         if root.name in blacklist:
@@ -234,7 +235,14 @@ def get_top_level_specs(env, blacklist=blacklist):
 
 
 def find_latest_git_hash(spec):
-    version_dict = spec.package_class.versions[spec.version]
+    if isinstance(spec.version, GitVersion):
+        # if it is already a GitVersion then we've probably already ran this once
+        # we are going to recreate the paried version that the git hash has been
+        # assigned to and use that
+        version = Version(spec.version.ref_version_str)
+        version_dict = spec.package_class.versions[version]
+    else:
+        version_dict = spec.package_class.versions[spec.version]
     keys = version_dict.keys()
 
     if 'branch' in keys:
@@ -273,8 +281,9 @@ def replace_versions_with_hashes(spec_string, hash_dict):
         hash = hash_dict.get(name)
         if hash:
             version = 'git.{hash}={version}'.format(hash=hash,version=version)
-            new_specs.append('{n}@{v}%{r}'.format(n=name,
-                                                  v=version, r=rest))
+            # prune the spec string to get rid of patches which could cause conflicts later
+            new_specs.append(pruned_spec_string('{n}@{v}%{r}'.format(n=name,
+                                                  v=version, r=rest)))
     final = ' ^'.join(new_specs)
     assert '\n' not in final
     assert '\t' not in final
