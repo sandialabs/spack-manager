@@ -22,6 +22,11 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
     spack config --scope site add "config:extensions:[${SPACK_MANAGER}/spack-scripting]"
   fi
+
+
+  if [[ -z $(spack repo list | grep "exawind    ${SPACK_MANAGER}") ]]; then
+    spack repo add ${SPACK_MANAGER}/repos/exawind
+  fi
   
   if [[ -z $(spack config --scope site blame bootstrap | grep spack-bootstrap-store) ]]; then
     if [[ "${SPACK_MANAGER_MACHINE}" == *"ascic"* || "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
