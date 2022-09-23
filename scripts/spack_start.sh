@@ -23,9 +23,6 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
     spack config --scope site add "config:extensions:[${SPACK_MANAGER}/spack-scripting]"
   fi
   
-  # need to add exawind repo so all packages are available to environments during creation 
-  spack repo add ${SPACK_MANAGER}/repos/exawind >/dev/null 2>&1
-  
   if [[ -z $(spack config --scope site blame bootstrap | grep spack-bootstrap-store) ]]; then
     if [[ "${SPACK_MANAGER_MACHINE}" == *"ascic"* || "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
       spack bootstrap add --scope site --trust wind-binaries /projects/wind/spack-bootstrap-store/metadata/binaries
