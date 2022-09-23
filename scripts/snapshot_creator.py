@@ -22,8 +22,10 @@ import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
 import spack.util.executable
-from spack.version import GitVersion, Version
 import spack.cmd.install
+
+from spack.version import GitVersion, Version
+from spack.spec import Spec
 
 
 git = spack.util.executable.which('git')
@@ -278,6 +280,12 @@ def replace_versions_with_hashes(spec_string, hash_dict):
     for spec in specs:
         base, rest = spec.split('%')
         name, version = base.split('@')
+
+        # use paired version if it is already a GitVersion
+        newSpec  = Spec(spec)
+        if isinstance(newSpec.version, GitVersion):
+            version = newSpec.version.ref_version_str
+
         hash = hash_dict.get(name)
         if hash:
             version = 'git.{hash}={version}'.format(hash=hash,version=version)
