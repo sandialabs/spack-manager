@@ -134,7 +134,7 @@ def parse(stream):
                         'relocate'], help='set the type of'
                         ' linking used in view creation')
     parser.set_defaults(modules=False, use_develop=False,
-                        stop_after='install', link_type='hardlink')
+                        stop_after='install', link_type='symlink')
 
     return parser.parse_args(stream)
 
@@ -246,6 +246,9 @@ def find_latest_git_hash(spec):
     elif 'sha256' in keys:
         # already matched
         return None
+    elif 'commit' in keys:
+        # we could reuse the commit, but since it is effectively pinned just return none
+        return None
     else:
         raise Exception(
             'no known git type for ' + spec.format(
@@ -269,7 +272,7 @@ def replace_versions_with_hashes(spec_string, hash_dict):
         name, version = base.split('@')
         hash = hash_dict.get(name)
         if hash:
-            version = hash
+            version = 'git.{hash}={version}'.format(hash=hash,version=version)
             new_specs.append('{n}@{v}%{r}'.format(n=name,
                                                   v=version, r=rest))
     final = ' ^'.join(new_specs)
@@ -293,9 +296,9 @@ def use_latest_git_hashes(env, top_specs, blacklist=blacklist):
                 if dep.name not in blacklist:
                     hash_dict[dep.name] = find_latest_git_hash(dep)
 
-            # yaml['spack']['specs'][i] = replace_versions_with_hashes(
-            #    roots[i].build_spec, hash_dict)
-            yaml['spack']['specs'][i] = str(roots[i].build_spec)
+            yaml['spack']['specs'][i] = replace_versions_with_hashes(
+               roots[i].build_spec, hash_dict)
+            # yaml['spack']['specs'][i] = str(roots[i].build_spec)
 
     with open(env.manifest_path, 'w') as fout:
         syaml.dump_config(yaml, stream=fout,
