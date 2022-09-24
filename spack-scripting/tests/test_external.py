@@ -11,6 +11,7 @@ from unittest.mock import patch
 import manager_cmds
 import manager_cmds.external
 import pytest
+from manager_utils import pruned_spec_string
 
 import spack.environment as ev
 import spack.main
@@ -35,7 +36,7 @@ manager = spack.main.SpackCommand("manager")
 def test_stripDevPathFromExternals(spec_str):
     assert "dev_path" in spec_str
     s = Spec(spec_str)
-    pruned_string = manager_cmds.external._well_posed_spec_string_minus_dev_path(s)
+    pruned_string = pruned_spec_string(s)
     assert "dev_path" not in pruned_string
 
 
@@ -52,7 +53,7 @@ def test_stripDevPathFromExternals(spec_str):
 def test_stripPatchesFromExternals(spec_str):
     assert "patches" in spec_str
     s = Spec(spec_str)
-    pruned_string = manager_cmds.external._well_posed_spec_string_minus_dev_path(s)
+    pruned_string = pruned_spec_string(s)
     assert "patches" not in pruned_string
 
 
