@@ -25,3 +25,19 @@ def path_extension(name, use_machine_name):
         base_extension(use_machine_name),
         "{date}".format(date=name if name else date.today().strftime("%Y-%m-%d")),
     )
+
+
+def pruned_spec_string(spec, variants_to_omit=["dev_path=", "patches="]):
+    full_spec = spec.format("{name}{@version}{%compiler}{variants}{arch=architecture}")
+    spec_components = full_spec.split(" ")
+
+    def filter_func(entry):
+        for v in variants_to_omit:
+            if v in entry:
+                return False
+        return True
+
+    pruned_components = list(filter(filter_func, spec_components))
+
+    pruned_spec = " ".join(pruned_components)
+    return pruned_spec

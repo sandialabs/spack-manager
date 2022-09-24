@@ -16,13 +16,16 @@ import os
 import sys
 from manager_cmds.find_machine import find_machine
 import multiprocessing
-from manager_utils import path_extension
+from manager_utils import path_extension, pruned_spec_string
 
 import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
 import spack.util.executable
 import spack.cmd.install
+
+from spack.version import GitVersion, Version
+from spack.spec import Spec
 
 
 git = spack.util.executable.which('git')
@@ -134,7 +137,7 @@ def parse(stream):
                         'relocate'], help='set the type of'
                         ' linking used in view creation')
     parser.set_defaults(modules=False, use_develop=False,
-                        stop_after='install', link_type='hardlink')
+                        stop_after='install', link_type='symlink')
 
     return parser.parse_args(stream)
 
@@ -217,7 +220,7 @@ def add_spec(env, extension, data, create_modules):
 def get_top_level_specs(env, blacklist=blacklist):
     ev.activate(env)
     print('\nInitial concretize')
-    command(concretize)
+    command(concretize, '-f')
     top_specs = []
     for root in env.roots():
         if root.name in blacklist:
@@ -234,7 +237,14 @@ def get_top_level_specs(env, blacklist=blacklist):
 
 
 def find_latest_git_hash(spec):
-    version_dict = spec.package_class.versions[spec.version]
+    if isinstance(spec.version, GitVersion):
+        # if it is already a GitVersion then we've probably already ran this
+        # once we are going to recreate the paried version that the git hash
+        # has been assigned to and use that
+        version = Version(spec.version.ref_version_str)
+        version_dict = spec.package_class.versions[version]
+    else:
+        version_dict = spec.package_class.versions[spec.version]
     keys = version_dict.keys()
 
     if 'branch' in keys:
@@ -245,6 +255,10 @@ def find_latest_git_hash(spec):
         return None
     elif 'sha256' in keys:
         # already matched
+        return None
+    elif 'commit' in keys:
+        # we could reuse the commit, but since it is effectively pinned just
+        # return none
         return None
     else:
         raise Exception(
@@ -267,18 +281,27 @@ def replace_versions_with_hashes(spec_string, hash_dict):
     for spec in specs:
         base, rest = spec.split('%')
         name, version = base.split('@')
+
+        # use paired version if it is already a GitVersion
+        newSpec = Spec(spec)
+        if isinstance(newSpec.version, GitVersion):
+            version = newSpec.version.ref_version_str
+
         hash = hash_dict.get(name)
         if hash:
-            version = hash
-            new_specs.append('{n}@{v}%{r}'.format(n=name,
-                                                  v=version, r=rest))
+            version = 'git.{hash}={version}'.format(hash=hash, version=version)
+            # prune the spec string to get rid of patches which could cause
+            # conflicts later
+            new_specs.append(pruned_spec_string('{n}@{v}%{r}'.format(n=name,
+                                                                     v=version,
+                                                                     r=rest)))
     final = ' ^'.join(new_specs)
     assert '\n' not in final
     assert '\t' not in final
     return final
 
 
-def use_latest_git_hashes(env, top_specs, blacklist=blacklist):
+def use_latest_git_hashes(env, blacklist=blacklist):
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
 
@@ -293,9 +316,8 @@ def use_latest_git_hashes(env, top_specs, blacklist=blacklist):
                 if dep.name not in blacklist:
                     hash_dict[dep.name] = find_latest_git_hash(dep)
 
-            # yaml['spack']['specs'][i] = replace_versions_with_hashes(
-            #    roots[i].build_spec, hash_dict)
-            yaml['spack']['specs'][i] = str(roots[i].build_spec)
+            yaml['spack']['specs'][i] = replace_versions_with_hashes(
+                roots[i].build_spec, hash_dict)
 
     with open(env.manifest_path, 'w') as fout:
         syaml.dump_config(yaml, stream=fout,
@@ -362,7 +384,7 @@ def create_snapshots(args):
     if args.use_develop:
         use_develop_specs(e, top_specs)
     else:
-        use_latest_git_hashes(e, top_specs)
+        use_latest_git_hashes(e)
 
     if args.stop_after == 'mod_specs':
         return
