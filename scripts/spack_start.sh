@@ -23,7 +23,7 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
     spack config --scope site add "config:extensions:[${SPACK_MANAGER}/spack-scripting]"
   fi
 
-  if [[ -z $(spack repo list | grep "exawind    ${SPACK_MANAGER}") ]]; then
+  if [[ -z $(spack repo list | awk '{print $1" "$2}' | grep "exawind $SPACK_MANAGER") ]]; then
     spack repo add ${SPACK_MANAGER}/repos/exawind
   fi
   
