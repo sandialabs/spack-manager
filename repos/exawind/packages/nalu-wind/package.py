@@ -20,10 +20,7 @@ class NaluWind(bNaluWind, ROCmPackage):
             description='Enable SIMD in STK')
     variant('ninja', default=False,
             description='Enable Ninja makefile generator')
-    variant('gpu-rdc', default=False,
-            description='Enable gpu-rdc for testing')
 
-    #depends_on('hypre+unified-memory', when='+hypre+cuda')
     for _arch in ROCmPackage.amdgpu_targets:
         depends_on('hypre+rocm amdgpu_target={0}'.format(_arch), when='+hypre+rocm amdgpu_target={0}'.format(_arch))
     depends_on('trilinos gotype=long')
@@ -61,17 +58,14 @@ class NaluWind(bNaluWind, ROCmPackage):
             env.set('OMPI_CXX', self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             env.set('MPICH_CXX', self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             env.set('MPICXX_CXX', self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
-        if '+gpu-rdc' in self.spec:
-            env.append_flags('CXXFLAGS', '-fgpu-rdc -ferror-limit=0')
-            #env.append_flags('LDFLAGS', '-fgpu-rdc --hip-link')
-            #env.append_flags("CXXFLAGS", "-D__HIP_DEVICE_COMPILE__ -DUSE_HIP_RDC")
+        if '+rocm' in self.spec:
+            env.append_flags('CXXFLAGS', '-fgpu-rdc')
 
     def cmake_args(self):
         spec = self.spec
         define = CMakePackage.define
         cmake_options = super(NaluWind, self).cmake_args()
         cmake_options.append(self.define_from_variant('CMAKE_CXX_STANDARD', 'cxxstd'))
-        cmake_options.append(define('CMAKE_VERBOSE_MAKEFILE', True))
 
         if  spec.satisfies('dev_path=*'):
             cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
@@ -82,10 +76,6 @@ class NaluWind(bNaluWind, ROCmPackage):
             cmake_options.append(define('ENABLE_ROCM', True))
             targets = spec.variants['amdgpu_target'].value
             cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
-
-        #if '+gpu-rdc' in self.spec:
-        #cmake_options.append('-DCMAKE_EXE_LINKER_FLAGS="-fgpu-rdc --hip-link"')
-        #    cmake_options.append(define('CMAKE_EXE_LINKER_FLAGS',"-fgpu-rdc --hip-link"))
 
         if spec['mpi'].name == 'openmpi':
             cmake_options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
