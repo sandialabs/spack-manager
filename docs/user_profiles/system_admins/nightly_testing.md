@@ -17,3 +17,16 @@ In the cron job specification, `SPACK_MANAGER` is set. Then the spack-manager re
 The `run-exawind-nightly-tests.sh` script generates another script on the fly. This is done because depending on what machine it is on, it may need to submit a job to run the tests, which requires a script to be submitted. Spack-manager finds the machine it is running on and runs the generated test script using different methods for different machines.
 
 For Exawind, the test script manages much of the archiving of gold files for each particular application in the `golds` directory of spack-manager. It then finds the set of tests that machine is intended to run which are listed in a file in the `env-templates` directory. These yaml files are lists of specs to be installed and tested. Spack-manager uses python class inheritance to add special testing packages with `*-nightly` suffixes onto preexisting packages within Spack or the custom spack-manager package repos in the `repos` directory. These nightly packages manage the CMake configured options that get passed to the CTest nightly scripts with the repos for each tested package. Spack-manager then sets up a Spack environment with the testing yaml file, activates the environment, uninstalls all the nightly test packages installed from the previous test runs and then concretizes and installs the latest git repos of the packages. By doing multiple `spack install` processes at the same time, Spack is able to parallelize the disjoint packages that have no dependencies on one another and test multiple packages on a system at once in a very organized and separate fashion. Once the tests complete, each package reports their own results to CDash and the test script then archives the generated gold files.
+
+## SNL nightly testing
+
+Scripts for nightly testing of Nalu-Wind on Sandia machines are located in `${SPACK_MANAGER}/scripts`.
+`nalu_wind_snl_cpu_nightly_test.sh` runs CPU tests, and `nalu_wind_snl_gpu_nightly_test.sh` runs GPU
+tests.  The current cronjob looks like:
+```
+0 22 * * * /bin/bash /projects/wind/wind-testing-cpu/scripts/nalu_wind_snl_cpu_nightly_test.sh
+```
+
+Note that things can get messed up if you do one-off runs from the same Spack-Manager directory as
+the regular nightly testing, so if you want to do a one-off test run, it's best to do it from a
+separate Spack-Manager instance.
