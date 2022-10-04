@@ -41,7 +41,12 @@ printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
 printf "\nCleaning Spack installation...\n"
-cmd "sm-clean"
+  echo "Remove Spack-Manager cache:"
+  cmd "rm -rf ${SPACK_MANAGER}/.cache"
+  echo "Use the native Spack clean system":
+  cmd "spack clean --all"
+  echo "Cleaning out pycache from spack-manager repos:"
+  cmd "find ${SPACK_MANAGER}/repos -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete"
 
 printf "\nGenerating test script for submission...\n"
 EXAWIND_TEST_SCRIPT=${SPACK_MANAGER}/scripts/exawind-tests-script.sh
