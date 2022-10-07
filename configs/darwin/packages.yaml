@@ -1,6 +1,6 @@
 packages:
   hypre:
-    variants: +shared
+    variants: +shared~fortran
   all:
     target: [x86_64]
     compiler: [apple-clang, gcc, clang]
