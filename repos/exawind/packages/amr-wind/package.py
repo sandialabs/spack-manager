@@ -20,11 +20,21 @@ class AmrWind(bAmrWind):
             description='Turn on clang-tidy')
     variant('hdf5', default=False,
             description='Enable HDF5 plots with ZFP compression')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     depends_on('hdf5~mpi', when='+hdf5~mpi')
     depends_on('hdf5+mpi', when='+hdf5+mpi')
     depends_on('h5z-zfp', when='+hdf5')
     depends_on('zfp', when='+hdf5')
+    depends_on("ninja", type="build", when='+ninja')
+    
+    @property
+    def generator(self):
+          if '+ninja' in self.spec:
+              return "Ninja"
+          else:
+              return "Unix Makefiles"
 
     def setup_build_environment(self, env):
         if '+asan' in self.spec:

@@ -18,6 +18,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             description='Turn on address sanitizer')
     variant('stk_simd', default=False,
             description='Enable SIMD in STK')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')
@@ -32,6 +34,15 @@ class NaluWind(bNaluWind, ROCmPackage):
 
     for std in cxxstd:
         depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
+
+    depends_on("ninja", type="build", when='+ninja')
+    
+    @property
+    def generator(self):
+          if '+ninja' in self.spec:
+              return "Ninja"
+          else:
+              return "Unix Makefiles"
 
     def setup_build_environment(self, env):
         if '~stk_simd' in self.spec:

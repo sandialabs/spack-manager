@@ -16,8 +16,19 @@ class Trilinos(bTrilinos):
             description='turn on STK unit tests')
     variant('stk_simd', default=False,
             description='Enable SIMD in STK')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     patch('kokkos_zero_length_team.patch')
+
+    depends_on("ninja", type="build", when='+ninja')
+   
+    @property
+    def generator(self):
+          if '+ninja' in self.spec:
+              return "Ninja"
+          else:
+              return "Unix Makefiles" 
 
     def setup_build_environment(self, env):
         spec = self.spec
