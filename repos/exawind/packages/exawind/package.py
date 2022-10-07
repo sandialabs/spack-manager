@@ -37,6 +37,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             description='Enable Nalu-Wind on the GPU')
     variant('stk_simd', default=False,
             description='Enable SIMD in STK')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     conflicts('+amr_wind_gpu', when='~cuda~rocm')
     conflicts('+nalu_wind_gpu', when='~cuda~rocm')
@@ -64,6 +66,9 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('amr-wind+hypre', when='+hypre')
     depends_on('hypre', when='+hypre')
     depends_on('hypre+rocm', when='+hypre+rocm')
+    depends_on('trilinos+ninja', when='+ninja')
+    depends_on('nalu-wind+ninja', when='+ninja')
+    depends_on('amr-wind+ninja', when='+ninja')
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on('trilinos')

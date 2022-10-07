@@ -18,6 +18,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             description='Turn on address sanitizer')
     variant('stk_simd', default=False,
             description='Enable SIMD in STK')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')

@@ -16,6 +16,8 @@ class Trilinos(bTrilinos):
             description='turn on STK unit tests')
     variant('stk_simd', default=False,
             description='Enable SIMD in STK')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     patch('kokkos_zero_length_team.patch')
 

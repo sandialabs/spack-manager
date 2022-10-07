@@ -42,7 +42,7 @@ if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 
 elif [ "${SPACK_MANAGER_MACHINE}" == 'spock' ] || [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ]; then
   cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 else
-  cmd "spack manager create-env -s exawind+hypre+openfast -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
+  cmd "spack manager create-env -s exawind+hypre+openfast+ninja -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 fi
 
 printf "\nActivating Spack environment...\n"

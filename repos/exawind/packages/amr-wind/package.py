@@ -20,6 +20,8 @@ class AmrWind(bAmrWind):
             description='Turn on clang-tidy')
     variant('hdf5', default=False,
             description='Enable HDF5 plots with ZFP compression')
+    variant('ninja', default=False,
+            description='Enable Ninja makefile generator')
 
     depends_on('hdf5~mpi', when='+hdf5~mpi')
     depends_on('hdf5+mpi', when='+hdf5+mpi')
