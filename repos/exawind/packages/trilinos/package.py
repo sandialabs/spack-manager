@@ -19,8 +19,14 @@ class Trilinos(bTrilinos):
 
     patch('kokkos_zero_length_team.patch')
 
-    depends_on("ninja", type="build")
-    generator = "Ninja"
+    depends_on("ninja", type="build", when='+ninja')
+   
+    @property
+    def generator(self):
+          if '+ninja' in self.spec:
+              return "Ninja"
+          else:
+              return "Unix Makefiles" 
 
     def setup_build_environment(self, env):
         spec = self.spec

@@ -33,8 +33,14 @@ class NaluWind(bNaluWind, ROCmPackage):
     for std in cxxstd:
         depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
 
-    depends_on("ninja", type="build")
-    generator = "Ninja"
+    depends_on("ninja", type="build", when='+ninja')
+    
+    @property
+    def generator(self):
+          if '+ninja' in self.spec:
+              return "Ninja"
+          else:
+              return "Unix Makefiles"
 
     def setup_build_environment(self, env):
         if '~stk_simd' in self.spec:
