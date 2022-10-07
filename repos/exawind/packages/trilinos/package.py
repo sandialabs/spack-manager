@@ -19,6 +19,9 @@ class Trilinos(bTrilinos):
 
     patch('kokkos_zero_length_team.patch')
 
+    depends_on("ninja", type="build")
+    generator = "Ninja"
+
     def setup_build_environment(self, env):
         spec = self.spec
         if '+cuda' in spec and '+wrapper' in spec:

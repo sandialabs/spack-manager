@@ -64,11 +64,14 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('amr-wind+hypre', when='+hypre')
     depends_on('hypre', when='+hypre')
     depends_on('hypre+rocm', when='+hypre+rocm')
+    depends_on("ninja", type="build")
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on('trilinos')
     depends_on('cmake')
     depends_on('mpi')
+
+    generator = "Ninja"
 
     def cmake_args(self):
         spec = self.spec

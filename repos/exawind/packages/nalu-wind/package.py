@@ -33,6 +33,9 @@ class NaluWind(bNaluWind, ROCmPackage):
     for std in cxxstd:
         depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
 
+    depends_on("ninja", type="build")
+    generator = "Ninja"
+
     def setup_build_environment(self, env):
         if '~stk_simd' in self.spec:
             env.append_flags('CXXFLAGS', '-DUSE_STK_SIMD_NONE')
