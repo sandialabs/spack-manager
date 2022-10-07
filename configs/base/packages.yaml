@@ -17,10 +17,12 @@ packages:
     variants: +cxx
   parallel-netcdf:
     version: [1.12.2]
+    variants: ~fortran
   tioga:
     version: [develop]
   hypre:
     version: [develop]
+    variants: ~fortran
   yaml-cpp:
     version: [0.6.3]
   trilinos:
