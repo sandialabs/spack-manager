@@ -1,6 +1,6 @@
 packages:
   ascent:
-    variants: ~fortran
+    variants: ~fortran~openmp
   conduit:
     variants: ~fortran~hdf5_compat
   boost:
