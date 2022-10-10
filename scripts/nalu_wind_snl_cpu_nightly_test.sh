@@ -18,5 +18,6 @@ set_gold_perms ${SPACK_MANAGER_GOLDS_DIR}-stable
 set_gold_perms ${SPACK_MANAGER_GOLDS_DIR}-develop
 
 chgrp wg-sierra-users $SPACK_MANAGER
+chmod g+rx $SPACK_MANAGER
 chgrp -R wg-sierra-users $SPACK_MANAGER/logs
-chmod -R g+rx $SPACK_MANAGER/logs
+chmod -R g+rX $SPACK_MANAGER/logs
