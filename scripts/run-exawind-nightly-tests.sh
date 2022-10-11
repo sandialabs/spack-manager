@@ -61,6 +61,20 @@ cmd() {
   eval "$@"
 }
 
+prep_gold_dirs() {
+  cmd "rm -rf $1/tmp/amr-wind"
+  cmd "mkdir -p $1/tmp/amr-wind"
+  cmd "mkdir -p $1/archived/amr-wind"
+  cmd "rm -rf $1/tmp/nalu-wind"
+  cmd "mkdir -p $1/tmp/nalu-wind"
+  cmd "mkdir -p $1/archived/nalu-wind"
+}
+
+archive_gold_dirs() {
+  cmd "tar -czf $1/archived/amr-wind/amr-wind-golds-$2.tar.gz -C $1/tmp/amr-wind ."
+  cmd "tar -czf $1/archived/nalu-wind/nalu-wind-golds-$2.tar.gz -C $1/tmp/nalu-wind ."
+}
+
 set -e
 
 printf "Starting at $(date)\n"
@@ -72,12 +86,12 @@ if [[ -f "${ENV_SCRIPT}" ]]; then
 fi
 
 printf "\nSetting up gold files directories...\n"
-cmd "rm -rf ${SPACK_MANAGER_GOLDS_DIR}/tmp/amr-wind"
-cmd "mkdir -p ${SPACK_MANAGER_GOLDS_DIR}/tmp/amr-wind"
-cmd "mkdir -p ${SPACK_MANAGER_GOLDS_DIR}/archived/amr-wind"
-cmd "rm -rf ${SPACK_MANAGER_GOLDS_DIR}/tmp/nalu-wind"
-cmd "mkdir -p ${SPACK_MANAGER_GOLDS_DIR}/tmp/nalu-wind"
-cmd "mkdir -p ${SPACK_MANAGER_GOLDS_DIR}/archived/nalu-wind"
+if [[ "${SPACK_MANAGER_MACHINE}" == "ascic" || "${SPACK_MANAGER_MACHINE}" == "ascicgpu" ]]; then
+  prep_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-stable
+  prep_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-develop
+else
+  prep_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}
+fi
 
 printf "\nSetting up Spack environoment...\n"
 cmd "export EXAWIND_ENV_DIR=${SPACK_MANAGER}/environments/exawind"
@@ -127,8 +141,12 @@ printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
-cmd "tar -czf ${SPACK_MANAGER_GOLDS_DIR}/archived/amr-wind/amr-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER_GOLDS_DIR}/tmp/amr-wind ."
-cmd "tar -czf ${SPACK_MANAGER_GOLDS_DIR}/archived/nalu-wind/nalu-wind-golds-${DATE}.tar.gz -C ${SPACK_MANAGER_GOLDS_DIR}/tmp/nalu-wind ."
+if [[ "${SPACK_MANAGER_MACHINE}" == "ascic" || "${SPACK_MANAGER_MACHINE}" == "ascicgpu" ]]; then
+  archive_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-stable ${DATE}
+  archive_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-develop ${DATE}
+else
+  archive_gold_dirs ${SPACK_MANAGER_GOLDS_DIR} ${DATE}
+fi
 
 #STAGE_DIR=$(spack location -S)
 #if [ ! -z "${STAGE_DIR}" ]; then
