@@ -42,7 +42,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     conflicts('+amr_wind_gpu', when='~cuda~rocm')
     conflicts('+nalu_wind_gpu', when='~cuda~rocm')
-    conflicts('+amr_wind_gpu~nalu_wind_gpu', when='^amr-wind+hypre')
+    conflicts('+amr_wind_gpu~nalu_wind_gpu', when='^amr-wind+hypre ^nalu-wind+hypre')
 
     for arch in CudaPackage.cuda_arch_values:
         depends_on('amr-wind+cuda cuda_arch=%s' % arch, when='+amr_wind_gpu+cuda cuda_arch=%s' % arch)
