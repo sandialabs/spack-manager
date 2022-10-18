@@ -30,3 +30,11 @@ tests.  The current cronjob looks like:
 Note that things can get messed up if you do one-off runs from the same Spack-Manager directory as
 the regular nightly testing, so if you want to do a one-off test run, it's best to do it from a
 separate Spack-Manager instance.
+
+### Gold files
+
+Currently, the nightly testing scripts set permissions correctly to allow anyone to access the gold
+files, but they will break if anyone has written gold files besides the owner of the nightly testing
+process.  For this reason, if someone else wants to build the `nalu-wind-nightly` package with the
+golds generated overnight, best practice is to first copy the gold files to another location, and
+point the one-off script towards this new location.
