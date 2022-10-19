@@ -8,7 +8,6 @@
 from spack import *
 from spack.pkg.builtin.tioga import Tioga as bTioga
 import os
-import sys
 
 class Tioga(bTioga):
     git = "https://github.com/Exawind/tioga.git"
@@ -20,12 +19,6 @@ class Tioga(bTioga):
         spec = self.spec
         define = CMakePackage.define
         options = super(Tioga, self).cmake_args()
-
-        options.append(define('MPI_ROOT', spec['mpi'].prefix))
-
-        # On some systems these are necessary, on some systems it causes failures
-        if sys.platform == 'darwin':
-            options.append(self.define('CMAKE_CXX_COMPILER', spec['mpi'].mpicxx))
 
         if 'dev_path' in spec:
             options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
