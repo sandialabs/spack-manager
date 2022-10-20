@@ -29,7 +29,7 @@ class NaluWind(bNaluWind, ROCmPackage):
         depends_on('hypre+rocm amdgpu_target=%s' % arch, when='+hypre+rocm amdgpu_target=%s' % arch)
 
     cxxstd=['14', '17']
-    variant('cxxstd', default='14', values=cxxstd,  multi=False)
+    variant('cxxstd', default='17', values=cxxstd,  multi=False)
     variant('tests', default=True, description='Activate regression tests')
 
     for std in cxxstd:
