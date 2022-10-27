@@ -21,7 +21,6 @@ class NaluWind(bNaluWind, ROCmPackage):
     variant('ninja', default=False,
             description='Enable Ninja makefile generator')
 
-    depends_on('hypre+unified-memory', when='+hypre+cuda')
     depends_on('trilinos gotype=long')
 
     for arch in ROCmPackage.amdgpu_targets:
