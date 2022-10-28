@@ -48,4 +48,8 @@ class Hypre(bHypre):
             options.append('--with-umpire-lib-dirs=%s'%(spec['umpire'].prefix.lib))
             options.append('--with-umpire-libs=umpire')
 
+        if  ("--enable-fortran" in options):
+            options.remove("--enable-fortran")
+            options.append("--disable-fortran")
+
         return options
