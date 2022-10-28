@@ -9,38 +9,38 @@ packages:
           - cray-mpich/8.1.16
           - craype-network-ofi
   hip:
-    version: [5.1.2]
+    version: [5.2.2]
     buildable: false
     externals:
-      - spec: hip@5.1.2
-        prefix: /opt/rocm-5.1.0/hip
+      - spec: hip@5.2.2
+        prefix: /opt/rocm-5.2.0/hip
         modules:
-          - rocm/5.1.0
+          - rocm/5.2.0
           - craype-accel-amd-gfx90a
   hsa-rocr-dev:
-    version: [5.1.0]
+    version: [5.2.0]
     buildable: false
     externals:
-      - spec: hsa-rocr-dev@5.1.0
-        prefix: /opt/rocm-5.1.0/hsa
+      - spec: hsa-rocr-dev@5.2.0
+        prefix: /opt/rocm-5.2.0/hsa
         modules:
-          - rocm/5.1.0
+          - rocm/5.2.0
           - craype-accel-amd-gfx90a
   llvm-amdgpu:
-    version: [5.1.0]
+    version: [5.2.0]
     buildable: false
     externals:
-      - spec: llvm-amdgpu@5.1.0
-        prefix: /opt/rocm-5.1.0/llvm
+      - spec: llvm-amdgpu@5.2.0
+        prefix: /opt/rocm-5.2.0/llvm
         modules:
-          - rocm/5.1.0
+          - rocm/5.2.0
           - craype-accel-amd-gfx90a
   boost:
     version: [1.78.0]
     buildable: false
     externals:
       - spec: boost@1.78.0
-        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.1.0/boost-1.78.0-ot5nax3akeytfoouhbcy3b6xf3emrjde
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.2.0/boost-1.78.0-jbrbfctoofn4arugu4odymojnwmpwzjm
         modules:
           - boost/1.78.0
   hdf5:
@@ -48,7 +48,7 @@ packages:
     buildable: false
     externals:
       - spec: hdf5@1.12.1
-        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.1.0/hdf5-1.12.1-xfwhfuyuhrkxtxb23myknwxp2wmsfg2j
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.2.0/hdf5-1.12.1-4kj7jfpwnbznydhd2xqdtij33v2bnubm/
         modules:
           - hdf5/1.12.1
   parallel-netcdf:
@@ -56,25 +56,25 @@ packages:
     buildable: false
     externals:
       - spec: parallel-netcdf@1.12.2
-        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.1.0/parallel-netcdf-1.12.2-wv53kuxgdfzyhfrd6uqwwkcumxefnz4f
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.2.0/parallel-netcdf-1.12.2-drkexm72gy4goprfr42vylekntbvloea
         modules:
           - parallel-netcdf/1.12.2
   cmake:
-    version: [3.22.2]
+    version: [3.23.2]
     buildable: false
     externals:
-      - spec: cmake@3.22.2
-        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.1.0/cmake-3.22.2-iv5tnnzbqsgz6ebgrysktc55b5unqvjy
+      - spec: cmake@3.23.2
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.2.0/cmake-3.23.2-veonilm53zmocipgahbmqvnpmboyqyvt
         modules:
-          - cmake/3.22.2
+          - cmake/3.23.2
   zlib:
-    version: [1.2.11]
+    version: [1.2.12]
     buildable: false
     externals:
-      - spec: zlib@1.2.11
-        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.1.0/zlib-1.2.11-j3ogymf5vmwlxvblzxxqdkrjkdvfccyx
+      - spec: zlib@1.2.12
+        prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.2.0/zlib-1.2.12-3puegeev5gkgpnwp7zc4tvxouzvjjfrz
         modules:
-          - zlib/1.2.11
+          - zlib/1.2.12
   perl:
     version: [5.34.0]
     buildable: false
