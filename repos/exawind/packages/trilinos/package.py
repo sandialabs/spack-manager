@@ -10,8 +10,8 @@ from spack.pkg.builtin.trilinos import Trilinos as bTrilinos
 import os
 
 class Trilinos(bTrilinos):
-    # develop@6-5-2022
-    version('stable', commit='7498bcb9b0392c830b83787f3fb0c17079431f06')
+    # develop@10-27-2022
+    version('stable', commit='da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1')
     variant('stk_unit_tests', default=False,
             description='turn on STK unit tests')
     variant('stk_simd', default=False,
