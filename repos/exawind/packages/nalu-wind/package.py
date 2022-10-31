@@ -11,6 +11,13 @@ from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
 
+
+def trilinos_version_filter(name):
+    if 'develop' in name:
+        return name
+    else:
+        return 'stable'
+
 class NaluWind(bNaluWind, ROCmPackage):
     version('master', branch='master', submodules=True)
 
@@ -24,7 +31,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     depends_on('trilinos gotype=long')
 
     for arch in ROCmPackage.amdgpu_targets:
-        depends_on('trilinos@stable: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm~rocm_rdc amdgpu_target=%s' % arch, when='+rocm amdgpu_target=%s' % arch)
+        depends_on('trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm~rocm_rdc amdgpu_target=%s' % arch, when='+rocm amdgpu_target=%s' % arch)
         depends_on('hypre+rocm amdgpu_target=%s' % arch, when='+hypre+rocm amdgpu_target=%s' % arch)
 
     cxxstd=['14', '17']
@@ -35,7 +42,7 @@ class NaluWind(bNaluWind, ROCmPackage):
         depends_on('trilinos cxxstd=%s' % std, when='cxxstd=%s' % std)
 
     depends_on("ninja", type="build", when='+ninja')
-    
+
     @property
     def generator(self):
           if '+ninja' in self.spec:
@@ -78,7 +85,7 @@ class NaluWind(bNaluWind, ROCmPackage):
             spack_manager_local_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds')
             spack_manager_golds_dir = os.getenv('SPACK_MANAGER_GOLDS_DIR', default=spack_manager_local_golds)
             if '+snl' in spec:
-                spack_manager_golds_dir = '{}-{}'.format(spack_manager_golds_dir, spec['trilinos'].version)
+                spack_manager_golds_dir = '{}-{}'.format(spack_manager_golds_dir, trilinos_version_filter(spec['trilinos'].version))
 
             saved_golds = os.path.join(spack_manager_golds_dir, 'tmp', 'nalu-wind')
             current_golds = os.path.join(spack_manager_golds_dir, 'current', 'nalu-wind')
