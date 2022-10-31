@@ -5,7 +5,7 @@ packages:
       mpi: [mpich]
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
-    variants: build_type=Release
+    variants: build_type=Release cuda_arch=70
     target: [x86_64]
   cmake:
     externals:

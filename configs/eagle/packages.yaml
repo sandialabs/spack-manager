@@ -38,3 +38,4 @@ packages:
     compiler: [gcc@9.3.0, clang@10.0.0, intel@20.0.2]
     providers:
       mpi: [mpt]
+    variants: cuda_arch=70
