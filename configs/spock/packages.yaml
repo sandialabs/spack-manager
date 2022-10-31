@@ -125,3 +125,4 @@ packages:
       mpi: [cray-mpich@8.1.12]
       blas: [openblas]
       lapack: [openblas]
+    variants: amdgpu_target=gfx908
