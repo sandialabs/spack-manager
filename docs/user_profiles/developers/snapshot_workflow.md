@@ -34,10 +34,10 @@ We then activate Spack-Manager:
 Once Spack-Manager itself is activated, we create the Spack environment in which we will install and develop. 
 To do this we use the `spack manager create-env` command.
 Our environment will be called `exawind` using the `--name` argument. We will choose to focus on building Nalu-Wind using the spec
-`nalu-wind@master+hypre+cuda cuda_arch=70 %gcc`, which means, `nalu-wind` at the `master` branch, with hypre
-enabled (`+hypre`), and CUDA (`+cuda cuda_arch=70`), using the GCC compiler (`%gcc`, which without a version, selects the default compiler version).
+`nalu-wind@master+hypre+cuda  %gcc`, which means, `nalu-wind` at the `master` branch, with hypre
+enabled (`+hypre`), and CUDA (`+cuda `), using the GCC compiler (`%gcc`, which without a version, selects the default compiler version).
 ```
-[user@el1 user]$ spack manager create-env --name exawind --spec 'nalu-wind@master+hypre+cuda cuda_arch=70 %gcc'
+[user@el1 user]$ spack manager create-env --name exawind --spec 'nalu-wind@master+hypre+cuda  %gcc'
 making /scratch/user/spack-manager/environments/exawind
 ```
 
@@ -45,7 +45,7 @@ Once the environment is created, we need to activate it:
 ```
 [user@el1 user]$ spack env activate -d ${SPACK_MANAGER}/environments/exawind
 ```
-Both of the previous steps can be combined into one with `quick-create-env -n exawind -s 'nalu-wind@master+hypre+cuda cuda_arch=70%gcc'`.
+Both of the previous steps can be combined into one with `quick-create-env -n exawind -s 'nalu-wind@master+hypre+cuda %gcc'`.
 
 Next, we will turn `nalu-wind` and `hypre` into "develop specs" with a command that tells Spack we want to edit the code for these packages
 locally and always rebuild with our local clones of the packages. We do this with the `spack manager develop` command:
@@ -117,13 +117,13 @@ we have already set as develop specs.
 
 Once our externals and git clones are configured, we have the necessary `*.yaml` files in our `${SPACK_MANAGER}/environments/exawind` environment directory
 to "concretize" and (re)install our entire project. The `spack.yaml` file in this directory is the main yaml file in which the
-other yaml files are included. Concretizing is required to solve or map our loosely defined `nalu-wind@master+hypre+cuda cuda_arch=70 %gcc` spec into "concrete" parameters of our dependency graph (or DAG). The concrete DAG is _exactly_ how Spack will fulfill the dependencies for your spec. We
+other yaml files are included. Concretizing is required to solve or map our loosely defined `nalu-wind@master+hypre+cuda  %gcc` spec into "concrete" parameters of our dependency graph (or DAG). The concrete DAG is _exactly_ how Spack will fulfill the dependencies for your spec. We
 concretize with the command (we almost always want to use the force with `-f`). It will likely complain about us using the "original" concretizer, but this will be fixed in the future:
 ```
 [user@el1 user]$ spack concretize -f
 ==> Warning: the original concretizer is currently being used.
         Upgrade to "clingo" at your earliest convenience. The original concretizer will be removed from Spack starting at v0.18.0
-==> Concretized nalu-wind@master%gcc+cuda+hypre cuda_arch=70
+==> Concretized nalu-wind@master%gcc+cuda+hypre 
  -   rbzxf3n  nalu-wind@master%gcc@9.3.0~asan~boost~catalyst+cuda~fftw+hypre~ipo~openfast+pic~rocm+tests~tioga~wind-utils abs_tol=1e-15 build_type=Release cuda_arch=70 cxxstd=14 dev_path=/scratch/user/spack-manager/environments/exawind/nalu-wind rel_tol=1e-12 arch=linux-centos7-skylake_avx512
  -   b5pippu      ^cmake@3.22.1%gcc@9.3.0~doc+ncurses+openssl+ownlibs~qt build_type=Release arch=linux-centos7-skylake_avx512
  -   cwar5vn      ^cuda@11.2.2%gcc@9.3.0~allow-unsupported-compilers~dev arch=linux-centos7-skylake_avx512
@@ -190,7 +190,7 @@ We start by verifying our currently activated environment in Spack:
 ==> In environment /scratch/user/spack-manager/environments/exawind
 ==> Root specs
 -- no arch / gcc ------------------------------------------------
-nalu-wind@master%gcc +cuda+hypre cuda_arch=70
+nalu-wind@master%gcc +cuda+hypre 
 
 ==> 9 installed packages
 -- linux-centos7-skylake_avx512 / gcc@9.3.0 ---------------------

@@ -5,4 +5,4 @@ spack:
     unify: when_possible
   view: false
   specs:
-    - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm amdgpu_target=gfx908 ^nalu-wind+hypre ^amr-wind~hypre'
+    - 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+rocm ^nalu-wind+hypre ^amr-wind~hypre'

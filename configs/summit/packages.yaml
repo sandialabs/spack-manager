@@ -6,6 +6,7 @@ packages:
     providers:
       mpi:
         - spectrum-mpi@10.4
+    variants: cuda_arch=70 
   spectrum-mpi:
     version: [10.4]
     buildable: false
