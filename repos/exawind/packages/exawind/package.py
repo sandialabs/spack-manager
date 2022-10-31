@@ -79,31 +79,30 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         spec = self.spec
 
         args = super(Exawind, self).cmake_args()
-        define = CMakePackage.define
 
         if spec.satisfies('dev_path=*'):
-            args.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+            args.append(self.define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
 
-        args.append(define('MPI_HOME', spec['mpi'].prefix))
+        args.append(self.define('MPI_HOME', spec['mpi'].prefix))
 
         if spec.satisfies('+cuda'):
-            args.append(define('EXAWIND_ENABLE_CUDA', True))
-            args.append(define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
+            args.append(self.define('EXAWIND_ENABLE_CUDA', True))
+            args.append(self.define('CUDAToolkit_ROOT', self.spec['cuda'].prefix))
 
         if spec.satisfies('+rocm'):
             targets = self.spec.variants['amdgpu_target'].value
-            args.append(define('EXAWIND_ENABLE_ROCM', True))
+            args.append(self.define('EXAWIND_ENABLE_ROCM', True))
             args.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
             args.append('-DCMAKE_HIP_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
             args.append('-DAMDGPU_TARGETS=' + ';'.join(str(x) for x in targets))
             args.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
 
         if spec.satisfies('^amr-wind+hdf5'):
-            args.append(define('H5Z_ZFP_USE_STATIC_LIBS', True))
+            args.append(self.define('H5Z_ZFP_USE_STATIC_LIBS', True))
 
         if spec.satisfies('^amr-wind+ascent'):
             # Necessary on Crusher to successfully find OpenMP
-            args.append(define('CMAKE_EXE_LINKER_FLAGS', self.compiler.openmp_flag))
+            args.append(self.define('CMAKE_EXE_LINKER_FLAGS', self.compiler.openmp_flag))
 
         return args
 
@@ -113,7 +112,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if '+asan' in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, 'sup.asan')))
         if '+rocm+amr_wind_gpu~nalu_wind_gpu' in self.spec:
-            # Manually turn off device defines to solve Kokkos issues in Nalu-Wind headers
+            # Manually turn off device self.defines to solve Kokkos issues in Nalu-Wind headers
             env.append_flags("CXXFLAGS", "-U__HIP_DEVICE_COMPILE__ -DDESUL_HIP_RDC")
         if '+rocm' in self.spec:
             env.set('OMPI_CXX', self.spec['hip'].hipcc)

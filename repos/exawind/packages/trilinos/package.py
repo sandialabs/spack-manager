@@ -64,13 +64,12 @@ class Trilinos(bTrilinos):
 
     def cmake_args(self):
         spec = self.spec
-        define = CMakePackage.define
         options = super(Trilinos, self).cmake_args()
 
         if '+stk' in spec:
             options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
-            options.append(define('SEACAS_ENABLE_SEACASSupes', False))
-            options.append(define('Trilinos_ENABLE_SEACASSupes', False))
+            options.append(self.define('SEACAS_ENABLE_SEACASSupes', False))
+            options.append(self.define('Trilinos_ENABLE_SEACASSupes', False))
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified

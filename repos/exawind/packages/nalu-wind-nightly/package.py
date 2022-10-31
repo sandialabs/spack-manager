@@ -59,7 +59,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
     def ctest_args(self):
         spec = self.spec
-        define = CMakePackage.define
         machine = find_machine(verbose=False)
         full_machine = find_machine(verbose=False, full_machine_name=True)
 
@@ -80,21 +79,21 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         if '%intel' in spec and '-DBoost_NO_BOOST_CMAKE=ON' in cmake_options:
             cmake_options.remove('-DBoost_NO_BOOST_CMAKE=ON') # Avoid dashboard warning
         if full_machine == 'eagle.hpc.nrel.gov' or 'ascicgpu' in machine:
-            cmake_options.append(define('TEST_ABS_TOL', '1e-10'))
-            cmake_options.append(define('TEST_REL_TOL', '1e-8'))
+            cmake_options.append(self.define('TEST_ABS_TOL', '1e-10'))
+            cmake_options.append(self.define('TEST_REL_TOL', '1e-8'))
 
         # Ctest options
         ctest_options = []
-        ctest_options.extend([define('TESTING_ROOT_DIR', self.stage.path),
-            define('NALU_DIR', self.stage.source_path),
-            define('BUILD_DIR', self.build_directory)])
+        ctest_options.extend([self.define('TESTING_ROOT_DIR', self.stage.path),
+            self.define('NALU_DIR', self.stage.source_path),
+            self.define('BUILD_DIR', self.build_directory)])
         if full_machine == 'eagle.hpc.nrel.gov' or machine == 'ascicgpu':
-            ctest_options.append(define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
-            ctest_options.append(define('UNSET_TMPDIR_VAR', True))
-        ctest_options.append(define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
-        ctest_options.append(define('HOST_NAME', spec.variants['host_name'].value))
-        ctest_options.append(define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
-        ctest_options.append(define('NP', spack.config.get('config:build_jobs')))
+            ctest_options.append(self.define('CTEST_DISABLE_OVERLAPPING_TESTS', True))
+            ctest_options.append(self.define('UNSET_TMPDIR_VAR', True))
+        ctest_options.append(self.define('CMAKE_CONFIGURE_ARGS',' '.join(v for v in cmake_options)))
+        ctest_options.append(self.define('HOST_NAME', spec.variants['host_name'].value))
+        ctest_options.append(self.define('EXTRA_BUILD_NAME', spec.variants['extra_name'].value))
+        ctest_options.append(self.define('NP', spack.config.get('config:build_jobs')))
         ctest_options.append('-VV')
         ctest_options.append('-S')
         ctest_options.append(os.path.join(self.stage.source_path,'reg_tests','CTestNightlyScript.cmake'))
