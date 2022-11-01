@@ -8,6 +8,15 @@ packages:
         modules:
           - cray-mpich/8.1.17
           - craype-network-ofi
+  rocprim:
+    version: [5.2.0]
+    buildable: false
+    externals:
+      - spec: rocprim@5.2.0
+        prefix: /opt/rocm-5.2.0/rocprim
+        modules:
+          - rocm/5.2.0
+          - craype-accel-amd-gfx90a
   rocrand:
     version: [5.2.0]
     buildable: false
