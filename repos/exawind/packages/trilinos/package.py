@@ -10,8 +10,8 @@ from spack.pkg.builtin.trilinos import Trilinos as bTrilinos
 import os
 
 class Trilinos(bTrilinos):
-    # develop@6-5-2022
-    version('stable', commit='7498bcb9b0392c830b83787f3fb0c17079431f06')
+    version('13.4.0.2022.10.27', commit='da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1')
+    version('13.2.0.2022.06.05', commit='7498bcb9b0392c830b83787f3fb0c17079431f06')
     variant('stk_unit_tests', default=False,
             description='turn on STK unit tests')
     variant('stk_simd', default=False,
@@ -22,13 +22,13 @@ class Trilinos(bTrilinos):
     patch('kokkos_zero_length_team.patch')
 
     depends_on("ninja", type="build", when='+ninja')
-   
+
     @property
     def generator(self):
           if '+ninja' in self.spec:
               return "Ninja"
           else:
-              return "Unix Makefiles" 
+              return "Unix Makefiles"
 
     def setup_build_environment(self, env):
         spec = self.spec
@@ -64,13 +64,12 @@ class Trilinos(bTrilinos):
 
     def cmake_args(self):
         spec = self.spec
-        define = CMakePackage.define
         options = super(Trilinos, self).cmake_args()
 
         if '+stk' in spec:
             options.append(self.define_from_variant('STK_ENABLE_TESTS', 'stk_unit_tests'))
-            options.append(define('SEACAS_ENABLE_SEACASSupes', False))
-            options.append(define('Trilinos_ENABLE_SEACASSupes', False))
+            options.append(self.define('SEACAS_ENABLE_SEACASSupes', False))
+            options.append(self.define('Trilinos_ENABLE_SEACASSupes', False))
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified

@@ -28,7 +28,7 @@ class AmrWind(bAmrWind):
     depends_on('h5z-zfp', when='+hdf5')
     depends_on('zfp', when='+hdf5')
     depends_on("ninja", type="build", when='+ninja')
-    
+
     @property
     def generator(self):
           if '+ninja' in self.spec:
@@ -45,31 +45,30 @@ class AmrWind(bAmrWind):
 
     def cmake_args(self):
         spec = self.spec
-        define = CMakePackage.define
         cmake_options = super(AmrWind, self).cmake_args()
 
         if '+cppcheck' in spec:
-            cmake_options.append(define('AMR_WIND_ENABLE_CPPCHECK', True))
+            cmake_options.append(self.define('AMR_WIND_ENABLE_CPPCHECK', True))
 
         if '+clangtidy' in spec:
-            cmake_options.append(define('AMR_WIND_ENABLE_CLANG_TIDY', True))
+            cmake_options.append(self.define('AMR_WIND_ENABLE_CLANG_TIDY', True))
 
         if spec.satisfies('dev_path=*'):
-            cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS', True))
+            cmake_options.append(self.define('CMAKE_EXPORT_COMPILE_COMMANDS', True))
 
         if '+cuda' in self.spec:
             targets = self.spec.variants['cuda_arch'].value
             cmake_options.append('-DCMAKE_CUDA_ARCHITECTURES=' + ';'.join(str(x) for x in targets))
 
         if '+hdf5' in spec:
-            cmake_options.append(define('AMR_WIND_ENABLE_HDF5', True))
-            cmake_options.append(define('AMR_WIND_ENABLE_HDF5_ZFP', True))
+            cmake_options.append(self.define('AMR_WIND_ENABLE_HDF5', True))
+            cmake_options.append(self.define('AMR_WIND_ENABLE_HDF5_ZFP', True))
             # Help AMReX understand if HDF5 is parallel or not.
             # Building HDF5 with CMake as Spack does, causes this inspection to break.
             if '+mpi' in spec:
-                cmake_options.append(define('HDF5_IS_PARALLEL', True))
+                cmake_options.append(self.define('HDF5_IS_PARALLEL', True))
             else:
-                cmake_options.append(define('HDF5_IS_PARALLEL', False))
+                cmake_options.append(self.define('HDF5_IS_PARALLEL', False))
 
         if '+rocm' in self.spec:
             # Used as an optimization to only list the single specified
@@ -86,10 +85,10 @@ class AmrWind(bAmrWind):
             current_golds = os.path.join(spack_manager_golds_dir, 'current', 'amr-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
-            cmake_options.append(define('AMR_WIND_TEST_WITH_FCOMPARE', True))
-            cmake_options.append(define('AMR_WIND_SAVE_GOLDS', True))
-            cmake_options.append(define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
-            cmake_options.append(define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
+            cmake_options.append(self.define('AMR_WIND_TEST_WITH_FCOMPARE', True))
+            cmake_options.append(self.define('AMR_WIND_SAVE_GOLDS', True))
+            cmake_options.append(self.define('AMR_WIND_SAVED_GOLDS_DIRECTORY', saved_golds))
+            cmake_options.append(self.define('AMR_WIND_REFERENCE_GOLDS_DIRECTORY', current_golds))
 
         return cmake_options
 

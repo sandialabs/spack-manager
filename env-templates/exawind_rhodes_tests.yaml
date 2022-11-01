@@ -9,7 +9,7 @@ spack:
     #- 'exawind-nightly +hypre+openfast %intel@20.0.2'
     #- 'exawind-nightly +hypre+openfast %clang@10.0.0'
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@9.3.0'
-    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast %intel@20.0.2'
+    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast cxxstd=14 %intel@20.0.2 ^trilinos@13.2.0.2022.06.05'
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast+asan build_type=Debug %clang@10.0.0'
     - 'amr-wind-nightly +hypre+masa+netcdf %gcc@9.3.0'
     - 'amr-wind-nightly +hypre+masa+netcdf %intel@20.0.2'
