@@ -31,7 +31,7 @@ packages:
     buildable: false
     externals:
       - spec: rocthrust@5.2.0
-        prefix: /opt/rocm-5.2.0/thrust
+        prefix: /opt/rocm-5.2.0/rocthrust
         modules:
           - rocm/5.2.0
           - craype-accel-amd-gfx90a
