@@ -84,7 +84,7 @@ class AmrWindNightly(bAmrWind):
         with working_dir(self.build_directory, create=True):
             """
             ctest will throw error 255 if there are any warnings
-            but that doesn"t mean our build failed
+            but that doesn't mean our build failed
             for now just print the error and move on
             """
             inspect.getmodule(self).ctest(*ctest_args, fail_on_error=False)
