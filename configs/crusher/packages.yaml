@@ -49,7 +49,7 @@ packages:
     buildable: false
     externals:
       - spec: hip@5.2.0
-        prefix: /opt/rocm-5.2.0/hip
+        prefix: /opt/rocm-5.2.0
         modules:
           - rocm/5.2.0
           - craype-accel-amd-gfx90a
