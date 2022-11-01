@@ -68,17 +68,17 @@ class NaluWind(bNaluWind, ROCmPackage):
         cmake_options.append(self.define_from_variant('CMAKE_CXX_STANDARD', 'cxxstd'))
 
         if  spec.satisfies('dev_path=*'):
-            cmake_options.append(define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
-            cmake_options.append(define('ENABLE_TESTS', True))
+            cmake_options.append(self.define('CMAKE_EXPORT_COMPILE_COMMANDS',True))
+            cmake_options.append(self.define('ENABLE_TESTS', True))
 
         if '+rocm' in self.spec:
-            cmake_options.append('-DCMAKE_CXX_COMPILER={0}'.format(self.spec['hip'].hipcc))
-            cmake_options.append(define('ENABLE_ROCM', True))
+            cmake_options.append(self.define('CMAKE_CXX_COMPILER', self.spec['hip'].hipcc))
+            cmake_options.append(self.define('ENABLE_ROCM', True))
             targets = spec.variants['amdgpu_target'].value
-            cmake_options.append('-DGPU_TARGETS=' + ';'.join(str(x) for x in targets))
+            cmake_options.append(self.define('GPU_TARGETS', ';'.join(str(x) for x in targets)))
 
         if spec['mpi'].name == 'openmpi':
-            cmake_options.append(define('MPIEXEC_PREFLAGS','--oversubscribe'))
+            cmake_options.append(self.define('MPIEXEC_PREFLAGS', '--oversubscribe'))
 
         if spec.satisfies('+tests') or self.run_tests or spec.satisfies('dev_path=*'):
             spack_manager_local_golds = os.path.join(os.getenv('SPACK_MANAGER'), 'golds')
@@ -90,9 +90,9 @@ class NaluWind(bNaluWind, ROCmPackage):
             current_golds = os.path.join(spack_manager_golds_dir, 'current', 'nalu-wind')
             os.makedirs(saved_golds, exist_ok=True)
             os.makedirs(current_golds, exist_ok=True)
-            cmake_options.append(define('NALU_WIND_SAVE_GOLDS', True))
-            cmake_options.append(define('NALU_WIND_SAVED_GOLDS_DIR', saved_golds))
-            cmake_options.append(define('NALU_WIND_REFERENCE_GOLDS_DIR', current_golds))
+            cmake_options.append(self.define('NALU_WIND_SAVE_GOLDS', True))
+            cmake_options.append(self.define('NALU_WIND_SAVED_GOLDS_DIR', saved_golds))
+            cmake_options.append(self.define('NALU_WIND_REFERENCE_GOLDS_DIR', current_golds))
 
         return cmake_options
 
