@@ -50,7 +50,7 @@ class Trilinos(bTrilinos):
             else:
                 env.set("CXX", self.spec["hip"].hipcc)
             if "+stk" in spec:
-                # Using CXXFLAGS for hipcc which doesn"t use flags in the spack wrappers
+                # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
                 env.append_flags("CXXFLAGS", "-DSTK_NO_BOOST_STACKTRACE")
                 if "~stk_simd" in spec:
                     env.append_flags("CXXFLAGS", "-DUSE_STK_SIMD_NONE")
