@@ -15,6 +15,7 @@ class Hypre(bHypre):
     depends_on("umpire", when="+umpire")
     depends_on("umpire+rocm", when="+umpire+rocm")
     depends_on("umpire+cuda", when="+umpire+cuda")
+    depends_on("rocprim", when="+rocm")
 
     def distclean(self, spec, prefix):
         with working_dir("src"):
