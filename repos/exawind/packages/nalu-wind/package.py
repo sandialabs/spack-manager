@@ -13,8 +13,9 @@ from shutil import copyfile
 
 
 def trilinos_version_filter(name):
-    if "develop" in name:
-        return name
+    local = str(name)
+    if "develop" in local:
+        return local
     else:
         return "stable"
 
