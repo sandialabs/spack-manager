@@ -86,7 +86,6 @@ class NaluWind(bNaluWind, ROCmPackage):
             spack_manager_golds_dir = os.getenv("SPACK_MANAGER_GOLDS_DIR", default=spack_manager_local_golds)
             if "+snl" in spec:
                 spack_manager_golds_dir = "{}-{}".format(spack_manager_golds_dir, trilinos_version_filter(spec["trilinos"].version))
-                exit()
 
             saved_golds = os.path.join(spack_manager_golds_dir, "tmp", "nalu-wind")
             current_golds = os.path.join(spack_manager_golds_dir, "current", "nalu-wind")
