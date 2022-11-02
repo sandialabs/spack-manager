@@ -13,8 +13,9 @@ from shutil import copyfile
 
 
 def trilinos_version_filter(name):
-    if "develop" in name:
-        return name
+    local = str(name)
+    if "develop" in local:
+        return local
     else:
         return "stable"
 
@@ -85,6 +86,7 @@ class NaluWind(bNaluWind, ROCmPackage):
             spack_manager_golds_dir = os.getenv("SPACK_MANAGER_GOLDS_DIR", default=spack_manager_local_golds)
             if "+snl" in spec:
                 spack_manager_golds_dir = "{}-{}".format(spack_manager_golds_dir, trilinos_version_filter(spec["trilinos"].version))
+                exit()
 
             saved_golds = os.path.join(spack_manager_golds_dir, "tmp", "nalu-wind")
             current_golds = os.path.join(spack_manager_golds_dir, "current", "nalu-wind")
