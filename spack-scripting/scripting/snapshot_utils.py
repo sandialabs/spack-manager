@@ -57,16 +57,23 @@ class Snapshot:
             self.env.write()
 
 
-    def add_view_per_root(self):
+    def add_view_dict(self):
         view_dict = {}
-        for root in self.env.roots():
-            view_name = root.format('{name}_{hash}')
-            view_path = os.path.join(
-                os.environ['SPACK_MANAGER'], 'views', self.extension, view_name)
-            view_dict[view_name] = {
-                'root': view_path,
-                'link_type': self.args.link_type
-            }
+        view_name = 'snapshot'
+        view_path = os.path.join(
+            os.environ['SPACK_MANAGER'], 'views', self.extension, view_name)
+        view_dict = {view_name: {
+            'root': view_path,
+            'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
+                            '{version}-{hash:4}',
+                            '^cuda': '{compiler.name}-{compiler.version}-'
+                            '{^cuda.name}-{^cuda.version}/{name}/{version}'
+                            '-{hash:4}',
+                            '^rocm': '{compiler.name}-{compiler.version}-'
+                            '{^rocm.name}-{^rocm.version}/{name}/{version}'
+                            '-{hash:4}'},
+            'link_type': self.args.link_type
+        }}
         with open(self.env.manifest_path, 'r') as f:
             yaml = syaml.load(f)
         # override whatever is there for views with the new information
@@ -89,7 +96,7 @@ class Snapshot:
                         top_specs.append(dep)
         # remove any duplicates
         self.top_specs = list(dict.fromkeys(top_specs))
-        print('\nTop Level Specs:', [s.name for s in self.top_specs])
+        print('\nTop Level Specs:', *[s.name for s in self.top_specs])
         ev.deactivate()
 
 def get_version_paired_git_branch(spec):

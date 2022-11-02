@@ -227,7 +227,7 @@ def use_latest_git_hashes(env):
 def create_snapshots(args):
     snap = sutils.Snapshot(args)
     snap.get_top_level_specs()
-    snap.add_view_per_root()
+    snap.add_view_dict()
 
     exit()
     if args.stop_after == 'create_env':
