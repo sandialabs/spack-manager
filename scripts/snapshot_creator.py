@@ -14,8 +14,7 @@ and any associated modules
 import argparse
 import os
 import sys
-from manager_cmds.find_machine import find_machine
-import multiprocessing
+import snapshot_utils as sutils
 from manager_utils import path_extension, pruned_spec_string
 
 import spack.environment as ev
@@ -23,9 +22,8 @@ import spack.main
 import spack.util.spack_yaml as syaml
 import spack.util.executable
 import spack.cmd.install
-
-from spack.version import GitVersion, Version
 from spack.spec import Spec
+
 
 
 git = spack.util.executable.which('git')
@@ -34,8 +32,6 @@ manager = spack.main.SpackCommand('manager')
 add = spack.main.SpackCommand('add')
 concretize = spack.main.SpackCommand('concretize')
 module = spack.main.SpackCommand('module')
-
-base_spec = 'exawind+hypre+openfast'
 
 blacklist = ['cuda', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
 
@@ -53,60 +49,6 @@ def spack_install_cmd(args):
     spack.cmd.install.install(parser, parsed_args)
 
 
-def command(command, *args):
-    """
-    Execute a spack.main.SpackCommand uniformly
-    and add some print statements
-    """
-    print('spack', command.command_name, *args)
-    print(command(*args, fail_on_error=False))
-
-
-class SnapshotSpec:
-    """
-    Data structure for storing a tag that is not a hash
-    to represent the spec added to the spack.yaml
-    """
-
-    def __init__(self, id='default', spec=base_spec, exclusions=[]):
-        self.id = id
-        self.spec = spec
-        self.exclusions = exclusions
-
-
-# a list of specs to build in the snapshot, 1 view will be created for each
-machine_specs = {
-    'darwin': [SnapshotSpec(exclusions=['%intel'])],
-    'cee': [SnapshotSpec()],
-    'e4s': [SnapshotSpec(), SnapshotSpec(id='amr-standalone',
-                                         spec='amr-wind+hypre+openfast+masa')],
-    'rhodes': [SnapshotSpec('gcc',
-                            base_spec + '%gcc', ['%clang', '%intel']),
-               SnapshotSpec('clang',
-                            base_spec + '%clang', ['%gcc', '%intel']),
-               SnapshotSpec('intel',
-                            base_spec + '%intel', ['%gcc', '%clang'])],
-    'eagle': [SnapshotSpec('gcc',
-                           base_spec + '%gcc', ['%clang', '%intel']),
-              SnapshotSpec('clang',
-                           base_spec + '%clang', ['%gcc', '%intel']),
-              SnapshotSpec('intel',
-                           base_spec + '%intel', ['%gcc', '%clang']),
-              SnapshotSpec('gcc-cuda',
-                           base_spec + '+cuda+amr_wind_gpu+nalu_wind_gpu '
-                           'cuda_arch=70 %gcc', ['%clang', '%intel'])],
-    'summit': [SnapshotSpec('gcc', 'exawind+hypre'
-                            '~cuda~amr_wind_gpu~nalu_wind_gpu %gcc'),
-               SnapshotSpec('cuda', 'exawind+hypre'
-                            '+cuda+amr_wind_gpu+nalu_wind_gpu '
-                            'cuda_arch=70 %gcc')],
-    'snl-hpc': [SnapshotSpec()],
-    'ascicgpu': [SnapshotSpec('gcc-cuda', base_spec + '+cuda+amr_wind_gpu'
-                              '+nalu_wind_gpu cuda_arch=70'),
-                 SnapshotSpec(id='gcc'), ],
-}
-
-
 def parse(stream):
     parser = argparse.ArgumentParser(
         'create a timestamped snapshot for registered machines')
@@ -115,29 +57,31 @@ def parse(stream):
         help='create modules to associate with each view in the environment')
     phases = ['create_env', 'mod_specs', 'concretize', 'install']
     parser.add_argument(
-        '--stop_after', '-sa', choices=phases,
+        '--terminate_after', '-t', choices=phases,
         help='stop script after this phase')
-    parser.add_argument('--use_develop', '-ud', action='store_true',
-                        help='use develop specs for roots and their immediate '
-                             'dependencies')
     parser.add_argument('--name', '-n', required=False,
                         help='name the environment something other than the '
                         'date')
-    parser.add_argument('--use_machine_name', '-mn', action='store_true',
+    parser.add_argument('--use_machine_name', '-M', action='store_true',
                         help='use machine name in the snapshot path '
                         'instead of computed architecture')
-    parser.add_argument('--spack_install_args', '-sai', required=False,
-                        default=[],
-                        help='arguments to forward to spack install')
-    parser.add_argument('--num_threads', '-nt', type=int, default=1,
-                        help='number of threads to use for calling spack '
-                        'install (parallel DAG install)')
-    parser.add_argument('--link_type', '-lt', required=False, choices=[
+    parser.add_argument('--link_type', '-l', required=False, choices=[
                         'symlink', 'soft', 'hardlink', 'hard,' 'copy',
                         'relocate'], help='set the type of'
                         ' linking used in view creation')
-    parser.set_defaults(modules=False, use_develop=False,
-                        stop_after='install', link_type='symlink')
+    parser.add_argument('--unify', '-u', required=False, choices=[
+                        True, False, 'when_possible'],
+                        help='concretization unify option to use')
+    parser.set_defaults(modules=True,
+                        stop_after='install', link_type='symlink', unify='when_possible')
+    parser.add_argument(
+        "-s",
+        "--specs",
+        required=True,
+        default=[],
+        nargs="+",
+        help="Specs to create snapshots for",
+    )
 
     return parser.parse_args(stream)
 
@@ -184,9 +128,6 @@ def add_view(env, extension, link_type):
 
 
 def add_spec(env, extension, data, create_modules):
-    ev.activate(env)
-    add(data.spec)
-    ev.deactivate()
     excludes = view_excludes(data)
 
     with open(env.manifest_path, 'r') as f:
@@ -217,62 +158,20 @@ def add_spec(env, extension, data, create_modules):
         syaml.dump(yaml, stream=f, default_flow_style=False)
 
 
-def get_top_level_specs(env, blacklist=blacklist):
-    ev.activate(env)
-    print('\nInitial concretize')
-    command(concretize, '-f')
-    top_specs = []
-    for root in env.roots():
-        if root.name in blacklist:
-            continue
-        top_specs.append(root)
-        for dep in root.dependencies():
-            if dep.name not in blacklist:
-                top_specs.append(dep)
-    # remove any duplicates
-    top_specs = list(dict.fromkeys(top_specs))
-    print('\nTop Level Specs:', [s.name for s in top_specs])
-    ev.deactivate()
-    return top_specs
-
 
 def find_latest_git_hash(spec):
-    if isinstance(spec.version, GitVersion):
-        # if it is already a GitVersion then we've probably already ran this
-        # once we are going to recreate the paried version that the git hash
-        # has been assigned to and use that
-        version = Version(spec.version.ref_version_str)
-        version_dict = spec.package_class.versions[version]
+    branch = sutils.get_version_paired_git_branch(spec)
+    if branch:
+        # get the matching entry and shas for github
+        query = git('ls-remote', spec.package.git, ref,
+                    output=str, error=str).strip().split('\n')
+        assert len(query) == 1
+
+        sha, _ = query[0].split('\t')
+
+        return sha
     else:
-        version_dict = spec.package_class.versions[spec.version]
-    keys = version_dict.keys()
-
-    if 'branch' in keys:
-        # git branch
-        ref = 'refs/heads/%s' % version_dict['branch']
-    elif 'tag' in keys:
-        # already matched
         return None
-    elif 'sha256' in keys:
-        # already matched
-        return None
-    elif 'commit' in keys:
-        # we could reuse the commit, but since it is effectively pinned just
-        # return none
-        return None
-    else:
-        raise Exception(
-            'no known git type for ' + spec.format(
-                '//{hash} ({name}{@version})'))
-
-    # get the matching entry and shas for github
-    query = git('ls-remote', spec.package.git, ref,
-                output=str, error=str).strip().split('\n')
-    assert len(query) == 1
-
-    sha, _ = query[0].split('\t')
-
-    return sha
 
 
 def replace_versions_with_hashes(spec_string, hash_dict):
@@ -301,7 +200,7 @@ def replace_versions_with_hashes(spec_string, hash_dict):
     return final
 
 
-def use_latest_git_hashes(env, blacklist=blacklist):
+def use_latest_git_hashes(env):
     with open(env.manifest_path, 'r') as f:
         yaml = syaml.load(f)
 
@@ -325,82 +224,31 @@ def use_latest_git_hashes(env, blacklist=blacklist):
     env._re_read()
 
 
-def use_develop_specs(env, specs):
-    # we have to concretize to solve the dependency tree to extract
-    # the top level dependencies and make them develop specs.
-    # anything that is not a develop spec is not gauranteed to get installed
-    # since spack can reuse them for matching hashes
-
-    print('\nSetting up develop specs')
-    dev_specs = list(dict.fromkeys(
-        [s.format('{name}{@version}') for s in specs]))
-
-    ev.activate(env)
-    for spec_string in dev_specs:
-        # special treatment for trilinos since its clone fails
-        # with standard spack develop
-        if 'trilinos' in spec_string:
-            branch = spec_string.split('@')[-1]
-            command(manager, 'develop', '--shallow', '-rb',
-                    'https://github.com/trilinos/trilinos',
-                    branch, spec_string)
-        elif 'openfast' in spec_string:
-            # skip openfast. we never want to dev build it
-            # because it takes so long to compile
-            continue
-        elif 'cmake' in spec_string:
-            continue
-        else:
-            command(manager, 'develop', '--shallow', spec_string)
-    ev.deactivate()
-
-
 def create_snapshots(args):
-    machine = find_machine(verbose=False)
-    extension = path_extension(args.name, args.use_machine_name)
-    env_path = os.path.join(
-        os.environ['SPACK_MANAGER'], 'environments', extension)
+    snap = sutils.Snapshot(args)
+    snap.get_top_level_specs()
+    snap.add_view_per_root()
 
-    print('\nCreating snapshot environment')
-
-    command(manager, 'create-env', '-d', env_path)
-
-    e = ev.Environment(env_path)
-
-    with e.write_transaction():
-        e.yaml['spack']['concretizer'] = {'unify': 'when_possible'}
-        e.write()
-
-    spec_data = machine_specs[machine]
-    add_view(e, extension, args.link_type)
-    for s in spec_data:
-        add_spec(e, extension, s, args.modules)
-
-    top_specs = get_top_level_specs(e)
-
+    exit()
     if args.stop_after == 'create_env':
         return
 
-    if args.use_develop:
-        use_develop_specs(e, top_specs)
-    else:
-        use_latest_git_hashes(e)
+    use_latest_git_hashes(e)
 
     if args.stop_after == 'mod_specs':
         return
 
     ev.activate(e)
     print('\nConcretize')
-    command(concretize, '-f')
+    sutils.command(concretize, '-f')
     if args.stop_after == 'concretize':
         return
     print('\nInstall')
-    with multiprocessing.Pool(args.num_threads):
-        spack_install_cmd(args.spack_install_args)
+    spack_install_cmd()
 
     if args.modules:
         print('\nGenerate module files')
-        command(module, 'tcl', 'refresh', '-y')
+        sutils.command(module, 'tcl', 'refresh', '-y')
     return env_path
 
 

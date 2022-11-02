@@ -12,7 +12,6 @@ import spack.main
 
 arch = spack.main.SpackCommand("arch")
 
-
 def base_extension(use_machine_name):
     if use_machine_name:
         return "exawind/snapshots/{machine}".format(machine=os.environ["SPACK_MANAGER_MACHINE"])
