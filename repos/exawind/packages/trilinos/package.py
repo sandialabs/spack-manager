@@ -18,6 +18,8 @@ class Trilinos(bTrilinos):
             description="Enable SIMD in STK")
     variant("ninja", default=False,
             description="Enable Ninja makefile generator")
+    variant("asan", default=False,
+            description="Turn on address sanitizer")
 
     patch("kokkos_zero_length_team.patch")
 
@@ -54,6 +56,10 @@ class Trilinos(bTrilinos):
                 env.append_flags("CXXFLAGS", "-DSTK_NO_BOOST_STACKTRACE")
                 if "~stk_simd" in spec:
                     env.append_flags("CXXFLAGS", "-DUSE_STK_SIMD_NONE")
+
+        if "+asan" in self.spec:
+            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer")
+            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
 
     def setup_dependent_package(self, module, dependent_spec):
         if "+wrapper" in self.spec:
