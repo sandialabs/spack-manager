@@ -47,13 +47,15 @@ class Snapshot:
 
         print('\nCreating snapshot environment')
 
-        command(manager, 'create-env', '-d', self.env_path, '-s', *args.specs)
+        command(manager, 'create-env', '-d', self.env_path)
 
         self.env = ev.Environment(self.env_path)
 
         # TODO refactor this to be a part of create-env command
         with self.env.write_transaction():
             self.env.yaml['spack']['concretizer'] = {'unify': args.unify}
+            # keep over writing specs so we don't keep appending them if we call multiple times
+            self.env.yaml['spack']['specs'] = args.specs
             self.env.write()
 
 
@@ -84,9 +86,13 @@ class Snapshot:
             'prefix_inspections': {'bin': ['PATH']},
             'roots': {'tcl': module_path},
             'arch_folder': False,
-            'tcl': {'projections': {
-                    'all': '%s/{name}-{compiler.name}-{compiler.version}' % (self.extension)},
-                    'hash_length': 0,
+            'tcl':
+                  {'projections': {
+                  'all': '%s/{compiler.name}/{compiler.version}/{name}-{hash:4}' % self.extension,
+                  '^cuda': '%s/{compiler.name}/{compiler.version}/{^cuda.name}/{^cuda.version}/{name}-{hash:4}' % self.extension,
+                  '^rocm': '%s/{compiler.name}/{compiler.version}/{^rocm.name}/{^rocm.version}/{name}-{hash:4}' % self.extension,
+                  },
+                  'hash_length': 0,
         }}}
         with open(self.env.manifest_path, 'r') as f:
             yaml = syaml.load(f)
