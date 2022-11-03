@@ -23,6 +23,7 @@ import spack.util.spack_yaml as syaml
 import spack.util.executable
 import spack.cmd.install
 from spack.spec import Spec
+from spack.version import GitVersion, Version
 
 
 
@@ -86,84 +87,11 @@ def parse(stream):
     return parser.parse_args(stream)
 
 
-def view_excludes(snap_spec):
-    if '+cuda' in snap_spec.spec:
-        snap_spec.exclusions.extend(
-            ['+rocm', '~cuda'])
-    elif '+rocm' in snap_spec.spec:
-        snap_spec.exclusions.extend(
-            ['~rocm', '+cuda'])
-    else:
-        snap_spec.exclusions.extend(
-            ['+rocm', '+cuda'])
-    return snap_spec.exclusions.copy()
-
-
-def add_view(env, extension, link_type):
-    view_path = os.path.join(
-        os.environ['SPACK_MANAGER'], 'views', extension, 'snapshot')
-    view_dict = {'snapshot': {
-        'root': view_path,
-        'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
-                        '{version}-{hash:4}',
-                        '^cuda': '{compiler.name}-{compiler.version}-'
-                        '{^cuda.name}-{^cuda.version}/{name}/{version}'
-                        '-{hash:4}',
-                        '^rocm': '{compiler.name}-{compiler.version}-'
-                        '{^rocm.name}-{^rocm.version}/{name}/{version}'
-                        '-{hash:4}'},
-        'link_type': link_type
-    }}
-    with open(env.manifest_path, 'r') as f:
-        yaml = syaml.load(f)
-    # view yaml entry can also be a bool so first try to add to a dictionary,
-    # and if that fails overwrite entry as a dictionary
-    try:
-        yaml['spack']['view'].update(view_dict)
-    except AttributeError:
-        yaml['spack']['view'] = view_dict
-
-    with open(env.manifest_path, 'w') as f:
-        syaml.dump(yaml, stream=f, default_flow_style=False)
-
-
-def add_spec(env, extension, data, create_modules):
-    excludes = view_excludes(data)
-
-    with open(env.manifest_path, 'r') as f:
-        yaml = syaml.load(f)
-
-    if create_modules:
-        module_excludes = excludes.copy()
-        module_path = os.path.join(
-            os.environ['SPACK_MANAGER'], 'modules')
-        module_dict = {data.id: {
-            'enable': ['tcl'],
-            'use_view': data.id,
-            'prefix_inspections': {'bin': ['PATH']},
-            'roots': {'tcl': module_path},
-            'arch_folder': False,
-            'tcl': {'projections': {
-                    'all': '%s/{name}-%s' % (extension, data.id)},
-                    'hash_length': 0,
-                    'blacklist_implicits': True,
-                    'blacklist': module_excludes}
-        }}
-        try:
-            yaml['spack']['modules'].update(module_dict)
-        except KeyError:
-            yaml['spack']['modules'] = module_dict
-
-    with open(env.manifest_path, 'w') as f:
-        syaml.dump(yaml, stream=f, default_flow_style=False)
-
-
-
 def find_latest_git_hash(spec):
     branch = sutils.get_version_paired_git_branch(spec)
     if branch:
         # get the matching entry and shas for github
-        query = git('ls-remote', spec.package.git, ref,
+        query = git('ls-remote', spec.package.git, branch,
                     output=str, error=str).strip().split('\n')
         assert len(query) == 1
 
@@ -229,27 +157,26 @@ def create_snapshots(args):
     snap.get_top_level_specs()
     snap.add_view_dict()
 
-    exit()
     if args.stop_after == 'create_env':
         return
 
-    use_latest_git_hashes(e)
+    use_latest_git_hashes(snap.env)
 
     if args.stop_after == 'mod_specs':
         return
 
-    ev.activate(e)
+    ev.activate(snap.env)
     print('\nConcretize')
     sutils.command(concretize, '-f')
     if args.stop_after == 'concretize':
         return
     print('\nInstall')
-    spack_install_cmd()
+    spack_install_cmd([])
 
     if args.modules:
         print('\nGenerate module files')
         sutils.command(module, 'tcl', 'refresh', '-y')
-    return env_path
+    return snap.env_path
 
 
 if __name__ == '__main__':

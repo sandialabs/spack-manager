@@ -72,12 +72,27 @@ class Snapshot:
                             '^rocm': '{compiler.name}-{compiler.version}-'
                             '{^rocm.name}-{^rocm.version}/{name}/{version}'
                             '-{hash:4}'},
-            'link_type': self.args.link_type
+            'link_type': self.args.link_type,
+            'link': 'roots',
+
         }}
+        module_path = os.path.join(
+            os.environ['SPACK_MANAGER'], 'modules')
+        module_dict = {view_name: {
+            'enable': ['tcl'],
+            'use_view': view_name,
+            'prefix_inspections': {'bin': ['PATH']},
+            'roots': {'tcl': module_path},
+            'arch_folder': False,
+            'tcl': {'projections': {
+                    'all': '%s/{name}-{compiler.name}-{compiler.version}' % (self.extension)},
+                    'hash_length': 0,
+        }}}
         with open(self.env.manifest_path, 'r') as f:
             yaml = syaml.load(f)
         # override whatever is there for views with the new information
         yaml['spack']['view'] = view_dict
+        yaml['spack']['modules'] = module_dict
         with open(self.env.manifest_path, 'w') as f:
             syaml.dump(yaml, stream=f, default_flow_style=False)
 
