@@ -8,6 +8,8 @@
 from spack import *
 from spack.pkg.builtin.trilinos import Trilinos as bTrilinos
 import os
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 class Trilinos(bTrilinos):
     version("13.4.0.2022.10.27", commit="da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1")
@@ -22,6 +24,9 @@ class Trilinos(bTrilinos):
             description="Turn on address sanitizer")
 
     patch("kokkos_zero_length_team.patch")
+    machine = find_machine(verbose=False, full_machine_name=False)
+    if machine == "eagle":
+        patch("stk-coupling-versions-func-overload.patch")
 
     depends_on("ninja", type="build", when="+ninja")
 
