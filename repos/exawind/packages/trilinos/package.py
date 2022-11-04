@@ -23,7 +23,8 @@ class Trilinos(bTrilinos):
     variant("asan", default=False,
             description="Turn on address sanitizer")
 
-    patch("kokkos_zero_length_team.patch")
+    patch("kokkos_zero_length_team.patch", when="@:13.3.0")
+
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
         patch("stk-coupling-versions-func-overload.patch")
@@ -86,8 +87,50 @@ class Trilinos(bTrilinos):
             # Used as an optimization to only list the single specified
             # arch in the offload-arch compile line, but not explicitly necessary
             targets = self.spec.variants["amdgpu_target"].value
-            options.append("-DCMAKE_HIP_ARCHITECTURES=" + ";".join(str(x) for x in targets))
-            options.append("-DAMDGPU_TARGETS=" + ";".join(str(x) for x in targets))
-            options.append("-DGPU_TARGETS=" + ";".join(str(x) for x in targets))
+            options.append(self.define("CMAKE_HIP_ARCHITECTURES", ";".join(str(x) for x in targets)))
+            options.append(self.define("AMDGPU_TARGETS", ";".join(str(x) for x in targets)))
+            options.append(self.define("GPU_TARGETS", ";".join(str(x) for x in targets)))
+            options.append(self.define("TPL_ENABLE_Boost", False))
+            options.append(self.define("Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES", False))
+            options.append(self.define("Trilinos_ALLOW_NO_PACKAGES", False))
+            options.append(self.define("Trilinos_ASSERT_MISSING_PACKAGES", False))
+            options.append(self.define("Trilinos_ENABLE_Fortran", False))
+            # Kokkos
+            options.append(self.define("Trilinos_ENABLE_Kokkos", True))
+            options.append(self.define("Kokkos_ENABLE_HIP", True))
+            options.append(self.define("Kokkos_ARCH_ZEN2", False))
+            options.append(self.define("Kokkos_ARCH_ZEN3", True))
+            options.append(self.define("Kokkos_ARCH_VEGA90A", True))
+            options.append(self.define("Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE", True))
+            # Tests
+            options.append(self.define("Trilinos_ENABLE_SEACAS", True))
+            options.append(self.define("SEACASExodus_ENABLE_TESTS", False))
+            options.append(self.define("SEACASIoss_ENABLE_TESTS", False))
+            options.append(self.define("SEACASNemesis_ENABLE_TESTS", False))
+            options.append(self.define("SEACASEpu_ENABLE_TESTS", False))
+            options.append(self.define("SEACASExodiff_ENABLE_TESTS", False))
+            options.append(self.define("SEACASNemspread_ENABLE_TESTS", False))
+            options.append(self.define("SEACASNemslice_ENABLE_TESTS", False))
+            options.append(self.define("SEACASChaco_ENABLE_TESTS", False))
+            options.append(self.define("SEACASAprepro_ENABLE_TESTS", False))
+
+            options.append(self.define("Trilinos_ENABLE_TESTS", False))
+            options.append(self.define("STK_ENABLE_TESTS", False))
+            options.append(self.define("Ifpack2_ENABLE_TESTS", False))
+            options.append(self.define("MueLu_ENABLE_TESTS", False))
+            options.append(self.define("PanzerMiniEM_ENABLE_TESTS", False))
+            options.append(self.define("Tpetra_INST_HIP", True))
+            options.append(self.define("Tpetra_ENABLE_TESTS", False))
+            # STK
+            options.append(self.define("Trilinos_ENABLE_STK", True))
+            options.append(self.define("Trilinos_ENABLE_STKMesh", True))
+            options.append(self.define("Trilinos_ENABLE_STKIO", True))
+            options.append(self.define("Trilinos_ENABLE_STKBalance", True))
+            options.append(self.define("Trilinos_ENABLE_STKMath", True))
+            options.append(self.define("Trilinos_ENABLE_STKSearch", True))
+            options.append(self.define("Trilinos_ENABLE_STKTransfer", True))
+            options.append(self.define("Trilinos_ENABLE_STKTopology", True))
+            options.append(self.define("Trilinos_ENABLE_STKUtils", True))
+            options.append(self.define("Trilinos_ENABLE_STKTools", True))
 
         return options
