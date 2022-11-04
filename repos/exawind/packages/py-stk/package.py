@@ -15,14 +15,14 @@ class PyStk(PythonPackage):
     git = "https://github.com/sayerhs/pystk.git"
     url = "https://github.com/sayerhs/pystk.git"
 
-    maintainers = ['psakievich']
+    maintainers = ["psakievich"]
 
-    version('master', branch='master')
+    version("master", branch="master")
 
-    depends_on('trilinos+stk')
-    depends_on('py-cython', type='build')
-    depends_on('py-scikit-build', type='build')
-    depends_on('cmake@3.13:', type='build')
+    depends_on("trilinos+stk")
+    depends_on("py-cython", type="build")
+    depends_on("py-scikit-build", type="build")
+    depends_on("cmake@3.13:", type="build")
 
-    depends_on('python@3.5:')
-    depends_on('py-numpy')
+    depends_on("python@3.5:")
+    depends_on("py-numpy")

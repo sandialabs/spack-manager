@@ -29,7 +29,7 @@ compilers:
       target: any
       modules:
       - PrgEnv-amd
-      - rocm/4.5.0
+      - rocm/5.0.0
       - libfabric/1.11.0.4.75
       - craype-network-ofi
       - craype-x86-rome

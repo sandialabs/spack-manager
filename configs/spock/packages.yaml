@@ -12,7 +12,7 @@ packages:
       - spec: "cray-mpich@8.1.12%clang@13.0.0"
         modules:
           - cray-mpich/8.1.12
-          - rocm/4.5.0
+          - rocm/5.0.0
           - libfabric/1.11.0.4.75
           - craype-network-ofi
       - spec: "cray-mpich@8.1.12%cce@13.0.0"
@@ -22,27 +22,27 @@ packages:
           - libfabric/1.11.0.4.75
           - craype-network-ofi
   hip:
-    version: [4.5.0]
+    version: [5.0.0]
     buildable: false
     externals:
-      - spec: hip@4.5.0
-        prefix: /opt/rocm-4.5.0/hip
+      - spec: hip@5.0.0
+        prefix: /opt/rocm-5.0.0/hip
         modules:
           - craype-accel-amd-gfx908
   hsa-rocr-dev:
-    version: [4.5.0]
+    version: [5.0.0]
     buildable: false
     externals:
-      - spec: hsa-rocr-dev@4.5.0
-        prefix: /opt/rocm-4.5.0/hsa
+      - spec: hsa-rocr-dev@5.0.0
+        prefix: /opt/rocm-5.0.0/hsa
         modules:
           - craype-accel-amd-gfx908
   llvm-amdgpu:
-    version: [4.5.0]
+    version: [5.0.0]
     buildable: false
     externals:
-      - spec: llvm-amdgpu@4.5.0
-        prefix: /opt/rocm-4.5.0/llvm
+      - spec: llvm-amdgpu@5.0.0
+        prefix: /opt/rocm-5.0.0/llvm
         modules:
           - craype-accel-amd-gfx908
   boost:
@@ -125,3 +125,4 @@ packages:
       mpi: [cray-mpich@8.1.12]
       blas: [openblas]
       lapack: [openblas]
+    variants: amdgpu_target=gfx908
