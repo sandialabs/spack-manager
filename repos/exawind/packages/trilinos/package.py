@@ -23,6 +23,8 @@ class Trilinos(bTrilinos):
     variant("asan", default=False,
             description="Turn on address sanitizer")
 
+patch("kokkos_zero_length_team.patch", when'@:13.3.0')
+
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
         patch("stk-coupling-versions-func-overload.patch")
