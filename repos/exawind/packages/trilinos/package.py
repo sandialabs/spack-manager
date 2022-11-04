@@ -22,6 +22,7 @@ class Trilinos(bTrilinos):
             description="Turn on address sanitizer")
 
     patch("kokkos_zero_length_team.patch")
+    patch("stk-coupling-versions-func-overload.patch")
 
     depends_on("ninja", type="build", when="+ninja")
 
