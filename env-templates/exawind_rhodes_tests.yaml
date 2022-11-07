@@ -7,10 +7,10 @@ spack:
   specs:
     - 'exawind-nightly +hypre+openfast %gcc@9.3.0'
     - 'exawind-nightly +hypre+openfast %intel@20.0.2'
-    - 'exawind-nightly +hypre+openfast+asan ^amr-wind+asan build_type=Debug ^nalu-wind+asan build_type=Debug ^tioga+asan build_type=Debug ^trilinos+asan build_type=RelWithDebInfo %clang@10.0.0'
+    - 'exawind-nightly +hypre+openfast+asan ^amr-wind~shared+asan build_type=Debug ^nalu-wind~shared+asan build_type=Debug ^tioga~shared+asan build_type=Debug ^trilinos~shared+asan build_type=Debug %clang@10.0.0'
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast %gcc@9.3.0'
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast %intel@20.0.2'
-    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast+asan build_type=Debug ^tioga+asan build_type=Debug ^trilinos+asan build_type=RelWithDebInfo %clang@10.0.0'
+    - 'nalu-wind-nightly +fftw+tioga+hypre+openfast~shared+asan build_type=Debug ^tioga~shared+asan build_type=Debug ^trilinos~shared+asan build_type=Debug %clang@10.0.0'
     - 'amr-wind-nightly +hypre+masa+netcdf %gcc@9.3.0'
     - 'amr-wind-nightly +hypre+masa+netcdf %intel@20.0.2'
-    - 'amr-wind-nightly +hypre+masa+netcdf+asan build_type=Debug %clang@10.0.0'
+    - 'amr-wind-nightly +hypre+masa+netcdf~shared+asan build_type=Debug %clang@10.0.0'
