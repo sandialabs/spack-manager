@@ -28,6 +28,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Enable SIMD in STK")
     variant("ninja", default=False,
             description="Enable Ninja makefile generator")
+    variant("shared", default=True,
+            description="Build shared libraries")
 
     depends_on("trilinos gotype=long")
 
@@ -72,6 +74,7 @@ class NaluWind(bNaluWind, ROCmPackage):
         spec = self.spec
         cmake_options = super(NaluWind, self).cmake_args()
         cmake_options.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
+        cmake_options.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
 
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
