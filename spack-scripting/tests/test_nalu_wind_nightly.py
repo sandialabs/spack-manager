@@ -112,9 +112,9 @@ def test_dashboard_trilinos_develop(create_package):
     assert package.dashboard_trilinos() == "trilinos@develop"
 
 
-def test_dashboard_trilinos_master(create_package):
-    package = create_package("nalu-wind-nightly ^trilinos@master")
-    assert package.dashboard_trilinos() == "trilinos@master"
+def test_dashboard_trilinos_stable(create_package):
+    package = create_package("nalu-wind-nightly ^trilinos@stable")
+    assert package.dashboard_trilinos() == "trilinos@stable"
 
 
 def test_dashboard_trilinos_no_cuda_no_uvm_option(create_package):
