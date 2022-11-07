@@ -7,6 +7,7 @@
 
 from spack import *
 from spack.pkg.exawind.nalu_wind import NaluWind as bNaluWind
+from spack.pkg.exawind.nalu_wind import trilinos_version_filter
 import spack.config
 import os
 from shutil import copyfile
@@ -41,7 +42,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return compiler + cuda
 
     def dashboard_trilinos(self):
-        trilinos = self.name_and_version("trilinos")
+        vstring = trilinos_version_filter(self.spec["trilinos"].version)
+        trilinos = "trilinos@{v}".format(v=vstring)
         uvm = self.spec["trilinos"].format("{variants.uvm}") if "cuda" in self.spec else ""
         return trilinos + uvm
 

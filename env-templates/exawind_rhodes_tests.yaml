@@ -13,4 +13,4 @@ spack:
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast~shared+asan build_type=Debug ^tioga~shared+asan build_type=Debug ^trilinos~shared+asan build_type=Debug %clang@10.0.0'
     - 'amr-wind-nightly +hypre+masa+netcdf %gcc@9.3.0'
     - 'amr-wind-nightly +hypre+masa+netcdf %intel@20.0.2'
-    - 'amr-wind-nightly +hypre+masa+netcdf+asan build_type=Debug %clang@10.0.0'
+    - 'amr-wind-nightly +hypre+masa+netcdf~shared+asan build_type=Debug %clang@10.0.0'
