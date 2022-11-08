@@ -17,7 +17,7 @@ class MachineData:
 
 
 def is_cee(hostname):
-    known_hosts = ("cee", "ews", "ecw", "ecs", "hpws")
+    known_hosts = ("cee", "ews", "ecw", "ecs", "hpws", "ascic")
     for k in known_hosts:
         if k in hostname:
             return True
@@ -56,11 +56,6 @@ machine_list = {
     # SNL
     "cee": MachineData(lambda: is_cee(socket.gethostname()), socket.gethostname()),
     "snl-hpc": MachineData(lambda: is_snl_hpc(socket.gethostname()), socket.gethostname()),
-    "ascic": MachineData(
-        lambda: "ascic" in socket.gethostname() and "gpu" not in socket.gethostname(),
-        socket.gethostname(),
-    ),
-    "ascicgpu": MachineData(lambda: "ascicgpu" in socket.gethostname(), socket.gethostname()),
     # NREL
     "eagle": MachineData(lambda: os.environ["NREL_CLUSTER"] == "eagle", "eagle.hpc.nrel.gov"),
     "rhodes": MachineData(lambda: os.environ["NREL_CLUSTER"] == "rhodes", "rhodes.hpc.nrel.gov"),
