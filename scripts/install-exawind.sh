@@ -55,8 +55,7 @@ fi
 
 printf "\nConcretizing environment...\n"
 cmd "spack concretize -f"
+cmd "spack env depfile -o Makefile"
 
 printf "\nInstalling environment...\n"
-for i in {1..4}; do
-  cmd "nice spack install" &
-done; wait
+cmd "make -j4"
