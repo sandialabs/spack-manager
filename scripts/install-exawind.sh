@@ -59,3 +59,4 @@ cmd "spack env depfile -o Makefile"
 
 printf "\nInstalling environment...\n"
 cmd "make -j4"
+cmd "rm -f Makefile"
