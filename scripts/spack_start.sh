@@ -29,7 +29,7 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   fi
   
   if [[ -z $(spack config --scope site blame bootstrap | grep spack-bootstrap-store) ]]; then
-    if [[ "${SPACK_MANAGER_MACHINE}" == *"ascic"* || "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
+    if [[ "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
       spack bootstrap add --scope site --trust wind-binaries /projects/wind/spack-bootstrap-store/metadata/binaries
     fi
   fi

@@ -100,10 +100,7 @@ machine_specs = {
                SnapshotSpec('cuda', 'exawind+hypre'
                             '+cuda+amr_wind_gpu+nalu_wind_gpu '
                             'cuda_arch=70 %gcc')],
-    'snl-hpc': [SnapshotSpec()],
-    'ascicgpu': [SnapshotSpec('gcc-cuda', base_spec + '+cuda+amr_wind_gpu'
-                              '+nalu_wind_gpu cuda_arch=70'),
-                 SnapshotSpec(id='gcc'), ],
+    'tlcc2': [SnapshotSpec()],
 }
 
 

@@ -24,7 +24,7 @@ def is_cee(hostname):
     return False
 
 
-def is_snl_hpc(hostname):
+def is_tlcc2(hostname):
     known_hosts = ("skybridge", "ghost", "attaway", "chama")
     for k in known_hosts:
         if k in hostname:
@@ -55,7 +55,7 @@ match
 machine_list = {
     # SNL
     "cee": MachineData(lambda: is_cee(socket.gethostname()), socket.gethostname()),
-    "snl-hpc": MachineData(lambda: is_snl_hpc(socket.gethostname()), socket.gethostname()),
+    "tlcc2": MachineData(lambda: is_tlcc2(socket.gethostname()), socket.gethostname()),
     # NREL
     "eagle": MachineData(lambda: os.environ["NREL_CLUSTER"] == "eagle", "eagle.hpc.nrel.gov"),
     "rhodes": MachineData(lambda: os.environ["NREL_CLUSTER"] == "rhodes", "rhodes.hpc.nrel.gov"),
