@@ -1,0 +1,149 @@
+compilers:
+- compiler:
+    spec: gcc@7.5.0
+    paths:
+      cc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-7.5.0-wdjxhayiek552ogqaoerdr25y5vn24ey/bin/gcc
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-7.5.0-wdjxhayiek552ogqaoerdr25y5vn24ey/bin/g++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-7.5.0-wdjxhayiek552ogqaoerdr25y5vn24ey/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-7.5.0-wdjxhayiek552ogqaoerdr25y5vn24ey/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-7.5.0-uukt25zkd2vi47kkd5ctns3fjyekcxnn/lib64
+- compiler:
+    spec: gcc@8.5.0
+    paths:
+      cc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-8.5.0-uukt25zkd2vi47kkd5ctns3fjyekcxnn/bin/gcc
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-8.5.0-uukt25zkd2vi47kkd5ctns3fjyekcxnn/bin/g++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-8.5.0-uukt25zkd2vi47kkd5ctns3fjyekcxnn/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-8.5.0-uukt25zkd2vi47kkd5ctns3fjyekcxnn/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-8.5.0-uukt25zkd2vi47kkd5ctns3fjyekcxnn/lib64
+- compiler:
+    spec: gcc@9.5.0
+    paths:
+      cc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-9.5.0-ycr75nn2ibq3poteljrt55b4l7gbld3k/bin/gcc
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-9.5.0-ycr75nn2ibq3poteljrt55b4l7gbld3k/bin/g++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-9.5.0-ycr75nn2ibq3poteljrt55b4l7gbld3k/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-9.5.0-ycr75nn2ibq3poteljrt55b4l7gbld3k/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-9.5.0-ycr75nn2ibq3poteljrt55b4l7gbld3k/lib64
+- compiler:
+    spec: gcc@10.4.0
+    paths:
+      cc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gcc
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/g++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/lib64
+- compiler:
+    spec: gcc@11.3.0
+    paths:
+      cc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-11.3.0-ktglj7h7bc3ijzpeaywrsy7k5ooty3ai/bin/gcc
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-11.3.0-ktglj7h7bc3ijzpeaywrsy7k5ooty3ai/bin/g++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-11.3.0-ktglj7h7bc3ijzpeaywrsy7k5ooty3ai/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-11.3.0-ktglj7h7bc3ijzpeaywrsy7k5ooty3ai/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-11.3.0-ktglj7h7bc3ijzpeaywrsy7k5ooty3ai/lib64
+- compiler:
+    spec: gcc@12.2.0
+    paths:
+      cc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-12.2.0-z5y2mgpvucctva54jz3mbfnna6mo5jmt/bin/gcc
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-12.2.0-z5y2mgpvucctva54jz3mbfnna6mo5jmt/bin/g++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-12.2.0-z5y2mgpvucctva54jz3mbfnna6mo5jmt/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-12.2.0-z5y2mgpvucctva54jz3mbfnna6mo5jmt/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-12.2.0-z5y2mgpvucctva54jz3mbfnna6mo5jmt/lib64
+- compiler:
+    spec: clang@12.0.1
+    paths:
+      cc: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-12.0.1-3fjkex6plweic5yhnwotaw6jq3p3qugt/bin/clang
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-12.0.1-3fjkex6plweic5yhnwotaw6jq3p3qugt/bin/clang++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-12.0.1-3fjkex6plweic5yhnwotaw6jq3p3qugt/lib
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-12.0.1-3fjkex6plweic5yhnwotaw6jq3p3qugt/lib/clang/12.0.1/lib/linux
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/lib64
+- compiler:
+    spec: clang@13.0.1
+    paths:
+      cc: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-13.0.1-2k642eh542pduhzvwu5ym5kcsp3efzh4/bin/clang
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-13.0.1-2k642eh542pduhzvwu5ym5kcsp3efzh4/bin/clang++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-13.0.1-2k642eh542pduhzvwu5ym5kcsp3efzh4/lib
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-13.0.1-2k642eh542pduhzvwu5ym5kcsp3efzh4/lib/clang/13.0.1/lib/linux
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/lib64
+- compiler:
+    spec: clang@14.0.6
+    paths:
+      cc: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-14.0.6-a2mkj6dq6u7gfjgupj6l5wsox42z7ah3/bin/clang
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-14.0.6-a2mkj6dq6u7gfjgupj6l5wsox42z7ah3/bin/clang++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-14.0.6-a2mkj6dq6u7gfjgupj6l5wsox42z7ah3/lib
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-14.0.6-a2mkj6dq6u7gfjgupj6l5wsox42z7ah3/lib/clang/14.0.6/lib/linux
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/lib64
+- compiler:
+    spec: clang@15.0.2
+    paths:
+      cc: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-15.0.2-ehytehn7zchhfxuhcacpsfe3abdieywe/bin/clang
+      cxx: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-15.0.2-ehytehn7zchhfxuhcacpsfe3abdieywe/bin/clang++
+      f77: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+      fc:  /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-15.0.2-ehytehn7zchhfxuhcacpsfe3abdieywe/lib
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/llvm-15.0.2-ehytehn7zchhfxuhcacpsfe3abdieywe/lib/clang/15.0.2/lib/x86_64-unknown-linux-gnu
+     - /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-3p6txnggl3gb25woqtbgfckpcti67d6c/lib64
