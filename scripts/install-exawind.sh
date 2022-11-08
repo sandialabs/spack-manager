@@ -61,5 +61,5 @@ printf "\nInstalling environment...\n"
 #    cmd "nice spack install" &
 # done; wait
 cmd "spack env depfile -o Makefile"
-cmd "nice make -j4"
+cmd "nice make -j8"
 cmd "rm -f Makefile"
