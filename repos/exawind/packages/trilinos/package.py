@@ -27,7 +27,7 @@ class Trilinos(bTrilinos):
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
-        patch("stk-coupling-versions-func-overload.patch")
+        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:")
 
     depends_on("ninja", type="build", when="+ninja")
 

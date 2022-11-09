@@ -114,7 +114,7 @@ printf "\nActivating environment...\n"
 cmd "spack env activate -d ${EXAWIND_ENV_DIR}"
 
 printf "\nConcretizing environment...\n"
-cmd "spack concretize -f --fresh"
+cmd "spack concretize -f"
 
 # Develop spec stuff that isn't working as desired
 #DEVELOP_SPEC_DIR=${SPACK_MANAGER}/stage/develop-specs/amr-wind-nightly
@@ -139,6 +139,7 @@ if [ "${SPACK_MANAGER_MACHINE}" == 'ascicgpu' ]; then
 else
   # time (for i in {1..4}; do spack install --keep-stage --fresh & done; wait)
   time (make SPACK_INSTALL_FLAGS='--keep-stage --fresh' -j32)
+
 fi
 printf "\nTests ended at: $(date)\n"
 
