@@ -86,7 +86,7 @@ if [[ -f "${ENV_SCRIPT}" ]]; then
 fi
 
 printf "\nSetting up gold files directories...\n"
-if [[ "${SPACK_MANAGER_MACHINE}" == "ascic" || "${SPACK_MANAGER_MACHINE}" == "ascicgpu" ]]; then
+if [[ "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
   prep_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-stable
   prep_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-develop
 else
@@ -132,7 +132,7 @@ cmd "spack concretize -f"
 
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
-if [ "${SPACK_MANAGER_MACHINE}" == 'ascicgpu' ]; then
+if [ "${SPACK_MANAGER_MACHINE}" == 'cee' ]; then
   time (spack install --keep-stage)
 else
   time (for i in {1..4}; do spack install --keep-stage & done; wait)
@@ -141,7 +141,7 @@ printf "\nTests ended at: $(date)\n"
 
 printf "\nSaving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
-if [[ "${SPACK_MANAGER_MACHINE}" == "ascic" || "${SPACK_MANAGER_MACHINE}" == "ascicgpu" ]]; then
+if [[ "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
   archive_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-stable ${DATE}
   archive_gold_dirs ${SPACK_MANAGER_GOLDS_DIR}-develop ${DATE}
 else
@@ -170,14 +170,10 @@ LOG_DIR=${SPACK_MANAGER}/logs
 DATE=$(date +%Y-%m-%d)
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   (set -x; cd ${LOG_DIR} && sbatch -J test-exawind-${DATE} -N 1 -t 4:00:00 -A exawind -p short -o "%x.o%j" --gres=gpu:2 ${EXAWIND_TEST_SCRIPT})
-elif [ "${SPACK_MANAGER_MACHINE}" == 'rhodes' ]; then
-  (set -x; cd ${LOG_DIR} && nice -n19 ionice -c3 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
-elif [ "${SPACK_MANAGER_MACHINE}" == 'ascic' ]; then
-  (set -x; cd ${LOG_DIR} && nice -n19 ionice -c3 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
-elif [ "${SPACK_MANAGER_MACHINE}" == 'ascicgpu' ]; then
-  (set -x; cd ${LOG_DIR} && nice -n19 ionice -c3 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
 elif [ "${SPACK_MANAGER_MACHINE}" == 'darwin' ]; then
   (set -x; cd ${LOG_DIR} && nice -n20 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
+else
+  (set -x; cd ${LOG_DIR} && nice -n19 ionice -c3 ${EXAWIND_TEST_SCRIPT} &> test-exawind-${DATE}.log)
 fi
 
 printf "\nDone at $(date)\n"
