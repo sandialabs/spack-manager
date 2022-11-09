@@ -100,7 +100,7 @@ machine_specs = {
                SnapshotSpec('cuda', 'exawind+hypre'
                             '+cuda+amr_wind_gpu+nalu_wind_gpu '
                             'cuda_arch=70 %gcc')],
-    'tlcc2': [SnapshotSpec()],
+    'snl-hpc': [SnapshotSpec()],
 }
 
 

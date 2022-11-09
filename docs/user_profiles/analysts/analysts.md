@@ -14,6 +14,6 @@ The location of these module files on the major machines are:
 
 | Machine Name | Path |
 |--------------|------|
-| tlcc2 | `/projects/wind/spack-manager/modules` |
+| snl-hpc | `/projects/wind/spack-manager/modules` |
 | cee | `/projects/wind/spack-manager/modules` |
 | eagle | `/projects/exawind/exawind-snapshots/modules` |
