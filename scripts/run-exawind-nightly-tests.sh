@@ -138,7 +138,7 @@ if [ "${SPACK_MANAGER_MACHINE}" == 'ascicgpu' ]; then
   time (make -j32)
 else
   # time (for i in {1..4}; do spack install --keep-stage --fresh & done; wait)
-  time (make -j32)
+  time (make SPACK_INSTALL_FLAGS='--keep-stage --fresh' -j32)
 fi
 printf "\nTests ended at: $(date)\n"
 
