@@ -59,6 +59,7 @@ machine_list = {
     # NREL
     "eagle": MachineData(lambda: os.environ["NREL_CLUSTER"] == "eagle", "eagle.hpc.nrel.gov"),
     "rhodes": MachineData(lambda: os.environ["NREL_CLUSTER"] == "rhodes", "rhodes.hpc.nrel.gov"),
+    "ellis": MachineData(lambda: os.environ["NREL_CLUSTER"] == "ellis", "ellis.hpc.nrel.gov"),
     # OLCF
     "summit": MachineData(
         lambda: os.environ["LMOD_SYSTEM_NAME"] == "summit", "summit.olcf.ornl.gov"
