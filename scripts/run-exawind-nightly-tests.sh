@@ -135,7 +135,7 @@ printf "spack install \n"
 spack env depfile -o Makefile
 if [ "${SPACK_MANAGER_MACHINE}" == 'ascicgpu' ]; then
   # time (spack install --keep-stage)
-  time (make -j32)
+  time (make SPACK_INSTALL_FLAGS=--keep-stage -j32)
 else
   # time (for i in {1..4}; do spack install --keep-stage --fresh & done; wait)
   time (make SPACK_INSTALL_FLAGS='--keep-stage --fresh' -j32)
