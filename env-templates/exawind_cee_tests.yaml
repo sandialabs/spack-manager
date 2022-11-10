@@ -11,6 +11,7 @@ spack:
     - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast %clang@12.0.1 build_type=Release ^trilinos@develop'
     - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+asan %clang@12.0.1 build_type=Debug ^trilinos@develop'
     - 'nalu-wind-nightly+snl ~fftw~tioga~hypre~openfast %clang@12.0.1 build_type=Release ^trilinos@develop'
+    when: '"gpu" not in hostname'
   # GPU tests run on ascicgpu
   - nalus:
     - 'nalu-wind-nightly+snl +fftw+tioga+hypre+openfast+cuda %gcc@10.3.0 build_type=Release ^trilinos@develop~uvm'
@@ -31,4 +32,5 @@ spack:
     unify: false
   view: false
   specs:
-  - [$nalus]
+  - matrix:
+    - [$nalus]
