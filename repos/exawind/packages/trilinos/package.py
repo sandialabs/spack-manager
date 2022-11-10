@@ -22,6 +22,8 @@ class Trilinos(bTrilinos):
             description="Enable Ninja makefile generator")
     variant("asan", default=False,
             description="Turn on address sanitizer")
+    variant("pic", default=True,
+            description="Position independent code")
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
 
@@ -77,6 +79,8 @@ class Trilinos(bTrilinos):
     def cmake_args(self):
         spec = self.spec
         options = super(Trilinos, self).cmake_args()
+
+        options.append(self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"))
 
         if "+stk" in spec:
             options.append(self.define_from_variant("STK_ENABLE_TESTS", "stk_unit_tests"))
