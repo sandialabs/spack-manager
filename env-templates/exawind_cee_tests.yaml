@@ -32,5 +32,4 @@ spack:
     unify: false
   view: false
   specs:
-  - matrix:
-    - [$nalus]
+  - $nalus
