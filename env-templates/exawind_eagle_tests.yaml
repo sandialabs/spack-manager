@@ -2,7 +2,8 @@ spack:
   include:
   - include.yaml
   concretizer:
-    unify: when_possible
+    unify: false
+    reuse: false
   view: false
   specs:
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast+cuda %gcc@9.3.0'
