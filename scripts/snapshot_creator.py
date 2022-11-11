@@ -34,8 +34,6 @@ add = spack.main.SpackCommand('add')
 concretize = spack.main.SpackCommand('concretize')
 module = spack.main.SpackCommand('module')
 
-blacklist = ['cuda', 'yaml-cpp', 'rocm', 'llvm-admgpu', 'hip', 'py-']
-
 
 def spack_install_cmd(args):
     """
@@ -57,24 +55,14 @@ def parse(stream):
         '-m', '--modules', action='store_true',
         help='create modules to associate with each view in the environment')
     phases = ['create_env', 'mod_specs', 'concretize', 'install']
-    parser.add_argument(
-        '--terminate_after', '-t', choices=phases,
-        help='stop script after this phase')
+    parser.add_argument('--git_hash_version', '-g', default=True,
+                        help="replace branch version with latest git hashes as verions")
     parser.add_argument('--name', '-n', required=False,
                         help='name the environment something other than the '
                         'date')
     parser.add_argument('--use_machine_name', '-M', action='store_true',
                         help='use machine name in the snapshot path '
                         'instead of computed architecture')
-    parser.add_argument('--link_type', '-l', required=False, choices=[
-                        'symlink', 'soft', 'hardlink', 'hard,' 'copy',
-                        'relocate'], help='set the type of'
-                        ' linking used in view creation')
-    parser.add_argument('--unify', '-u', required=False, choices=[
-                        True, False, 'when_possible'],
-                        help='concretization unify option to use')
-    parser.set_defaults(modules=True,
-                        stop_after='install', link_type='symlink', unify='when_possible')
     parser.add_argument(
         "-s",
         "--specs",
@@ -135,13 +123,11 @@ def use_latest_git_hashes(env):
     roots = list(env.roots())
 
     for i in range(len(roots)):
-        if roots[i].name not in blacklist:
             hash_dict = {}
             hash_dict[roots[i].name] = find_latest_git_hash(roots[i])
 
             for dep in roots[i].dependencies():
-                if dep.name not in blacklist:
-                    hash_dict[dep.name] = find_latest_git_hash(dep)
+                hash_dict[dep.name] = find_latest_git_hash(dep)
 
             yaml['spack']['specs'][i] = replace_versions_with_hashes(
                 roots[i].build_spec, hash_dict)
@@ -156,21 +142,11 @@ def create_snapshots(args):
     snap = sutils.Snapshot(args)
     snap.get_top_level_specs()
 
-    if args.stop_after == 'create_env':
-        return
+    if args.git_hash_version:
+        use_latest_git_hashes(snap.env)
 
-    use_latest_git_hashes(snap.env)
-
-    if args.stop_after == 'mod_specs':
-        return
-
-    ev.activate(snap.env)
-    print('\nConcretize')
-    sutils.command(concretize, '-f')
-    if args.stop_after == 'concretize':
-        return
-    print('\nInstall')
-    spack_install_cmd([])
+        ev.activate(snap.env)
+        sutils.command(concretize, '-f')
 
     return snap.env_path
 

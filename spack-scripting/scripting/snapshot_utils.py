@@ -57,6 +57,7 @@ class Snapshot:
         self.env = ev.Environment(self.env_path)
 
         with self.env.write_transaction():
+            self.env.yaml['spack']['view'] = True
             lmod = self.env.yaml['spack']['modules']['default']['lmod']
             lmod['projections']['all'] = self.extension+'/{name}/{version}'
             lmod['projections']['^cuda'] = self.extension+'/{^cuda.name}-{^cuda.version}/{name}/{version}'
