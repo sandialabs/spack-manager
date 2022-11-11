@@ -39,13 +39,12 @@ class Snapshot:
         generate the base environment that will be used to create the snapshot
         this will be appended throughout the setup process
         """
+        template = os.path.join(os.environ['SPACK_MANAGER'],'env-templates','snapshot.yaml')
         self.args = args
         self.machine = find_machine(verbose=False)
         self.extension = path_extension(args.name, args.use_machine_name)
         self.env_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'environments', self.extension)
-        self.install_dir = os.path.join(
-            os.environ['SPACK_MANAGER'], 'modules_src', self.extension)
 
         print('\nCreating snapshot environment')
 
@@ -53,16 +52,15 @@ class Snapshot:
         if os.path.isfile(yaml_path):
             os.remove(yaml_path)
 
-        command(manager, 'create-env', '-d', self.env_path, '-s', *args.specs)
+        command(manager, 'create-env', '-d', self.env_path, '-s', *args.specs, '-y', template)
 
         self.env = ev.Environment(self.env_path)
 
-        # TODO refactor this to be a part of create-env command
         with self.env.write_transaction():
-            self.env.yaml['spack']['config'] = {'install_tree': {'root': self.install_dir}}
-            self.env.yaml['spack']['upstreams'] = {'manager': {'install_tree': '$spack/opt/spack'}}
-            self.env.yaml['spack']['concretizer'] = {'unify': False}
-            # keep over writing specs so we don't keep appending them if we call multiple times
+            lmod = self.env.yaml['spack']['modules']['default']['lmod']
+            lmod['projections']['all'] = self.extension+'/{name}/{version}'
+            lmod['projections']['^cuda'] = self.extension+'/{^cuda.name}-{^cuda.version}/{name}/{version}'
+            lmod['projections']['^rocm'] = self.extension+'/{^rocm.name}-{^rocm.version}/{name}/{version}'
             self.env.write()
 
 

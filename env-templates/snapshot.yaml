@@ -20,7 +20,8 @@ spack:
         lib64/pkgconfig: [PKG_CONFIG_PATH]
         share/pkgconfig: [PKG_CONFIG_PATH]
       lmod:
-        core_compilers: [ apple-clang ] # TODO
+        # TODO update if using manually
+        # core_compilers: [ coarcompiler ]
         include: [gcc, intel, clang, apple-clang]
         hash_length: 0
         hierarchy: [mpi]
@@ -35,9 +36,10 @@ spack:
               '{name}_BIN': '{prefix.bin}'
               '{name}_INC': '{prefix.include}'
               '{name}_LIB': '{prefix.lib}'
+        # TODO update if using manually
         projections:
-          all: 'exawind/date/{name}/{version}'
-          ^cuda: 'exawind/date/{cuda.name}-{cuda.version}/{name}/{version}'
-          ^rocm: 'exawind/date/{rocm.name}-{rocm.version}/{name}/{version}'
+          all: 'projectname/date/{name}/{version}'
+          ^cuda: 'projectname/date/{cuda.name}-{cuda.version}/{name}/{version}'
+          ^rocm: 'projectname/date/{rocm.name}-{rocm.version}/{name}/{version}'
 
 

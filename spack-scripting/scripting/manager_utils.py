@@ -14,9 +14,9 @@ arch = spack.main.SpackCommand("arch")
 
 def base_extension(use_machine_name):
     if use_machine_name:
-        return "exawind/snapshots/{machine}".format(machine=os.environ["SPACK_MANAGER_MACHINE"])
+        return "snapshots/exawind/{machine}".format(machine=os.environ["SPACK_MANAGER_MACHINE"])
     else:
-        return "exawind/snapshots/{arch}".format(arch=arch("-b").strip())
+        return "snapshots/exawind/{arch}".format(arch=arch("-b").strip())
 
 
 def path_extension(name, use_machine_name):
