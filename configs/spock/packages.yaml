@@ -86,7 +86,7 @@ packages:
         modules:
           - zlib/1.2.11
   perl:
-    version: [5.34.0]
+    require: "@5.34.0"
     buildable: false
     externals:
       - spec: perl@5.34.0
