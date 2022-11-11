@@ -1,0 +1,15 @@
+packages:
+  cuda:
+    buildable: false
+    version: [11.4.4]
+    externals:
+    - spec: cuda@11.4.4
+      prefix: /projects/hpacf/apps/compilers/2022-10/spack/opt/spack/linux-rocky8-zen/gcc-8.5.0/cuda-11.4.4-gzsu4bitcwa6ovuw5c32n2vgol3vbxbt
+  all:
+    compiler: [gcc@10.4.0, clang@15.0.2]
+    variants: build_type=Release +mpi cuda_arch=80
+    target: [zen2]
+    providers:
+      mpi: [mpich]
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]

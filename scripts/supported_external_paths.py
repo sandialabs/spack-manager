@@ -12,7 +12,7 @@ import manager_cmds.find_machine as find_machine
 
 def get_path_to_externals():
     machine = find_machine.find_machine(verbose=False)
-    if machine in ['cee', 'snl-hpc', 'ascicgpu', 'ascic']:
+    if machine in ['cee', 'snl-hpc']:
         return '/projects/wind/spack-manager'
     elif machine in ['eagle']:
         return '/projects/exawind/exawind-snapshots/spack-manager'

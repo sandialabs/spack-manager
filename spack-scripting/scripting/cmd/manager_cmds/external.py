@@ -100,7 +100,15 @@ def create_external_detected_spec(env, spec):
     view = _get_first_view_containing_spec(env, spec)
     pruned_spec = pruned_spec_string(spec)
     prefix = view.get_projection_for_spec(spec)
-    return spack.detection.DetectedPackage(Spec.from_detection(pruned_spec), prefix)
+    if not os.path.isdir(prefix):
+        return None
+    # attempt to return a valid spec using the current spack instance
+    try:
+        return spack.detection.DetectedPackage(Spec.from_detection(pruned_spec), prefix)
+    except spack.variant.UnknownVariantError:
+        # if it is an old spec then a variant could have changed so we just create a spec from the
+        # pruned_spec string
+        return spack.detection.DetectedPackage(Spec(pruned_spec), prefix)
 
 
 def assemble_dict_of_detected_externals(env, black_list, white_list):
@@ -108,10 +116,15 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
     active_env = ev.active_environment()
 
     def update_dictionary(env, spec):
-        if spec.name in external_spec_dict:
-            external_spec_dict[spec.name].append(create_external_detected_spec(env, spec))
+
+        ext_spec = create_external_detected_spec(env, spec)
+        if ext_spec:
+            if spec.name in external_spec_dict:
+                external_spec_dict[spec.name].append(ext_spec)
+            else:
+                external_spec_dict[spec.name] = [ext_spec]
         else:
-            external_spec_dict[spec.name] = [create_external_detected_spec(env, spec)]
+            return
 
     for spec in env.all_specs():
         if spec.external:

@@ -28,12 +28,15 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Enable SIMD in STK")
     variant("ninja", default=False,
             description="Enable Ninja makefile generator")
+    variant("shared", default=True,
+            description="Build shared libraries")
 
     depends_on("trilinos gotype=long")
 
-    for arch in ROCmPackage.amdgpu_targets:
-        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm~rocm_rdc amdgpu_target=%s" % arch, when="+rocm amdgpu_target=%s" % arch)
-        depends_on("hypre+rocm amdgpu_target=%s" % arch, when="+hypre+rocm amdgpu_target=%s" % arch)
+    for _arch in ROCmPackage.amdgpu_targets:
+        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
+                   when="+rocm amdgpu_target={0}".format(_arch))
+        depends_on("hypre+rocm amdgpu_target={0}".format(_arch), when="+hypre+rocm amdgpu_target={0}".format(_arch))
 
     cxxstd=["14", "17"]
     variant("cxxstd", default="17", values=cxxstd,  multi=False)
@@ -64,22 +67,27 @@ class NaluWind(bNaluWind, ROCmPackage):
             env.set("OMPI_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             env.set("MPICH_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             env.set("MPICXX_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
+        if "+rocm" in self.spec:
+            env.append_flags("CXXFLAGS", "-fgpu-rdc")
 
     def cmake_args(self):
         spec = self.spec
         cmake_options = super(NaluWind, self).cmake_args()
         cmake_options.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
+        cmake_options.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
 
-        if  spec.satisfies("dev_path=*"):
+        if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
 
         if "+rocm" in self.spec:
-            cmake_options.append("-DCMAKE_CXX_COMPILER={0}".format(self.spec["hip"].hipcc))
+            cmake_options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
             cmake_options.append(self.define("ENABLE_ROCM", True))
+            targets = spec.variants["amdgpu_target"].value
+            cmake_options.append(self.define("GPU_TARGETS", ";".join(str(x) for x in targets)))
 
         if spec["mpi"].name == "openmpi":
-            cmake_options.append(self.define("MPIEXEC_PREFLAGS","--oversubscribe"))
+            cmake_options.append(self.define("MPIEXEC_PREFLAGS", "--oversubscribe"))
 
         if spec.satisfies("+tests") or self.run_tests or spec.satisfies("dev_path=*"):
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")

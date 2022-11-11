@@ -28,13 +28,6 @@ packages:
       #- spec: "cuda@11.0.3%gcc"
       #  modules:
       #    - cuda/11.0.3
-  hdf5:
-    version: [1.10.7]
-    buildable: false
-    externals:
-      - spec: "hdf5@1.10.7%gcc"
-        modules:
-          - hdf5/1.10.7
   netcdf-c:
     version: [4.8.1]
     buildable: false

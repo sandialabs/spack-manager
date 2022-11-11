@@ -1,0 +1,19 @@
+diff --git a/packages/stk/stk_util/stk_util/parallel/CouplingVersions.cpp b/packages/stk/stk_util/stk_util/parallel/CouplingVersions.cpp
+index a67aac80a6f..e07fd1f1c6e 100644
+--- a/packages/stk/stk_util/stk_util/parallel/CouplingVersions.cpp
++++ b/packages/stk/stk_util/stk_util/parallel/CouplingVersions.cpp
+@@ -62,10 +62,10 @@ class StkCompatibleVersion
+ 
+     int get_global_max_version() const { return m_globalMaxVersion; }
+ 
+-    void set_version(unsigned int version)
+-    {
+-      set_version_impl(MPI_COMM_WORLD, version);
+-    }
++    // void set_version(unsigned int version)
++    // {
++    //   set_version_impl(MPI_COMM_WORLD, version);
++    // }
+ 
+     void set_version(MPI_Comm comm)
+     {
