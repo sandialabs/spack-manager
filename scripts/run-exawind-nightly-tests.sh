@@ -167,6 +167,7 @@ cmd "chmod u+x ${EXAWIND_TEST_SCRIPT}"
 
 printf "\nRunning test script...\n"
 LOG_DIR=${SPACK_MANAGER}/logs
+mkdir -p ${LOG_DIR}
 DATE=$(date +%Y-%m-%d)
 if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]; then
   (set -x; cd ${LOG_DIR} && sbatch -J test-exawind-${DATE} -N 1 -t 4:00:00 -A exawind -p short -o "%x.o%j" --gres=gpu:2 ${EXAWIND_TEST_SCRIPT})

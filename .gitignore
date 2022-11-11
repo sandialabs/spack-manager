@@ -1,4 +1,13 @@
+# directories
 spack
+environments
+golds
+logs
+tmp
+views
+modules
+cache
+# file types
 __pycache__
 *.lock
 .spack-env/
