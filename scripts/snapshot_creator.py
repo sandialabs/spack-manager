@@ -81,7 +81,11 @@ def find_latest_git_hash(spec):
         # get the matching entry and shas for github
         query = git('ls-remote', spec.package.git, branch,
                     output=str, error=str).strip().split('\n')
-        assert len(query) == 1
+        try:
+            assert len(query) == 1
+        except:
+            print(spec.name, query)
+            exit()
 
         sha, _ = query[0].split('\t')
 
