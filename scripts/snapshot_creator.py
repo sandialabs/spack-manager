@@ -79,12 +79,12 @@ def find_latest_git_hash(spec):
     branch = sutils.get_version_paired_git_branch(spec)
     if branch:
         # get the matching entry and shas for github
-        query = git('ls-remote', spec.package.git, branch,
+        query = git('ls-remote', '-h', spec.package.git, branch,
                     output=str, error=str).strip().split('\n')
         try:
             assert len(query) == 1
         except:
-            print(spec.name, query)
+            print('Too many hits for the remote branch:', spec.name, query)
             exit()
 
         sha, _ = query[0].split('\t')

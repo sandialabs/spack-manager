@@ -44,7 +44,7 @@ class Snapshot:
         self.machine = find_machine(verbose=False)
         self.extension = path_extension(args.name, args.use_machine_name)
         self.env_path = os.path.join(
-            os.environ['SPACK_MANAGER'], 'environments', self.extension)
+            os.environ['SPACK_MANAGER'], self.extension)
 
         print('\nCreating snapshot environment')
 
