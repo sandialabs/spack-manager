@@ -44,6 +44,8 @@ class Snapshot:
         self.extension = path_extension(args.name, args.use_machine_name)
         self.env_path = os.path.join(
             os.environ['SPACK_MANAGER'], 'environments', self.extension)
+        self.install_dir = os.path.join(
+            os.environ['SPACK_MANAGER'], 'modules_src', self.extension)
 
         print('\nCreating snapshot environment')
 
@@ -53,55 +55,11 @@ class Snapshot:
 
         # TODO refactor this to be a part of create-env command
         with self.env.write_transaction():
+            self.env.yaml['spack']['config']['install_tree']['root'] = self.install_dir
             self.env.yaml['spack']['concretizer'] = {'unify': args.unify}
             # keep over writing specs so we don't keep appending them if we call multiple times
             self.env.yaml['spack']['specs'] = args.specs
             self.env.write()
-
-
-    def add_view_dict(self):
-        view_dict = {}
-        view_name = 'snapshot'
-        view_path = os.path.join(
-            os.environ['SPACK_MANAGER'], 'views', self.extension, view_name)
-        view_dict = {view_name: {
-            'root': view_path,
-            'projections': {'all': '{compiler.name}-{compiler.version}/{name}/'
-                            '{version}-{hash:4}',
-                            '^cuda': '{compiler.name}-{compiler.version}-'
-                            '{^cuda.name}-{^cuda.version}/{name}/{version}'
-                            '-{hash:4}',
-                            '^rocm': '{compiler.name}-{compiler.version}-'
-                            '{^rocm.name}-{^rocm.version}/{name}/{version}'
-                            '-{hash:4}'},
-            'link_type': self.args.link_type,
-            'link': 'roots',
-
-        }}
-        module_path = os.path.join(
-            os.environ['SPACK_MANAGER'], 'modules')
-        module_dict = {view_name: {
-            'enable': ['tcl'],
-            'use_view': view_name,
-            'prefix_inspections': {'bin': ['PATH']},
-            'roots': {'tcl': module_path},
-            'arch_folder': False,
-            'tcl':
-                  {'projections': {
-                  'all': '%s/{compiler.name}/{compiler.version}/{name}-{hash:4}' % self.extension,
-                  '^cuda': '%s/{compiler.name}/{compiler.version}/{^cuda.name}/{^cuda.version}/{name}-{hash:4}' % self.extension,
-                  '^rocm': '%s/{compiler.name}/{compiler.version}/{^rocm.name}/{^rocm.version}/{name}-{hash:4}' % self.extension,
-                  },
-                  'hash_length': 0,
-        }}}
-        with open(self.env.manifest_path, 'r') as f:
-            yaml = syaml.load(f)
-        # override whatever is there for views with the new information
-        yaml['spack']['view'] = view_dict
-        yaml['spack']['modules'] = module_dict
-        with open(self.env.manifest_path, 'w') as f:
-            syaml.dump(yaml, stream=f, default_flow_style=False)
-
 
 
     def get_top_level_specs(self):

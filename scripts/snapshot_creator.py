@@ -155,7 +155,6 @@ def use_latest_git_hashes(env):
 def create_snapshots(args):
     snap = sutils.Snapshot(args)
     snap.get_top_level_specs()
-    snap.add_view_dict()
 
     if args.stop_after == 'create_env':
         return
@@ -173,9 +172,6 @@ def create_snapshots(args):
     print('\nInstall')
     spack_install_cmd([])
 
-    if args.modules:
-        print('\nGenerate module files')
-        sutils.command(module, 'tcl', 'refresh', '-y')
     return snap.env_path
 
 
