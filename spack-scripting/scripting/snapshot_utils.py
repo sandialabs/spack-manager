@@ -49,16 +49,20 @@ class Snapshot:
 
         print('\nCreating snapshot environment')
 
-        command(manager, 'create-env', '-d', self.env_path)
+        yaml_path = os.path.join(self.env_path, 'spack.yaml')
+        if os.path.isfile(yaml_path):
+            os.remove(yaml_path)
+
+        command(manager, 'create-env', '-d', self.env_path, '-s', *args.specs)
 
         self.env = ev.Environment(self.env_path)
 
         # TODO refactor this to be a part of create-env command
         with self.env.write_transaction():
-            self.env.yaml['spack']['config']['install_tree']['root'] = self.install_dir
-            self.env.yaml['spack']['concretizer'] = {'unify': args.unify}
+            self.env.yaml['spack']['config'] = {'install_tree': {'root': self.install_dir}}
+            self.env.yaml['spack']['upstreams'] = {'manager': {'install_tree': '$spack/opt/spack'}}
+            self.env.yaml['spack']['concretizer'] = {'unify': False}
             # keep over writing specs so we don't keep appending them if we call multiple times
-            self.env.yaml['spack']['specs'] = args.specs
             self.env.write()
 
 

@@ -1,0 +1,43 @@
+spack:
+  specs: []
+  view: false
+  concretizer:
+    unify: false
+  config:
+    install_tree:
+      root: ${env}/opt/
+  modules:
+    default:
+      enable:: [lmod]
+      arch_folder: false
+      roots:
+        lmod: ${SPACK_MANAGER}/modules/snapshots
+      prefix_inspections:
+        bin: [PATH]
+        lib: [LIBRARY_PATH, LD_LIBRARY_PATH]
+        lib64: [LIBRARY_PATH, LD_LIBRARY_PATH]
+        lib/pkgconfig: [PKG_CONFIG_PATH]
+        lib64/pkgconfig: [PKG_CONFIG_PATH]
+        share/pkgconfig: [PKG_CONFIG_PATH]
+      lmod:
+        core_compilers: [ apple-clang ] # TODO
+        include: [gcc, intel, clang, apple-clang]
+        hash_length: 0
+        hierarchy: [mpi]
+        exclude_implicits: true
+        all:
+          conflict:
+          - '{name}'
+          environment:
+            set:
+              '{name}_ROOT': '{prefix}'
+              '{name}_VERSION': '{version}'
+              '{name}_BIN': '{prefix.bin}'
+              '{name}_INC': '{prefix.include}'
+              '{name}_LIB': '{prefix.lib}'
+        projections:
+          all: 'exawind/date/{name}/{version}'
+          ^cuda: 'exawind/date/{cuda.name}-{cuda.version}/{name}/{version}'
+          ^rocm: 'exawind/date/{rocm.name}-{rocm.version}/{name}/{version}'
+
+
