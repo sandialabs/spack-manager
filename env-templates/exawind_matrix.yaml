@@ -2,9 +2,10 @@ spack:
   include:
   - include.yaml
   concretizer:
-    unify: when_possible
+    unify: false
+    reuse: false
   view: false
   specs:
-    - 'exawind+ninja+hypre+amr_wind_gpu+nalu_wind_gpu+cuda '
+    - 'exawind+ninja+hypre+amr_wind_gpu+nalu_wind_gpu+cuda'
     - 'exawind+ninja+hypre~amr_wind_gpu~nalu_wind_gpu~cuda'
     - 'exawind+ninja~hypre+amr_wind_gpu~nalu_wind_gpu+cuda  ^nalu-wind+hypre ^amr-wind~hypre'

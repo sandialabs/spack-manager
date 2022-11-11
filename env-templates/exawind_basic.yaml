@@ -2,7 +2,8 @@ spack:
   include:
   - include.yaml
   concretizer:
-    unify: when_possible
+    unify: false
+    reuse: false
   view: false
   specs:
   - exawind+hypre
