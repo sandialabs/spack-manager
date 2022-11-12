@@ -49,16 +49,13 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Link scripts with flake8
-      run: |
-        # flake8 on scripts that aren't spack extensions
-        flake8 .
     - name: Spack Style
       run: |
         # check our spack extension with spack's style guide
         source start.sh
         spack-start
         spack style spack-scripting
+        spack style scripts
   concretization-basic:
     runs-on: ${{matrix.os}}
     env:
