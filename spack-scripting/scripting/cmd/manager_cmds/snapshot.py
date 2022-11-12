@@ -117,7 +117,7 @@ def use_latest_git_hashes(env):
     env._re_read()
 
 
-def create_snapshots(args):
+def create_snapshots(parser, args):
     """
     Command to create the snapshot environment
     if we use latest git hashes then this will have to concretize twice
