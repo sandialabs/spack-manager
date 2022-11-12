@@ -8,7 +8,9 @@ tmp
 views
 modules
 cache
+stage
 # file types
+Makefile
 __pycache__
 *.lock
 .spack-env/

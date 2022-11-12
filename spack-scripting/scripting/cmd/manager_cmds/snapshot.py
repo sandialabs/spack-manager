@@ -128,7 +128,7 @@ def create_snapshots(args):
     snap = sutils.Snapshot(args)
     snap.get_top_level_specs()
 
-    if args.git_hash_version:
+    if args.git_version:
         use_latest_git_hashes(snap.env)
 
         ev.activate(snap.env)
@@ -148,9 +148,18 @@ def add_command(parser, command_dict):
         "environment.",
     )
     sub_parser.add_argument(
-        "--git_hash_version",
+        "--git_version",
         "-g",
-        default=True,
+        action="store_true",
+        required=False,
+        help="replace branch version with latest git hashes as verions",
+    )
+    sub_parser.add_argument(
+        "--regular_versions",
+        "-r",
+        action="store_false",
+        destination="git_version",
+        required=False,
         help="replace branch version with latest git hashes as verions",
     )
     sub_parser.add_argument(
@@ -161,7 +170,7 @@ def add_command(parser, command_dict):
     )
     sub_parser.add_argument(
         "--use_machine_name",
-        "-M",
+        "-m",
         action="store_true",
         help="use machine name in the snapshot path " "instead of computed architecture",
     )
