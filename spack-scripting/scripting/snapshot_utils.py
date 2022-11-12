@@ -10,65 +10,67 @@
 Functions for snapshot creation that are added here to be testable
 """
 import os
-from manager_utils import path_extension, pruned_spec_string
+
 from manager_cmds.find_machine import find_machine
+from manager_utils import path_extension
 
 import spack.environment as ev
 import spack.main
-import spack.util.spack_yaml as syaml
 from spack.version import GitVersion, Version
 
-manager = spack.main.SpackCommand('manager')
-add = spack.main.SpackCommand('add')
-concretize = spack.main.SpackCommand('concretize')
-module = spack.main.SpackCommand('module')
+manager = spack.main.SpackCommand("manager")
+add = spack.main.SpackCommand("add")
+concretize = spack.main.SpackCommand("concretize")
+module = spack.main.SpackCommand("module")
+
 
 def command(command, *args):
     """
     Execute a spack.main.SpackCommand uniformly
     and add some print statements
     """
-    print('spack', command.command_name, *args)
+    print("spack", command.command_name, *args)
     print(command(*args, fail_on_error=False))
 
 
 class Snapshot:
-
     def __init__(self, args):
         """
         generate the base environment that will be used to create the snapshot
         this will be appended throughout the setup process
         """
-        template = os.path.join(os.environ['SPACK_MANAGER'],'env-templates','snapshot.yaml')
+        template = os.path.join(os.environ["SPACK_MANAGER"], "env-templates", "snapshot.yaml")
         self.args = args
         self.machine = find_machine(verbose=False)
         self.extension = path_extension(args.name, args.use_machine_name)
-        self.env_path = os.path.join(
-            os.environ['SPACK_MANAGER'], self.extension)
+        self.env_path = os.path.join(os.environ["SPACK_MANAGER"], self.extension)
 
-        print('\nCreating snapshot environment')
+        print("\nCreating snapshot environment")
 
-        yaml_path = os.path.join(self.env_path, 'spack.yaml')
+        yaml_path = os.path.join(self.env_path, "spack.yaml")
         if os.path.isfile(yaml_path):
             os.remove(yaml_path)
 
-        command(manager, 'create-env', '-d', self.env_path, '-s', *args.specs, '-y', template)
+        command(manager, "create-env", "-d", self.env_path, "-s", *args.specs, "-y", template)
 
         self.env = ev.Environment(self.env_path)
 
         with self.env.write_transaction():
-            self.env.yaml['spack']['view'] = True
-            lmod = self.env.yaml['spack']['modules']['default']['lmod']
-            lmod['projections']['all'] = self.extension+'/{name}/{version}'
-            lmod['projections']['^cuda'] = self.extension+'/{^cuda.name}-{^cuda.version}/{name}/{version}'
-            lmod['projections']['^rocm'] = self.extension+'/{^rocm.name}-{^rocm.version}/{name}/{version}'
+            self.env.yaml["spack"]["view"] = True
+            lmod = self.env.yaml["spack"]["modules"]["default"]["lmod"]
+            lmod["projections"]["all"] = self.extension + "/{name}/{version}"
+            lmod["projections"]["^cuda"] = (
+                self.extension + "/{^cuda.name}-{^cuda.version}/{name}/{version}"
+            )
+            lmod["projections"]["^rocm"] = (
+                self.extension + "/{^rocm.name}-{^rocm.version}/{name}/{version}"
+            )
             self.env.write()
-
 
     def get_top_level_specs(self):
         ev.activate(self.env)
-        print('\nInitial concretize')
-        command(concretize, '-f')
+        print("\nInitial concretize")
+        command(concretize, "-f")
         top_specs = []
         for root in self.env.roots():
             if get_version_paired_git_branch(root):
@@ -78,8 +80,9 @@ class Snapshot:
                         top_specs.append(dep)
         # remove any duplicates
         self.top_specs = list(dict.fromkeys(top_specs))
-        print('\nTop Level Specs:', *[s.name for s in self.top_specs])
+        print("\nTop Level Specs:", *[s.name for s in self.top_specs])
         ev.deactivate()
+
 
 def get_version_paired_git_branch(spec):
     if isinstance(spec.version, GitVersion):
@@ -92,13 +95,13 @@ def get_version_paired_git_branch(spec):
         try:
             version_dict = spec.package_class.versions[spec.version]
         except KeyError:
-            print("Skipping {s}@{v} since this version is no longer valid and is likely from"
-                      " --reuse. If this is not desired then please add a version constraint to the spec".format(s=spec.name, v=spec.version))
+            print(
+                "Skipping {s}@{v} since this version is no longer valid and is likely from"
+                " --reuse. If this is not desired then please add a version constraint to "
+                "the spec".format(s=spec.name, v=spec.version)
+            )
             return None
-    if 'branch' in version_dict.keys():
-        return version_dict['branch']
+    if "branch" in version_dict.keys():
+        return version_dict["branch"]
     else:
         return None
-
-
-

@@ -28,8 +28,8 @@ def get_external_dir():
         manager_root = os.environ["SPACK_MANAGER_EXTERNAL"]
     else:
         manager_root = os.environ["SPACK_MANAGER"]
-    external_machine = os.path.join(manager_root,  base_extension(True))
-    external_arch = os.path.join(manager_root,  base_extension(False))
+    external_machine = os.path.join(manager_root, base_extension(True))
+    external_arch = os.path.join(manager_root, base_extension(False))
 
     if os.path.isdir(external_machine) and os.path.isdir(external_arch):
         raise Exception(

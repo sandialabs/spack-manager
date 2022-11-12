@@ -1,6 +1,7 @@
 # directories
 spack
 environments
+snapshots
 golds
 logs
 tmp
