@@ -19,6 +19,7 @@ manager = spack.main.SpackCommand("manager")
 concretize = spack.main.SpackCommand("concretize")
 config = spack.main.SpackCommand("config")
 install = spack.main.SpackCommand("install")
+# we really need something small with only 1-2 dependencies for testing this out
 
 # set up the snapshot
 print("Create Snapshot")
@@ -28,6 +29,6 @@ location = os.path.join(os.environ["SPACK_MANAGER"], "snapshots", "exawind", "sn
 # set up the user environment
 print("Create user environment")
 env_path = os.path.join(os.environ["SPACK_MANAGER"], "environments", "dev_test")
-command(manager, "create-env-dev", "--directory", env_path, "--spec", "h5z-zfp@develop")
+command(manager, "create-dev-env", "--directory", env_path, "--spec", "h5z-zfp@develop")
 ev.activate(ev.Environment(env_path))
 command(install)
