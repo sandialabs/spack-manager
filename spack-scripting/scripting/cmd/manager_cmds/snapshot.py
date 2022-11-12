@@ -128,7 +128,7 @@ def create_snapshots(parser, args):
     snap = sutils.Snapshot(args)
     snap.get_top_level_specs()
 
-    if args.git_version:
+    if not args.regular_versions:
         use_latest_git_hashes(snap.env)
 
         ev.activate(snap.env)
@@ -148,19 +148,11 @@ def add_command(parser, command_dict):
         "environment.",
     )
     sub_parser.add_argument(
-        "--git_version",
-        "-g",
-        action="store_true",
-        required=False,
-        help="replace branch version with latest git hashes as verions",
-    )
-    sub_parser.add_argument(
         "--regular_versions",
         "-r",
-        action="store_false",
-        dest="git_version",
+        action="store_true",
         required=False,
-        help="replace branch version with latest git hashes as verions",
+        help="don't replace branch version with latest git hashes as verions",
     )
     sub_parser.add_argument(
         "--name",
@@ -185,8 +177,8 @@ def add_command(parser, command_dict):
     sub_parser.add_argument(
         "-i",
         "--install",
+        action="store_true",
         required=False,
-        default=False,
         help="install the environment as part of this command rather than as a separate step.  "
         "Depfile installs are generally prefered over using this option",
     )

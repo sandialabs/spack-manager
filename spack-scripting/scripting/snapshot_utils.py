@@ -39,7 +39,7 @@ def env_creation_wrapper(path, specs, template):
     parser = argparse.ArgumentParser("create")
     sub_parser = parser.add_subparsers()
     manager_cmds.create_env.add_command(sub_parser, {})
-    args = parser.parse_args(["create", *args])
+    args = parser.parse_args([*args])
     manager_cmds.create_env.create_env(parser, args)
 
 

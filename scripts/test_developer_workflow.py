@@ -18,20 +18,16 @@ import spack.main
 manager = spack.main.SpackCommand("manager")
 concretize = spack.main.SpackCommand("concretize")
 config = spack.main.SpackCommand("config")
-snapshot = spack.main.SpackCommand("snapshot")
 install = spack.main.SpackCommand("install")
 
 # set up the snapshot
 print("Create Snapshot")
-snapshot("--install", "-n", "snap_test", "-s", "exawind+hypre+openfast")
+manager("snapshot", "--install", "-n", "snap_test", "-s", "h5z-zfp")
 location = os.path.join(os.environ["SPACK_MANAGER"], "snapshots", "exawind", "snap_test")
 
 # set up the user environment
 print("Create user environment")
 env_path = os.path.join(os.environ["SPACK_MANAGER"], "environments", "dev_test")
-command(manager, "create-env", "--directory", env_path, "--spec", "nalu-wind")
+command(manager, "create-env-dev", "--directory", env_path, "--spec", "h5z-zfp@develop")
 ev.activate(ev.Environment(env_path))
-command(manager, "external", "--blacklist", "nalu-wind", location)
-command(manager, "develop", "nalu-wind@master")
-command(concretize)
 command(install)
