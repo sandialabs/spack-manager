@@ -18,6 +18,10 @@ packages:
   parallel-netcdf:
     version: [1.12.2]
     variants: ~fortran
+  perl:
+    require: "@5.34.1"
+  python:
+    require: "@3.9.15"
   tioga:
     version: [develop]
   hypre:

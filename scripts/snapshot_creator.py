@@ -16,14 +16,15 @@ import sys
 
 import snapshot_utils as sutils
 from manager_utils import pruned_spec_string
-
 import spack.cmd.install
 import spack.environment as ev
 import spack.main
 import spack.util.executable
 import spack.util.spack_yaml as syaml
 from spack.spec import Spec
+
 from spack.version import GitVersion
+
 
 git = spack.util.executable.which("git")
 
@@ -31,6 +32,7 @@ manager = spack.main.SpackCommand("manager")
 add = spack.main.SpackCommand("add")
 concretize = spack.main.SpackCommand("concretize")
 module = spack.main.SpackCommand("module")
+
 
 
 def spack_install_cmd(args):
@@ -79,6 +81,7 @@ def parse(stream):
         default=[],
         nargs="+",
         help="Specs to create snapshots for",
+
     )
 
     return parser.parse_args(stream)
