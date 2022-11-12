@@ -7,12 +7,14 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 #
+import os
+import shutil
+import sys
+
+import llnl.util.tty as tty
+
 import spack.config
 import spack.util.spack_yaml as syaml
-import sys
-import llnl.util.tty as tty
-import shutil
-import os
 
 
 def config_updater(cfg_type, cfg_file):
@@ -26,19 +28,19 @@ def config_updater(cfg_type, cfg_file):
         data = raw_data.pop(cfg_type, {})
     update_fn(data)
     # Make a backup copy and rewrite the file
-    bkp_file = cfg_file + '.bkp'
+    bkp_file = cfg_file + ".bkp"
     shutil.copy(cfg_file, bkp_file)
     write_data = {cfg_type: data}
-    with open(cfg_file, 'w') as f:
+    with open(cfg_file, "w") as f:
         syaml.dump_config(write_data, stream=f, default_flow_style=False)
     msg = 'File "{0}" updated [backup={1}]'
     tty.msg(msg.format(cfg_file, bkp_file))
 
 
-if __name__ == '__main__':
-    myTypes = ['config', 'packages', 'compilers']
+if __name__ == "__main__":
+    myTypes = ["config", "packages", "compilers"]
     myDir = sys.argv[1]
-    ftemplate = os.path.join(myDir, '{tpe}.yaml')
+    ftemplate = os.path.join(myDir, "{tpe}.yaml")
     for typ in myTypes:
         resolved = ftemplate.format(tpe=typ)
         if os.path.isfile(resolved):
