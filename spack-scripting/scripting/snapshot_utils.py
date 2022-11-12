@@ -9,16 +9,17 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
+import argparse
 import os
 
 from manager_cmds.find_machine import find_machine
+from manager_cmds.create_env import *
 from manager_utils import path_extension
 
 import spack.environment as ev
 import spack.main
 from spack.version import GitVersion, Version
 
-manager = spack.main.SpackCommand("manager")
 add = spack.main.SpackCommand("add")
 concretize = spack.main.SpackCommand("concretize")
 module = spack.main.SpackCommand("module")
@@ -32,6 +33,13 @@ def command(command, *args):
     print("spack", command.command_name, *args)
     print(command(*args, fail_on_error=False))
 
+def env_creation_wrapper(path, specs, template):
+    args = ["create-env", "-d", path, "-s", *specs, "-y", template]
+    parser = argparse.ArgumentParser("create")
+    sub_parser = parser.add_subparsers()
+    manager_cmds.create_env.add_command(sub_parser, {})
+    args = parser.parse_args(["create", *args])
+    manager_cmds.create_env.create_env(parser, args)
 
 class Snapshot:
     def __init__(self, args):
@@ -51,7 +59,8 @@ class Snapshot:
         if os.path.isfile(yaml_path):
             os.remove(yaml_path)
 
-        command(manager, "create-env", "-d", self.env_path, "-s", *args.specs, "-y", template)
+        # command(manager, "create-env", "-d", self.env_path, "-s", *args.specs, "-y", template)
+        env_creation_wrapper(self.env_path, args.specs, template)
 
         self.env = ev.Environment(self.env_path)
 
