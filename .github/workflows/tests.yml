@@ -191,12 +191,12 @@ jobs:
       run: |
         source start.sh
         spack-start
-        spack manager snapshot  --name git_refs -m -s exawind+openfast amr-wind+hypre
-        quick-activate $SPACK_MANAGER/snapshots/exawind/git_refs
-        despacktivate
-        spack manager snapshot  --name regular_verions -r -m -s exawind+openfast amr-wind+hypre
-        quick-activate $SPACK_MANAGER/snapshots/exawind/regular_versions
-        despacktivate
+        spack manager snapshot -m --name git_refs -s exawind+openfast amr-wind+hypre
+        quick-activate $SPACK_MANAGER/snapshots/exawind/${SPACK_MANAGER_MACHINE}/git_refs
+        spack env deactivate        
+        spack manager snapshot -m --name regular_versions -r -s exawind+openfast amr-wind+hypre
+        quick-activate $SPACK_MANAGER/snapshots/exawind/${SPACK_MANAGER_MACHINE}/regular_versions
+        spack env deactivate        
 
 
 
