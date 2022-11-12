@@ -37,13 +37,14 @@ NUM_CORES=8
 
 printf "\nRunning snapshot creator...\n"
 if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
+  # TODO get cores right on these machines
   NUM_CORES=16
   cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast exawind%gcc+hypre+openfast+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
   NUM_CORES=8
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast+masa"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "rhodes" ]]; then
-  NUM_CORES=8
+  NUM_CORES=16
   cmd "nice -n19 spack manager snapshot -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "summit" ]]; then
   NUM_CORES=8
