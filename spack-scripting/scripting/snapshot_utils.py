@@ -12,8 +12,8 @@ Functions for snapshot creation that are added here to be testable
 import argparse
 import os
 
+import manager_cmds.create_env
 from manager_cmds.find_machine import find_machine
-from manager_cmds.create_env import *
 from manager_utils import path_extension
 
 import spack.environment as ev
@@ -33,6 +33,7 @@ def command(command, *args):
     print("spack", command.command_name, *args)
     print(command(*args, fail_on_error=False))
 
+
 def env_creation_wrapper(path, specs, template):
     args = ["create-env", "-d", path, "-s", *specs, "-y", template]
     parser = argparse.ArgumentParser("create")
@@ -40,6 +41,7 @@ def env_creation_wrapper(path, specs, template):
     manager_cmds.create_env.add_command(sub_parser, {})
     args = parser.parse_args(["create", *args])
     manager_cmds.create_env.create_env(parser, args)
+
 
 class Snapshot:
     def __init__(self, args):
