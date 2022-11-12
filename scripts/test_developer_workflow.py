@@ -8,10 +8,9 @@
 # for more details.
 #
 
-import argparse
 import os
 
-import snapshot_creator
+from snapshot_utils import command
 
 import spack.environment as ev
 import spack.main
@@ -24,12 +23,12 @@ install = spack.main.SpackCommand("install")
 
 # set up the snapshot
 print("Create Snapshot")
-snapshot("--install", "-n", "test", "-s", "exawind+hypre+openfast")
-location = os.path.join(os.environ["SPACK_MANAGER"], "snapshots", "exawind", "test")
+snapshot("--install", "-n", "snap_test", "-s", "exawind+hypre+openfast")
+location = os.path.join(os.environ["SPACK_MANAGER"], "snapshots", "exawind", "snap_test")
 
 # set up the user environment
 print("Create user environment")
-env_path = os.path.join(os.environ["SPACK_MANAGER"], "environments", args.dev_name)
+env_path = os.path.join(os.environ["SPACK_MANAGER"], "environments", "dev_test")
 command(manager, "create-env", "--directory", env_path, "--spec", "nalu-wind")
 ev.activate(ev.Environment(env_path))
 command(manager, "external", "--blacklist", "nalu-wind", location)
