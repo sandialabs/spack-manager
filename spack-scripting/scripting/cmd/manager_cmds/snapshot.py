@@ -158,7 +158,7 @@ def add_command(parser, command_dict):
         "--regular_versions",
         "-r",
         action="store_false",
-        destination="git_version",
+        dest="git_version",
         required=False,
         help="replace branch version with latest git hashes as verions",
     )
