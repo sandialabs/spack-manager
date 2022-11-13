@@ -37,4 +37,3 @@ def test_version_replacement_string_creates_spec_with_git_ref_version():
     new_spec = Spec(new_spec_str)
     assert isinstance(new_spec.version, GitVersion)
 # =============================================================================
-
