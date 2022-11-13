@@ -130,6 +130,7 @@ cmd "spack concretize -f"
 #  cmd "spack develop -p ${DEVELOP_SPEC_DIR} --clone hypre@develop"
 #fi
 
+set +e
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
 if [ "${SPACK_MANAGER_MACHINE}" == 'cee' ]; then
@@ -138,6 +139,7 @@ else
   time (for i in {1..4}; do spack install --keep-stage & done; wait)
 fi
 printf "\nTests ended at: $(date)\n"
+set -e
 
 printf "\nSaving gold files...\n"
 DATE=$(date +%Y-%m-%d-%H-%M)
