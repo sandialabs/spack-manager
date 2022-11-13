@@ -11,6 +11,7 @@ from spack.spec import Spec
 from spack.version import GitVersion
 
 
+# =============================================================================
 # These tests  are really slow because we have to concretize
 # it would be good to come up with a quick concretization test suite
 # or figure out how to mock it, we may want to consider disabling at some point
