@@ -28,6 +28,10 @@ module = spack.main.SpackCommand("module")
 
 
 def get_version_paired_git_branch(spec):
+    """
+    get the branch that is associate with a spack version if it exists
+    else return None
+    """
     if isinstance(spec.version, GitVersion):
         # if it is already a GitVersion then we've probably already ran this
         # once we are going to recreate the paried version that the git hash
