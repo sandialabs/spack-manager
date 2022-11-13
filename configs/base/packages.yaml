@@ -4,31 +4,31 @@ packages:
   conduit:
     variants: ~fortran~hdf5_compat
   boost:
-    version: [1.76.0]
+    require: "@1.76.0"
     variants: cxxstd=17
   hdf5:
-    version: [1.10.7]
+    require: "@1.10.7"
     variants: +cxx+hl
   netcdf-c:
-    version: [4.7.4]
+    require: "@4.7.4"
     variants: +parallel-netcdf maxdims=65536 maxvars=524288
   openfast:
-    version: [master]
+    require: "@master"
     variants: +cxx
   parallel-netcdf:
-    version: [1.12.2]
+    require: "@1.12.2"
     variants: ~fortran
   perl:
     require: "@5.34.1"
   python:
     require: "@3.9.15"
   tioga:
-    version: [develop]
+    require: "@develop"
   hypre:
-    version: [develop]
+    require: "@develop"
     variants: ~fortran
   yaml-cpp:
-    version: [0.6.3]
+    require: "@0.6.3"
   trilinos:
     version: [13.4.0.2022.10.27, develop]
     variants: ~adios2~alloptpkgs~amesos+amesos2~anasazi~aztec+belos+boost~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~mesquite+metis~minitensor~ml+mpi+muelu~mumps~nox~openmp~phalanx~piro~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra+uvm~x11~xsdkflags+zlib+zoltan+zoltan2 gotype=long cxxstd=14 build_type=Release

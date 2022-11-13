@@ -1,6 +1,6 @@
 packages:
   boost:
-    version: [1.78.0]
+    require: "@1.78.0"
     variants: ~shared+pic
   all:
     compiler: [intel]

@@ -1,6 +1,6 @@
 packages:
   perl:
-    version: [5.32.0]
+    require: "@5.32.0"
   slurm:
     buildable: false
     externals:
@@ -10,7 +10,7 @@ packages:
         - slurm
   cuda:
     buildable: false
-    version: [11.2.2]
+    require: "@11.2.2"
     externals:
     - spec: cuda@11.2.2
       prefix: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu
@@ -26,7 +26,7 @@ packages:
     variants: +optimizations+gdrcopy
     version: [1.8.1]
   mpt:
-    version: [2.22]
+    require: "@2.22"
     buildable: false
     externals:
     - spec: mpt@2.22
