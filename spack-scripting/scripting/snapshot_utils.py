@@ -14,15 +14,83 @@ import os
 
 import manager_cmds.create_env
 from manager_cmds.find_machine import find_machine
-from manager_utils import path_extension
+from manager_utils import path_extension, pruned_spec_string
 
 import spack.environment as ev
 import spack.main
+import spack.util.executable
 from spack.version import GitVersion, Version
 
+git = spack.util.executable.which("git")
 add = spack.main.SpackCommand("add")
 concretize = spack.main.SpackCommand("concretize")
 module = spack.main.SpackCommand("module")
+
+
+def get_version_paired_git_branch(spec):
+    if isinstance(spec.version, GitVersion):
+        # if it is already a GitVersion then we've probably already ran this
+        # once we are going to recreate the paried version that the git hash
+        # has been assigned to and use that
+        version = Version(spec.version.ref_version_str)
+        version_dict = spec.package_class.versions[version]
+    else:
+        try:
+            version_dict = spec.package_class.versions[spec.version]
+        except KeyError:
+            print(
+                "Skipping {s}@{v} since this version is no longer valid and is likely from"
+                " --reuse. If this is not desired then please add a version constraint to "
+                "the spec".format(s=spec.name, v=spec.version)
+            )
+            return None
+    if "branch" in version_dict.keys():
+        return version_dict["branch"]
+    else:
+        return None
+
+
+def find_latest_git_hash(spec):
+    """
+    if the concrete spec's version is using a git branch
+    find the latest sha for the branch
+    otherwise return None
+    """
+    branch = get_version_paired_git_branch(spec)
+    if branch:
+        # get the matching entry and shas for github
+        query = (
+            git("ls-remote", "-h", spec.package.git, branch, output=str, error=str)
+            .strip()
+            .split("\n")
+        )
+        try:
+            assert len(query) == 1
+        except Exception:
+            print("Too many hits for the remote branch:", spec.name, query)
+            exit()
+
+        sha, _ = query[0].split("\t")
+
+        return sha
+    else:
+        return None
+
+
+def spec_string_with_git_ref_for_version(spec):
+    """
+    if a spec is using a git branch for the version replace the version with sha of latest commit
+    """
+    # create string representation of the spec and break it into parts
+    spec_str = str(spec).strip().split(" ^")[0]
+    base, rest = spec_str.split("%")
+    name, version = base.split("@")
+    version_str = spec.format("{version}")
+    # get hash
+    sha = find_latest_git_hash(spec)
+    if sha:
+        version_str = "git.{h}={v}".format(h=sha, v=version_str)
+    return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
 
 
 def command(command, *args):
@@ -93,26 +161,3 @@ class Snapshot:
         self.top_specs = list(dict.fromkeys(top_specs))
         print("\nTop Level Specs:", *[s.name for s in self.top_specs])
         ev.deactivate()
-
-
-def get_version_paired_git_branch(spec):
-    if isinstance(spec.version, GitVersion):
-        # if it is already a GitVersion then we've probably already ran this
-        # once we are going to recreate the paried version that the git hash
-        # has been assigned to and use that
-        version = Version(spec.version.ref_version_str)
-        version_dict = spec.package_class.versions[version]
-    else:
-        try:
-            version_dict = spec.package_class.versions[spec.version]
-        except KeyError:
-            print(
-                "Skipping {s}@{v} since this version is no longer valid and is likely from"
-                " --reuse. If this is not desired then please add a version constraint to "
-                "the spec".format(s=spec.name, v=spec.version)
-            )
-            return None
-    if "branch" in version_dict.keys():
-        return version_dict["branch"]
-    else:
-        return None

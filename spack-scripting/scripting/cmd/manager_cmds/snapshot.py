@@ -7,17 +7,11 @@
 import argparse
 
 import snapshot_utils as sutils
-from manager_utils import pruned_spec_string
 
 import spack.cmd.install
 import spack.environment as ev
 import spack.main
-import spack.util.executable
 import spack.util.spack_yaml as syaml
-from spack.spec import Spec
-from spack.version import GitVersion
-
-git = spack.util.executable.which("git")
 
 add = spack.main.SpackCommand("add")
 concretize = spack.main.SpackCommand("concretize")
@@ -37,61 +31,6 @@ def spack_install_cmd(args=[]):
     spack.cmd.install.install(parser, parsed_args)
 
 
-def find_latest_git_hash(spec):
-    """
-    if the concrete spec's version is using a git branch
-    find the latest sha for the branch
-    otherwise return None
-    """
-    branch = sutils.get_version_paired_git_branch(spec)
-    if branch:
-        # get the matching entry and shas for github
-        query = (
-            git("ls-remote", "-h", spec.package.git, branch, output=str, error=str)
-            .strip()
-            .split("\n")
-        )
-        try:
-            assert len(query) == 1
-        except Exception:
-            print("Too many hits for the remote branch:", spec.name, query)
-            exit()
-
-        sha, _ = query[0].split("\t")
-
-        return sha
-    else:
-        return None
-
-
-def replace_versions_with_hashes(spec_string, hash_dict):
-    """
-    given a spec string and a dictionary with the git sha's that have been computed
-    replace the spec versions with the git ref versions using the commit sha's
-    """
-    specs = str(spec_string).strip().split(" ^")
-    new_specs = []
-    for spec in specs:
-        base, rest = spec.split("%")
-        name, version = base.split("@")
-
-        # use paired version if it is already a GitVersion
-        newSpec = Spec(spec)
-        if isinstance(newSpec.version, GitVersion):
-            version = newSpec.version.ref_version_str
-
-        hash = hash_dict.get(name)
-        if hash:
-            version = "git.{hash}={version}".format(hash=hash, version=version)
-            # prune the spec string to get rid of patches which could cause
-            # conflicts later
-            new_specs.append(pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version, r=rest)))
-    final = " ^".join(new_specs)
-    assert "\n" not in final
-    assert "\t" not in final
-    return final
-
-
 def use_latest_git_hashes(env):
     """
     loops over the spec's in the environment and replaces any versions that are based
@@ -103,14 +42,12 @@ def use_latest_git_hashes(env):
 
     roots = list(env.roots())
 
-    for i in range(len(roots)):
-        hash_dict = {}
-        hash_dict[roots[i].name] = find_latest_git_hash(roots[i])
+    for i, root in enumerate(roots):
+        spec_str = sutils.spec_string_with_git_ref_for_version(root)
+        for dep in root.dependencies():
+            spec_str += " ^{0}".format(sutils.spec_string_with_git_ref_for_version(dep))
 
-        for dep in roots[i].dependencies():
-            hash_dict[dep.name] = find_latest_git_hash(dep)
-
-        yaml["spack"]["specs"][i] = replace_versions_with_hashes(roots[i].build_spec, hash_dict)
+        yaml["spack"]["specs"][i] = spec_str
 
     with open(env.manifest_path, "w") as fout:
         syaml.dump_config(yaml, stream=fout, default_flow_style=False)
