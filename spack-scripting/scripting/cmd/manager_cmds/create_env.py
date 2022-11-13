@@ -81,7 +81,6 @@ def create_env(parser, args):
         else:
             yaml["spack"]["config"] = {"install_tree": {"root": "$env/opt"}}
 
-
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "base")
     inc_creator.add_scope("base", genPath)
@@ -141,7 +140,7 @@ def setup_parser_args(sub_parser):
         action="store_true",
         required=False,
         help="Move install tree inside the environment directory. This will divorce all the "
-             "installations from the rest of the spack database"
+        "installations from the rest of the spack database",
     )
 
 
