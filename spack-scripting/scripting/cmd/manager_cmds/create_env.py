@@ -86,7 +86,7 @@ def create_env(parser, args):
     else:
         print("Host not setup in spack-manager: %s" % hostPath)
     if os.path.exists(userPath):
-        inc_creator.add_scope("machine", userPath)
+        inc_creator.add_scope("sm_user", userPath)
 
     include_file_name = "include.yaml"
     include_file = os.path.join(theDir, include_file_name)
