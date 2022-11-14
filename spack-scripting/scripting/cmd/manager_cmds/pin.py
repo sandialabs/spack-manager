@@ -104,7 +104,7 @@ def pin_env(parser, args):
     """
     env = ev.active_environment()
     if not env:
-        tty.die("spack manager external requires an active environment")
+        tty.die("spack manager pin requires an active environment")
     yaml = env.yaml
 
     cargs = ["--force"]
