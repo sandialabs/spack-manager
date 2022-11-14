@@ -130,6 +130,11 @@ def pin_env(parser, args):
         yaml["spack"]["specs"][i] = spec_str
 
     print("Updating the spack.yaml")
+    # spack environment has a member function "change_existing_spec" which would allow us
+    # to update the environment rather than having to rewrite the yaml file but then we
+    # don't capture the solved for dependencies in the DAG.
+    # we could play around with this more in the futute.
+    # this works for now but it is a little messy
     with open(env.manifest_path, "w") as fout:
         syaml.dump_config(yaml, stream=fout, default_flow_style=False)
     env._re_read()
