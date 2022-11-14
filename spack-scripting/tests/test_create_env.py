@@ -157,3 +157,10 @@ spack:
         manager("create-env", "-y", "template.yaml")
         e = env.Environment(tmpdir.strpath)
         assert "when_possible" == e.yaml["spack"]["concretizer"]["unify"]
+
+
+def test_local_source_tree_can_be_added_to_env(tmpdir):
+    with tmpdir.as_cwd():
+        manager("create-env", "-s", "nalu-wind", "-l")
+        e = env.Environment(tmpdir.strpath)
+        assert "$env/opt" in e.yaml["spack"]["config"]["install_tree"]["root"]
