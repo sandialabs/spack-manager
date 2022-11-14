@@ -1,4 +1,6 @@
 packages:
+  mpich:
+    require: "@4.0.2"
   perl:
     require: "@5.32.0"
   all:
