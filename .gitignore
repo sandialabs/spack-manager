@@ -7,6 +7,7 @@ tmp
 views
 modules
 cache
+configs/user
 # file types
 __pycache__
 *.lock
