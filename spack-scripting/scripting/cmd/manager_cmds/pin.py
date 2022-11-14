@@ -20,6 +20,7 @@ import spack.util.spack_yaml as syaml
 from spack.version import GitVersion, Version
 
 git = spack.util.executable.which("git")
+concretize = spack.main.Concretize("concretize")
 
 
 def get_version_paired_git_branch(spec):
@@ -96,6 +97,10 @@ def pin_env(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die("spack manager external requires an active environment")
+    cargs = ["--force"]
+    if args.fresh:
+        cargs.append("--fresh")
+    concretize(*cargs)
     roots = list(env.roots())
 
     for i, root in enumerate(roots):
@@ -112,6 +117,7 @@ def pin_env(parser, args):
     with open(env.manifest_path, "w") as fout:
         syaml.dump_config(yaml, stream=fout, default_flow_style=False)
     env._re_read()
+    concretize(*cargs)
 
 
 def setup_parser_args(sub_parser):
@@ -129,13 +135,20 @@ def setup_parser_args(sub_parser):
     spec_types.add_argument(
         "-a", "--all", action="store_true", default=False, help="pin all specs in the DAG"
     )
+    sub_parser.add_argument(
+        "--fresh",
+        "-f",
+        action="store_true",
+        default=False,
+        help="use --fresh during the concretization process",
+    )
 
 
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser(
         "pin",
         help="pin git branch versions in the active environment's DAG to"
-        " the current git commits",
+        " the current git commits. This requires concretization twice.",
     )
     setup_parser_args(sub_parser)
     command_dict["pin"] = pin_env
