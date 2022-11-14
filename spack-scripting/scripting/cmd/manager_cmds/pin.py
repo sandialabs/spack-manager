@@ -8,7 +8,6 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
-import ruamel.yaml as yaml
 from manager_utils import pruned_spec_string
 
 import llnl.util.tty as tty
@@ -20,7 +19,7 @@ import spack.util.spack_yaml as syaml
 from spack.version import GitVersion, Version
 
 git = spack.util.executable.which("git")
-concretize = spack.main.Concretize("concretize")
+concretize = spack.main.SpackCommand("concretize")
 
 
 def get_version_paired_git_branch(spec):
@@ -85,7 +84,10 @@ def spec_string_with_git_ref_for_version(spec):
     spec_str = str(spec).strip().split(" ^")[0]
     base, rest = spec_str.split("%")
     name, version = base.split("@")
-    version_str = spec.format("{version}")
+    if isinstance(spec.version, GitVersion):
+        version_str = spec.version.ref_version_str
+    else:
+        version_str = spec.format("{version}")
     # get hash
     sha = find_latest_git_hash(spec)
     if sha:
@@ -103,30 +105,36 @@ def pin_env(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die("spack manager external requires an active environment")
+    yaml = env.yaml
 
     cargs = ["--force"]
 
     if args.fresh:
         cargs.append("--fresh")
 
+    print("Concretizing environment to resolve DAG")
     concretize(*cargs)
 
     roots = list(env.roots())
 
+    print("Pinning branches to sha's")
     for i, root in enumerate(roots):
         if args.roots or args.all:
             spec_str = spec_string_with_git_ref_for_version(root)
         else:
-            spec_str = str(root).strip().split(" ^")[0]
-        if args.dependencie or args.all:
+            spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
+        if args.dependencies or args.all:
             for dep in root.dependencies():
                 spec_str += " ^{0}".format(spec_string_with_git_ref_for_version(dep))
 
         yaml["spack"]["specs"][i] = spec_str
 
+    print("Updating the spack.yaml")
     with open(env.manifest_path, "w") as fout:
         syaml.dump_config(yaml, stream=fout, default_flow_style=False)
     env._re_read()
+
+    print("Reconcretizing with updated specs")
     concretize(*cargs)
 
 

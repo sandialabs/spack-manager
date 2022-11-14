@@ -27,7 +27,7 @@ def path_extension(name, use_machine_name):
     )
 
 
-def pruned_spec_string(spec, variants_to_omit=["dev_path=", "patches="]):
+def pruned_spec_string(spec, variants_to_omit=["dev_path=", "patches=", "build_system="]):
     full_spec = spec.format("{name}{@version}{%compiler}{variants}{arch=architecture}")
     spec_components = full_spec.split(" ")
 
