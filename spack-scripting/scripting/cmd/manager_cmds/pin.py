@@ -94,13 +94,23 @@ def spec_string_with_git_ref_for_version(spec):
 
 
 def pin_env(parser, args):
+    """
+    pin versions paired to git branches with latest sha
+    requires concrete specs to work so we must concretize once before looping over
+    the dag, and then once after we replace the versions to make sure the environment
+    still concretizes
+    """
     env = ev.active_environment()
     if not env:
         tty.die("spack manager external requires an active environment")
+
     cargs = ["--force"]
+
     if args.fresh:
         cargs.append("--fresh")
+
     concretize(*cargs)
+
     roots = list(env.roots())
 
     for i, root in enumerate(roots):
