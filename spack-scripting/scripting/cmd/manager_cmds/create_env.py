@@ -75,15 +75,24 @@ def create_env(parser, args):
         for s in spec_list:
             env.add(s)
 
+    if args.local_source:
+        if "config" in yaml["spack"]:
+            yaml["spack"]["config"]["install_tree"] = {"root": "$env/opt"}
+        else:
+            yaml["spack"]["config"] = {"install_tree": {"root": "$env/opt"}}
+
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "base")
     inc_creator.add_scope("base", genPath)
     hostPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", machine)
+    userPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "user")
 
     if os.path.exists(hostPath):
         inc_creator.add_scope("machine", hostPath)
     else:
         print("Host not setup in spack-manager: %s" % hostPath)
+    if os.path.exists(userPath):
+        inc_creator.add_scope("sm_user", userPath)
 
     include_file_name = "include.yaml"
     include_file = os.path.join(theDir, include_file_name)
@@ -127,6 +136,14 @@ def setup_parser_args(sub_parser):
         default=[],
         nargs="+",
         help="Specs to populate the environment with",
+    )
+    sub_parser.add_argument(
+        "-l",
+        "--local-source",
+        action="store_true",
+        required=False,
+        help="Move install tree inside the environment directory. This will divorce all the "
+        "installations from the rest of the spack database",
     )
 
 

@@ -9,6 +9,7 @@ views
 modules
 cache
 stage
+configs/user
 # file types
 Makefile
 __pycache__
