@@ -3,7 +3,7 @@ packages:
     compiler: [gcc, intel]
     providers:
       mpi: [mpich, openmpi]
-    variants: +mpi build_type=Release
+    variants: +mpi build_type=Release cuda_arch=70
     target: [x86_64]
   cmake:
     externals:
