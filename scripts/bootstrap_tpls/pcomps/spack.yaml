@@ -14,4 +14,3 @@ spack:
       variants: [build_type=Release libs=static ~shared]
     gcc:
       variants: [~bootstrap ~profiled +strip]
-      
