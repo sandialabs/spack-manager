@@ -5,8 +5,8 @@ spack:
   - config.yaml
   # build the latest gcc we can with the base compiler
   specs:
-  - gcc%10.3.0
-  - llvm%12+clang targets=x86 ~gold ^ninja@kitware
+  - gcc@10.3.0
+  - llvm@12+clang targets=x86 ~gold ^ninja@kitware
   view: false
   packages:
     all:

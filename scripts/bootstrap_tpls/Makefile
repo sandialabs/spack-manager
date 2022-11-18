@@ -33,11 +33,7 @@ icomp/spack.mk: icomp/spack.lock
 
 # production compilers (depends on intermediate compilers)
 pcomps/compilers.yaml: icomp/generated/env
-				SPACK_USER_CONFIG_PATH=pcomps spack env activate icomp 
-				SPACK_USER_CONFIG_PATH=pcomps spack load gcc
-				SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user 
-				SPACK_USER_CONFIG_PATH=pcomps spack env deactivate
-				# SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user $$(spack -e icomp find --format '{prefix}' gcc)
+				SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user $$(spack -e icomp find --format '{prefix}' gcc)
 
 pcomps/config.yaml: 
 				SPACK_USER_CONFIG_PATH=pcomps spack config --scope=user add config:install_tree:root:$(CURDIR)/pcomp_store
