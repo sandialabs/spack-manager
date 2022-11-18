@@ -39,7 +39,7 @@ pcomps/config.yaml:
 				SPACK_USER_CONFIG_PATH=pcomps spack config --scope=user add config:install_tree:root:$(CURDIR)/pcomp_store
 
 pcomps/packages.yaml:
-				SPACK_USER_CONFIG_PATH=pcomps spack external find --scope=user perl m4 autoconf automake libtool gawk
+				SPACK_USER_CONFIG_PATH=pcomps spack external find --scope=user perl m4 autoconf automake libtool gawk ncurses openssl
 
 pcomps/spack.lock: pcomps/spack.yaml pcomps/config.yaml pcomps/packages.yaml pcomps/compilers.yaml
 				spack -e pcomps concretize --force
@@ -49,19 +49,16 @@ pcomps/spack.mk: pcomps/spack.lock
 
 # tpls (depends on production compilers)
 tpls/compilers.yaml: pcomps/generated/env
-				SPACK_USER_CONFIG_PATH=tpls spack env activate icomp 
-				SPACK_USER_CONFIG_PATH=tpls spack load gcc llvm
-				SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user 
-				SPACK_USER_CONFIG_PATH=tpls spack env deactivate
-				# SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user $$(spack -e pcomps find --format '{prefix}' gcc)
+				SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user $$(spack -e pcomps find --format '{prefix}' gcc llvm)
 
 tpls/config.yaml:
 				SPACK_USER_CONFIG_PATH=tpls spack config --scope=user add config:install_tree:root:$(CURDIR)/tpls_store
 
 tpls/packages.yaml:
-				SPACK_USER_CONFIG_PATH=tpls spack external find --scope=user perl m4 autoconf automake libtool gawk
+				SPACK_USER_CONFIG_PATH=tpls spack external find --scope=user perl m4 autoconf automake libtool gawk ncurses openssl openssh libxcrypt
 
 tpls/spack.lock: tpls/spack.yaml tpls/config.yaml tpls/packages.yaml tpls/compilers.yaml
+				spack python mixed_compiler_creator.py tpls/compilers.yaml
 				spack -e tpls concretize --force
 
 tpls/spack.mk: tpls/spack.lock

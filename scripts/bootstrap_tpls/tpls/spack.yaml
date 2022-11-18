@@ -3,19 +3,33 @@ spack:
   - packages.yaml
   - compilers.yaml
   - config.yaml
+  - $SPACK_MANAGER/configs/base/packages.yaml
   definitions:
   - compilers: ['%gcc', '%clang']
-  - core: [openmpi@4.02, mvapich2, cmake, python@3.9, ninja]
+  - core: 
+    - openmpi@4.0.5
+    - cmake
+    - python 
+    - ninja
+    - yaml-cpp
+    - netcdf-c
+    - hdf5
+    - parallel-netcdf
   specs:
-    - matrix:
-      - [$core]
-      - [$compilers]
-    - cuda@11.2%gcc
-  view: false
+  - matrix:
+    - [$core]
+    - [$compilers]
+  - cuda@11.2%gcc
+  - mvapich2%gcc
+  # add a view to make it easy to external everything
+  view: true
+  concretizer:
+    unify: false
   packages:
     all:
       target: [x86_64]
-      variants: [build_type=Release libs=static ~shared]
+      variants: [build_type=Release]
     openmpi:
       variants: [+legacylaunchers fabrics=auto schedulers=auto]
-      
+    python:
+      variants: [~crypt]

@@ -3,14 +3,25 @@ spack:
   - packages.yaml
   - compilers.yaml
   - config.yaml
-  # build the latest gcc we can with the base compiler
   specs:
   - gcc@10.3.0
-  - llvm@12+clang targets=x86 ~gold ^ninja@kitware
+  - llvm@13+clang targets=x86 ~gold ^ninja@kitware
   view: false
+  concretizer:
+    unify: false
   packages:
     all:
       target: [x86_64]
-      variants: [build_type=Release libs=static ~shared]
+      variants: [build_type=Release]
     gcc:
-      variants: [~bootstrap ~profiled +strip]
+      variants: [build_type=Release +profiled +strip]
+    mpc:
+      variants: [libs=static]
+    gmp:
+      variants: [libs=static]
+    mpfr:
+      variants: [libs=static]
+    zstd:
+      variants: [libs=static]
+    zlib:
+      variants: [~shared]
