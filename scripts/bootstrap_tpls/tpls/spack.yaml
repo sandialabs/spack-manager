@@ -14,6 +14,7 @@ spack:
   view: false
   packages:
     all:
+      target: [x86_64]
       variants: [build_type=Release libs=static ~shared]
     openmpi:
       variants: [+legacylaunchers fabrics=auto schedulers=auto]

@@ -9,6 +9,7 @@ spack:
   view: false
   packages:
     all:
+      target: [x86_64]
       variants: [build_type=Release libs=static ~shared]
     gcc:
       variants: [~bootstrap ~profiled +strip]
