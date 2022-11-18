@@ -30,6 +30,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Enable Ninja makefile generator")
     variant("shared", default=True,
             description="Build shared libraries")
+    conflict("+shared", when="+cuda",
+             msg="invalid device functions are generated with shared libs and cuda")
 
     depends_on("trilinos gotype=long")
 
