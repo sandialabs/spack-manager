@@ -17,66 +17,70 @@ clean:
 
 ## intermediate compiler (start with system compiler)
 icomp/compilers.yaml:
-	SPACK_USER_CONFIG_PATH=icomp spack compiler find --scope=user
+				SPACK_USER_CONFIG_PATH=icomp spack compiler find --scope=user
 
 icomp/config.yaml:
-	SPACK_USER_CONFIG_PATH=icomp spack config --scope=user add config:install_tree:root:$(CURDIR)/icomp_store
+				SPACK_USER_CONFIG_PATH=icomp spack config --scope=user add config:install_tree:root:$(CURDIR)/icomp_store
 
 icomp/packages.yaml:
-	SPACK_USER_CONFIG_PATH=icomp spack external find --scope=user perl m4 autoconf automake libtool gawk
+				SPACK_USER_CONFIG_PATH=icomp spack external find --scope=user perl m4 autoconf automake libtool gawk
 
 icomp/spack.lock: icomp/spack.yaml icomp/config.yaml icomp/packages.yaml icomp/compilers.yaml
-	spack -e icomp concretize --force
+				spack -e icomp concretize --force
 
 icomp/spack.mk: icomp/spack.lock
-	spack -e icomp env depfile --make-target-prefix icomp/generated -o $@
+				spack -e icomp env depfile --make-target-prefix icomp/generated -o $@
 
 # production compilers (depends on intermediate compilers)
 pcomps/compilers.yaml: icomp/generated/env
-	SPACK_USER_CONFIG_PATH=pcomps spack env activate icomp 
-	SPACK_USER_CONFIG_PATH=pcomps spack load gcc
-	SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user 
-	SPACK_USER_CONFIG_PATH=pcomps spack env deactivate
- 	# SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user $$(spack -e icomp find --format '{prefix}' gcc)
+				SPACK_USER_CONFIG_PATH=pcomps spack env activate icomp 
+				SPACK_USER_CONFIG_PATH=pcomps spack load gcc
+				SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user 
+				SPACK_USER_CONFIG_PATH=pcomps spack env deactivate
+				# SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user $$(spack -e icomp find --format '{prefix}' gcc)
 
 pcomps/config.yaml:
-	SPACK_USER_CONFIG_PATH=pcomps spack config --scope=user add config:install_tree:root:$(CURDIR)/pcomp_store
+				SPACK_USER_CONFIG_PATH=pcomps spack config --scope=user add config:install_tree:root:$(CURDIR)/pcomp_store
 
 pcomps/packages.yaml:
-	SPACK_USER_CONFIG_PATH=pcomps spack external find --scope=user perl m4 autoconf automake libtool gawk
+				SPACK_USER_CONFIG_PATH=pcomps spack external find --scope=user perl m4 autoconf automake libtool gawk
 
 pcomps/spack.lock: pcomps/spack.yaml pcomps/config.yaml pcomps/packages.yaml pcomps/compilers.yaml
-	spack -e pcomps concretize --force
+				spack -e pcomps concretize --force
 
 pcomps/spack.mk: pcomps/spack.lock
-	spack -e pcomps env depfile --make-target-prefix pcomps/generated -o $@
+				spack -e pcomps env depfile --make-target-prefix pcomps/generated -o $@
 
 # tpls (depends on production compilers)
 tpls/compilers.yaml: pcomps/generated/env
-	SPACK_USER_CONFIG_PATH=tpls spack env activate icomp 
-	SPACK_USER_CONFIG_PATH=tpls spack load gcc llvm
-	SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user 
-	SPACK_USER_CONFIG_PATH=tpls spack env deactivate
-	# SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user $$(spack -e pcomps find --format '{prefix}' gcc)
+				SPACK_USER_CONFIG_PATH=tpls spack env activate icomp 
+				SPACK_USER_CONFIG_PATH=tpls spack load gcc llvm
+				SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user 
+				SPACK_USER_CONFIG_PATH=tpls spack env deactivate
+				# SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user $$(spack -e pcomps find --format '{prefix}' gcc)
 
 tpls/config.yaml:
-	SPACK_USER_CONFIG_PATH=tpls spack config --scope=user add config:install_tree:root:$(CURDIR)/tpls_store
+				SPACK_USER_CONFIG_PATH=tpls spack config --scope=user add config:install_tree:root:$(CURDIR)/tpls_store
 
 tpls/packages.yaml:
-	SPACK_USER_CONFIG_PATH=tpls spack external find --scope=user perl m4 autoconf automake libtool gawk
+				SPACK_USER_CONFIG_PATH=tpls spack external find --scope=user perl m4 autoconf automake libtool gawk
 
 tpls/spack.lock: tpls/spack.yaml tpls/config.yaml tpls/packages.yaml tpls/compilers.yaml
-	spack -e tpls concretize --force
+				spack -e tpls concretize --force
 
 pcomps/spack.mk: pcomps/spack.lock
-	spack -e tpls env depfile --make-target-prefix tpls/generated -o $@
+				spack -e tpls env depfile --make-target-prefix tpls/generated -o $@
 
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
+
 include icomp/spack.mk
+
 ifneq (,$(wildcard icomp/spack.mk))
 include pscomps/spack.mk
+endif
+
 ifneq (,$(wildcard pcomps/spack.mk))
 include tpls/spack.mk
 endif
-endif
+
 endif
