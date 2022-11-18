@@ -3,12 +3,19 @@ packages:
     compiler: [gcc, intel]
     providers:
       mpi: [mpich, openmpi]
-    variants: +mpi build_type=Release
+    variants: +mpi build_type=Release cuda_arch=70
     target: [x86_64]
   cmake:
     externals:
     - spec: cmake@3.22.2
       prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cmake-3.22.2-s67tgoaqaw4ky5kmpuzxdg5une7xouvh/
+    buildable: false
+  cuda:
+    externals:
+    - spec: cuda@11.2.2%gcc@9.3.0
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cuda-11.2.2-wlah7an4q7rej4uylqlimczaa6z3zlq7/
+    - spec: cuda@11.2.152%gcc@10.3.0
+      prefix: /projects/cde/v3/cee/spack/opt/spack/linux-rhel7-x86_64/gcc-10.3.0/cuda-11.2.2-5msjxkf5yufbjndzanbavtnyxslnxnkv
     buildable: false
   openmpi:
     version: [4.0.5]
