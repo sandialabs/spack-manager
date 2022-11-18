@@ -76,7 +76,7 @@ ifeq (,$(filter clean,$(MAKECMDGOALS)))
 include icomp/spack.mk
 
 ifneq (,$(wildcard icomp/spack.mk))
-include pscomps/spack.mk
+include pcomps/spack.mk
 endif
 
 ifneq (,$(wildcard pcomps/spack.mk))
