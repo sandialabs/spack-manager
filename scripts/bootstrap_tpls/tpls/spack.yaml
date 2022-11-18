@@ -6,23 +6,20 @@ spack:
   - $SPACK_MANAGER/configs/base/packages.yaml
   definitions:
   - compilers: ['%gcc', '%clang']
-  - core: 
-    - openmpi@4.0.5
+  - core:
     - cmake
-    - python 
+    - python
     - ninja
     - yaml-cpp
-    - netcdf-c
+    - netcdf-c ^openmpi@4.0.5
     - hdf5
-    - parallel-netcdf
   specs:
   - matrix:
     - [$core]
     - [$compilers]
   - cuda@11.2%gcc
-  - mvapich2%gcc
-  # add a view to make it easy to external everything
-  view: true
+  - netcdf-c%gcc ^mvapich2
+  view: false
   concretizer:
     unify: false
   packages:
