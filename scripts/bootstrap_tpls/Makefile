@@ -60,7 +60,7 @@ tpls/compilers.yaml: pcomps/generated/env
 	# SPACK_USER_CONFIG_PATH=tpls spack compiler find --scope=user $$(spack -e pcomps find --format '{prefix}' gcc)
 
 tpls/config.yaml:
-	SPACK_USER_CONFIG_PATH=tpls spack config --scope=user add config:install_tree:root:$(CURDIR)/tpl-store
+	SPACK_USER_CONFIG_PATH=tpls spack config --scope=user add config:install_tree:root:$(CURDIR)/tpls_store
 
 tpls/packages.yaml:
 	SPACK_USER_CONFIG_PATH=tpls spack external find --scope=user perl m4 autoconf automake libtool gawk

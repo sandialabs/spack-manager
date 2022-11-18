@@ -1,0 +1,11 @@
+.spack
+icomp_store
+pcomp_store
+tpls_store
+.spack-env
+config.yaml
+compilers.yaml
+packages.yaml
+spack.mk
+generated/
+spack.lock
