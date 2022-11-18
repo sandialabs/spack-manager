@@ -4,10 +4,9 @@
 #
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
-import os
 import sys
-import spack.util.spack_yaml as syaml
 
+import spack.util.spack_yaml as syaml
 
 file = sys.argv[1]
 with open(file, "r") as fyaml:
@@ -32,7 +31,7 @@ for comp in yaml["compilers"]:
 for comp in yaml["compilers"]:
     for key, value in comp["compiler"]["paths"].items():
         if not value or value == "null":
-           comp["compiler"]["paths"][key] = first_has_compiler[key]
+            comp["compiler"]["paths"][key] = first_has_compiler[key]
 
 with open(file, "w") as fyaml:
     syaml.dump_config(yaml, stream=fyaml, default_flow_style=False)
