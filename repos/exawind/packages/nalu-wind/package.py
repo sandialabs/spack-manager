@@ -32,6 +32,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Build shared libraries")
     conflicts("+shared", when="+cuda",
              msg="invalid device functions are generated with shared libs and cuda")
+    conflicts("+shared", when="+rocm",
+             msg="invalid device functions are generated with shared libs and rocm")
 
     depends_on("trilinos gotype=long")
 
