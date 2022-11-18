@@ -39,7 +39,7 @@ pcomps/compilers.yaml: icomp/generated/env
 				SPACK_USER_CONFIG_PATH=pcomps spack env deactivate
 				# SPACK_USER_CONFIG_PATH=pcomps spack compiler find --scope=user $$(spack -e icomp find --format '{prefix}' gcc)
 
-pcomps/config.yaml:
+pcomps/config.yaml: 
 				SPACK_USER_CONFIG_PATH=pcomps spack config --scope=user add config:install_tree:root:$(CURDIR)/pcomp_store
 
 pcomps/packages.yaml:
@@ -68,7 +68,7 @@ tpls/packages.yaml:
 tpls/spack.lock: tpls/spack.yaml tpls/config.yaml tpls/packages.yaml tpls/compilers.yaml
 				spack -e tpls concretize --force
 
-pcomps/spack.mk: pcomps/spack.lock
+tpls/spack.mk: tpls/spack.lock
 				spack -e tpls env depfile --make-target-prefix tpls/generated -o $@
 
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
