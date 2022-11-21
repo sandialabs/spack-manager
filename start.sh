@@ -196,7 +196,10 @@ function sm-clean(){
   echo "Remove user cache of configs:"
   cmd "rm -rf ~/.spack"
   echo "Remove Spack-Manager cache:"
+  # leave for legacy purposes
   cmd "rm -rf ${SPACK_MANAGER}/.cache"
+  # new config path
+  cmd "rm -rf ${SPACK_MANAGER}/.spack"
   echo "Use the native Spack clean system":
   cmd "spack clean --all"
   echo "Cleaning out pycache from spack-manager repos:"
