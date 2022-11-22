@@ -19,7 +19,12 @@ spack:
     - [$compilers]
   - cuda@11.2%gcc
   - netcdf-c%gcc ^mvapich2
-  view: false
+  view:
+    default:
+      root: $env/view
+      projections:
+        all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
+      link_type: symlink
   concretizer:
     unify: false
   packages:

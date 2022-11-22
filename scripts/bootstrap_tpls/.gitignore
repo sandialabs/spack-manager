@@ -2,6 +2,7 @@
 icomp_store
 pcomp_store
 tpls_store
+*view
 .spack-env
 config.yaml
 compilers.yaml
