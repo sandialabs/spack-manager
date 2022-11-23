@@ -1,6 +1,7 @@
 # directories
 spack
 environments
+snapshots
 golds
 logs
 tmp
@@ -8,7 +9,9 @@ views
 modules
 cache
 configs/user
+stage
 # file types
+Makefile
 __pycache__
 *.lock
 .spack-env/
