@@ -7,21 +7,17 @@ spack:
   definitions:
   - compilers: ['%gcc', '%clang']
   - core:
-    - cmake
-    - python
-    - ninja
-    - yaml-cpp
-    - netcdf-c ^openmpi@4.0.5
-    - hdf5
+    - exawind+openfast+hypre ^openmpi@4.0.2
+    - exawind~openfast~hypre ^openmpi@4.0.2
   specs:
   - matrix:
     - [$core]
     - [$compilers]
-  - cuda@11.2%gcc
-  - netcdf-c%gcc ^mvapich2
+  - exawind%gcc+cuda+hypre+openfast ^cuda@11.2
+  - exawind%gcc ^mvapich2
   view:
     default:
-      root: $env/view
+      root: .spack-env/view
       projections:
         all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
       link_type: symlink
@@ -31,6 +27,8 @@ spack:
     all:
       target: [x86_64]
       variants: [build_type=Release]
+    boost:
+      version: [1.80.0]
     openmpi:
       variants: [+legacylaunchers fabrics=auto schedulers=auto]
     python:

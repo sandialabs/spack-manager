@@ -1,7 +1,7 @@
 .spack
-icomp_store
-pcomp_store
-tpls_store
+bootstrap_store
+compilers_store
+packages_store
 *view
 .spack-env
 config.yaml
