@@ -2,9 +2,7 @@
 
 
 ## I'm getting lots of weird Spack errors, what should I do?
-If you have multiple Spack instances or have recently updated spack things can get a little mangled.
-For example if you have used Spack in the past or have more than one instance then both pull configs
-from the `~/.spack` directory. 
+If you have multiple Spack instances or have recently updated spack things can get a little mangled.  For example if you have used Spack in the past or have more than one instance then both pull configs from the `~/.spack` directory. 
 This is a common source of user issues.
 Please try the `sm-clean` function (available after `source $SPACK_MANAGER/start.sh`)  and see if it solves your issue.
 If this doesn't work then raise/create an issue on slack/github and we will help you figure it out.
@@ -87,6 +85,7 @@ To build successfully on Eagle, in general you want the following in your `.bash
 ```
 mkdir -p /scratch/${USER}/.tmp && export TMPDIR=/scratch/${USER}/.tmp
 ```
+To get rid of the error run `spack clean -m`
 
 ## How do I compile faster using a parallel DAG?
 The `spack install` command gives you parallel builds inside each `make` command. However, further parallelism can be had on large DAGs by invoking concurrent `spack install` commands. Spack will find parallelism within the DAG and build any packages it can simultaneously using file locks. You can do this in bash with the following command:
@@ -94,4 +93,3 @@ The `spack install` command gives you parallel builds inside each `make` command
 for i in {1..4}; do nice spack install & done; wait
 ```
 If you have really large DAGs, it's even possible to use `srun` on multiple nodes for the install process.
-To get rid of the error run `spack clean -m`
