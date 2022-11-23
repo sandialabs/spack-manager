@@ -28,7 +28,6 @@ class NaluWindNightly(bNaluWind, CudaPackage):
     variant("extra_name", default="default")
 
     variant("snl", default=False, description="Reports to SNL dashboard")
-    patch("snl_ctest.patch", when="+snl")
 
     phases = ["test"]
 
