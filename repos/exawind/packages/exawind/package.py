@@ -110,7 +110,9 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         if "~stk_simd" in self.spec:
             env.append_flags("CXXFLAGS", "-DUSE_STK_SIMD_NONE")
         if "+asan" in self.spec:
-            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, "sup.asan")))
+            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, "blacklist.asan")))
+            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
+            env.set("ASAN_OPTIONS", "detect_container_overflow=0")
         if "+rocm+amr_wind_gpu~nalu_wind_gpu" in self.spec:
             # Manually turn off device self.defines to solve Kokkos issues in Nalu-Wind headers
             env.append_flags("CXXFLAGS", "-U__HIP_DEVICE_COMPILE__ -DDESUL_HIP_RDC")

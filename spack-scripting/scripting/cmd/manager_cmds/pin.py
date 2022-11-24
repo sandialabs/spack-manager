@@ -5,6 +5,9 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+"""
+Functions for snapshot creation that are added here to be testable
+"""
 from manager_utils import command, pruned_spec_string
 
 import llnl.util.tty as tty

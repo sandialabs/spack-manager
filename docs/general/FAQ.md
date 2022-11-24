@@ -87,3 +87,16 @@ To build successfully on Eagle, in general you want the following in your `.bash
 ```
 mkdir -p /scratch/${USER}/.tmp && export TMPDIR=/scratch/${USER}/.tmp
 ```
+
+## How do I compile faster using a parallel DAG?
+The `spack install` command gives you parallel builds inside each `make` command. However, further parallelism can be had on large DAGs by invoking concurrent `spack install` commands. Spack will find parallelism within the DAG and build any packages it can simultaneously using file locks. You can do this in bash with the following command:
+```
+for i in {1..4}; do nice spack install & done; wait
+```
+If you have really large DAGs, it's even possible to use `srun` on multiple nodes for the install process.
+
+Another newer method for this in Spack is to use depfiles where Spack can generate standard makefiles which can expose the DAG parallelism. More documentation on this can be found [here](https://spack.readthedocs.io/en/latest/environments.html#generating-depfiles-from-environments). In summary, once you have an environment concretized you can generate a makefile and replace the `spack install` with a `make` command as such:
+```
+spack -e . env depfile -o Makefile
+make -j8
+```
