@@ -8,6 +8,7 @@ views
 modules
 cache
 configs/user
+.bootstrap
 # file types
 __pycache__
 *.lock
