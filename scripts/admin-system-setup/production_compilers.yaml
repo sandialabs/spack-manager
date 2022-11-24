@@ -5,13 +5,14 @@ spack:
   - config.yaml
   specs:
   - gcc@10.3.0
-  - llvm@13+clang targets=x86 ~gold ^ninja@kitware
+  - llvm@13+clang targets=x86 +gold ^ninja@kitware
   # try a view to detect compilers
-  view:
-      root: .spack-env/view
-      projections:
-        all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
-      link_type: symlink
+  view: false
+  #  default:
+  #    root: .spack-env/view
+  #    projections:
+  #      all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
+  #    link_type: symlink
   concretizer:
     unify: false
   packages:
@@ -20,13 +21,3 @@ spack:
       variants: [build_type=Release]
     gcc:
       variants: [build_type=Release +profiled +strip]
-    mpc:
-      variants: [libs=static]
-    gmp:
-      variants: [libs=static]
-    mpfr:
-      variants: [libs=static]
-    zstd:
-      variants: [libs=static]
-    zlib:
-      variants: [~shared]

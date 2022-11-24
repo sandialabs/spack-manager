@@ -15,12 +15,12 @@ spack:
     - [$compilers]
   - exawind%gcc+cuda+hypre+openfast ^cuda@11.2
   - exawind%gcc ^mvapich2
-  view:
-    default:
-      root: .spack-env/view
-      projections:
-        all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
-      link_type: symlink
+  view: false
+  #  default:
+  #    root: .spack-env/view
+  #    projections:
+  #      all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
+  #    link_type: symlink
   concretizer:
     unify: false
   packages:

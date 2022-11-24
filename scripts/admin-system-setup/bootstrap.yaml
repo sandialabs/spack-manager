@@ -10,6 +10,6 @@ spack:
   packages:
     all:
       target: [x86_64]
-      variants: [build_type=Release libs=static ~shared]
+      variants: [build_type=Release]
     gcc:
       variants: [~bootstrap ~profiled +strip]

@@ -3,7 +3,7 @@
 #
 export SPACK_USER_CONFIG_PATH=$(CURDIR)/.spack
 export SPACK_USER_CACHE_PATH=$(CURDIR)/.spack
-external_packages = perl m4 autoconf automake libtool gawk ncurses openssl openssh libxcrypt
+external_packages = perl m4 autoconf automake libtool gawk ncurses openssl openssh
 
 .SUFFIXES:
 
@@ -13,9 +13,9 @@ external_packages = perl m4 autoconf automake libtool gawk ncurses openssl opens
 all: packages/generated/env
 
 clean:
-	rm -rf bootstrap/spack.mk bootstrap/spack.lock bootstrap/compilers.yaml bootstrap/config.yaml bootstrap/packages.yaml bootstrap/generated bootstrap/.spack-env
-	rm -rf compilers/spack.mk compilers/spack.lock compilers/compilers.yaml compilers/config.yaml compilers/packages.yaml compilers/generated compilers/.spack-env
-	rm -rf packages/spack.mk packages/spack.lock packages/compilers.yaml packages/config.yaml packages/packages.yaml packages/generated packages/.spack-env
+	rm -rf bootstrap/
+	rm -rf compilers/
+	rm -rf packages/
 
 ## intermediate compiler (start with system compiler)
 bootstrap/spack.yaml:
@@ -46,7 +46,7 @@ compilers/compilers.yaml: bootstrap/generated/env
 				SPACK_USER_CONFIG_PATH=compilers spack compiler find --scope=user $$(spack -e bootstrap find --format '{prefix}' gcc)
 
 compilers/config.yaml: 
-				SPACK_USER_CONFIG_PATH=compilers spack config --scope=user add config:install_tree:root:$(CURDIR)/pcomp_store
+				SPACK_USER_CONFIG_PATH=compilers spack config --scope=user add config:install_tree:root:$(CURDIR)/compilers_store
 
 compilers/packages.yaml:
 				SPACK_USER_CONFIG_PATH=compilers spack external find --scope=user $(external_packages)
