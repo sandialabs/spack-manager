@@ -7,14 +7,15 @@ spack:
   definitions:
   - compilers: ['%gcc', '%clang']
   - core:
-    - exawind+openfast+hypre ^openmpi@4.0.2
+    - nalu-wind+openfast+hypre ^openmpi@4.0.2
+    - amr-wind+openfast+hypre ^openmpi@4.0.2
     - exawind~openfast~hypre ^openmpi@4.0.2
   specs:
   - matrix:
     - [$core]
     - [$compilers]
-  - exawind%gcc+cuda+hypre+openfast ^cuda@11.2
-  - exawind%gcc ^mvapich2
+  - nalu-wind+cuda+hypre+openfast+fftw ^cuda@11.2
+  - nalu-wind%gcc ^mvapich2
   view: false
   #  default:
   #    root: .spack-env/view
