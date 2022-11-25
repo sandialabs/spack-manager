@@ -2,6 +2,43 @@ packages:
   all:
     compiler: [gcc, clang, intel]
     providers:
-      mpi: [openmpi, mvapich2]
+      mpi: [mpich, openmpi, mvapich2]
     variants: +mpi build_type=Release cuda_arch=70
     target: [x86_64]
+  cmake:
+    externals:
+    - spec: cmake@3.22.2
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cmake-3.22.2-s67tgoaqaw4ky5kmpuzxdg5une7xouvh/
+    buildable: false
+  cuda:
+    externals:
+    - spec: cuda@11.2.2%gcc@9.3.0
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/cuda-11.2.2-wlah7an4q7rej4uylqlimczaa6z3zlq7/
+    buildable: false
+  pkg-config:
+    buildable: false
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr/bin/pkg-config
+  hdf5:
+    version: [1.10.6]
+    variants: +mpi+cxx+hl
+  zlib:
+    version: [1.2.5]
+    buildable: false
+    externals:
+    - spec: zlib@1.2.5
+      prefix: /usr/
+  bzip2:
+    version: [1.6.0]
+    buildable: false
+    externals:
+    - spec: bzip2@1.6.0
+      prefix: /usr/
+  openblas:
+    version: [0.3.10]
+  mpich:
+    externals:
+    - spec: mpich@3.4.2%gcc@9.3.0
+      prefix: /projects/wind/system-spack/opt/spack/linux-rhel7-x86_64/gcc-9.3.0/mpich-3.4.2-4h2muy6jlgfdahehxmxa4ybndfdb6gx2/
+    buildable: false
