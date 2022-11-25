@@ -3,16 +3,11 @@ spack:
   - packages.yaml
   - compilers.yaml
   - config.yaml
+  # llvm+gold adds a binutils dependency to llvm that allows it to build without needing to manually add binutils
   specs:
   - gcc@10.3.0
   - llvm@13+clang targets=x86 +gold ^ninja@kitware
-  # try a view to detect compilers
   view: false
-  #  default:
-  #    root: .spack-env/view
-  #    projections:
-  #      all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
-  #    link_type: symlink
   concretizer:
     unify: false
   packages:

@@ -13,5 +13,7 @@ env -i bash --no-profile
 ```
 
 since I have built a lot of otherthings with different spack installations
+Unfortunately this can cause issues with binutils that requires, manually adding binutils to `compilers:compiler:environment:prepend_path:PATH`
+or adding it to your  `PATH` before calling spack install.
 
-Unfortunately llvm fails I believe due to using a very old binutils.
+This is something that should be automated in the future.
