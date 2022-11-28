@@ -74,7 +74,7 @@ packages/packages.yaml:
 
 packages/spack.lock: packages/spack.yaml packages/config.yaml packages/packages.yaml packages/compilers.yaml
 	spack python mixed_compiler_creator.py packages/compilers.yaml
-	spack -e packages manager pin --all
+	spack -e packages concretize --force
 
 packages/spack.mk: packages/spack.lock
 	spack -e packages env depfile --make-target-prefix packages/generated -o $@
