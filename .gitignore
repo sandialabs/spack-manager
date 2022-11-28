@@ -1,5 +1,6 @@
 # directories
 spack
+stage
 environments
 golds
 logs
