@@ -5,9 +5,9 @@ export SPACK_USER_CONFIG_PATH=$(CURDIR)/.spack
 export SPACK_USER_CACHE_PATH=$(CURDIR)/.spack
 unexport SPACK_DISABLE_LOCAL_CONFIG
 #Ellis
-INSTALLDIR = /data/ssd1/software/2020-11-28
+INSTALLDIR = /data/ssd1/software/2022-11-28
 #Rhodes
-#INSTALLDIR = /opt/software/2020-11-28
+#INSTALLDIR = /opt/software/2022-11-28
 
 .SUFFIXES:
 

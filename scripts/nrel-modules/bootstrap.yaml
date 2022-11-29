@@ -8,6 +8,7 @@ spack:
    - binutils+gold
    - gcc@8.5.0
    - environment-modules
+   - screen
    view: false
    packages:
      perl:
