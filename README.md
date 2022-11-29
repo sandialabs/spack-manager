@@ -1,6 +1,6 @@
 # Spack-Manager
 
-[Documentation](https://psakievich.github.io/spack-manager) | [![Test Status](https://github.com/psakievich/spack-manager/workflows/Spack-Manager%20Tests/badge.svg)](https://github.com/psakievich/spack-manager/actions)
+[Documentation](https://sandialabs.github.io/spack-manager) | [![Test Status](https://github.com/sandialabs/spack-manager/workflows/Spack-Manager%20Tests/badge.svg)](https://github.com/psakievich/spack-manager/actions)
 
 Spack-Manager is a light-weight extension to Spack that is intended to streamline the software development and deployment cycle for individual software projects on specific machines. Currently this project focused on serving the needs of the [ExaWind project](https://github.com/ExaWind), but is designed and intended to serve multiple projects simultaneously in the future.
 
