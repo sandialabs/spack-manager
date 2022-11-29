@@ -143,7 +143,7 @@ For this section it is sufficient to know that `spack info` is the key to knowin
 Spack specs are critical to using Spack-Manager because they are the language used to communicate the options and configurations of 
 the software that is getting built.  
 We provide an overview of what a spec is, and the parts that go into making a Spack spec in our 
-[general documentation](https://psakievich.github.io/spack-manager/general/spack_features.html#spack-specs), 
+[general documentation](https://sandialabs.github.io/spack-manager/general/spack_features.html#spack-specs), 
 and an even more thorough description can be found in the 
 [spack documentation](https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies)
 
@@ -183,7 +183,7 @@ The major steps and associated commands for building software with Spack environ
    Now that you've decided what combination of software you want to build, what elements you want to develop, and what the dependency graph is all that is left is to build and install. Easy right?
 
 This may seem like a lot to go over, and this was not a very thorough description of each step.
-These steps are covered with a workflow example in the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
+These steps are covered with a workflow example in the [developer tutorial](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
 where we walk through each step one at a time. 
 The intention of this page is to serve as an introduction and a reference going forward.
 If you forget a step or command you can always come back to this page to see what it is and see a brief description of the whole process.

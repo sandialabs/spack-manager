@@ -3,7 +3,7 @@
 ===============
 
 
-`Spack-Manager <https://github.com/psakievich/spack-manager>`_ is a light-weight extension to 
+`Spack-Manager <https://github.com/sandialabs/spack-manager>`_ is a light-weight extension to 
 `Spack <https://github.com/spack/spack>`_ that is intended to streamline the software development and deployment cycle
 for individual software projects on specific machines.
 
