@@ -99,14 +99,19 @@ packages/generated/modules: packages/generated/env
 	touch packages/generated/modules
 
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
-
 include bootstrap/spack.mk
 
 ifneq (,$(wildcard bootstrap/spack.mk))
+export PATH := $(shell spack -e bootstrap find --format "{prefix}" binutils)/bin:$(PATH)
+export SHELL := env PATH=$(PATH) /bin/bash
+#$(info    PATH is $(PATH))
 include compilers/spack.mk
 endif
 
 ifneq (,$(wildcard compilers/spack.mk))
+export PATH := $(shell spack -e bootstrap find --format "{prefix}" binutils)/bin:$(PATH)
+export SHELL := env PATH=$(PATH) /bin/bash
+#$(info    PATH is $(PATH))
 include packages/spack.mk
 endif
 
