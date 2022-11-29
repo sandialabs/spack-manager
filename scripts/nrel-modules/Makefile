@@ -1,10 +1,13 @@
 # Makefile to bootstrap compilers/mpi etc from scratch 
 # Includes an intermeidate compiler to build more advanced compilers since the system compiler could be too old
-#
+
 export SPACK_USER_CONFIG_PATH=$(CURDIR)/.spack
 export SPACK_USER_CACHE_PATH=$(CURDIR)/.spack
 unexport SPACK_DISABLE_LOCAL_CONFIG
-INSTALLDIR = /home/jrood/exawind/installs/2020-11-28
+#Ellis
+INSTALLDIR = /data/ssd1/software/2020-11-28
+#Rhodes
+#INSTALLDIR = /opt/software/2020-11-28
 
 .SUFFIXES:
 
@@ -102,15 +105,17 @@ ifeq (,$(filter clean,$(MAKECMDGOALS)))
 include bootstrap/spack.mk
 
 ifneq (,$(wildcard bootstrap/spack.mk))
-export PATH := $(shell spack -e bootstrap find --format "{prefix}" binutils)/bin:$(PATH)
-export SHELL := env PATH=$(PATH) /bin/bash
+#Try to get binutils into PATH
+#export PATH := $(shell spack -e bootstrap find --format "{prefix}" binutils)/bin:$(PATH)
+#export SHELL := env PATH=$(PATH) /bin/bash
 #$(info    PATH is $(PATH))
 include compilers/spack.mk
 endif
 
 ifneq (,$(wildcard compilers/spack.mk))
-export PATH := $(shell spack -e bootstrap find --format "{prefix}" binutils)/bin:$(PATH)
-export SHELL := env PATH=$(PATH) /bin/bash
+#Try to get binutils into PATH
+#export PATH := $(shell spack -e bootstrap find --format "{prefix}" binutils)/bin:$(PATH)
+#export SHELL := env PATH=$(PATH) /bin/bash
 #$(info    PATH is $(PATH))
 include packages/spack.mk
 endif

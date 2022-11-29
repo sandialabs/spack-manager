@@ -9,72 +9,72 @@ spack:
    #- compilers: ['%gcc', '%clang']
    - compilers: ['%gcc']
    - core:
-     #- bc
-     #- bison
-     #- bzip2
+     - bc
+     - bison
+     - bzip2
      - cmake
      - cppcheck
-     #- curl
-     #- flex
-     #- ffmpeg
-     #- emacs
-     #- git
-     #- gdb
-     #- gnuplot
-     #- gnutls
-     #- htop
-     #- imagemagick
-     #- libxml2
-     #- likwid
-     #- ninja
-     #- mercurial
-     #- makedepend
-     #- patch
-     #- pkg-config
-     #- python
-     #- python@2.7.18
-     #- rsync
-     #- screen
-     #- stow
-     #- strace
-     #- texinfo
-     #- texlive
-     #- tmux
-     #- unzip
-     #- vim
-     #- wget
-     #- zsh
-     ##- global
-     ##- xterm
-     #- py-numpy
-     #- py-matplotlib
-     #- py-pandas
-     #- py-nose
-     #- py-autopep8
-     #- py-flake8
-     #- py-jedi
-     #- py-pip
-     #- py-pyyaml
-     #- py-seaborn
-     #- py-sphinx
-     #- py-scipy
-     #- py-yapf
-     #- py-yt
-     #- masa
-     #- valgrind
-     #- ascent
-     #- nccmp
-     #- netcdf-fortran
-     #- amrvis dims=3
-     #- amrvis+profiling dims=2
-     #- mpich
-     #- hdf5
-     #- parallel-netcdf
-     #- netcdf-c
-     #- boost
-     #- hypre
-     #- h5z-zfp
-     #- yaml-cpp
+     - curl
+     - flex
+     - ffmpeg
+     - emacs
+     - git
+     - gdb
+     - gnuplot
+     - gnutls
+     - htop
+     - imagemagick
+     - libxml2
+     - likwid
+     - ninja
+     - mercurial
+     - makedepend
+     - patch
+     - pkg-config
+     - python
+     - python@2.7.18
+     - rsync
+     - screen
+     - stow
+     - strace
+     - texinfo
+     - texlive
+     - tmux
+     - unzip
+     - vim
+     - wget
+     - zsh
+     #- global
+     #- xterm
+     - py-numpy
+     - py-matplotlib
+     - py-pandas
+     - py-nose
+     - py-autopep8
+     - py-flake8
+     - py-jedi
+     - py-pip
+     - py-pyyaml
+     - py-seaborn
+     - py-sphinx
+     - py-scipy
+     - py-yapf
+     - py-yt
+     - masa
+     - valgrind
+     - ascent
+     - nccmp
+     - netcdf-fortran
+     - amrvis dims=3
+     - amrvis+profiling dims=2
+     - mpich
+     - hdf5
+     - parallel-netcdf
+     - netcdf-c
+     - boost
+     - hypre
+     - h5z-zfp
+     - yaml-cpp
    specs:
    - matrix:
      - [$core]
@@ -87,6 +87,7 @@ spack:
    #    link_type: symlink
    concretizer:
      unify: false
+     reuse: true
    packages:
      perl:
        require: "@5.30.3"
