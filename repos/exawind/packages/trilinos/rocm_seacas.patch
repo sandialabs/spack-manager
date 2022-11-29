@@ -23,6 +23,7 @@ index dd8de28be3d..4fcf6c2b1c3 100644
 +  #  INSTALLABLE
 +  #  )
  ENDIF()
+ 
  TRIBITS_SUBPACKAGE_POSTPROCESS()
 diff --git a/packages/seacas/libraries/nemesis/CMakeLists.txt b/packages/seacas/libraries/nemesis/CMakeLists.txt
 index 154cf9e9e39..994d27b436c 100644
@@ -31,6 +32,7 @@ index 154cf9e9e39..994d27b436c 100644
 @@ -28,11 +28,13 @@ TRIBITS_ADD_LIBRARY(
    SOURCES ${SOURCES}
    )
+ 
 +IF (${PACKAGE_NAME}_ENABLE_TESTS)
  TRIBITS_ADD_EXECUTABLE_AND_TEST(
    ne_ctest_wrap
@@ -39,3 +41,5 @@ index 154cf9e9e39..994d27b436c 100644
    NUM_MPI_PROCS 1
  )
 +ENDIF()
+ 
+ TRIBITS_SUBPACKAGE_POSTPROCESS()
