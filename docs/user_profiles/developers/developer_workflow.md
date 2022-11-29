@@ -20,7 +20,7 @@ The ideal location for this directory is one that has adequate storage for multi
 and it should also be on a filesytem that is accesible where you plan to run the software.
 
 ```console
-git clone --recursive git@github.com:psakievich/spack-manager.git
+git clone --recursive git@github.com:sandialabs/spack-manager.git
 ```
 In order for Spack-Manager to work you need to define the `SPACK_MANAGER` environment variable,
 and it should provide the absolute path to your Spack-Manager directory. To have access to the
@@ -38,7 +38,7 @@ source $SPACK_MANAGER/start.sh
 ## Creating an Environment
 
 With the Spack development workflow we are going to create an environment similar to a Conda environment.
-Setting up the environments is a multistep process that is outlined in greater detail [here](https://psakievich.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html) and [here](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html#environment-setup-process).
+Setting up the environments is a multistep process that is outlined in greater detail [here](https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html) and [here](https://sandialabs.github.io/spack-manager/user_profiles/developers/useful_commands.html#environment-setup-process).
 There are three `quick-commands` for creating environments: `quick-create`, `quick-create-dev` and `quick-develop`.
 They all exit the process of setting up an environment at different points in the process as outlined below:
 
@@ -98,7 +98,7 @@ quick-create-dev -n example-env -s exawind@master nalu-wind@master amr-wind@main
 If you don't want to develop one of these packages (say you're only focused on `amr-wind`) then just ommit the software you don't
 plan to develop in from the spec list in the command above. Please note that these specs need to be concrete specs, meaning they have the name
 (`amr-wind`) and the version from spack (`main`), and that **that the version is not necessarily the same thing as the branch**.
-This is covered in the [things developers need to know about Spack](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html) for those needing a refresher.
+This is covered in the [things developers need to know about Spack](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html) for those needing a refresher.
 
 The `-n` flag can be replaced with `-d` if we want to setup an environment in a different location than `$SPACK_MANAGER/environments` (see the help message above).
 The `quick-create-dev` command will execute all the stages in the table above including cloning the repos from github for the software.
@@ -154,9 +154,9 @@ In this environment if you make a change in `amr-wind` it will also trigger a re
 ## Running Tests and Coming Back
 
 To run tests in a one off manner you can use the `spack build-env` command to run commands in a sub-shell with the build environment.
-This is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html#running).
+This is further documented [here](https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html#running).
 We also have a function `build-env-dive` which is a beta feature that launches this same subshell in your terminal and dives into it.
-It is further documented [here](https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html#build-env-dive).
+It is further documented [here](https://sandialabs.github.io/spack-manager/user_profiles/developers/useful_commands.html#build-env-dive).
 
 If you wish to come back to an environment later, or in a new shell you can just run
 ```console
@@ -170,7 +170,7 @@ These are the commands needed to set up Spack-Manager and a development build fo
 
 ```console
 # setup Spack-Manager
-git clone --recursive git@github.com:psakievich/spack-manager.git
+git clone --recursive git@github.com:sandialabs/spack-manager.git
 export SPACK_MANAGER=$(pwd)/spack-manager
 source $SPACK_MANAGER/start.sh
 # setup environment
