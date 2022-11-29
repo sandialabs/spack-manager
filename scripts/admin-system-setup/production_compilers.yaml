@@ -1,0 +1,18 @@
+spack:
+  include:
+  - packages.yaml
+  - compilers.yaml
+  - config.yaml
+  # llvm+gold adds a binutils dependency to llvm that allows it to build without needing to manually add binutils
+  specs:
+  - gcc@10.3.0
+  - llvm@13+clang targets=x86 +gold ^ninja@kitware
+  view: false
+  concretizer:
+    unify: false
+  packages:
+    all:
+      target: [x86_64]
+      variants: [build_type=Release]
+    gcc:
+      variants: [build_type=Release +profiled +strip]

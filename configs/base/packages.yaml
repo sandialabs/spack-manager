@@ -5,7 +5,7 @@ packages:
     variants: ~fortran~hdf5_compat
   boost:
     version: [1.76.0]
-    variants: cxxstd=14
+    variants: cxxstd=17
   hdf5:
     version: [1.10.7]
     variants: +cxx+hl
