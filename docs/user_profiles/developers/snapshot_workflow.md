@@ -9,7 +9,7 @@ projects for running on the GPU using CUDA. Starting from nothing, we first clon
 ```
 [user@el1 ~]$ export SCRATCH=/scratch/${USER}
 [user@el1 ~]$ cd ${SCRATCH}
-[user@el1 user]$ git clone --recursive https://github.com/psakievich/spack-manager.git
+[user@el1 user]$ git clone --recursive https://github.com/sandialabs/spack-manager.git
 Cloning into 'spack-manager'...
 remote: Enumerating objects: 2610, done.
 remote: Counting objects: 100% (2610/2610), done.
