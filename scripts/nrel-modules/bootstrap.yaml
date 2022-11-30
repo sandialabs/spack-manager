@@ -17,6 +17,9 @@ spack:
        variants: [build_type=Release]
      gcc:
        variants: [~bootstrap ~profiled +strip]
+   config:
+     build_stage:
+       $spack/var/spack/stage
    modules:
      default:
        tcl:
