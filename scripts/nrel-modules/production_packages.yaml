@@ -4,10 +4,11 @@ spack:
    - compilers.yaml
    - modules.yaml
    - config.yaml
+   - $SPACK_MANAGER/scripts/nrel-modules/ellis_packages.yaml
    - $SPACK_MANAGER/configs/base/packages.yaml
    definitions:
    #- compilers: ['%gcc', '%clang']
-   - compilers: ['%gcc']
+   - compilers: ['%gcc@10.4.0']
    - core:
      - bc
      - bison
