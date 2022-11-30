@@ -20,7 +20,7 @@ spack:
    - gcc@9.5.0
    - gcc@8.5.0
    - gcc@7.5.0
-   - go@1.18.4
+   - go@1.18
    - llvm@15.0.4 +omp_debug+omp_tsan+python build_type=Release
    - llvm@14.0.6 +omp_debug+omp_tsan+python build_type=Release
    - llvm@13.0.1 +omp_debug+omp_tsan+python build_type=Release

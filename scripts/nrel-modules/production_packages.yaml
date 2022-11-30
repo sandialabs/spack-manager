@@ -28,18 +28,17 @@ spack:
      - libxml2
      - likwid
      - ninja
-     - mercurial
+       #- mercurial
      - makedepend
      - patch
      - pkg-config
      - python
-     - python@2.7.18
      - rsync
      - screen
      - stow
      - strace
      - texinfo
-     - texlive
+       #- texlive
      - tmux
      - unzip
      - vim
@@ -60,9 +59,9 @@ spack:
      - py-sphinx
      - py-scipy
      - py-yapf
-     - py-yt
-     - masa
-     - valgrind
+       #- py-yt
+     - masa~python
+     - valgrind~mpi
      - ascent
      - nccmp
      - netcdf-fortran
@@ -74,12 +73,13 @@ spack:
      - netcdf-c
      - boost
      - hypre
-     - h5z-zfp
+       #- h5z-zfp
      - yaml-cpp
    specs:
    - matrix:
      - [$core]
      - [$compilers]
+   view: false
    #view:
    #  default:
    #    root: $env/view
