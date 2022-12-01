@@ -45,15 +45,14 @@ packages:
           - rocm/5.2.0
           - craype-accel-amd-gfx90a
   hwloc:
-    externals:
     buildable: false
+    externals:
     - spec: hwloc@2.7.0
       prefix: /sw/crusher/spack-envs/base/opt/cray-sles15-zen3/clang-14.0.0-rocm5.1.0/hwloc-2.7.0-pukyd7oczgehpgx7rasxzpymkqqy3wbu
     - spec: hwloc@2.5.0
       prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/hwloc-2.5.0-4p6jkgf5ez6wr27pytkzyptppzpugu3e
     - spec: hwloc@2.6.0a1
       prefix: /usr
-
   hip:
     version: [5.2.0]
     buildable: false
