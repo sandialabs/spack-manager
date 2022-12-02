@@ -20,8 +20,8 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   #spack clean -m
   
   # move the bootstrap store outside the user config path
-  if [[ -z $(spack config --scope site blame config | grep .smbootstrap) ]]; then
-    spack bootstrap root ${SPACK_MANAGER}/.smbootstrap
+  if [[ -z $(spack config --scope site blame bootstrap | grep "root: ${SPACK_MANAGER}/.bootstrap") ]]; then
+    spack bootstrap root ${SPACK_MANAGER}/.bootstrap
   fi
 
   if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
