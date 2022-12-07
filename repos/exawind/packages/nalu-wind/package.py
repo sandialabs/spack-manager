@@ -99,7 +99,7 @@ class NaluWind(bNaluWind, ROCmPackage):
         if spec["mpi"].name == "openmpi":
             cmake_options.append(self.define("MPIEXEC_PREFLAGS", "--oversubscribe"))
 
-        cmake_options.append(self.define_from_variant("ENABLE_OPENFAST", "fsi"))
+        cmake_options.append(self.define_from_variant("ENABLE_OPENFAST_FSI", "fsi"))
         if "+fsi" in spec:
             cmake_options.append(self.define("OpenFAST_DIR", spec["openfast-fsi"].prefix))
 
