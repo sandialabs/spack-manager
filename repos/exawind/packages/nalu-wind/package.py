@@ -38,10 +38,11 @@ class NaluWind(bNaluWind, ROCmPackage):
              msg="invalid device functions are generated with shared libs and rocm")
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
-    conflicts("+openfast", when="+fsi")
+    conflicts("openfast@fsi", when="~fsi")
+    conflicts("+fsi", when="~openfast")
 
     depends_on("trilinos gotype=long")
-    depends_on("openfast-fsi+netcdf", when="+fsi")
+    depends_on("openfast@fsi+netcdf", when="+fsi")
 
     for _arch in ROCmPackage.amdgpu_targets:
         depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
@@ -101,7 +102,7 @@ class NaluWind(bNaluWind, ROCmPackage):
 
         cmake_options.append(self.define_from_variant("ENABLE_OPENFAST_FSI", "fsi"))
         if "+fsi" in spec:
-            cmake_options.append(self.define("OpenFAST_DIR", spec["openfast-fsi"].prefix))
+            cmake_options.append(self.define("OpenFAST_DIR", spec["openfast"].prefix))
 
         if spec.satisfies("+tests") or self.run_tests or spec.satisfies("dev_path=*"):
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
