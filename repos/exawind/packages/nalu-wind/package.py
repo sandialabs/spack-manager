@@ -39,7 +39,6 @@ class NaluWind(bNaluWind, ROCmPackage):
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
     conflicts("openfast@fsi", when="~fsi")
-    conflicts("+fsi", when="~openfast")
 
     depends_on("trilinos gotype=long")
     depends_on("openfast@fsi+netcdf", when="+fsi")
