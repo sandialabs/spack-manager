@@ -30,6 +30,9 @@ spack:
   - include.yaml
   concretizer:
     unify: false
+  packages:
+    mpi:
+      require: 'openmpi'
   view: false
   specs:
   - $nalus
