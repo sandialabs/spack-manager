@@ -1,6 +1,6 @@
 compilers:
   - compiler:
-      spec: clang@14.0.0
+      spec: cce@14.0.2
       paths:
         cc: cc
         cxx: CC
@@ -10,9 +10,14 @@ compilers:
       operating_system: sles15
       target: any
       modules:
-      - PrgEnv-amd/8.3.3
+      - PrgEnv-cray/8.3.3
+      - cce/14.0.2
       - rocm/5.2.0
+      - craype/2.7.16
       - libfabric
+      - xpmem
       - craype-x86-trento
-      environment: {}
+      environment:
+        prepend_path:
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.4.4-2.3_11.2__gff0e1d9.shasta/lib64/pkgconfig
       extra_rpaths: []
