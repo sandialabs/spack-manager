@@ -102,6 +102,7 @@ class NaluWind(bNaluWind, ROCmPackage):
         cmake_options.append(self.define_from_variant("ENABLE_OPENFAST_FSI", "fsi"))
         if "+fsi" in spec:
             cmake_options.append(self.define("OpenFAST_DIR", spec["openfast"].prefix))
+            cmake_options.append(self.define("ENABLE_OPENFAST", True))
 
         if spec.satisfies("+tests") or self.run_tests or spec.satisfies("dev_path=*"):
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
