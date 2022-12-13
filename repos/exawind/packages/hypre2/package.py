@@ -33,7 +33,7 @@ class Hypre2(bHypre):
 
     def configure_args(self):
         spec = self.spec
-        options = super(Hypre, self).configure_args()
+        options = super(Hypre2, self).configure_args()
 
         if "+gpu-aware-mpi" in spec:
             options.append("--enable-gpu-aware-mpi")
