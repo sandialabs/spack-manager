@@ -25,7 +25,10 @@ packages:
   tioga:
     version: [develop]
   hypre:
-    version: [develop]
+    require: "@develop"
+    variants: ~fortran
+  hypre2:
+    require: "@develop"
     variants: ~fortran
   yaml-cpp:
     version: [0.6.3]
