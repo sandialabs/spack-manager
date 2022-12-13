@@ -54,3 +54,12 @@ class Hypre2(bHypre):
             options.append("--with-umpire-libs=umpire")
 
         return options
+
+    @property
+    def libs(self):
+        """Export the hypre library.
+        Sample usage: spec['hypre'].libs.ld_flags
+        """
+        is_shared = "+shared" in self.spec
+        libs = find_libraries("libNALU_HYPRE", root=self.prefix, shared=is_shared, recursive=True)
+        return libs or None
