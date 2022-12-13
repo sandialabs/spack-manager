@@ -1,5 +1,5 @@
 from spack import *
-from spack.pkg.builtin.hypre import Hypre as bHypre
+from spack.pkg.builtin.hypre import Hypre2 as bHypre
 import os
 
 class Hypre2(bHypre):
