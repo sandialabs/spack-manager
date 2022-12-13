@@ -20,7 +20,9 @@ def trilinos_version_filter(name):
         return "stable"
 
 class NaluWind(bNaluWind, ROCmPackage):
-    version("master", branch="master", submodules=True)
+    git = "https://github.com/jrood-nrel/nalu-wind.git"
+
+    version("master", branch="mangled", submodules=True)
 
     variant("asan", default=False,
             description="Turn on address sanitizer")
