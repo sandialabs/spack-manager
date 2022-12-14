@@ -14,5 +14,7 @@ compilers:
       - rocm/5.2.0
       - libfabric
       - craype-x86-trento
-      environment: {}
       extra_rpaths: []
+      environment:
+        prepend_path:
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.4.4-2.3_11.2__gff0e1d9.shasta/lib64/pkgconfig
