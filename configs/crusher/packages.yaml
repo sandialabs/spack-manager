@@ -151,4 +151,4 @@ packages:
       mpi: [cray-mpich@8.1.17]
       blas: [openblas]
       lapack: [openblas]
-    variants: amdgpu_target=gfx90a
+    variants: build_type=Release amdgpu_target=gfx90a
