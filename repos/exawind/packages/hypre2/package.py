@@ -56,6 +56,15 @@ class Hypre2(bHypre):
         return options
 
     @property
+    def headers(self):
+        """Export the main hypre header, HYPRE.h; all other headers can be found
+        in the same directory.
+        Sample usage: spec['hypre'].headers.cpp_flags
+        """
+        hdrs = find_headers("NALU_HYPRE", self.prefix.include, recursive=False)
+        return hdrs or None
+
+    @property
     def libs(self):
         """Export the hypre library.
         Sample usage: spec['hypre'].libs.ld_flags
