@@ -57,7 +57,7 @@ class Hypre2(bHypre):
 
     @property
     def headers(self):
-        """Export the main hypre header, HYPRE.h; all other headers can be found
+        """Export the main hypre header, NALU_HYPRE.h; all other headers can be found
         in the same directory.
         Sample usage: spec['hypre'].headers.cpp_flags
         """
