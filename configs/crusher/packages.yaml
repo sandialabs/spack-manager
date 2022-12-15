@@ -80,10 +80,10 @@ packages:
         modules:
           - cmake/3.23.2
   perl:
-    version: [5.34.0]
+    version: [5.34.1]
     buildable: false
     externals:
-      - spec: perl@5.34.0
+      - spec: perl@5.34.1
         prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/perl-5.34.0-2f4kqqwg4xkrrapb5peh5m6fw2cargdl
         modules:
           - perl/5.34.0
