@@ -29,6 +29,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             description="turn on address sanitizer")
     variant("openfast", default=False,
             description="Enable OpenFAST integration")
+    variant("fsi", default=False,
+            description="Enable OpenFAST FSI integration")
     variant("hypre", default=True,
             description="Enable hypre solver")
     variant("amr_wind_gpu", default=False,
@@ -59,6 +61,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("tioga~nodegid")
     depends_on("yaml-cpp@0.6:")
     depends_on("nalu-wind+openfast", when="+openfast")
+    depends_on("nalu-wind+fsi", when="+fsi")
     depends_on("openfast+cxx@2.6.0:", when="+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^nalu-wind+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^amr-wind+openfast")
