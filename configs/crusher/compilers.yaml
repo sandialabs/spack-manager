@@ -1,6 +1,6 @@
 compilers:
   - compiler:
-      spec: clang@14.0.0
+      spec: clang@15.0.0
       paths:
         cc: cc
         cxx: CC
