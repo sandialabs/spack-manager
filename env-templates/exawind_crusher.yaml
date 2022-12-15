@@ -5,4 +5,4 @@ spack:
     unify: when_possible
   view: false
   specs:
-    - 'exawind+ninja~hypre+amr_wind_gpu~nalu_wind_gpu+rocm ^nalu-wind+hypre ^amr-wind~hypre'
+    - 'exawind+ninja+hypre+amr_wind_gpu~nalu_wind_gpu+rocm'

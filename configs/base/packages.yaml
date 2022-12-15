@@ -1,8 +1,8 @@
 packages:
   ascent:
-    variants: ~fortran~openmp
+    variants: ~fortran~openmp build_type=Release
   conduit:
-    variants: ~fortran~hdf5_compat
+    variants: ~fortran~hdf5_compat build_type=Release
   boost:
     version: [1.76.0]
     variants: cxxstd=17
@@ -25,7 +25,10 @@ packages:
   tioga:
     version: [develop]
   hypre:
-    version: [develop]
+    require: "@develop"
+    variants: ~fortran
+  hypre2:
+    require: "@develop"
     variants: ~fortran
   yaml-cpp:
     version: [0.6.3]

@@ -44,7 +44,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
 
     conflicts("+amr_wind_gpu", when="~cuda~rocm")
     conflicts("+nalu_wind_gpu", when="~cuda~rocm")
-    conflicts("+amr_wind_gpu~nalu_wind_gpu", when="^amr-wind+hypre ^nalu-wind+hypre")
+    #conflicts("+amr_wind_gpu~nalu_wind_gpu", when="^amr-wind+hypre ^nalu-wind+hypre")
+    #conflicts("~amr_wind_gpu+nalu_wind_gpu", when="^amr-wind+hypre ^nalu-wind+hypre")
 
     for arch in CudaPackage.cuda_arch_values:
         depends_on("amr-wind+cuda cuda_arch=%s" % arch, when="+amr_wind_gpu+cuda cuda_arch=%s" % arch)
@@ -57,7 +58,7 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
         depends_on("trilinos+rocm amdgpu_target=%s" % arch, when="+nalu_wind_gpu+rocm amdgpu_target=%s" % arch)
 
     depends_on("nalu-wind+tioga")
-    depends_on("amr-wind+netcdf+mpi")
+    depends_on("amr-wind+ascent+hdf5+netcdf+mpi")
     depends_on("tioga~nodegid")
     depends_on("yaml-cpp@0.6:")
     depends_on("nalu-wind+openfast", when="+openfast")
@@ -65,10 +66,15 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("openfast+cxx@2.6.0:", when="+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^nalu-wind+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^amr-wind+openfast")
-    depends_on("nalu-wind+hypre", when="+hypre")
+    depends_on("nalu-wind+hypre", when="+hypre+amr_wind_gpu+nalu_wind_gpu")
+    depends_on("nalu-wind+hypre", when="+hypre~amr_wind_gpu~nalu_wind_gpu")
+    depends_on("nalu-wind+hypre2", when="+hypre~amr_wind_gpu+nalu_wind_gpu")
+    depends_on("nalu-wind+hypre2", when="+hypre+amr_wind_gpu~nalu_wind_gpu")
     depends_on("amr-wind+hypre", when="+hypre")
-    depends_on("hypre", when="+hypre")
-    depends_on("hypre+rocm", when="+hypre+rocm")
+    depends_on("amr-wind~hypre", when="~hypre")
+    depends_on("nalu-wind~hypre", when="~hypre")
+    #depends_on("hypre", when="+hypre")
+    #depends_on("hypre+rocm", when="+hypre+rocm")
     depends_on("trilinos+ninja", when="+ninja")
     depends_on("nalu-wind+ninja", when="+ninja")
     depends_on("amr-wind+ninja", when="+ninja")
