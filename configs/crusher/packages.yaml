@@ -71,14 +71,14 @@ packages:
         modules:
           - rocm/5.4.0
           - craype-accel-amd-gfx90a
-  cmake:
-    version: [3.23.2]
-    buildable: false
-    externals:
-      - spec: cmake@3.23.2
-        prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd
-        modules:
-          - cmake/3.23.2
+  #cmake:
+  #  require: "@3.23.2"
+  #  buildable: false
+  #  externals:
+  #    - spec: cmake@3.23.2
+  #      prefix: /sw/crusher/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd
+  #      modules:
+  #        - cmake/3.23.2
   perl:
     version: [5.34.1]
     buildable: false
