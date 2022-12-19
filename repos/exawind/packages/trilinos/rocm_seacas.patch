@@ -1,0 +1,45 @@
+diff --git a/packages/seacas/applications/exo_format/CMakeLists.txt b/packages/seacas/applications/exo_format/CMakeLists.txt
+index dd8de28be3d..4fcf6c2b1c3 100644
+--- a/packages/seacas/applications/exo_format/CMakeLists.txt
++++ b/packages/seacas/applications/exo_format/CMakeLists.txt
+@@ -12,14 +12,14 @@ APPEND_GLOB(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
+ #this error only seems to manifest on pgi 11.1, however, the version of the compiler
+ #is not given for pgi compilers unfortunately so we can't be more specific
+ IF(NOT __LINUX_COMPILER_PGI)
+-  TRIBITS_ADD_EXECUTABLE(
+-    exo_format
+-    NOEXEPREFIX
+-    NOEXESUFFIX
+-    SOURCES ${SOURCES}
+-    COMM serial mpi
+-    INSTALLABLE
+-    )
++  #TRIBITS_ADD_EXECUTABLE(
++  #  exo_format
++  #  NOEXEPREFIX
++  #  NOEXESUFFIX
++  #  SOURCES ${SOURCES}
++  #  COMM serial mpi
++  #  INSTALLABLE
++  #  )
+ ENDIF()
+ 
+ TRIBITS_SUBPACKAGE_POSTPROCESS()
+diff --git a/packages/seacas/libraries/nemesis/CMakeLists.txt b/packages/seacas/libraries/nemesis/CMakeLists.txt
+index 154cf9e9e39..994d27b436c 100644
+--- a/packages/seacas/libraries/nemesis/CMakeLists.txt
++++ b/packages/seacas/libraries/nemesis/CMakeLists.txt
+@@ -28,11 +28,13 @@ TRIBITS_ADD_LIBRARY(
+   SOURCES ${SOURCES}
+   )
+ 
++IF (${PACKAGE_NAME}_ENABLE_TESTS)
+ TRIBITS_ADD_EXECUTABLE_AND_TEST(
+   ne_ctest_wrap
+   NAME ne_ctest_wrap
+   SOURCES ne_ctest_wrap.c
+   NUM_MPI_PROCS 1
+ )
++ENDIF()
+ 
+ TRIBITS_SUBPACKAGE_POSTPROCESS()
