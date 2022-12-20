@@ -1,8 +1,7 @@
 packages:
+  hypre:
+    variants: +shared~fortran
   all:
-    variants: ~shared
     compiler: [apple-clang, gcc, clang]
     providers:
       mpi: [mpich, openmpi]
-      blas: [openblas]
-      lapack: [openblas]
