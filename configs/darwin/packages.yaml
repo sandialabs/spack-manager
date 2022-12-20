@@ -1,5 +1,8 @@
 packages:
   all:
+    variants: ~shared
     compiler: [apple-clang, gcc, clang]
     providers:
       mpi: [mpich, openmpi]
+      blas: [openblas]
+      lapack: [openblas]
