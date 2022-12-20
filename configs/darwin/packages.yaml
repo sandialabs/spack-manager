@@ -1,4 +1,6 @@
 packages:
+  hypre:
+    variants: +shared~fortran
   all:
     compiler: [apple-clang, gcc, clang]
     providers:
