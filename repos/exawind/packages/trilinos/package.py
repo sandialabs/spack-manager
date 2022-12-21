@@ -26,7 +26,7 @@ class Trilinos(bTrilinos):
             description="Position independent code")
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
-    patch("rocm_seacas.patch", when="+rocm")
+    patch("rocm_seacas.patch", when="@develop+rocm")
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
