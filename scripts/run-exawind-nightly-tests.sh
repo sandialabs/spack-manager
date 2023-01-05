@@ -54,7 +54,7 @@ cat > ${EXAWIND_TEST_SCRIPT} << '_EOF'
 #!/bin/bash -l
 
 # Trap and kill background processes
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+#trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 cmd() {
   echo "+ $@"
@@ -133,11 +133,8 @@ cmd "spack concretize -f"
 set +e
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
-if [ "${SPACK_MANAGER_MACHINE}" == 'cee' ]; then
-  time (spack install --keep-stage)
-else
-  time (for i in {1..4}; do spack install --keep-stage & done; wait)
-fi
+time (spack install --keep-stage)
+#time (for i in {1..4}; do spack install --keep-stage & done; wait)
 printf "\nTests ended at: $(date)\n"
 set -e
 
