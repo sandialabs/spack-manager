@@ -1,0 +1,4 @@
+bootstrap/
+compilers/
+packages/
+.spack/
