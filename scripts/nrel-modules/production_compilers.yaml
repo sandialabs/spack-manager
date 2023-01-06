@@ -1,0 +1,57 @@
+spack:
+   include:
+   - packages.yaml
+   - compilers.yaml
+   - modules.yaml
+   - config.yaml
+   - $SPACK_MANAGER/configs/base/packages.yaml
+   specs:
+   - binutils+gold
+   - cuda@11.8.0
+   - cuda@11.7.1
+   - cuda@11.6.2
+   - cuda@11.5.2
+   - cuda@11.4.4
+   - cuda@11.3.1
+   - cuda@11.2.2
+   - gcc@12.2.0
+   - gcc@11.3.0
+   - gcc@10.4.0
+   - gcc@9.5.0
+   - gcc@8.5.0
+   - gcc@7.5.0
+   - go@1.18
+   - llvm@15.0.4 +omp_debug+omp_tsan+python build_type=Release
+   - llvm@14.0.6 +omp_debug+omp_tsan+python build_type=Release
+   - llvm@13.0.1 +omp_debug+omp_tsan+python build_type=Release
+   - llvm@12.0.1 +omp_debug+omp_tsan+python build_type=Release
+   view: false
+   concretizer:
+     unify: false
+     reuse: false
+   packages:
+     perl:
+       require: "@5.30.3"
+     all:
+       variants: [build_type=Release]
+   config:
+     build_stage:
+       $spack/var/spack/stage
+   modules:
+     default:
+       tcl:
+         projections:
+           all: '{compiler.name}-{compiler.version}/{name}/{version}/{hash:4}'
+         hash_length: 0
+         all:
+           conflict:
+             - '{name}'
+           environment:
+             set:
+               '{name}_ROOT_DIR': '{prefix}'
+         intel-parallel-studio:
+           environment:
+             set:
+               INTEL_LICENSE_FILE: '28519@license-1.hpc.nrel.gov'
+         include: ['cuda', 'gcc', 'go', 'llvm', 'intel-parallel-studio', 'binutils', 'pgi']
+         exclude: ['%gcc']

@@ -1,0 +1,36 @@
+spack:
+   include:
+   - packages.yaml
+   - compilers.yaml
+   - modules.yaml
+   - config.yaml
+   specs:
+   - binutils+gold
+   - gcc@8.5.0
+   - environment-modules
+   - screen
+   view: false
+   packages:
+     perl:
+       require: "@5.30.3"
+     all:
+       variants: [build_type=Release]
+     gcc:
+       variants: [~bootstrap ~profiled +strip]
+   config:
+     build_stage:
+       $spack/var/spack/stage
+   modules:
+     default:
+       tcl:
+         projections:
+           all: '{compiler.name}-{compiler.version}/{name}/{version}/{hash:4}'
+         hash_length: 0
+         all:
+           conflict:
+             - '{name}'
+           environment:
+             set:
+               '{name}_ROOT_DIR': '{prefix}'
+         include: ['gcc']
+         exclude: ['%gcc']
