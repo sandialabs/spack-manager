@@ -9,6 +9,8 @@ packages:
   hdf5:
     version: [1.10.7]
     variants: +cxx+hl
+  masa:
+    variants: ~fortran~python
   netcdf-c:
     version: [4.7.4]
     variants: +parallel-netcdf maxdims=65536 maxvars=524288
