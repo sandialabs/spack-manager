@@ -120,7 +120,6 @@ class Trilinos(bTrilinos):
             options.append(self.define("SEACASAprepro_ENABLE_TESTS", False))
 
             options.append(self.define("Trilinos_ENABLE_TESTS", False))
-            options.append(self.define("STK_ENABLE_TESTS", False))
             options.append(self.define("Ifpack2_ENABLE_TESTS", False))
             options.append(self.define("MueLu_ENABLE_TESTS", False))
             options.append(self.define("PanzerMiniEM_ENABLE_TESTS", False))
@@ -128,6 +127,7 @@ class Trilinos(bTrilinos):
             options.append(self.define("Tpetra_ENABLE_TESTS", False))
             # STK
             options.append(self.define("Trilinos_ENABLE_STK", True))
+            options.append(self.define_from_variant("STK_ENABLE_TESTS", "stk_unit_tests"))
             options.append(self.define("Trilinos_ENABLE_STKMesh", True))
             options.append(self.define("Trilinos_ENABLE_STKIO", True))
             options.append(self.define("Trilinos_ENABLE_STKBalance", True))
