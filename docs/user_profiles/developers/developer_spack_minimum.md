@@ -209,7 +209,7 @@ For example, fastest way to start developing `amr-wind` and `openfast` together 
 quick-create-dev --name my-dev-project --spec amr-wind@main+openfast openfast@master
 # go to amr-wind source code
 spack cd amr-wind # modify the code in here as you wish
-# got to openfast source code
+# go to openfast source code
 spack cd openfast # modify the code in here as you wish
 # install code
 spack install
