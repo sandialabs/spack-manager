@@ -214,6 +214,6 @@ spack cd openfast # modify the code in here as you wish
 # install code
 spack install
 ```
-If you do not understand what these lines are doing then please make sure you have read this entire page.
+
 As a reminder, to learn more about the commnands used above `quick-create-dev --help`, `spack cd --help`, `spack install --help`.
 To learn what other build options you have for `amr-wind` ... `spack info amr-wind`, `openfast` ... `spack info openfast`, etc.
