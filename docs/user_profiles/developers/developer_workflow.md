@@ -106,7 +106,30 @@ These clones of the source code default to the environment directory you specifi
 If we wish to work off specific branches then we can use `git add remote`, `git fetch` and `git checkout` to get the branches we want
 inside each of the clones before building.
 
-If you wish to pre-clone your repos you can simply create a directory, pre-clone the software you want to develop with names that match the package names and run your `quick-create-dev` inside the directory you created without either of the `-d` or `-n` flags.
+### Managing the Source Code 
+
+There are 4 options for setting up the source code you will use in your development process
+1) Allow spack to clone the default git repo and branch when you use the `spack develop` or `spack manager develop` commands.
+2) Use the `spack manager develop` command with the `--repo-branch` argument to clone from a specific fork and branch.
+3) Pre-clone the source code into the environment directory.
+4) Use additional `develop` arguments to point spack to exisiting source code outside the environment directory.
+
+Option 1 happens automatically if you run `quick-create-dev`.  Option 2 can be used with an active environment.
+See below for an example of how to use option2.
+
+```console
+# create an environment and acticate it with "quick-create"
+quick-create -n build-from-my-fork -s amr-wind+openfast
+# clone the "amr-feature" branch from a user specific fork of the amr-wind git repo
+spack manager develop --repo-branch git@github.com:psakievich/amr-wind.git amr-feature amr-wind@main
+# clone the "openfast-feature" branch from a user specific fork of the openfast git repo
+spack manager develop --repo-branch git@github.com:psakievich/openfast.git openfast-feature openfast@master
+# build the software using the source code that was just cloned
+spack install
+```
+
+If you wish to pre-clone your repos using option 3 you can simply create a directory,
+pre-clone the software you want to develop with names that match the package names and run your `quick-create-dev` inside the directory you created without either of the `-d` or `-n` flags.
 This is because the default behavior of the command is to create the environment files, and clone repos in the current
 working directory.
 
@@ -131,6 +154,12 @@ does the same thing as
 quick-create-dev -d test -s exawind@master nalu-wind@master amr-wind@main
 ```
 However, adding in the extra pre-clone steps gives you a little more control over your environment.
+
+Options 1 and 2 are the recommended ways of proceeding since they are the most concise and support the most common use cases.
+Option 3 is available if you need additional flexibility, are on an air gaped system
+or have issues with spack cloning from git (this may be due to an old version of git on the system).
+Option 4 is not really recommended but the curious can learn more by diving into spack's documentation and/or using `spack manager develop --help`
+to learn the features and combinations available.
 
 At this point in the process your environment is active and all setup.
 You can confirm that it is active with `spack env status` which displays the active environment.
