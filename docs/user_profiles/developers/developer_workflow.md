@@ -206,12 +206,21 @@ source $SPACK_MANAGER/start.sh
 quick-create-dev -n demo -s exawind@master amr-wind@main nalu-wind@master
 # build code
 spack install
-# code changes
-# ....
+# code changes in amr-wind
+spack cd amr-wind
+# .... make code changes
+# code changes in nalu-wind
+spack cd nalu-wind
+# ... make code changes
 # re-build
 spack install
 # go to build directory
 spack cd -b nalu-wind
 # run all the overset regression tests in nalu-wind
 spack build-env nalu-wind ctest -R overset
+# run regression tests in the exawind-driver
+build-env-dive exawind
+ctest -VV
+# when using build-env-dive you have to remember to leave the subshell when you're done 
+exit
 ```
