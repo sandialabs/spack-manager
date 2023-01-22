@@ -1,5 +1,22 @@
 # Frequently Asked Questions:
 
+## How do I setup and build custom branches of `amr-wind` and `openfast` together?
+A simple script below is the minimum commands you need.
+It is highly encouraged that users with this question review [Developers: What you need to know about Spack](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html).
+A detailed guide explaining many of the other questions you are likely to encounter can be found in the [Quick-Start: Developer Workflow](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
+documentation.
+```console
+quick-create -n build-based-on-FAQ -s amr-wind+openfast
+spack manager develop -rb https://github.com/[your fork]/amr-wind [your feature branch name] amr-wind@main
+spack manager develop -rb https://github.com/[your fork]/openfast [your feature branch name] openfast@master
+spack install
+```
+
+## How do I build for GPU's?
+If you are using a machine with a profile in Spack-Manager simply add `+cuda` or `+rocm` to your current specs.
+If you are on an unsupported machine you will need to add the device architecture as well.
+`spack info [spec]` will show you the options for this, and further questions will need to be addressed with your
+system administrator.
 
 ## I'm getting lots of weird Spack errors, what should I do?
 If you have multiple Spack instances or have recently updated spack things can get a little mangled.
