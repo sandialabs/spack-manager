@@ -196,7 +196,6 @@ You will be able to come back at anytime and pick up where you left off.
 
 ## Quick Start
 These are the commands needed to set up Spack-Manager and a development build for the exawind-driver with the intention of editing `nalu-wind` and `amr-wind` at the same time.
-
 ```console
 # setup Spack-Manager
 git clone --recursive git@github.com:sandialabs/spack-manager.git
