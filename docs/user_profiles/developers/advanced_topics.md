@@ -154,7 +154,7 @@ Doing this is a bit tedious and the new base environments will need to be period
 ## Constructing and Utilizing Multiple builds
 One of the nice features about using Spack is the build environments you setup can have arbitrary complexity.
 A nice feature for this is to setup your development environment to perform multiple builds that you may need
-from the same source such as a `+Cuda` and `~Cuda` build, or `Release` and `Debug` builds.
+from the same source such as a `+cuda` and `~cuda` build, or `Release` and `Debug` builds.
 
 To do this you need to edit the `spack.yaml` file so that the `concretizer:unify` parameter is set to `false`.
 `Unify` tells the concretizer that all the software has to concretize into a single graph.
