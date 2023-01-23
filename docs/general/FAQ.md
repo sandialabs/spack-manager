@@ -12,6 +12,26 @@ spack manager develop -rb https://github.com/[your fork]/openfast [your feature 
 spack install
 ```
 
+## What should I do if Spack Keeps failing to clone code for me on Eagle?
+Eagle's default version of Git is very old and fails to do many operations.
+To fix the cloning issue please make sure you have a more recent version of Git in your path.
+Adding the following lines to your `bashrc` will fix the issue.
+```bash
+source /nopt/nrel/ecom/hpacf/env.sh
+module load git
+```
+
+This is the minimum set of commands we've found to remove the problem.
+The suggested modules to load are:
+```bash
+# HPACF Environment
+source /nopt/nrel/ecom/hpacf/env.sh
+module load gcc/9.3.0
+module load binutils
+module load git
+module load python
+```
+
 ## How do I build for GPU's?
 If you are using a machine with a profile in Spack-Manager simply add `+cuda` or `+rocm` to your current specs.
 If you are on an unsupported machine you will need to add the device architecture as well.
