@@ -220,6 +220,4 @@ spack build-env nalu-wind ctest -R overset
 # run regression tests in the exawind-driver
 build-env-dive exawind
 ctest -VV
-# when using build-env-dive you have to remember to leave the subshell when you're done 
-exit
 ```
