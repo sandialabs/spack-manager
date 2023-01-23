@@ -32,11 +32,8 @@ quick-create -d [location of new env] -y [old environment]/spack.yaml
 spack -e [old environment] uninstall --all
 rm -rf [old environment]
 ```
----
-**TIP:**
-Using `spack -e [env location]` allows you to run commands in that environment
+> **TIP:** Using `spack -e [env location]` allows you to run commands in that environment
 without activating it in your shell.
----
 
 If you truly wish to revise the environment then it is a good idea to try and reconcretize
 before making changes to the environment.  `spack concretize -f`.
@@ -49,14 +46,8 @@ So to add a variant, such as making the build a debug build, simply open the `sp
 in your environment's directory and add `build_type=Debug` to the spec for the package
 you want to be built in debug mode.
 
----
-**TIP:**
-Spack has a built in command for automatically opening the `spack.yaml` file in a
-text editor for you.
-It is `spack config edit`.
-The default editor is Vim, but you can set it to be anything you want simply by 
-setting the `EDITOR` environment variable i.e. `export EDITOR=emacs`.
----
+> **TIP:** Spack has a built in command for automatically opening the `spack.yaml` file in a
+text editor for you. It is `spack config edit`. The default editor is Vim, but you can set it to be anything you want simply by setting the `EDITOR` environment variable i.e. `export EDITOR=emacs`.
 
 A more archaic way to do this from the command line would be to remove the spec
 and then add it back with the edits that you want.
