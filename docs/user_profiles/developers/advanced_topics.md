@@ -72,7 +72,7 @@ in the state of your Spack installation.
 
 We suggest the following steps for how to handle an error from Spack:
 
-1) If you just updated Spack-Manager make sure the Spack submodule is up-to-date: `git submodule --update`
+1) If you just updated Spack-Manager make sure the Spack submodule is up-to-date: `git submodule update`
 2) Read the error message again and see if it makes sense.  Many of the error messages are quite good.
 3) Run `sm-clean`.  This is a heavy clean up command for Spack-Manager that we've created based on the errors we've seen in the past.
 4) Run your Spack command with the `-d` flag (debug) i.e. `spack -d install` and see if that gives you any more insight
