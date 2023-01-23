@@ -126,7 +126,7 @@ will notice several build directories `spack-build-[hash]`.
 Preserving these allows for incremental builds, and deleting them will cause you to rebuild the entire software product.
 So there is a trade off between waiting on builds and storage space.
 
-To handle the issue of install tree's we've added the `--local-source` or `-l` flag to the environment creation commands.
+To handle the issue of install trees we've added the `--local-source` or `-l` flag to the environment creation commands.
 This will make it so all the binaries are installed local to the environment in a directory named `opt/`.
 Now when you delete the environment you will also delete all the install binaries and you don't need to worry about them piling up in the
 main Spack install tree.
