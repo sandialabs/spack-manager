@@ -151,4 +151,55 @@ So to setup a very space conservative Spack-Manager repo you should do the follo
 Now whenever you want to clean things up just delete your development environment directory and all the space from that specific build will be removed.
 Doing this is a bit tedious and the new base environments will need to be periodically created for new compilers and flags, or the existing ones will need to be updated.
 
-## Constructing and Utilizing Multiple Builds
+## Constructing and Utilizing Multiple builds
+One of the nice features about using Spack is the build environments you setup can have arbitrary complexity.
+A nice feature for this is to setup your development environment to perform multiple builds that you may need
+from the same source such as a `+Cuda` and `~Cuda` build, or `Release` and `Debug` builds.
+
+To do this you need to edit the `spack.yaml` file so that the `concretizer:unify` parameter is set to `false`.
+`Unify` tells the concretizer that all the software has to concretize into a single graph.
+We turn on unification by default in Spack-Manager to serve as a guard-rail for users and to simply syntax for setting up environments.
+
+```yaml
+spack:
+  # having the two specs
+  specs: 
+  - nalu-wind@master+hypre+cuda
+  - nalu-wind@master+hypre~cuda
+  view: false
+  concretizer:
+    unify: false # this is defaulted to true
+  include:
+  - include.yaml
+  develop:
+    nalu-wind:
+      # this develop spec matches both the root specs and so the source code will be used for both
+      spec: nalu-wind@master
+ ``` 
+
+ You may not want to rebuild both instances of the code every time you make a change.
+ However, you can do `build-env-dive nalu-wind~cuda` if you want to develop the code on a non-cuda environment for the faster link times.
+ When using `build-env-dive` you can simply call `make`, `make clean`, run the tests, etc from inside the build directory.
+When you want to test the cuda build you can exit the build-env and rebuild the Cuda case.
+An example of this workflow is illustrated below.
+
+```console
+# Setup the environment
+quick-create -d two-build-one-env -s nalu-wind+cuda nalu-wind~cuda
+spack manager develop nalu-wind@master
+spack config add conncretizer:unify:false # a way to edit the spack.yaml configs from the command line
+spack install 
+# dive into the non-cuda build environment
+build-env-dive nalu-wind~cuda
+# make some code changes
+[...]
+# run the unit-tests and interate
+make -j8 && ./unittestX
+# jump out of the build0-env 
+exit
+# now rebuild everything with the changes
+spack install
+# check the cuda tests
+build-env-dive nalu-wind+cuda
+ctest -R unit -VV
+```
