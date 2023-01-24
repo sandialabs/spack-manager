@@ -82,7 +82,7 @@ class NaluWind(bNaluWind, ROCmPackage):
             env.set("MPICH_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             env.set("MPICXX_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
         if "+rocm" in self.spec:
-            env.append_flags('CXXFLAGS', '--gpu-max-threads-per-block=128 -fgpu-rdc')
+            env.append_flags('CXXFLAGS', '-fgpu-rdc')
 
     def cmake_args(self):
         spec = self.spec

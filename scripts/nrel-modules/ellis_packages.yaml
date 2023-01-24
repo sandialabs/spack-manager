@@ -1,0 +1,25 @@
+packages:
+  py-horovod:
+    variants: tensor_ops=mpi frameworks=pytorch,tensorflow
+  py-tensorflow:
+    variants: +cuda+mpi+nccl
+  py-torch:
+    variants: +cuda+cudnn+nccl
+  emacs:
+    variants: +tls
+  llvm:
+    variants: +omp_debug+omp_tsan+python build_type=Release
+  texlive:
+    variants: scheme=full
+  vim:
+    variants: +python+huge+cscope
+  py-yt:
+    variants: ~astropy
+  all:
+    compiler: [gcc@10.4.0, clang@15.0.2]
+    variants: build_type=Release +mpi cuda_arch=80
+    target: [zen2]
+    providers:
+      mpi: [mpich]
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]
