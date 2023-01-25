@@ -133,11 +133,11 @@ cmd "spack concretize -f"
 set +e
 printf "\nTests started at: $(date)\n\n"
 printf "spack install \n"
-if [ "${SPACK_MANAGER_MACHINE}" == 'cee' ]; then
-  time (spack install --keep-stage)
-else
-  time (for i in {1..2}; do spack install --keep-stage & done; wait)
-fi
+#if [ "${SPACK_MANAGER_MACHINE}" == 'cee' ]; then
+time (spack install --keep-stage)
+#else
+#  time (for i in {1..2}; do spack install --keep-stage & done; wait)
+#fi
 printf "\nTests ended at: $(date)\n"
 set -e
 
