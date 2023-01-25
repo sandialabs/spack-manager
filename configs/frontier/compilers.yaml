@@ -1,0 +1,21 @@
+compilers:
+  - compiler:
+      spec: clang@14.0.0
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: sles15
+      target: any
+      modules:
+      - PrgEnv-amd/8.3.3
+      - rocm/5.2.0
+      - amd/5.2.0
+      - libfabric
+      - craype-x86-trento
+      extra_rpaths: []
+      environment:
+        prepend_path:
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.4.4-2.3_11.2__gff0e1d9.shasta/lib64/pkgconfig
