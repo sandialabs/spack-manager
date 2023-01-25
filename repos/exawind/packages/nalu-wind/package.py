@@ -10,6 +10,7 @@ from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
 from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
+from manager_cmds.find_machine import find_machine
 
 
 def trilinos_version_filter(name):
@@ -85,6 +86,10 @@ class NaluWind(bNaluWind, ROCmPackage):
         cmake_options = super(NaluWind, self).cmake_args()
         cmake_options.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         cmake_options.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
+
+        if find_machine(verbose=False) == "crusher":
+            cmake_options.append(self.define("MPIEXEC_EXECUTABLE", "srun"))
+            cmake_options.append(self.define("MPIEXEC_NUMPROC_FLAG", "--ntasks"))
 
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
