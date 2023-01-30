@@ -1,0 +1,120 @@
+packages:
+  cray-mpich:
+    version: [8.1.17]
+    buildable: false
+    externals:
+      - spec: "cray-mpich@8.1.17%gcc@11.2.0"
+        modules:
+          - cray-mpich/8.1.17
+          - gcc/11.2.0
+          - libfabric/1.15.2.0
+          - craype-network-ofi
+      - spec: "cray-mpich@8.1.17%clang@14.0.0"
+        modules:
+          - cray-mpich/8.1.17
+          - rocm/5.2.0
+          - libfabric/1.15.2.0
+          - craype-network-ofi
+      - spec: "cray-mpich@8.1.17%cce@14.0.2"
+        modules:
+          - cray-mpich/8.1.17
+          - cce/14.0.2
+          - libfabric/1.15.2.0
+          - craype-network-ofi
+  hip:
+    version: [5.2.0]
+    buildable: false
+    externals:
+      - spec: hip@5.2.0
+        prefix: /opt/rocm-5.2.0/hip
+        modules:
+          - craype-accel-amd-gfx90a
+  hsa-rocr-dev:
+    version: [5.2.0]
+    buildable: false
+    externals:
+      - spec: hsa-rocr-dev@5.2.0
+        prefix: /opt/rocm-5.2.0/hsa
+        modules:
+          - craype-accel-amd-gfx90a
+  llvm-amdgpu:
+    version: [5.2.0]
+    buildable: false
+    externals:
+      - spec: llvm-amdgpu@5.2.0
+        prefix: /opt/rocm-5.2.0/llvm
+        modules:
+          - craype-accel-amd-gfx90a
+  boost:
+    version: [1.79.0]
+    buildable: false
+    externals:
+      - spec: boost@1.79.0
+        prefix: /sw/frontier/spack-envs/base/opt/cray-sles15-zen3/cce-14.0.2/boost-1.79.0-n6rqrt7re3o7js3npdv5z3w2a5b74qsl
+        modules:
+          - boost/1.79.0
+#  hdf5:
+#    version: [1.12.0.7]
+#    buildable: false
+#    externals:
+#      - spec: hdf5@1.12.0.7
+#        prefix: /opt/cray/pe/hdf5-parallel/1.12.0.7/crayclang/10.0
+#        modules:
+#          - cray-hdf5-parallel/1.12.0.7
+#  parallel-netcdf:
+#    version: [1.12.1.7]
+#    buildable: false
+#    externals:
+#      - spec: parallel-netcdf@1.12.1.7
+#        prefix: /opt/cray/pe/parallel-netcdf/1.12.1.7/amd/4.3
+#        modules:
+#          - cray-parallel-netcdf/1.12.1.7
+  cmake:
+    version: [3.23.2]
+    buildable: false
+    externals:
+      - spec: cmake@3.23.2
+        prefix: /sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd
+        modules:
+          - cmake/3.23.2
+  zlib:
+    version: [1.2.11]
+    buildable: false
+    externals:
+      - spec: zlib@1.2.11
+        prefix: /sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/zlib-1.2.11-zuyclcfig4tizmb2bm2h4roqsp3rwn2y
+        modules:
+          - zlib/1.2.11
+  perl:
+    require: "@5.34.0"
+    buildable: false
+    externals:
+      - spec: perl@5.34.0
+        prefix: /sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/perl-5.34.0-2f4kqqwg4xkrrapb5peh5m6fw2cargdl
+        modules:
+          - perl/5.34.0
+  openblas:
+    version: [0.3.17]
+    buildable: false
+    externals:
+      - spec: openblas@0.3.17
+        prefix: /sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/openblas-0.3.17-mnemgqrf4u47isw3rkt4abvto5neqef7
+        modules:
+          - openblas/0.3.17
+  libxml2:
+    version: [2.9.12]
+    buildable: false
+    externals:
+      - spec: libxml2@2.9.12
+        prefix: /sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/libxml2-2.9.12-h7fe2yauotu3xit7rsaixaowd3noknur
+        modules:
+          - libxml2/2.9.12
+  all:
+    compiler:
+      #- gcc@9.3.0
+      - clang@14.0.0
+    providers:
+      mpi: [cray-mpich@8.1.17]
+      blas: [openblas]
+      lapack: [openblas]
+    variants: amdgpu_target=gfx90a
