@@ -31,7 +31,7 @@ packages:
     version: [0.6.3]
   trilinos:
     version: [13.4.0.2022.10.27, develop]
-    variants: ~adios2~alloptpkgs~amesos+amesos2~anasazi~aztec+belos+boost~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~isorropia+kokkos~mesquite+metis~minitensor~ml+mpi+muelu~mumps~nox~openmp~phalanx~piro~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra+uvm~x11~xsdkflags+zlib+zoltan+zoltan2 gotype=long cxxstd=14 build_type=Release
+    variants: ~adios2~alloptpkgs~amesos~anasazi~aztec+boost~chaco~complex~debug~dtk~epetra~epetraext+exodus+explicit_template_instantiation~float~fortran~fortrilinos+glm+gtest+hdf5~hypre~ifpack~intrepid~intrepid2~isorropia+kokkos~mesquite+metis~minitensor~ml+mpi~mumps~nox~openmp~phalanx~piro~python~rol~rythmos~sacado+shards~shylu+stk~stratimikos~suite-sparse~superlu~superlu-dist~teko~tempus+teuchos+tpetra+uvm~x11~xsdkflags+zlib+zoltan+zoltan2 gotype=long cxxstd=17 build_type=Release
   all:
     variants: build_type=Release +mpi
     providers:
