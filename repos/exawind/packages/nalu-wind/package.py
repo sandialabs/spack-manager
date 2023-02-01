@@ -45,7 +45,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     depends_on("openfast@fsi+netcdf", when="+fsi")
 
     for _arch in ROCmPackage.amdgpu_targets:
-        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
+        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
                    when="+rocm amdgpu_target={0}".format(_arch))
         depends_on("hypre+rocm amdgpu_target={0}".format(_arch), when="+hypre+rocm amdgpu_target={0}".format(_arch))
 
