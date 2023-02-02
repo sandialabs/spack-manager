@@ -43,10 +43,5 @@ class Hypre(bHypre):
         if "+umpire" in spec:
             if  (("+cuda" in spec or "+rocm" in spec) and "--enable-device-memory-pool" in options):
                 options.remove("--enable-device-memory-pool")
-            options.append("--with-umpire")
-            options.append("--with-umpire-pinned")
-            options.append("--with-umpire-include=%s"%(spec["umpire"].prefix.include))
-            options.append("--with-umpire-lib-dirs=%s"%(spec["umpire"].prefix.lib))
-            options.append("--with-umpire-libs=umpire")
 
         return options
