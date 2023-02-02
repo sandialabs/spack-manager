@@ -94,6 +94,8 @@ class NaluWind(bNaluWind, ROCmPackage):
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
+            if find_machine(verbose=False) == "eagle" and "%intel" in spec:
+                cmake_options.append(self.define("ENABLE_UNIT_TESTS", False))
 
         if "+rocm" in self.spec:
             cmake_options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
