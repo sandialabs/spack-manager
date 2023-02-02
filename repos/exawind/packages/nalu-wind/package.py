@@ -52,6 +52,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     cxxstd=["14", "17"]
     variant("cxxstd", default="17", values=cxxstd,  multi=False)
     variant("tests", default=True, description="Activate regression tests")
+    variant("unit-tests", default=True, description="Activate unit tests")
 
     for std in cxxstd:
         depends_on("trilinos cxxstd=%s" % std, when="cxxstd=%s" % std)
@@ -87,6 +88,9 @@ class NaluWind(bNaluWind, ROCmPackage):
         cmake_options.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         cmake_options.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
 
+        if find_machine(verbose=False) == "eagle" and "%intel" in spec:
+            cmake_options.append(self.define("ENABLE_UNIT_TESTS", False))
+
         if find_machine(verbose=False) == "crusher":
             cmake_options.append(self.define("MPIEXEC_EXECUTABLE", "srun"))
             cmake_options.append(self.define("MPIEXEC_NUMPROC_FLAG", "--ntasks"))
@@ -95,8 +99,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
 
-        if "+rocm" in self.spec:
-            cmake_options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
+        if "+rocm" in spec:
+            cmake_options.append(self.define("CMAKE_CXX_COMPILER", spec["hip"].hipcc))
             cmake_options.append(self.define("ENABLE_ROCM", True))
             targets = spec.variants["amdgpu_target"].value
             cmake_options.append(self.define("GPU_TARGETS", ";".join(str(x) for x in targets)))
