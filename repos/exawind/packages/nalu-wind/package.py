@@ -52,6 +52,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     cxxstd=["14", "17"]
     variant("cxxstd", default="17", values=cxxstd,  multi=False)
     variant("tests", default=True, description="Activate regression tests")
+    variant("unit-tests", default=True, description="Activate unit tests")
 
     for std in cxxstd:
         depends_on("trilinos cxxstd=%s" % std, when="cxxstd=%s" % std)
@@ -94,8 +95,6 @@ class NaluWind(bNaluWind, ROCmPackage):
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
-            if find_machine(verbose=False) == "eagle" and "%intel" in spec:
-                cmake_options.append(self.define("ENABLE_UNIT_TESTS", False))
 
         if "+rocm" in self.spec:
             cmake_options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
