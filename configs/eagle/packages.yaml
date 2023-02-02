@@ -22,9 +22,6 @@ packages:
     variants: +mpi+fma simd=avx512
   libfabric:
     variants: fabrics=verbs
-  nalu-wind:
-    require:
-    - any_of: ["%clang", "%gcc", "%intel~unit-tests"]
   ucx:
     variants: +optimizations+gdrcopy
     version: [1.8.1]
