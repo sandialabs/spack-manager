@@ -10,6 +10,7 @@ from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
 from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
+from manager_cmds.find_machine import find_machine
 
 
 def trilinos_version_filter(name):
@@ -48,7 +49,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     depends_on("hypre2@2.18.2: ~int64+mpi~superlu-dist~shared", when="+hypre2")
 
     for _arch in ROCmPackage.amdgpu_targets:
-        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+muelu+belos+ifpack2+amesos2+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
+        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
                    when="+rocm amdgpu_target={0}".format(_arch))
         depends_on("hypre+rocm amdgpu_target={0}".format(_arch), when="+hypre+rocm amdgpu_target={0}".format(_arch))
 
@@ -89,6 +90,10 @@ class NaluWind(bNaluWind, ROCmPackage):
         cmake_options = super(NaluWind, self).cmake_args()
         cmake_options.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         cmake_options.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
+
+        if find_machine(verbose=False) == "crusher":
+            cmake_options.append(self.define("MPIEXEC_EXECUTABLE", "srun"))
+            cmake_options.append(self.define("MPIEXEC_NUMPROC_FLAG", "--ntasks"))
 
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))

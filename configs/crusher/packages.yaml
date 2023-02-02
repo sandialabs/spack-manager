@@ -97,6 +97,8 @@ packages:
           - openblas/0.3.17
   trilinos:
     require: "@develop"
+  nalu-wind:
+    variants: ~trilinos-solvers
   all:
     compiler:
       - clang@15.0.0
