@@ -27,6 +27,9 @@ class Hypre2(bHypre):
             if "SPACK_MANAGER_CLEAN_HYPRE" in os.environ:
                 make("clean")
 
+    def setup_build_environment(self, env):
+        env.set("CFLAGS", self.pkg.compiler.cc_pic_flag)
+
     def configure_args(self):
         spec = self.spec
         options = super(Hypre2, self).configure_args()
