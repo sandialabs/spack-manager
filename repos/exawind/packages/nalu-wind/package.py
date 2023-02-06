@@ -98,12 +98,12 @@ class NaluWind(bNaluWind, ROCmPackage):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
 
-        if "+umpire" in self.spec:
+        if "+umpire" in spec:
             cmake_options.append(self.define_from_variant("ENABLE_UMPIRE", "umpire"))
-            cmake_options.append(self.define("UMPIRE_DIR", self.spec["umpire"].prefix))
+            cmake_options.append(self.define("UMPIRE_DIR", spec["umpire"].prefix))
 
-        if "+rocm" in self.spec:
-            cmake_options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
+        if "+rocm" in spec:
+            cmake_options.append(self.define("CMAKE_CXX_COMPILER", spec["hip"].hipcc))
             cmake_options.append(self.define("ENABLE_ROCM", True))
             targets = spec.variants["amdgpu_target"].value
             cmake_options.append(self.define("GPU_TARGETS", ";".join(str(x) for x in targets)))
