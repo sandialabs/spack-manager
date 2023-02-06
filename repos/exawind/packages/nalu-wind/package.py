@@ -33,6 +33,8 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Enable Ninja makefile generator")
     variant("shared", default=True,
             description="Build shared libraries")
+    variant("hypre2", default=False,
+            description="Compile with namespaced Hypre support")
     variant("umpire", default=False,
             description="Enable Umpire")
     conflicts("+shared", when="+cuda",
@@ -42,8 +44,10 @@ class NaluWind(bNaluWind, ROCmPackage):
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
     conflicts("openfast@fsi", when="~fsi")
-    depends_on("hypre+umpire", when="+umpire")
+    conflicts("+hypre", when="+hypre2")
 
+    depends_on("hypre2@2.18.2: ~int64+mpi~superlu-dist~shared", when="+hypre2")
+    depends_on("hypre+umpire", when="+umpire")
     depends_on("trilinos gotype=long")
     depends_on("openfast@fsi+netcdf+cxx", when="+fsi")
 
@@ -111,6 +115,10 @@ class NaluWind(bNaluWind, ROCmPackage):
             cmake_options.append(self.define("ENABLE_ROCM", True))
             targets = spec.variants["amdgpu_target"].value
             cmake_options.append(self.define("GPU_TARGETS", ";".join(str(x) for x in targets)))
+
+        if "+hypre2" in spec:
+            cmake_options.append(self.define("ENABLE_HYPRE", True))
+            cmake_options.append(self.define("HYPRE_DIR", spec["hypre2"].prefix))
 
         if spec["mpi"].name == "openmpi":
             cmake_options.append(self.define("MPIEXEC_PREFLAGS", "--oversubscribe"))
