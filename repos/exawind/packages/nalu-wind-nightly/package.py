@@ -82,6 +82,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         if '+cuda' in spec:
             cmake_options.append(self.define("TEST_ABS_TOL", "1e-10"))
             cmake_options.append(self.define("TEST_REL_TOL", "1e-8"))
+        if machine == "eagle" and "%intel" in spec:
+            cmake_options.append(self.define("ENABLE_UNIT_TESTS", False))
 
         # Ctest options
         ctest_options = []

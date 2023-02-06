@@ -82,6 +82,17 @@ class Trilinos(bTrilinos):
         options = super(Trilinos, self).cmake_args()
 
         options.append(self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"))
+        options.append(self.define("Trilinos_ENABLE_SEACAS", True))
+        options.append(self.define("Trilinos_ENABLE_SEACASCpup", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASEjoin", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASExo_format", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASExomatlab", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASNas2exo", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASSlice", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASuplib", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASuplibC", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASuplibCpp", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASZellij", False))
 
         if "+stk" in spec:
             options.append(self.define_from_variant("STK_ENABLE_TESTS", "stk_unit_tests"))
@@ -108,7 +119,6 @@ class Trilinos(bTrilinos):
             options.append(self.define("Kokkos_ARCH_VEGA90A", True))
             options.append(self.define("Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE", True))
             # Tests
-            options.append(self.define("Trilinos_ENABLE_SEACAS", True))
             options.append(self.define("SEACASExodus_ENABLE_TESTS", False))
             options.append(self.define("SEACASIoss_ENABLE_TESTS", False))
             options.append(self.define("SEACASNemesis_ENABLE_TESTS", False))

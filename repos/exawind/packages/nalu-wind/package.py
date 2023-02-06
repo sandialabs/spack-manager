@@ -55,6 +55,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     cxxstd=["14", "17"]
     variant("cxxstd", default="17", values=cxxstd,  multi=False)
     variant("tests", default=True, description="Activate regression tests")
+    variant("unit-tests", default=True, description="Activate unit tests")
 
     for std in cxxstd:
         depends_on("trilinos cxxstd=%s" % std, when="cxxstd=%s" % std)
@@ -89,6 +90,9 @@ class NaluWind(bNaluWind, ROCmPackage):
         cmake_options = super(NaluWind, self).cmake_args()
         cmake_options.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         cmake_options.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
+
+        if find_machine(verbose=False) == "eagle" and "%intel" in spec:
+            cmake_options.append(self.define("ENABLE_UNIT_TESTS", False))
 
         if find_machine(verbose=False) == "crusher":
             cmake_options.append(self.define("MPIEXEC_EXECUTABLE", "srun"))

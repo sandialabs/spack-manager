@@ -1,6 +1,6 @@
 packages:
   perl:
-    version: [5.32.0]
+    require: "@5.32.0"
   slurm:
     buildable: false
     externals:
