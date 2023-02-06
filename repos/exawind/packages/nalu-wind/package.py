@@ -35,7 +35,11 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Enable Ninja makefile generator")
     variant("shared", default=False,
             description="Build shared libraries")
-    variant("hypre2", default=False, description="Compile with mangled Hypre support")
+    variant("hypre2", default=False,
+            description="Compile with mangled Hypre support")
+    variant("umpire", default=False,
+            description="Enable Umpire")
+
     conflicts("+shared", when="+cuda",
              msg="invalid device functions are generated with shared libs and cuda")
     conflicts("+shared", when="+rocm",
@@ -43,6 +47,7 @@ class NaluWind(bNaluWind, ROCmPackage):
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
     conflicts("openfast@fsi", when="~fsi")
+    depends_on("hypre+umpire", when="+umpire")
 
     depends_on("trilinos gotype=long")
     depends_on("openfast@fsi+netcdf", when="+fsi")
@@ -102,6 +107,10 @@ class NaluWind(bNaluWind, ROCmPackage):
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
+
+        if "+umpire" in spec:
+            cmake_options.append(self.define_from_variant("ENABLE_UMPIRE", "umpire"))
+            cmake_options.append(self.define("UMPIRE_DIR", spec["umpire"].prefix))
 
         if "+rocm" in spec:
             cmake_options.append(self.define("CMAKE_CXX_COMPILER", spec["hip"].hipcc))

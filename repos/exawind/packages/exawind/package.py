@@ -41,6 +41,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             description="Enable SIMD in STK")
     variant("ninja", default=False,
             description="Enable Ninja makefile generator")
+    variant("umpire", default=False,
+            description="Enable Umpire")
 
     conflicts("+amr_wind_gpu", when="~cuda~rocm")
     conflicts("+nalu_wind_gpu", when="~cuda~rocm")
@@ -83,6 +85,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("trilinos")
     depends_on("cmake")
     depends_on("mpi")
+    depends_on("nalu-wind+umpire", when="+umpire")
+    depends_on("amr-wind+umpire", when="+umpire")
 
     def cmake_args(self):
         spec = self.spec
@@ -93,6 +97,10 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
 
         args.append(self.define("MPI_HOME", spec["mpi"].prefix))
+
+        if "+umpire" in self.spec:
+            args.append(self.define_from_variant("EXAWIND_ENABLE_UMPIRE", "umpire"))
+            args.append(self.define("UMPIRE_DIR", self.spec["umpire"].prefix))
 
         if spec.satisfies("+cuda"):
             args.append(self.define("EXAWIND_ENABLE_CUDA", True))
