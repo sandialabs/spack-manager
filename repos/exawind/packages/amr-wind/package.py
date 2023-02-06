@@ -22,12 +22,15 @@ class AmrWind(bAmrWind):
             description="Enable HDF5 plots with ZFP compression")
     variant("ninja", default=False,
             description="Enable Ninja makefile generator")
+    variant("umpire", default=False,
+            description="Enable Umpire")
 
     depends_on("hdf5~mpi", when="+hdf5~mpi")
     depends_on("hdf5+mpi", when="+hdf5+mpi")
     depends_on("h5z-zfp", when="+hdf5")
     depends_on("zfp", when="+hdf5")
     depends_on("ninja", type="build", when="+ninja")
+    depends_on("hypre+umpire", when="+umpire")
 
     @property
     def generator(self):
@@ -55,6 +58,10 @@ class AmrWind(bAmrWind):
 
         if spec.satisfies("dev_path=*"):
             cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS", True))
+
+        if "+umpire" in self.spec:
+            cmake_options.append(self.define_from_variant("AMR_WIND_ENABLE_UMPIRE", "umpire"))
+            cmake_options.append(self.define("UMPIRE_DIR", self.spec["umpire"].prefix))
 
         if "+cuda" in self.spec:
             targets = self.spec.variants["cuda_arch"].value
