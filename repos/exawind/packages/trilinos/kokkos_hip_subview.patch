@@ -1,0 +1,43 @@
+diff --git a/packages/kokkos/core/src/impl/Kokkos_ViewMapping.hpp b/packages/kokkos/core/src/impl/Kokkos_ViewMapping.hpp
+index 994dd0b2adf..9e7595a25bf 100644
+--- a/packages/kokkos/core/src/impl/Kokkos_ViewMapping.hpp
++++ b/packages/kokkos/core/src/impl/Kokkos_ViewMapping.hpp
+@@ -2741,6 +2741,12 @@ struct ViewDataHandle<
+                                          Kokkos::CudaSpace>::value ||
+                             std::is_same<typename Traits::memory_space,
+                                          Kokkos::CudaUVMSpace>::value))
++#endif
++#ifdef KOKKOS_ENABLE_HIP
++                      && (!(std::is_same<typename Traits::memory_space,
++                                         Kokkos::Experimental::HIPSpace>::value ||
++                            std::is_same<typename Traits::memory_space,
++                                         Kokkos::Experimental::HIPManagedSpace>::value))
+ #endif
+                       && (!Traits::memory_traits::is_atomic))>> {
+   using value_type  = typename Traits::value_type;
+@@ -2771,6 +2777,12 @@ struct ViewDataHandle<
+                                          Kokkos::CudaSpace>::value ||
+                             std::is_same<typename Traits::memory_space,
+                                          Kokkos::CudaUVMSpace>::value))
++#endif
++#ifdef KOKKOS_ENABLE_HIP
++                      && (!(std::is_same<typename Traits::memory_space,
++                                         Kokkos::Experimental::HIPSpace>::value ||
++                            std::is_same<typename Traits::memory_space,
++                                         Kokkos::Experimental::HIPManagedSpace>::value))
+ #endif
+                       && (!Traits::memory_traits::is_atomic))>> {
+   using value_type = typename Traits::value_type;
+@@ -2816,6 +2828,12 @@ struct ViewDataHandle<
+                                          Kokkos::CudaSpace>::value ||
+                             std::is_same<typename Traits::memory_space,
+                                          Kokkos::CudaUVMSpace>::value))
++#endif
++#ifdef KOKKOS_ENABLE_HIP
++                      && (!(std::is_same<typename Traits::memory_space,
++                                         Kokkos::Experimental::HIPSpace>::value ||
++                            std::is_same<typename Traits::memory_space,
++                                         Kokkos::Experimental::HIPManagedSpace>::value))
+ #endif
+                       && (!Traits::memory_traits::is_atomic))>> {
+   using value_type = typename Traits::value_type;
