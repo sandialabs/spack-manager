@@ -1,3 +1,5 @@
 leak:libopen-pal
 leak:libmpi
 leak:libnetcdf
+leak:libc
+leak:libpmix
