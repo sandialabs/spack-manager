@@ -27,6 +27,7 @@ class Trilinos(bTrilinos):
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
     patch("rocm_seacas.patch", when="@develop+rocm")
+    patch("kokkos_hip_subview.patch", when="@develop+rocm")
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
