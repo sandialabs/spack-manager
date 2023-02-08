@@ -9,4 +9,4 @@ spack:
     - 'exawind+ninja+hypre+amr_wind_gpu+nalu_wind_gpu+cuda+fsi'
     - 'exawind+ninja+hypre+amr_wind_gpu+nalu_wind_gpu+cuda'
     - 'exawind+ninja+hypre~amr_wind_gpu~nalu_wind_gpu~cuda'
-    - 'exawind+ninja~hypre+amr_wind_gpu~nalu_wind_gpu+cuda  ^nalu-wind+hypre ^amr-wind~hypre'
+    - 'exawind+ninja+hypre+amr_wind_gpu~nalu_wind_gpu+cuda'
