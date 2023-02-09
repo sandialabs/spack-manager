@@ -1,10 +1,11 @@
-from spack import *
-from spack.pkg.builtin.hypre import Hypre as bHypre
 import glob
 import os
 import shutil
 
 import spack.util
+from spack import *
+from spack.pkg.builtin.hypre import Hypre as bHypre
+
 
 class Hypre(bHypre):
 
@@ -59,7 +60,7 @@ class Hypre(bHypre):
             options.append("--enable-cublas")
 
         if "+umpire" in spec:
-            if  (("+cuda" in spec or "+rocm" in spec) and "--enable-device-memory-pool" in options):
+            if ("+cuda" in spec or "+rocm" in spec) and "--enable-device-memory-pool" in options:
                 options.remove("--enable-device-memory-pool")
 
         return options

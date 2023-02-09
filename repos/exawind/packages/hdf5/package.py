@@ -5,8 +5,10 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-from spack.pkg.builtin.hdf5 import Hdf5 as bHdf5
 import os
+
+from spack.pkg.builtin.hdf5 import Hdf5 as bHdf5
+
 
 class Hdf5(bHdf5):
     @run_after("install")

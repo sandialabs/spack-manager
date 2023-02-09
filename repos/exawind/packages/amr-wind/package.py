@@ -5,23 +5,21 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import os
+
+from smpackages import *
+
 from spack import *
 from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
-import os
-from smpackages import *
+
 
 class AmrWind(SMCMakeExtension, bAmrWind):
 
-    variant("asan", default=False,
-            description="Turn on address sanitizer")
-    variant("cppcheck", default=False,
-            description="Turn on cppcheck")
-    variant("clangtidy", default=False,
-            description="Turn on clang-tidy")
-    variant("hdf5", default=False,
-            description="Enable HDF5 plots with ZFP compression")
-    variant("umpire", default=False,
-            description="Enable Umpire")
+    variant("asan", default=False, description="Turn on address sanitizer")
+    variant("cppcheck", default=False, description="Turn on cppcheck")
+    variant("clangtidy", default=False, description="Turn on clang-tidy")
+    variant("hdf5", default=False, description="Enable HDF5 plots with ZFP compression")
+    variant("umpire", default=False, description="Enable Umpire")
 
     depends_on("hdf5~mpi", when="+hdf5~mpi")
     depends_on("hdf5+mpi", when="+hdf5+mpi")
@@ -32,7 +30,9 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer")
-            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
+            env.set(
+                "LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan"))
+            )
         if "%intel" in self.spec:
             env.append_flags("CXXFLAGS", "-no-ipo")
 
@@ -77,7 +77,9 @@ class AmrWind(SMCMakeExtension, bAmrWind):
 
         if "+tests" in spec:
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
-            spack_manager_golds_dir = os.getenv("SPACK_MANAGER_GOLDS_DIR", default=spack_manager_local_golds)
+            spack_manager_golds_dir = os.getenv(
+                "SPACK_MANAGER_GOLDS_DIR", default=spack_manager_local_golds
+            )
             saved_golds = os.path.join(spack_manager_golds_dir, "tmp", "amr-wind")
             current_golds = os.path.join(spack_manager_golds_dir, "current", "amr-wind")
             os.makedirs(saved_golds, exist_ok=True)

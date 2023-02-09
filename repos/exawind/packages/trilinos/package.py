@@ -5,24 +5,23 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-from spack import *
-from spack.pkg.builtin.trilinos import Trilinos as bTrilinos
 import os
+
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
 from smpackages import *
 
+from spack import *
+from spack.pkg.builtin.trilinos import Trilinos as bTrilinos
+
+
 class Trilinos(bTrilinos, SMCMakeExtension):
     version("13.4.0.2022.10.27", commit="da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1")
     version("13.2.0.2022.06.05", commit="7498bcb9b0392c830b83787f3fb0c17079431f06")
-    variant("stk_unit_tests", default=False,
-            description="turn on STK unit tests")
-    variant("stk_simd", default=False,
-            description="Enable SIMD in STK")
-    variant("asan", default=False,
-            description="Turn on address sanitizer")
-    variant("pic", default=True,
-            description="Position independent code")
+    variant("stk_unit_tests", default=False, description="turn on STK unit tests")
+    variant("stk_simd", default=False, description="Enable SIMD in STK")
+    variant("asan", default=False, description="Turn on address sanitizer")
+    variant("pic", default=True, description="Position independent code")
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
     patch("rocm_seacas.patch", when="@develop+rocm")
@@ -35,7 +34,10 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     def setup_build_environment(self, env):
         spec = self.spec
         if "+cuda" in spec and "+wrapper" in spec:
-            if spec.variants["build_type"].value == "RelWithDebInfo" or spec.variants["build_type"].value == "Debug":
+            if (
+                spec.variants["build_type"].value == "RelWithDebInfo"
+                or spec.variants["build_type"].value == "Debug"
+            ):
                 env.append_flags("CXXFLAGS", "-Xcompiler -rdynamic -lineinfo")
             if "+mpi" in spec:
                 env.set("OMPI_CXX", spec["kokkos-nvcc-wrapper"].kokkos_cxx)
@@ -59,7 +61,9 @@ class Trilinos(bTrilinos, SMCMakeExtension):
 
         if "+asan" in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer")
-            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
+            env.set(
+                "LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan"))
+            )
 
     def setup_dependent_package(self, module, dependent_spec):
         if "+wrapper" in self.spec:
@@ -94,7 +98,9 @@ class Trilinos(bTrilinos, SMCMakeExtension):
             # Used as an optimization to only list the single specified
             # arch in the offload-arch compile line, but not explicitly necessary
             targets = self.spec.variants["amdgpu_target"].value
-            options.append(self.define("CMAKE_HIP_ARCHITECTURES", ";".join(str(x) for x in targets)))
+            options.append(
+                self.define("CMAKE_HIP_ARCHITECTURES", ";".join(str(x) for x in targets))
+            )
             options.append(self.define("AMDGPU_TARGETS", ";".join(str(x) for x in targets)))
             options.append(self.define("GPU_TARGETS", ";".join(str(x) for x in targets)))
             options.append(self.define("TPL_ENABLE_Boost", False))

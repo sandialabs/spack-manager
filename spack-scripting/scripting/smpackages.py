@@ -8,19 +8,21 @@ import glob
 import os
 import shutil
 
-from spack.package import *
+from spack.builder import run_after
+from spack.directives import depends_on, variant
+from spack.package import CMakePackage
+
 
 class SMCMakeExtension(CMakePackage):
-    variant("ninja", default=False,
-            description="Enable Ninja makefile generator")
+    variant("ninja", default=False, description="Enable Ninja makefile generator")
     depends_on("ninja", type="build", when="+ninja")
 
     @property
     def generator(self):
-          if "+ninja" in self.spec:
-              return "Ninja"
-          else:
-              return "Unix Makefiles"
+        if "+ninja" in self.spec:
+            return "Ninja"
+        else:
+            return "Unix Makefiles"
 
     def do_clean(self):
         super().do_clean()
@@ -35,7 +37,6 @@ class SMCMakeExtension(CMakePackage):
 
             if os.path.isfile(ccjson):
                 os.remove(ccjson)
-
 
     @run_after("cmake")
     def copy_compile_commands(self):
