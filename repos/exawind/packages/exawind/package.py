@@ -12,7 +12,7 @@ import os
 from smpackages import *
 
 
-class Exawind(CMakePackage, SMCMakePackage, CudaPackage, ROCmPackage):
+class Exawind(CMakePackage, SMCMakeExtension, CudaPackage, ROCmPackage):
     """Multi-application driver for Exawind project."""
 
     homepage = "https://github.com/Exawind/exawind-driver"

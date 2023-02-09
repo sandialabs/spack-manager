@@ -9,7 +9,6 @@ from spack import *
 from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
 from spack.pkg.builtin.kokkos import Kokkos
 import os
-from shutil import copyfile
 from manager_cmds.find_machine import find_machine
 from smpackages import *
 
