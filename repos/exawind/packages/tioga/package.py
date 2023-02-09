@@ -8,8 +8,9 @@
 from spack import *
 from spack.pkg.builtin.tioga import Tioga as bTioga
 import os
+from smpackages import *
 
-class Tioga(bTioga):
+class Tioga(bTioga, SMCMakeExtension):
     git = "https://github.com/Exawind/tioga.git"
 
     variant("asan", default=False,
@@ -27,10 +28,3 @@ class Tioga(bTioga):
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
             env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, "sup.asan")))
-
-    @run_after("cmake")
-    def copy_compile_commands(self):
-        if "dev_path" in self.spec:
-            target = os.path.join(self.stage.source_path, "compile_commands.json")
-            source = os.path.join(self.build_directory, "compile_commands.json")
-            copyfile(source, target)
