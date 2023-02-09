@@ -9,9 +9,10 @@ from spack import *
 #from spack.pkg.builtin.exawind import Exawind as bExawind
 from shutil import copyfile
 import os
+from smpackages import *
 
 
-class Exawind(CMakePackage, CudaPackage, ROCmPackage):
+class Exawind(CMakePackage, SMCMakePackage, CudaPackage, ROCmPackage):
     """Multi-application driver for Exawind project."""
 
     homepage = "https://github.com/Exawind/exawind-driver"
@@ -39,8 +40,6 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             description="Enable Nalu-Wind on the GPU")
     variant("stk_simd", default=False,
             description="Enable SIMD in STK")
-    variant("ninja", default=False,
-            description="Enable Ninja makefile generator")
     variant("umpire", default=False,
             description="Enable Umpire")
 
@@ -133,10 +132,3 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             env.set("OMPI_CXX", self.spec["hip"].hipcc)
             env.set("MPICH_CXX", self.spec["hip"].hipcc)
             env.set("MPICXX_CXX", self.spec["hip"].hipcc)
-
-    @run_after("cmake")
-    def copy_compile_commands(self):
-        source = os.path.join(self.build_directory, "compile_commands.json")
-        if self.spec.satisfies("dev_path=*") and os.path.isfile(source):
-            target = os.path.join(self.stage.source_path, "compile_commands.json")
-            copyfile(source, target)

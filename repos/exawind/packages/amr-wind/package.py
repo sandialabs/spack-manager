@@ -8,9 +8,9 @@
 from spack import *
 from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
-from shutil import copyfile
+from smpackages import *
 
-class AmrWind(bAmrWind):
+class AmrWind(SMCMakeExtension, bAmrWind):
 
     variant("asan", default=False,
             description="Turn on address sanitizer")
@@ -20,8 +20,6 @@ class AmrWind(bAmrWind):
             description="Turn on clang-tidy")
     variant("hdf5", default=False,
             description="Enable HDF5 plots with ZFP compression")
-    variant("ninja", default=False,
-            description="Enable Ninja makefile generator")
     variant("umpire", default=False,
             description="Enable Umpire")
 
@@ -29,15 +27,7 @@ class AmrWind(bAmrWind):
     depends_on("hdf5+mpi", when="+hdf5+mpi")
     depends_on("h5z-zfp", when="+hdf5")
     depends_on("zfp", when="+hdf5")
-    depends_on("ninja", type="build", when="+ninja")
     depends_on("hypre+umpire", when="+umpire")
-
-    @property
-    def generator(self):
-          if "+ninja" in self.spec:
-              return "Ninja"
-          else:
-              return "Unix Makefiles"
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
@@ -98,10 +88,3 @@ class AmrWind(bAmrWind):
             cmake_options.append(self.define("AMR_WIND_REFERENCE_GOLDS_DIRECTORY", current_golds))
 
         return cmake_options
-
-    @run_after("cmake")
-    def copy_compile_commands(self):
-        if self.spec.satisfies("dev_path=*"):
-            target = os.path.join(self.stage.source_path, "compile_commands.json")
-            source = os.path.join(self.build_directory, "compile_commands.json")
-            copyfile(source, target)

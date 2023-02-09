@@ -27,6 +27,20 @@ class Hypre2(bHypre):
             if "SPACK_MANAGER_CLEAN_HYPRE" in os.environ:
                 make("clean")
 
+    def do_clean(self):
+        super().do_clean()
+        if not self.stage.managed_by_spack:
+            build_artifacts = glob.glob(os.path.join(self.stage.source_path, "spack-build-*"))
+            for f in build_artifacts:
+                if os.path.isfile(f):
+                    os.remove(f)
+                if os.path.isdir(f):
+                    shutil.rmtree(f)
+            with working_dir(os.path.join(self.stage.source_path, "src")):
+                make = spack.util.executable.which("make")
+                make("clean")
+                make("distclean")
+
     def setup_build_environment(self, env):
         env.set("CFLAGS", self.compiler.cc_pic_flag)
 

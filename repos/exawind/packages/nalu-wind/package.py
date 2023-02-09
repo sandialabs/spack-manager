@@ -11,6 +11,7 @@ from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
 from manager_cmds.find_machine import find_machine
+from smpackages import *
 
 
 def trilinos_version_filter(name):
@@ -20,7 +21,7 @@ def trilinos_version_filter(name):
     else:
         return "stable"
 
-class NaluWind(bNaluWind, ROCmPackage):
+class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
     version("master", branch="master", submodules=True)
 
     variant("asan", default=False,
@@ -29,8 +30,6 @@ class NaluWind(bNaluWind, ROCmPackage):
             description="Use FSI branch of openfast")
     variant("stk_simd", default=False,
             description="Enable SIMD in STK")
-    variant("ninja", default=False,
-            description="Enable Ninja makefile generator")
     variant("shared", default=True,
             description="Build shared libraries")
     variant("hypre2", default=False,
@@ -63,15 +62,6 @@ class NaluWind(bNaluWind, ROCmPackage):
 
     for std in cxxstd:
         depends_on("trilinos cxxstd=%s" % std, when="cxxstd=%s" % std)
-
-    depends_on("ninja", type="build", when="+ninja")
-
-    @property
-    def generator(self):
-          if "+ninja" in self.spec:
-              return "Ninja"
-          else:
-              return "Unix Makefiles"
 
     def setup_build_environment(self, env):
         if "~stk_simd" in self.spec:
@@ -143,10 +133,3 @@ class NaluWind(bNaluWind, ROCmPackage):
             cmake_options.append(self.define("NALU_WIND_REFERENCE_GOLDS_DIR", current_golds))
 
         return cmake_options
-
-    @run_after("cmake")
-    def copy_compile_commands(self):
-        if self.spec.satisfies("dev_path=*"):
-            target = os.path.join(self.stage.source_path, "compile_commands.json")
-            source = os.path.join(self.build_directory, "compile_commands.json")
-            copyfile(source, target)
