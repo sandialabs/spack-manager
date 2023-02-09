@@ -8,6 +8,6 @@
 from spack.pkg.builtin.openfast import Openfast as bOpenfast
 
 class Openfast(bOpenfast):
-    patch("hub_seg_fault.patch", when="@2.6:3.2")
+    patch("hub_seg_fault.patch", when="@2.7:3.2")
     patch("segfault_message.patch", when="%clang@12.0.1 build_type=RelWithDebInfo")
     version("fsi", git="https://github.com/gantech/openfast.git", branch="f/br_fsi_2")
