@@ -1,6 +1,8 @@
 from spack import *
 from spack.pkg.builtin.hypre import Hypre as bHypre
+import glob
 import os
+import shutil
 
 class Hypre2(bHypre):
 
