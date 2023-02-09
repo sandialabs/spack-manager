@@ -5,24 +5,21 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import inspect
-import os
-import re
-from shutil import copyfile
-
-import manager_cmds.find_machine as fm
-from manager_cmds.find_machine import find_machine
-
-import spack.config
 from spack import *
 from spack.pkg.exawind.nalu_wind import NaluWind as bNaluWind
 from spack.pkg.exawind.nalu_wind import trilinos_version_filter
+import spack.config
+import os
+from shutil import copyfile
+import inspect
+import re
 from spack.util.executable import ProcessError
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 
 class NaluWindNightly(bNaluWind, CudaPackage):
     """Extension of Nalu-Wind for nightly build and test"""
-
     maintainers = ["psakievich"]
 
     version("master", branch="master", submodules=True)
@@ -58,9 +55,7 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         enabled = [v for v in printable if self.spec.variants[v].value]
 
         build_type = self.spec.format("{variants.build_type}").split("=")[1]
-        formatted = "".join(
-            [self.spec.format("{variants." + variant + "}") for variant in enabled]
-        )
+        formatted = "".join([self.spec.format("{variants." + variant + "}") for variant in enabled])
         return build_type + formatted
 
     def ctest_args(self):
@@ -81,10 +76,10 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         cmake_options.remove("-G")
-        cmake_options.remove("Unix Makefiles")  # The space causes problems for ctest
+        cmake_options.remove("Unix Makefiles") # The space causes problems for ctest
         if "%intel" in spec and "-DBoost_NO_BOOST_CMAKE=ON" in cmake_options:
-            cmake_options.remove("-DBoost_NO_BOOST_CMAKE=ON")  # Avoid dashboard warning
-        if "+cuda" in spec:
+            cmake_options.remove("-DBoost_NO_BOOST_CMAKE=ON") # Avoid dashboard warning
+        if '+cuda' in spec:
             cmake_options.append(self.define("TEST_ABS_TOL", "1e-10"))
             cmake_options.append(self.define("TEST_REL_TOL", "1e-8"))
         if machine == "eagle" and "%intel" in spec:
@@ -92,28 +87,20 @@ class NaluWindNightly(bNaluWind, CudaPackage):
 
         # Ctest options
         ctest_options = []
-        ctest_options.extend(
-            [
-                self.define("TESTING_ROOT_DIR", self.stage.path),
-                self.define("NALU_DIR", self.stage.source_path),
-                self.define("BUILD_DIR", self.build_directory),
-            ]
-        )
-        if "+cuda" in spec:
+        ctest_options.extend([self.define("TESTING_ROOT_DIR", self.stage.path),
+            self.define("NALU_DIR", self.stage.source_path),
+            self.define("BUILD_DIR", self.build_directory)])
+        if '+cuda' in spec:
             ctest_options.append(self.define("CTEST_DISABLE_OVERLAPPING_TESTS", True))
             # What is this variable doing? Is it generic to CUDA machines or do we just need it for eagle?
             ctest_options.append(self.define("UNSET_TMPDIR_VAR", True))
-        ctest_options.append(
-            self.define("CMAKE_CONFIGURE_ARGS", " ".join(v for v in cmake_options))
-        )
+        ctest_options.append(self.define("CMAKE_CONFIGURE_ARGS"," ".join(v for v in cmake_options)))
         ctest_options.append(self.define("HOST_NAME", spec.variants["host_name"].value))
         ctest_options.append(self.define("EXTRA_BUILD_NAME", spec.variants["extra_name"].value))
         ctest_options.append(self.define("NP", spack.config.get("config:build_jobs")))
         ctest_options.append("-VV")
         ctest_options.append("-S")
-        ctest_options.append(
-            os.path.join(self.stage.source_path, "reg_tests", "CTestNightlyScript.cmake")
-        )
+        ctest_options.append(os.path.join(self.stage.source_path,"reg_tests","CTestNightlyScript.cmake"))
 
         return ctest_options
 

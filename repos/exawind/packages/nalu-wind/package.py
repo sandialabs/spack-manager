@@ -5,15 +5,13 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+from spack import *
+from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
+from spack.pkg.builtin.kokkos import Kokkos
 import os
 from shutil import copyfile
-
 from manager_cmds.find_machine import find_machine
 from smpackages import *
-
-from spack import *
-from spack.pkg.builtin.kokkos import Kokkos
-from spack.pkg.builtin.nalu_wind import NaluWind as bNaluWind
 
 
 def trilinos_version_filter(name):
@@ -23,26 +21,25 @@ def trilinos_version_filter(name):
     else:
         return "stable"
 
-
 class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
     version("master", branch="master", submodules=True)
 
-    variant("asan", default=False, description="Turn on address sanitizer")
-    variant("fsi", default=False, description="Use FSI branch of openfast")
-    variant("stk_simd", default=False, description="Enable SIMD in STK")
-    variant("shared", default=True, description="Build shared libraries")
-    variant("hypre2", default=False, description="Compile with namespaced Hypre support")
-    variant("umpire", default=False, description="Enable Umpire")
-    conflicts(
-        "+shared",
-        when="+cuda",
-        msg="invalid device functions are generated with shared libs and cuda",
-    )
-    conflicts(
-        "+shared",
-        when="+rocm",
-        msg="invalid device functions are generated with shared libs and rocm",
-    )
+    variant("asan", default=False,
+            description="Turn on address sanitizer")
+    variant("fsi", default=False,
+            description="Use FSI branch of openfast")
+    variant("stk_simd", default=False,
+            description="Enable SIMD in STK")
+    variant("shared", default=True,
+            description="Build shared libraries")
+    variant("hypre2", default=False,
+            description="Compile with namespaced Hypre support")
+    variant("umpire", default=False,
+            description="Enable Umpire")
+    conflicts("+shared", when="+cuda",
+             msg="invalid device functions are generated with shared libs and cuda")
+    conflicts("+shared", when="+rocm",
+             msg="invalid device functions are generated with shared libs and rocm")
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
     conflicts("openfast@fsi", when="~fsi")
@@ -54,19 +51,12 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
     depends_on("openfast@fsi+netcdf+cxx", when="+fsi")
 
     for _arch in ROCmPackage.amdgpu_targets:
-        depends_on(
-            "trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(
-                _arch
-            ),
-            when="+rocm amdgpu_target={0}".format(_arch),
-        )
-        depends_on(
-            "hypre+rocm amdgpu_target={0}".format(_arch),
-            when="+hypre+rocm amdgpu_target={0}".format(_arch),
-        )
+        depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
+                   when="+rocm amdgpu_target={0}".format(_arch))
+        depends_on("hypre+rocm amdgpu_target={0}".format(_arch), when="+hypre+rocm amdgpu_target={0}".format(_arch))
 
-    cxxstd = ["14", "17"]
-    variant("cxxstd", default="17", values=cxxstd, multi=False)
+    cxxstd=["14", "17"]
+    variant("cxxstd", default="17", values=cxxstd,  multi=False)
     variant("tests", default=True, description="Activate regression tests")
     variant("unit-tests", default=True, description="Activate unit tests")
 
@@ -77,15 +67,8 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
         if "~stk_simd" in self.spec:
             env.append_flags("CXXFLAGS", "-DUSE_STK_SIMD_NONE")
         if "+asan" in self.spec:
-            env.append_flags(
-                "CXXFLAGS",
-                "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(
-                    join_path(self.package_dir, "blacklist.asan")
-                ),
-            )
-            env.set(
-                "LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan"))
-            )
+            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, "blacklist.asan")))
+            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
             env.set("ASAN_OPTIONS", "detect_container_overflow=0")
         if "+cuda" in self.spec:
             env.set("CUDA_LAUNCH_BLOCKING", "1")
@@ -94,7 +77,7 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
             env.set("MPICH_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
             env.set("MPICXX_CXX", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
         if "+rocm" in self.spec:
-            env.append_flags("CXXFLAGS", "-fgpu-rdc")
+            env.append_flags('CXXFLAGS', '-fgpu-rdc')
 
     def cmake_args(self):
         spec = self.spec
@@ -110,7 +93,7 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
             cmake_options.append(self.define("MPIEXEC_NUMPROC_FLAG", "--ntasks"))
 
         if spec.satisfies("dev_path=*"):
-            cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS", True))
+            cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
             cmake_options.append(self.define("ENABLE_TESTS", True))
 
         if "+umpire" in spec:
@@ -137,13 +120,9 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
 
         if spec.satisfies("+tests") or self.run_tests or spec.satisfies("dev_path=*"):
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
-            spack_manager_golds_dir = os.getenv(
-                "SPACK_MANAGER_GOLDS_DIR", default=spack_manager_local_golds
-            )
+            spack_manager_golds_dir = os.getenv("SPACK_MANAGER_GOLDS_DIR", default=spack_manager_local_golds)
             if "+snl" in spec:
-                spack_manager_golds_dir = "{}-{}".format(
-                    spack_manager_golds_dir, trilinos_version_filter(spec["trilinos"].version)
-                )
+                spack_manager_golds_dir = "{}-{}".format(spack_manager_golds_dir, trilinos_version_filter(spec["trilinos"].version))
 
             saved_golds = os.path.join(spack_manager_golds_dir, "tmp", "nalu-wind")
             current_golds = os.path.join(spack_manager_golds_dir, "current", "nalu-wind")

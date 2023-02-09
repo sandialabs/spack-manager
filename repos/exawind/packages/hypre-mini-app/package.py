@@ -9,10 +9,10 @@ from spack import *
 
 
 class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
-    """HYPRE mini-app for use with Nalu-Wind linear systems."""
+    """HYPRE mini-app for use with Nalu-Wind linear systems. """
 
     homepage = "https://github.com/Exawind/hypre-mini-app"
-    git = "https://github.com/Exawind/hypre-mini-app.git"
+    git      = "https://github.com/Exawind/hypre-mini-app.git"
 
     maintainers = ["jrood-nrel"]
 
@@ -20,15 +20,20 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
 
     version("master", branch="master", submodules=True)
 
-    variant("umpire", default=False, description="Enable Umpire")
+    variant("umpire", default=False,
+            description="Enable Umpire")
 
-    variant("unified-memory", default=False, description="Enable Unified Memory in hypre")
+    variant("unified-memory", default=False,
+            description="Enable Unified Memory in hypre")
 
-    variant("gpu-aware-mpi", default=False, description="gpu-aware-mpi")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
 
-    variant("rocblas", default=False, description="use rocblas")
+    variant("rocblas", default=False,
+            description="use rocblas")
 
-    variant("cublas", default=False, description="use cublas")
+    variant("cublas", default=False,
+            description="use cublas")
 
     depends_on("mpi")
     depends_on("hypre+mpi@2.20.0:")
@@ -39,9 +44,11 @@ class HypreMiniApp(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("hypre+rocblas", when="+rocblas")
     depends_on("hypre+cublas", when="+cublas")
     for arch in CudaPackage.cuda_arch_values:
-        depends_on("hypre+cuda cuda_arch=%s @2.20.0:" % arch, when="+cuda cuda_arch=%s" % arch)
+        depends_on("hypre+cuda cuda_arch=%s @2.20.0:" % arch,
+                   when="+cuda cuda_arch=%s" % arch)
     for arch in ROCmPackage.amdgpu_targets:
-        depends_on("hypre+rocm amdgpu_target=%s" % arch, when="+rocm amdgpu_target=%s" % arch)
+        depends_on("hypre+rocm amdgpu_target=%s" % arch,
+                   when="+rocm amdgpu_target=%s" % arch)
 
     def cmake_args(self):
         args = [

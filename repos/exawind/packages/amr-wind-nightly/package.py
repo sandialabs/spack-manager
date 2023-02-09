@@ -5,31 +5,27 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import inspect
-import os
-import re
-from shutil import copyfile
-
-import manager_cmds.find_machine as fm
-from manager_cmds.find_machine import find_machine
-
-import spack.config
 from spack import *
 from spack.pkg.exawind.amr_wind import AmrWind as bAmrWind
+import spack.config
+import os
+from shutil import copyfile
+import inspect
+import re
 from spack.util.executable import ProcessError
-
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 def variant_peeler(var_str):
     """strip out everything but + variants and build types"""
     output = ""
     # extract all the + variants
     for match in re.finditer(r"(?<=\+)([a-z0-9]*)", var_str):
-        output += "+{v}".format(v=var_str[match.start() : match.end()])
+        output+="+{v}".format(v=var_str[match.start(): match.end()])
     # extract build type
     for match in re.finditer("r(?<=build_type=)(a-zA-Z)", var_str):
-        output = var_str[match.start() : match.end()] + " " + output
+        output = var_str[match.start():match.end()] + " " + output
     return output
-
 
 class AmrWindNightly(bAmrWind):
     """Extension of amr-wind for nightly build and test"""
@@ -51,46 +47,34 @@ class AmrWindNightly(bAmrWind):
         if spec.variants["extra_name"].value == "default":
             spec.variants["extra_name"].value = spec.format("-{compiler}")
             if "+cuda" in spec:
-                spec.variants["extra_name"].value = (
-                    spec.variants["extra_name"].value + "-cuda@" + str(spec["cuda"].version)
-                )
+                spec.variants["extra_name"].value = spec.variants["extra_name"].value + "-cuda@" + str(spec["cuda"].version)
             if spec.variants["latest_amrex"].value == True:
-                spec.variants["extra_name"].value = (
-                    spec.variants["extra_name"].value + "-latest-amrex"
-                )
+                spec.variants["extra_name"].value = spec.variants["extra_name"].value + "-latest-amrex"
 
         # Cmake options for ctest
         cmake_options = self.std_cmake_args
         cmake_options += self.cmake_args()
         cmake_options.remove("-G")
-        cmake_options.remove("Unix Makefiles")  # The space causes problems for ctest
+        cmake_options.remove("Unix Makefiles") # The space causes problems for ctest
 
         # Ctest options
         ctest_options = []
-        ctest_options.extend(
-            [
-                self.define("TESTING_ROOT_DIR", self.stage.path),
-                self.define("SOURCE_DIR", self.stage.source_path),
-                self.define("BUILD_DIR", self.build_directory),
-            ]
-        )
+        ctest_options.extend([self.define("TESTING_ROOT_DIR", self.stage.path),
+            self.define("SOURCE_DIR", self.stage.source_path),
+            self.define("BUILD_DIR", self.build_directory)])
         if machine == "eagle.hpc.nrel.gov":
             ctest_options.append(self.define("CTEST_DISABLE_OVERLAPPING_TESTS", True))
             ctest_options.append(self.define("UNSET_TMPDIR_VAR", True))
             if "+cuda" in spec:
                 cmake_options.append(self.define("GPUS_PER_NODE", "2"))
-        ctest_options.append(
-            self.define("CMAKE_CONFIGURE_ARGS", " ".join(v for v in cmake_options))
-        )
+        ctest_options.append(self.define("CMAKE_CONFIGURE_ARGS"," ".join(v for v in cmake_options)))
         ctest_options.append(self.define("HOST_NAME", spec.variants["host_name"].value))
         ctest_options.append(self.define("EXTRA_BUILD_NAME", spec.variants["extra_name"].value))
         ctest_options.append(self.define("USE_LATEST_AMREX", spec.variants["latest_amrex"].value))
         ctest_options.append(self.define("NP", spack.config.get("config:build_jobs")))
         ctest_options.append("-VV")
         ctest_options.append("-S")
-        ctest_options.append(
-            os.path.join(self.stage.source_path, "test", "CTestNightlyScript.cmake")
-        )
+        ctest_options.append(os.path.join(self.stage.source_path,"test","CTestNightlyScript.cmake"))
 
         return ctest_options
 

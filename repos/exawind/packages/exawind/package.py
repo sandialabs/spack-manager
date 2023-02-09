@@ -5,14 +5,11 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
-
-# from spack.pkg.builtin.exawind import Exawind as bExawind
-from shutil import copyfile
-
-from smpackages import *
-
 from spack import *
+#from spack.pkg.builtin.exawind import Exawind as bExawind
+from shutil import copyfile
+import os
+from smpackages import *
 
 
 class Exawind(CMakePackage, SMCMakePackage, CudaPackage, ROCmPackage):
@@ -29,42 +26,35 @@ class Exawind(CMakePackage, SMCMakePackage, CudaPackage, ROCmPackage):
     # to avoid cloning the mesh submodule
     version("master", branch="main", submodules=True)
 
-    variant("asan", default=False, description="turn on address sanitizer")
-    variant("openfast", default=False, description="Enable OpenFAST integration")
-    variant("fsi", default=False, description="Enable OpenFAST FSI integration")
-    variant("hypre", default=True, description="Enable hypre solver")
-    variant("amr_wind_gpu", default=False, description="Enable AMR-Wind on the GPU")
-    variant("nalu_wind_gpu", default=False, description="Enable Nalu-Wind on the GPU")
-    variant("stk_simd", default=False, description="Enable SIMD in STK")
-    variant("umpire", default=False, description="Enable Umpire")
+    variant("asan", default=False,
+            description="turn on address sanitizer")
+    variant("openfast", default=False,
+            description="Enable OpenFAST integration")
+    variant("fsi", default=False,
+            description="Enable OpenFAST FSI integration")
+    variant("hypre", default=True,
+            description="Enable hypre solver")
+    variant("amr_wind_gpu", default=False,
+            description="Enable AMR-Wind on the GPU")
+    variant("nalu_wind_gpu", default=False,
+            description="Enable Nalu-Wind on the GPU")
+    variant("stk_simd", default=False,
+            description="Enable SIMD in STK")
+    variant("umpire", default=False,
+            description="Enable Umpire")
 
     conflicts("+amr_wind_gpu", when="~cuda~rocm")
     conflicts("+nalu_wind_gpu", when="~cuda~rocm")
 
     for arch in CudaPackage.cuda_arch_values:
-        depends_on(
-            "amr-wind+cuda cuda_arch=%s" % arch, when="+amr_wind_gpu+cuda cuda_arch=%s" % arch
-        )
-        depends_on(
-            "nalu-wind+cuda cuda_arch=%s" % arch, when="+nalu_wind_gpu+cuda cuda_arch=%s" % arch
-        )
-        depends_on(
-            "trilinos+cuda cuda_arch=%s" % arch, when="+nalu_wind_gpu+cuda cuda_arch=%s" % arch
-        )
+        depends_on("amr-wind+cuda cuda_arch=%s" % arch, when="+amr_wind_gpu+cuda cuda_arch=%s" % arch)
+        depends_on("nalu-wind+cuda cuda_arch=%s" % arch, when="+nalu_wind_gpu+cuda cuda_arch=%s" % arch)
+        depends_on("trilinos+cuda cuda_arch=%s" % arch, when="+nalu_wind_gpu+cuda cuda_arch=%s" % arch)
 
     for arch in ROCmPackage.amdgpu_targets:
-        depends_on(
-            "amr-wind+rocm amdgpu_target=%s" % arch,
-            when="+amr_wind_gpu+rocm amdgpu_target=%s" % arch,
-        )
-        depends_on(
-            "nalu-wind+rocm amdgpu_target=%s" % arch,
-            when="+nalu_wind_gpu+rocm amdgpu_target=%s" % arch,
-        )
-        depends_on(
-            "trilinos+rocm amdgpu_target=%s" % arch,
-            when="+nalu_wind_gpu+rocm amdgpu_target=%s" % arch,
-        )
+        depends_on("amr-wind+rocm amdgpu_target=%s" % arch, when="+amr_wind_gpu+rocm amdgpu_target=%s" % arch)
+        depends_on("nalu-wind+rocm amdgpu_target=%s" % arch, when="+nalu_wind_gpu+rocm amdgpu_target=%s" % arch)
+        depends_on("trilinos+rocm amdgpu_target=%s" % arch, when="+nalu_wind_gpu+rocm amdgpu_target=%s" % arch)
 
     depends_on("nalu-wind+tioga")
     depends_on("amr-wind+netcdf+mpi")
@@ -99,7 +89,7 @@ class Exawind(CMakePackage, SMCMakePackage, CudaPackage, ROCmPackage):
         args = super(Exawind, self).cmake_args()
 
         if spec.satisfies("dev_path=*"):
-            args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS", True))
+            args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
 
         args.append(self.define("MPI_HOME", spec["mpi"].prefix))
 
@@ -132,15 +122,8 @@ class Exawind(CMakePackage, SMCMakePackage, CudaPackage, ROCmPackage):
         if "~stk_simd" in self.spec:
             env.append_flags("CXXFLAGS", "-DUSE_STK_SIMD_NONE")
         if "+asan" in self.spec:
-            env.append_flags(
-                "CXXFLAGS",
-                "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(
-                    join_path(self.package_dir, "blacklist.asan")
-                ),
-            )
-            env.set(
-                "LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan"))
-            )
+            env.append_flags("CXXFLAGS", "-fsanitize=address -fno-omit-frame-pointer -fsanitize-blacklist={0}".format(join_path(self.package_dir, "blacklist.asan")))
+            env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
             env.set("ASAN_OPTIONS", "detect_container_overflow=0")
         if "+rocm+amr_wind_gpu~nalu_wind_gpu" in self.spec:
             # Manually turn off device self.defines to solve Kokkos issues in Nalu-Wind headers
