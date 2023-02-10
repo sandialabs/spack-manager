@@ -119,12 +119,12 @@ See below for an example of how to use option2.
 
 ```console
 # create an environment and acticate it with "quick-create"
+# then clone the "amr-feature" branch from a user specific fork of the amr-wind git repo
+# then clone the "openfast-feature" branch from a user specific fork of the openfast git repo
+# finally build the software using the source code that was just cloned
 quick-create -n build-from-my-fork -s amr-wind+openfast
-# clone the "amr-feature" branch from a user specific fork of the amr-wind git repo
 spack manager develop --repo-branch git@github.com:psakievich/amr-wind.git amr-feature amr-wind@main
-# clone the "openfast-feature" branch from a user specific fork of the openfast git repo
 spack manager develop --repo-branch git@github.com:psakievich/openfast.git openfast-feature openfast@master
-# build the software using the source code that was just cloned
 spack install
 ```
 
