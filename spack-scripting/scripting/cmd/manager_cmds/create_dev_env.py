@@ -52,7 +52,7 @@ def create_dev_env(parser, args):
             dev_args.extend(["--path", env.yaml["spack"]["develop"][str(s.name)]["path"]])
         if "trilinos" in str(s.name):
             dev_args.extend(["-rb", "git@github.com:trilinos/trilinos.git", str(s.version)])
-        dev_args.append(str(s))
+        dev_args.append(str(s.format("{name}{@version}")))
         develop(dev_args)
     ev.deactivate()
 
