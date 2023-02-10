@@ -20,8 +20,8 @@ class Tioga(bTioga, SMCMakeExtension):
         spec = self.spec
         options = super(Tioga, self).cmake_args()
 
-        if "dev_path" in spec:
-            options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
+        if spec.satisfies("dev_path=*"):
+            cmake_options.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
 
         return options
 
