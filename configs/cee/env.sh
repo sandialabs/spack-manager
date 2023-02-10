@@ -1,4 +1,4 @@
-// Convenience function for running clang-format
+# Convenience function for running clang-format
 function run-nalu-clang-format()
 {
 spack cd -s nalu-wind
