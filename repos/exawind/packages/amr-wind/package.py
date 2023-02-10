@@ -18,6 +18,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="Turn on cppcheck")
     variant("clangtidy", default=False,
             description="Turn on clang-tidy")
+    variant("tinyprofile", default=False,
+            description="Turn on tiny profile")
     variant("hdf5", default=False,
             description="Enable HDF5 plots with ZFP compression")
     variant("umpire", default=False,
@@ -52,6 +54,9 @@ class AmrWind(SMCMakeExtension, bAmrWind):
         if "+umpire" in self.spec:
             cmake_options.append(self.define_from_variant("AMR_WIND_ENABLE_UMPIRE", "umpire"))
             cmake_options.append(self.define("UMPIRE_DIR", self.spec["umpire"].prefix))
+
+        if "+tinyprofile" in self.spec:
+            cmake_options.append(self.define("AMR_WIND_ENABLE_TINY_PROFILE", True))
 
         if "+cuda" in self.spec:
             targets = self.spec.variants["cuda_arch"].value
