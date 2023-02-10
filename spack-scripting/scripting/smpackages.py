@@ -43,4 +43,5 @@ class SMCMakeExtension(CMakePackage):
         if self.spec.satisfies("dev_path=*"):
             target = os.path.join(self.stage.source_path, "compile_commands.json")
             source = os.path.join(self.build_directory, "compile_commands.json")
-            shutil.copyfile(source, target)
+            if os.path.isfile(source):
+                shutil.copyfile(source, target)
