@@ -107,12 +107,7 @@ def test_errorsIfThereIsNoView(tmpdir):
         path = tmpdir.join("spack.yaml")
         with open(str(path), "w") as f:
             f.write(yaml_file)
-        env(
-            "create",
-            "-d",
-            "test",
-            "spack.yaml",
-        )
+        env("create", "-d", "test", "spack.yaml")
         args = ParserMock(ext_env)
         with pytest.raises(SystemExit):
             with ev.Environment("test"):
@@ -144,12 +139,7 @@ def evaluate_external(tmpdir, yaml_file):
     with open(str(manifest), "w") as f:
         f.write(yaml_file)
 
-    env(
-        "create",
-        "-d",
-        "test",
-        "spack.yaml",
-    )
+    env("create", "-d", "test", "spack.yaml")
     assert os.path.isfile("test/spack.yaml")
 
     with ev.Environment("test") as e:
