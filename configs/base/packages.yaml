@@ -1,6 +1,8 @@
 packages:
   ascent:
     variants: ~fortran~openmp
+  amr-wind:
+    variants: +tiny_profile
   conduit:
     variants: ~fortran~hdf5_compat
   boost:
