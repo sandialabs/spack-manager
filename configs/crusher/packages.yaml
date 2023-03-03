@@ -104,7 +104,7 @@ packages:
         modules:
           - umpire/6.0.0
   trilinos:
-    require: "@develop"
+    require: "@13.4.0.2023.02.28"
   nalu-wind:
     variants: ~trilinos-solvers
   libffi:
