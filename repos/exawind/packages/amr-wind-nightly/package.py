@@ -66,7 +66,7 @@ class AmrWindNightly(bAmrWind):
             ctest_options.append(self.define("CTEST_DISABLE_OVERLAPPING_TESTS", True))
             ctest_options.append(self.define("UNSET_TMPDIR_VAR", True))
             if "+cuda" in spec:
-                cmake_options.append(self.define("GPUS_PER_NODE", "2"))
+                cmake_options.append(self.define("GPUS_PER_NODE", "1"))
         ctest_options.append(self.define("CMAKE_CONFIGURE_ARGS"," ".join(v for v in cmake_options)))
         ctest_options.append(self.define("HOST_NAME", spec.variants["host_name"].value))
         ctest_options.append(self.define("EXTRA_BUILD_NAME", spec.variants["extra_name"].value))
