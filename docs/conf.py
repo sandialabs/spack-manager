@@ -1,5 +1,5 @@
 extensions = ['myst_parser']
-myst_heading_anchors = 2
+myst_heading_anchors = 3
 templates_path = ['_templates']
 master_doc = 'index'
 project = u'Spack-Manager'
