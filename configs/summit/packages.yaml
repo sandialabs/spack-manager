@@ -43,12 +43,12 @@ packages:
         modules:
           - parallel-netcdf/1.12.2
   cmake:
-    version: [3.21.3]
+    version: [3.23.2]
     buildable: false
     externals:
-      - spec: "cmake@3.21.3%gcc"
+      - spec: "cmake@3.23.2%gcc"
         modules:
-          - cmake/3.21.3
+          - cmake/3.23.2
   zlib:
     version: [1.2.11]
     buildable: false
