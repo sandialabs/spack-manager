@@ -13,6 +13,10 @@ from manager_cmds.find_machine import find_machine
 from smpackages import *
 
 class Trilinos(bTrilinos, SMCMakeExtension):
+    # Our custom release versions should be the latest release tag found on
+    # the trilinos github page appended with the date of the commit.
+    # this preserves the Trilinos versioning scheme and will allow for valid
+    # version comparisons in spack's internals.
     version("13.4.0.2023.02.28", commit="8b3e2e1")
     version("13.4.0.2022.10.27", commit="da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1")
     version("13.2.0.2022.06.05", commit="7498bcb9b0392c830b83787f3fb0c17079431f06")
