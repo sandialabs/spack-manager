@@ -35,7 +35,7 @@ class Trilinos(bTrilinos, SMCMakeExtension):
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
-        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.5.0.2022.12.15")
+        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.4.0.2022.12.15")
 
     def setup_build_environment(self, env):
         spec = self.spec
