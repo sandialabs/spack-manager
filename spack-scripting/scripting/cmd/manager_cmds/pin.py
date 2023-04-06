@@ -8,7 +8,7 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
-from manager_utils import pruned_spec_string
+from manager_utils import command, pruned_spec_string
 
 import llnl.util.tty as tty
 
@@ -113,7 +113,7 @@ def pin_env(parser, args):
         cargs.append("--fresh")
 
     print("Concretizing environment to resolve DAG")
-    concretize(*cargs)
+    command(concretize, *cargs)
 
     roots = list(env.roots())
 
@@ -140,7 +140,7 @@ def pin_env(parser, args):
     env._re_read()
 
     print("Reconcretizing with updated specs")
-    concretize(*cargs)
+    command(concretize, *cargs)
 
 
 def setup_parser_args(sub_parser):

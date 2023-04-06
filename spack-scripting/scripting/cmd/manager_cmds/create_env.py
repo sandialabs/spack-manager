@@ -41,7 +41,6 @@ def create_env(parser, args):
     if args.yaml:
         assert os.path.isfile(args.yaml)
         with open(args.yaml, "r") as fyaml:
-            print(fyaml)
             user_yaml = syaml.load_config(fyaml)
             user_view = environment.config_dict(user_yaml).get("view")
             if user_view:

@@ -2,6 +2,7 @@
 spack
 stage
 environments
+snapshots
 golds
 logs
 tmp
@@ -9,9 +10,9 @@ views
 modules
 cache
 configs/user
-.bootstrap
-.jython_cache
+stage
 # file types
+Makefile
 __pycache__
 *.lock
 .spack-env/
