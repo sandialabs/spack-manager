@@ -1,75 +1,75 @@
 packages:
   cray-mpich:
-    require: "@8.1.17"
+    require: "@8.1.23"
     buildable: false
     externals:
-      - spec: "cray-mpich@8.1.17%clang@15.0.0"
-        prefix: /opt/cray/pe/mpich/8.1.17/ofi/amd/5.0
+      - spec: "cray-mpich@8.1.23%clang@15.0.0"
+        prefix: /opt/cray/pe/mpich/8.1.23/ofi/amd/5.0
         modules:
-          - cray-mpich/8.1.17
+          - cray-mpich/8.1.23
           - craype-network-ofi
   rocprim:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: rocprim@5.4.0
-        prefix: /opt/rocm-5.4.0/rocprim
+      - spec: rocprim@5.4.3
+        prefix: /opt/rocm-5.4.3/rocprim
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   rocrand:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: rocrand@5.4.0
-        prefix: /opt/rocm-5.4.0/rocrand
+      - spec: rocrand@5.4.3
+        prefix: /opt/rocm-5.4.3/rocrand
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   rocthrust:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: rocthrust@5.4.0
-        prefix: /opt/rocm-5.4.0/rocthrust
+      - spec: rocthrust@5.4.3
+        prefix: /opt/rocm-5.4.3/rocthrust
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   rocsparse:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: rocsparse@5.4.0
-        prefix: /opt/rocm-5.4.0/rocsparse
+      - spec: rocsparse@5.4.3
+        prefix: /opt/rocm-5.4.3/rocsparse
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   hip:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: hip@5.4.0
-        prefix: /opt/rocm-5.4.0
+      - spec: hip@5.4.3
+        prefix: /opt/rocm-5.4.3
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   hsa-rocr-dev:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: hsa-rocr-dev@5.4.0
-        prefix: /opt/rocm-5.4.0/hsa
+      - spec: hsa-rocr-dev@5.4.3
+        prefix: /opt/rocm-5.4.3/hsa
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   llvm-amdgpu:
-    require: "@5.4.0"
+    require: "@5.4.3"
     buildable: false
     externals:
-      - spec: llvm-amdgpu@5.4.0
-        prefix: /opt/rocm-5.4.0/llvm
+      - spec: llvm-amdgpu@5.4.3
+        prefix: /opt/rocm-5.4.3/llvm
         modules:
-          - rocm/5.4.0
+          - rocm/5.4.3
           - craype-accel-amd-gfx90a
   cmake:
     require: "@3.23.2"
@@ -113,7 +113,7 @@ packages:
     compiler:
       - clang@15.0.0
     providers:
-      mpi: [cray-mpich@8.1.17]
+      mpi: [cray-mpich@8.1.23]
       blas: [openblas]
       lapack: [openblas]
     variants: build_type=Release amdgpu_target=gfx90a
