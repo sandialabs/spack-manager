@@ -16,6 +16,6 @@ compilers:
       - libfabric
       - craype-x86-trento
       extra_rpaths: []
-      #environment:
-      #  prepend_path:
-      #    PKG_CONFIG_PATH: /opt/cray/xpmem/2.4.4-2.3_11.2__gff0e1d9.shasta/lib64/pkgconfig
+      environment:
+        prepend_path:
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.5.2-2.4_3.30__gd0f7936.shasta/lib64/pkgconfig/
