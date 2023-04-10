@@ -1,0 +1,3 @@
+config:
+  install_tree:
+    root: /lustre/$user/exawind/software/opt
