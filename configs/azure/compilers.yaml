@@ -1,0 +1,13 @@
+compilers:
+  - compiler:
+      spec: gcc@9.2.0
+      paths:
+        cc: /opt/gcc-9.2.0/bin/gcc
+        cxx: /opt/gcc-9.2.0/bin/g++
+        f77: /opt/gcc-9.2.0/bin/gfortran
+        fc: /opt/gcc-9.2.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: any
+      modules: []
+      extra_rpaths: []
