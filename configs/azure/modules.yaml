@@ -1,6 +1,0 @@
-modules:
-  default:
-    roots:
-     tcl:    /lustre/$user/exawind/software/modules
-    enable:
-      - tcl
