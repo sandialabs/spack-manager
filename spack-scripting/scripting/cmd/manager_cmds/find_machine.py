@@ -39,11 +39,13 @@ def is_jlse(hostname):
             return True
     return False
 
+
 def is_azure():
     if "CYCLECLOUD_HOME" in os.environ:
         return True
     else:
         return False
+
 
 def is_e4s():
     if "E4S_MACHINE" in os.environ:
