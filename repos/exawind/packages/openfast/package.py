@@ -17,5 +17,5 @@ class Openfast(bOpenfast):
     def setup_build_environment(self, env):
         spec = self.spec
         machine = find_machine(verbose=False, full_machine_name=False)
-        if machine == "crusher":
+        if machine == "crusher" or machine == "frontier":
             env.unset("SPACK_TARGET_ARGS")
