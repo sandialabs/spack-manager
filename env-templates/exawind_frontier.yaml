@@ -1,0 +1,12 @@
+spack:
+  include:
+  - include.yaml
+  concretizer:
+    unify: false
+    reuse: false
+  view: false
+  specs:
+    - 'exawind+ninja+hypre+amr_wind_gpu+nalu_wind_gpu+rocm+fsi'
+    - 'exawind+ninja+hypre+amr_wind_gpu+nalu_wind_gpu+rocm'
+    - 'exawind+ninja+hypre+amr_wind_gpu~nalu_wind_gpu+rocm'
+    - 'exawind+ninja+hypre~amr_wind_gpu~nalu_wind_gpu'
