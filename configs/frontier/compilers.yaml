@@ -10,7 +10,7 @@ compilers:
       operating_system: sles15
       target: any
       modules:
-      - PrgEnv-cray-amd/8.3.3
+      - PrgEnv-amd/8.3.3
       - rocm/5.4.3
       - amd/5.4.3
       - libfabric
