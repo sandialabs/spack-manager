@@ -7,4 +7,4 @@ spack:
   view: false
   specs:
     - 'nalu-wind-nightly +fftw+tioga+hypre+openfast+cuda %gcc@9.3.0'
-    - 'amr-wind-nightly +hypre+netcdf+cuda~mpi %gcc@9.3.0'
+    - 'amr-wind-nightly +hypre+cuda~mpi %gcc@9.3.0'

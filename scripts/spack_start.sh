@@ -24,6 +24,10 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
     spack bootstrap root ${SPACK_MANAGER}/.bootstrap
   fi
 
+  if [[ -z $(spack config blame config | grep "environments_root: ${SPACK_MANAGER}/environments") ]]; then
+    spack config add config:environments_root:${SPACK_MANAGER}/environments
+  fi
+
   if [[ -z $(spack config --scope site blame config | grep spack-scripting) ]]; then
     spack config --scope site add "config:extensions:[${SPACK_MANAGER}/spack-scripting]"
     spack config --scope site add "concretizer:unify:false"

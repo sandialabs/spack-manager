@@ -13,6 +13,11 @@ from manager_cmds.find_machine import find_machine
 from smpackages import *
 
 class Trilinos(bTrilinos, SMCMakeExtension):
+    # Our custom release versions should be the latest release tag found on
+    # the trilinos github page appended with the date of the commit.
+    # this preserves the Trilinos versioning scheme and will allow for valid
+    # version comparisons in spack's internals.
+    version("13.4.0.2023.02.28", commit="8b3e2e1")
     version("13.4.0.2022.10.27", commit="da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1")
     version("13.2.0.2022.06.05", commit="7498bcb9b0392c830b83787f3fb0c17079431f06")
     variant("stk_unit_tests", default=False,
@@ -30,7 +35,7 @@ class Trilinos(bTrilinos, SMCMakeExtension):
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
-        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.5.0.2022.12.15")
+        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.4.0.2022.12.15")
 
     def setup_build_environment(self, env):
         spec = self.spec

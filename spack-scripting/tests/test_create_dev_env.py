@@ -14,12 +14,14 @@ import spack.main
 manager = spack.main.SpackCommand("manager")
 
 
-def test_allSpecsCallSpackDevelop(tmpdir):
+@patch("manager_cmds.create_dev_env.develop")
+def test_allSpecsCallSpackDevelop(mock_dev, tmpdir):
     with tmpdir.as_cwd():
-        with patch("manager_cmds.create_dev_env.develop") as mock_dev:
-            manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
+        manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
         mock_dev.assert_any_call(["amr-wind@main"])
-        mock_dev.assert_any_call(["nalu-wind@master"])
+        mock_dev.assert_any_call(
+            ["-rb", "git@github.com:Exawind/nalu-wind.git", "master", "nalu-wind@master"]
+        )
         mock_dev.assert_any_call(["exawind@master"])
 
 

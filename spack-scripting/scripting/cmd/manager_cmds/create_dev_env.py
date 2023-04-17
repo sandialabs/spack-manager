@@ -50,7 +50,9 @@ def create_dev_env(parser, args):
         # it is already in the spack.yaml
         if env.is_develop(s) and "path" in env.yaml["spack"]["develop"][str(s.name)]:
             dev_args.extend(["--path", env.yaml["spack"]["develop"][str(s.name)]["path"]])
-        if "trilinos" in str(s.name):
+        elif "nalu-wind" in str(s.name):
+            dev_args.extend(["-rb", "git@github.com:Exawind/nalu-wind.git", str(s.version)])
+        elif "trilinos" in str(s.name):
             dev_args.extend(["-rb", "git@github.com:trilinos/trilinos.git", str(s.version)])
         dev_args.append(str(s.format("{name}{@version}")))
         develop(dev_args)

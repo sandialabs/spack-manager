@@ -1,0 +1,23 @@
+packages:
+  hpcx-mpi:
+    require: "@2.8.3"
+    buildable: false
+    externals:
+      - spec: "hpcx-mpi@2.8.3"
+        prefix: /opt/hpcx-v2.8.3-gcc-MLNX_OFED_LINUX-5.2-2.2.3.0-redhat7.7-x86_64/ompi
+  slurm:
+    buildable: false
+    externals:
+    - spec: slurm@22.05.3
+      prefix: /usr
+  mpi:
+    require: 'hpcx-mpi'
+  perl:
+    require: "@5.30.3"
+  all:
+    compiler: [gcc@9.2.0]
+    variants: build_type=Release +mpi
+    providers:
+      mpi: [hpcx-mpi]
+      blas: [openblas]
+      lapack: [openblas]
