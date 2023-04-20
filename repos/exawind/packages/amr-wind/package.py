@@ -22,12 +22,15 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="Enable HDF5 plots with ZFP compression")
     variant("umpire", default=False,
             description="Enable Umpire")
+    variant("sycl", default=False,
+            description="Enable SYCL backend")
 
     depends_on("hdf5~mpi", when="+hdf5~mpi")
     depends_on("hdf5+mpi", when="+hdf5+mpi")
     depends_on("h5z-zfp", when="+hdf5")
     depends_on("zfp", when="+hdf5")
     depends_on("hypre+umpire", when="+umpire")
+    depends_on("hypre+sycl", when="+sycl")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
@@ -74,6 +77,16 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             cmake_options.append("-DCMAKE_HIP_ARCHITECTURES=" + ";".join(str(x) for x in targets))
             cmake_options.append("-DAMDGPU_TARGETS=" + ";".join(str(x) for x in targets))
             cmake_options.append("-DGPU_TARGETS=" + ";".join(str(x) for x in targets))
+
+        if "+sycl" in self.spec:
+            cmake_options.append("-DAMReX_GPU_BACKEND=SYCL")
+            # SYCL GPU backend only supported with Intel's oneAPI or DPC++ compilers
+            sycl_compatible_compilers = ["dpcpp", "icpx"]
+            if not (os.path.basename(self.compiler.cxx) in sycl_compatible_compilers):
+                raise InstallError(
+                    "AMReX's SYCL GPU Backend requires DPC++ (dpcpp)"
+                    + " or the oneAPI CXX (icpx) compiler."
+                )
 
         if "+tests" in spec:
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
