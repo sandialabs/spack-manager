@@ -1,5 +1,6 @@
 # directories
 spack
+stage
 environments
 snapshots
 golds
@@ -10,6 +11,8 @@ modules
 cache
 configs/user
 stage
+.bootstrap
+.jython_cache
 # file types
 Makefile
 __pycache__

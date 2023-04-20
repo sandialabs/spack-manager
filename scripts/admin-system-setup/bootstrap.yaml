@@ -1,0 +1,15 @@
+spack:
+  include:
+  - packages.yaml
+  - compilers.yaml
+  - config.yaml
+  # build the latest gcc we can with the base compiler
+  specs:
+  - gcc
+  view: false
+  packages:
+    all:
+      target: [x86_64]
+      variants: [build_type=Release]
+    gcc:
+      variants: [~bootstrap ~profiled +strip]

@@ -2,7 +2,6 @@ packages:
   hypre:
     variants: +shared~fortran
   all:
-    target: [x86_64]
     compiler: [apple-clang, gcc, clang]
     providers:
       mpi: [mpich, openmpi]

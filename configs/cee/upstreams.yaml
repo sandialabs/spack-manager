@@ -1,0 +1,4 @@
+upstreams:
+  packages:
+    install_tree: /projects/wind/core-spack-manager/scripts/admin-system-setup/packages_store/
+

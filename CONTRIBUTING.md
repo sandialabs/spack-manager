@@ -5,7 +5,7 @@ Thank you for your interest in contributing to the project. Please adhere to to 
 ## Issues
 
 Please feel free to make issues for any questions you have. Github issues help us stay organized and are a valuable mechanism for archiving information.
-We do ask that you review our [FAQ](https://psakievich.github.io/spack-manager/general/FAQ.html) before submitting a ticket.
+We do ask that you review our [FAQ](https://sandialabs.github.io/spack-manager/general/FAQ.html) before submitting a ticket.
 We try to archive the most common user issues there so it will likely save you (and us) some time.
 
 ## Pull Requests

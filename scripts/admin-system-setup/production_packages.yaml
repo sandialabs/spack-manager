@@ -1,0 +1,36 @@
+spack:
+  include:
+  - packages.yaml
+  - compilers.yaml
+  - config.yaml
+  - $SPACK_MANAGER/configs/base/packages.yaml
+  definitions:
+  - compilers: ['%gcc', '%clang']
+  - core:
+    - nalu-wind+openfast+hypre ^openmpi@4.0.2
+    - amr-wind+openfast+hypre ^openmpi@4.0.2
+    - exawind~openfast~hypre ^openmpi@4.0.2
+  specs:
+  - matrix:
+    - [$core]
+    - [$compilers]
+  - nalu-wind+cuda+hypre+openfast+fftw ^cuda@11.2
+  - nalu-wind%gcc ^mvapich2
+  view: false
+  #  default:
+  #    root: .spack-env/view
+  #    projections:
+  #      all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
+  #    link_type: symlink
+  concretizer:
+    unify: false
+  packages:
+    all:
+      target: [x86_64]
+      variants: [build_type=Release]
+    boost:
+      version: [1.80.0]
+    openmpi:
+      variants: [+legacylaunchers fabrics=auto schedulers=auto]
+    python:
+      variants: [~crypt]

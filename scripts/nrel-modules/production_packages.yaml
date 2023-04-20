@@ -1,0 +1,111 @@
+spack:
+   include:
+   - packages.yaml
+   - compilers.yaml
+   - modules.yaml
+   - config.yaml
+   - $SPACK_MANAGER/scripts/nrel-modules/ellis_packages.yaml
+   - $SPACK_MANAGER/configs/base/packages.yaml
+   definitions:
+   #- compilers: ['%gcc', '%clang']
+   - compilers: ['%gcc@10.4.0']
+   - core:
+     - bc
+     - bison
+     - bzip2
+     - cmake
+     - cppcheck
+     - curl
+     - flex
+     - ffmpeg
+     - emacs
+     - git
+     - gdb
+     - gnuplot
+     - gnutls
+     - htop
+     - imagemagick
+     - libxml2
+     - likwid
+     - ninja
+       #- mercurial
+     - makedepend
+     - patch
+     - pkg-config
+     - python
+     - rsync
+     - screen
+     - stow
+     - strace
+     - texinfo
+       #- texlive
+     - tmux
+     - unzip
+     - vim
+     - wget
+     - zsh
+     #- global
+     #- xterm
+     - py-numpy
+     - py-matplotlib
+     - py-pandas
+     - py-nose
+     - py-autopep8
+     - py-flake8
+     - py-jedi
+     - py-pip
+     - py-pyyaml
+     - py-seaborn
+     - py-sphinx
+     - py-scipy
+     - py-yapf
+       #- py-yt
+     - masa~python
+     - valgrind~mpi
+     - ascent
+     - nccmp
+     - netcdf-fortran
+     - amrvis dims=3
+     - amrvis+profiling dims=2
+     - mpich
+     - hdf5
+     - parallel-netcdf
+     - netcdf-c
+     - boost
+     - hypre
+       #- h5z-zfp
+     - yaml-cpp
+   specs:
+   - matrix:
+     - [$core]
+     - [$compilers]
+   view: false
+   #view:
+   #  default:
+   #    root: $env/view
+   #    projections:
+   #      all: '{compiler.name}/{compiler.version}/{name}/{version}/{hash:8}'
+   #    link_type: symlink
+   concretizer:
+     unify: false
+     reuse: true
+   packages:
+     perl:
+       require: "@5.30.3"
+     all:
+       variants: [build_type=Release]
+   config:
+     build_stage:
+       $spack/var/spack/stage
+   modules:
+     default:
+       tcl:
+         projections:
+           all: '{compiler.name}-{compiler.version}/{name}/{version}/{hash:4}'
+         hash_length: 0
+         all:
+           conflict:
+             - '{name}'
+           environment:
+             set:
+               '{name}_ROOT_DIR': '{prefix}'

@@ -1,6 +1,6 @@
 # Useful Commands for Development
 
-In the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_tutorial.html) the granular Spack commands are shown to help youe become familiar with the process of building with Spack.
+In the [developer tutorial](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_tutorial.html) the granular Spack commands are shown to help youe become familiar with the process of building with Spack.
 Using these commands (along with familiarization with the [spack.yaml](https://spack.readthedocs.io/en/latest/environments.html#spack-yaml)) will allow you to create a fully customized build environments. 
 
 In practice many of these commands are redundant and unneccesary for standard development workflows.

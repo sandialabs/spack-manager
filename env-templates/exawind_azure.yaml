@@ -1,0 +1,18 @@
+spack:
+  include:
+  - include.yaml
+  concretizer:
+    unify: false
+    reuse: false
+  view: false
+  config:
+    install_tree:
+      root: /lustre/$user/exawind/software/opt
+  modules:
+    default:
+      roots:
+       tcl: /lustre/$user/exawind/software/modules
+      enable:
+        - tcl
+  specs:
+    - 'exawind+hypre+openfast+ninja'

@@ -9,9 +9,10 @@ from spack import *
 #from spack.pkg.builtin.exawind import Exawind as bExawind
 from shutil import copyfile
 import os
+from smpackages import *
 
 
-class Exawind(CMakePackage, CudaPackage, ROCmPackage):
+class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     """Multi-application driver for Exawind project."""
 
     homepage = "https://github.com/Exawind/exawind-driver"
@@ -29,6 +30,8 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             description="turn on address sanitizer")
     variant("openfast", default=False,
             description="Enable OpenFAST integration")
+    variant("fsi", default=False,
+            description="Enable OpenFAST FSI integration")
     variant("hypre", default=True,
             description="Enable hypre solver")
     variant("amr_wind_gpu", default=False,
@@ -37,12 +40,13 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             description="Enable Nalu-Wind on the GPU")
     variant("stk_simd", default=False,
             description="Enable SIMD in STK")
-    variant("ninja", default=False,
-            description="Enable Ninja makefile generator")
+    variant("umpire", default=False,
+            description="Enable Umpire")
+    variant("tiny_profile", default=False,
+            description="Turn on AMR-wind with tiny profile")
 
     conflicts("+amr_wind_gpu", when="~cuda~rocm")
     conflicts("+nalu_wind_gpu", when="~cuda~rocm")
-    conflicts("+amr_wind_gpu~nalu_wind_gpu", when="^amr-wind+hypre ^nalu-wind+hypre")
 
     for arch in CudaPackage.cuda_arch_values:
         depends_on("amr-wind+cuda cuda_arch=%s" % arch, when="+amr_wind_gpu+cuda cuda_arch=%s" % arch)
@@ -59,13 +63,17 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("tioga~nodegid")
     depends_on("yaml-cpp@0.6:")
     depends_on("nalu-wind+openfast", when="+openfast")
+    depends_on("nalu-wind+fsi", when="+fsi")
     depends_on("openfast+cxx@2.6.0:", when="+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^nalu-wind+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^amr-wind+openfast")
-    depends_on("nalu-wind+hypre", when="+hypre")
+    depends_on("nalu-wind+hypre", when="+hypre+amr_wind_gpu+nalu_wind_gpu")
+    depends_on("nalu-wind+hypre", when="+hypre~amr_wind_gpu~nalu_wind_gpu")
+    depends_on("nalu-wind+hypre2", when="+hypre~amr_wind_gpu+nalu_wind_gpu")
+    depends_on("nalu-wind+hypre2", when="+hypre+amr_wind_gpu~nalu_wind_gpu")
     depends_on("amr-wind+hypre", when="+hypre")
-    depends_on("hypre", when="+hypre")
-    depends_on("hypre+rocm", when="+hypre+rocm")
+    depends_on("amr-wind~hypre", when="~hypre")
+    depends_on("nalu-wind~hypre", when="~hypre")
     depends_on("trilinos+ninja", when="+ninja")
     depends_on("nalu-wind+ninja", when="+ninja")
     depends_on("amr-wind+ninja", when="+ninja")
@@ -74,6 +82,9 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("trilinos")
     depends_on("cmake")
     depends_on("mpi")
+    depends_on("nalu-wind+umpire", when="+umpire")
+    depends_on("amr-wind+umpire", when="+umpire")
+    depends_on("amr-wind+tiny_profile", when="+tiny_profile")
 
     def cmake_args(self):
         spec = self.spec
@@ -84,6 +95,10 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
 
         args.append(self.define("MPI_HOME", spec["mpi"].prefix))
+
+        if "+umpire" in self.spec:
+            args.append(self.define_from_variant("EXAWIND_ENABLE_UMPIRE", "umpire"))
+            args.append(self.define("UMPIRE_DIR", self.spec["umpire"].prefix))
 
         if spec.satisfies("+cuda"):
             args.append(self.define("EXAWIND_ENABLE_CUDA", True))
@@ -120,10 +135,3 @@ class Exawind(CMakePackage, CudaPackage, ROCmPackage):
             env.set("OMPI_CXX", self.spec["hip"].hipcc)
             env.set("MPICH_CXX", self.spec["hip"].hipcc)
             env.set("MPICXX_CXX", self.spec["hip"].hipcc)
-
-    @run_after("cmake")
-    def copy_compile_commands(self):
-        source = os.path.join(self.build_directory, "compile_commands.json")
-        if self.spec.satisfies("dev_path=*") and os.path.isfile(source):
-            target = os.path.join(self.stage.source_path, "compile_commands.json")
-            copyfile(source, target)

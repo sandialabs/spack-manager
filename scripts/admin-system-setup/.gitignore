@@ -1,0 +1,15 @@
+.spack
+bootstrap
+compilers
+packages
+bootstrap_store
+compilers_store
+packages_store
+*view
+.spack-env
+config.yaml
+compilers.yaml
+packages.yaml
+spack.mk
+generated/
+spack.lock

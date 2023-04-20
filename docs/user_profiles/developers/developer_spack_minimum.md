@@ -143,7 +143,7 @@ For this section it is sufficient to know that `spack info` is the key to knowin
 Spack specs are critical to using Spack-Manager because they are the language used to communicate the options and configurations of 
 the software that is getting built.  
 We provide an overview of what a spec is, and the parts that go into making a Spack spec in our 
-[general documentation](https://psakievich.github.io/spack-manager/general/spack_features.html#spack-specs), 
+[general documentation](https://sandialabs.github.io/spack-manager/general/spack_features.html#spack-specs), 
 and an even more thorough description can be found in the 
 [spack documentation](https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies)
 
@@ -176,14 +176,22 @@ The major steps and associated commands for building software with Spack environ
 3. **Add root specs:** (`spack add`)  
    Define the software that you want in the environment.  Spack will solve for the dependencies of all these root specs, and ensure that your environment meshes together. They just need the `name` as a minimum.
 4. **Add develop specs** (`spack develop`)  
-   Determine which root specs you want to develop.  These specs must have the `name` and `version` as a minimum. They are not going to be added to your environment by themselves, but rather serve as keys for the concretizer to determine if a spec should be treated as a develop spec or not.  Essentially, if the concretizer can determine that a root spec can be equivalenced with the develop spec, then it will use your source code and not spack's usual process for cloning/building/installing.  Think of this as a sort of dictionary. For instance `spack add trilinos` and `spack develop trilinos@develop` will mean that trilinos will use the source code, but if you had done `spack add trilinos@master` then it would not because `trilinos@develop` and `trilinos@master` can't be quivalenced.  It is recommended that you always just do `name@version` for your develop specs to get the broadest match possible. More documentation on this can be found in the [spack documentation](https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html).
+   Determine what software you want to modify i.e. which specs you want to develop.
+   These specs must have the `name` and `version` as a minimum.
+   They are not going to be added to your environment by themselves, but rather serve as keys for the concretizer to determine if a spec should be treated as a develop spec or not.
+   Essentially, if the concretizer can determine that a spec in the graph can be equivalenced with the develop spec, then it will use your source code and not spack's usual process for cloning/building/installing.
+   Think of this as a sort of dictionary.
+   For instance `spack add trilinos` and `spack develop trilinos@develop` will mean that trilinos will use the source code,
+   but if you had done `spack add trilinos@master` then it would not because `trilinos@develop` and `trilinos@master` can't be equivalenced.
+   It is recommended that you always just do `name@version` for your develop specs to get the broadest match possible.
+   More documentation on this can be found in the [spack documentation](https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html).
 5. **Concretize:** (`spack concretize`)  
    This is how the Spack determines what the dependency graph needs to look like for your environment.  It is a non-trivial problem to solve since you can use any combination of variants in each package in the [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph).  Each software package can enforce built in conflicts that are set by the maintainers, but anything that is not constrained by your spec or the software itself will fall to the default (once again look to `spack info` to see the defaults).
 6. **Build/install:** (`spack install`)  
    Now that you've decided what combination of software you want to build, what elements you want to develop, and what the dependency graph is all that is left is to build and install. Easy right?
 
 This may seem like a lot to go over, and this was not a very thorough description of each step.
-These steps are covered with a workflow example in the [developer tutorial](https://psakievich.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
+These steps are covered with a workflow example in the [developer tutorial](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html)
 where we walk through each step one at a time. 
 The intention of this page is to serve as an introduction and a reference going forward.
 If you forget a step or command you can always come back to this page to see what it is and see a brief description of the whole process.
@@ -192,7 +200,20 @@ Spack-Manager contains convenience scripts that wrap the steps together, and pri
 
 The two most hands off commands are:
 
-- `quick-develop`: this will do steps 1-5 for you automatically if you provide specs with versions in the input arguments (stops at step 4 if you don't)
+- `quick-create-dev`: this will do steps 1-5 for you automatically if you provide specs with versions in the input arguments (stops at step 4 if you don't)
 - `quick-activate`: this will activate a previously created environment for you. You just pass the directory location to it.
 
-If you want to learn more about them... `quick-develop --help`.  Additional documentation to come soon.
+For example, fastest way to start developing `amr-wind` and `openfast` together is:
+
+```
+quick-create-dev --name my-dev-project --spec amr-wind@main+openfast openfast@master
+# go to amr-wind source code
+spack cd amr-wind # modify the code in here as you wish
+# go to openfast source code
+spack cd openfast # modify the code in here as you wish
+# install code
+spack install
+```
+
+As a reminder, to learn more about the commnands used above `quick-create-dev --help`, `spack cd --help`, `spack install --help`.
+To learn what other build options you have for `amr-wind` ... `spack info amr-wind`, `openfast` ... `spack info openfast`, etc.

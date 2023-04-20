@@ -10,35 +10,32 @@ from spack.pkg.builtin.trilinos import Trilinos as bTrilinos
 import os
 import manager_cmds.find_machine as fm
 from manager_cmds.find_machine import find_machine
+from smpackages import *
 
-class Trilinos(bTrilinos):
+class Trilinos(bTrilinos, SMCMakeExtension):
+    # Our custom release versions should be the latest release tag found on
+    # the trilinos github page appended with the date of the commit.
+    # this preserves the Trilinos versioning scheme and will allow for valid
+    # version comparisons in spack's internals.
+    version("13.4.0.2023.02.28", commit="8b3e2e1")
     version("13.4.0.2022.10.27", commit="da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1")
     version("13.2.0.2022.06.05", commit="7498bcb9b0392c830b83787f3fb0c17079431f06")
     variant("stk_unit_tests", default=False,
             description="turn on STK unit tests")
     variant("stk_simd", default=False,
             description="Enable SIMD in STK")
-    variant("ninja", default=False,
-            description="Enable Ninja makefile generator")
     variant("asan", default=False,
             description="Turn on address sanitizer")
     variant("pic", default=True,
             description="Position independent code")
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
+    patch("rocm_seacas.patch", when="@develop+rocm")
+    patch("kokkos_hip_subview.patch", when="@develop+rocm")
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
-        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:")
-
-    depends_on("ninja", type="build", when="+ninja")
-
-    @property
-    def generator(self):
-          if "+ninja" in self.spec:
-              return "Ninja"
-          else:
-              return "Unix Makefiles"
+        patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.4.0.2022.12.15")
 
     def setup_build_environment(self, env):
         spec = self.spec
@@ -81,6 +78,17 @@ class Trilinos(bTrilinos):
         options = super(Trilinos, self).cmake_args()
 
         options.append(self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"))
+        options.append(self.define("Trilinos_ENABLE_SEACAS", True))
+        options.append(self.define("Trilinos_ENABLE_SEACASCpup", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASEjoin", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASExo_format", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASExomatlab", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASNas2exo", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASSlice", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASuplib", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASuplibC", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASuplibCpp", False))
+        options.append(self.define("Trilinos_ENABLE_SEACASZellij", False))
 
         if "+stk" in spec:
             options.append(self.define_from_variant("STK_ENABLE_TESTS", "stk_unit_tests"))
@@ -107,7 +115,6 @@ class Trilinos(bTrilinos):
             options.append(self.define("Kokkos_ARCH_VEGA90A", True))
             options.append(self.define("Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE", True))
             # Tests
-            options.append(self.define("Trilinos_ENABLE_SEACAS", True))
             options.append(self.define("SEACASExodus_ENABLE_TESTS", False))
             options.append(self.define("SEACASIoss_ENABLE_TESTS", False))
             options.append(self.define("SEACASNemesis_ENABLE_TESTS", False))
@@ -119,7 +126,6 @@ class Trilinos(bTrilinos):
             options.append(self.define("SEACASAprepro_ENABLE_TESTS", False))
 
             options.append(self.define("Trilinos_ENABLE_TESTS", False))
-            options.append(self.define("STK_ENABLE_TESTS", False))
             options.append(self.define("Ifpack2_ENABLE_TESTS", False))
             options.append(self.define("MueLu_ENABLE_TESTS", False))
             options.append(self.define("PanzerMiniEM_ENABLE_TESTS", False))
@@ -127,6 +133,7 @@ class Trilinos(bTrilinos):
             options.append(self.define("Tpetra_ENABLE_TESTS", False))
             # STK
             options.append(self.define("Trilinos_ENABLE_STK", True))
+            options.append(self.define_from_variant("STK_ENABLE_TESTS", "stk_unit_tests"))
             options.append(self.define("Trilinos_ENABLE_STKMesh", True))
             options.append(self.define("Trilinos_ENABLE_STKIO", True))
             options.append(self.define("Trilinos_ENABLE_STKBalance", True))

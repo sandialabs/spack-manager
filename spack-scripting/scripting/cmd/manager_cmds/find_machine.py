@@ -40,6 +40,13 @@ def is_jlse(hostname):
     return False
 
 
+def is_azure():
+    if "CYCLECLOUD_HOME" in os.environ:
+        return True
+    else:
+        return False
+
+
 def is_e4s():
     if "E4S_MACHINE" in os.environ:
         return True
@@ -68,10 +75,15 @@ machine_list = {
     "crusher": MachineData(
         lambda: os.environ["LMOD_SYSTEM_NAME"] == "crusher", "crusher.olcf.ornl.gov"
     ),
+    "frontier": MachineData(
+        lambda: os.environ["LMOD_SYSTEM_NAME"] == "frontier", "frontier.olcf.ornl.gov"
+    ),
     # JLSE
     "arcticus": MachineData(lambda: is_jlse(socket.gethostname()), "arcticus.alcf.anl.gov"),
     # E4S
     "e4s": MachineData(lambda: is_e4s(), "e4s.nodomain.gov"),
+    # Azure
+    "azure": MachineData(lambda: is_azure(), "azure.nodomain.com"),
     # General
     "darwin": MachineData(lambda: sys.platform == "darwin", "darwin.nodomain.gov"),
 }

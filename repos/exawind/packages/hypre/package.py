@@ -1,6 +1,10 @@
 from spack import *
 from spack.pkg.builtin.hypre import Hypre as bHypre
+import glob
 import os
+import shutil
+
+import spack.util
 
 class Hypre(bHypre):
 
@@ -27,6 +31,20 @@ class Hypre(bHypre):
             if "SPACK_MANAGER_CLEAN_HYPRE" in os.environ:
                 make("clean")
 
+    def do_clean(self):
+        super().do_clean()
+        if not self.stage.managed_by_spack:
+            build_artifacts = glob.glob(os.path.join(self.stage.source_path, "spack-build-*"))
+            for f in build_artifacts:
+                if os.path.isfile(f):
+                    os.remove(f)
+                if os.path.isdir(f):
+                    shutil.rmtree(f)
+            with working_dir(os.path.join(self.stage.source_path, "src")):
+                make = spack.util.executable.which("make")
+                make("clean")
+                make("distclean")
+
     def configure_args(self):
         spec = self.spec
         options = super(Hypre, self).configure_args()
@@ -43,10 +61,5 @@ class Hypre(bHypre):
         if "+umpire" in spec:
             if  (("+cuda" in spec or "+rocm" in spec) and "--enable-device-memory-pool" in options):
                 options.remove("--enable-device-memory-pool")
-            options.append("--with-umpire")
-            options.append("--with-umpire-pinned")
-            options.append("--with-umpire-include=%s"%(spec["umpire"].prefix.include))
-            options.append("--with-umpire-lib-dirs=%s"%(spec["umpire"].prefix.lib))
-            options.append("--with-umpire-libs=umpire")
 
         return options
