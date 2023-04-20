@@ -80,7 +80,9 @@ machine_list = {
     ),
     # ANL
     "arcticus": MachineData(lambda: is_jlse(socket.gethostname()), "arcticus.alcf.anl.gov"),
-    "sunspot": MachineData(lambda: os.environ["AURORA_BASE_ENV"] == "2023.0", "sunspot.alcf.anl.gov"),
+    "sunspot": MachineData(
+        lambda: os.environ["AURORA_BASE_ENV"] == "2023.0", "sunspot.alcf.anl.gov"
+    ),
     # E4S
     "e4s": MachineData(lambda: is_e4s(), "e4s.nodomain.gov"),
     # Azure
