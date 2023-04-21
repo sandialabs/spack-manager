@@ -79,7 +79,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             cmake_options.append("-DGPU_TARGETS=" + ";".join(str(x) for x in targets))
 
         if "+sycl" in self.spec:
-            cmake_options.append("-DAMReX_GPU_BACKEND=SYCL")
+            cmake_options.append(self.define("AMR_WIND_ENABLE_SYCL", True))
             # SYCL GPU backend only supported with Intel's oneAPI or DPC++ compilers
             sycl_compatible_compilers = ["dpcpp", "icpx"]
             if not (os.path.basename(self.compiler.cxx) in sycl_compatible_compilers):
