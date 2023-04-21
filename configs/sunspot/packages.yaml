@@ -22,7 +22,7 @@ packages:
   nalu-wind:
     require: "~trilinos-solvers"
   amr-wind:
-    variants: build_type=Release
+    variants: +tiny_profile build_type=Release
   trilinos:
     require: "+tpetra+kokkos"
   boost:
