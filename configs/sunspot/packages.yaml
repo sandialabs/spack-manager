@@ -21,6 +21,8 @@ packages:
         prefix: /usr
   nalu-wind:
     require: "~trilinos-solvers"
+  amr-wind:
+    variants: build_type=Release
   trilinos:
     require: "+tpetra+kokkos"
   boost:
