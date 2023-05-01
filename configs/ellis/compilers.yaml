@@ -88,8 +88,8 @@ compilers:
     paths:
       cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/clang
       cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/clang++
-      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/flang
-      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/flang
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/flang-new
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/flang-new
     flags: {}
     operating_system: rocky8
     target: x86_64
@@ -102,8 +102,8 @@ compilers:
     paths:
       cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/clang
       cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/clang++
-      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/flang
-      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/flang
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/flang-new
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/flang-new
     flags: {}
     operating_system: rocky8
     target: x86_64
@@ -116,8 +116,8 @@ compilers:
     paths:
       cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/clang
       cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/clang++
-      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/flang
-      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/flang
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/flang-new
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/flang-new
     flags: {}
     operating_system: rocky8
     target: x86_64
@@ -130,8 +130,8 @@ compilers:
     paths:
       cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/clang
       cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/clang++
-      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/flang
-      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/flang
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/flang-new
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/flang-new
     flags: {}
     operating_system: rocky8
     target: x86_64
