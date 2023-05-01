@@ -4,7 +4,7 @@ packages:
     version: [11.4.4]
     externals:
     - spec: cuda@11.4.4
-      prefix: /data/ssd1/software/2023-03/opt/compilers/linux-rocky8-zen/gcc-8.5.0/cuda-11.4.4-7mgoqtrkw2egzutjpjtrzy6gzidyi5bt
+      prefix: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/cuda-11.4.4-jkgjgq7zuzsb45e55z4nucoemb54qift
   all:
     compiler: [gcc@10.4.0, clang@16.0.2]
     variants: build_type=Release +mpi cuda_arch=80

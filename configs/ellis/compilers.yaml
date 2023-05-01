@@ -1,15 +1,141 @@
 compilers:
 - compiler:
-    spec: gcc@10.4.0
+    spec: gcc@8.5.0
     paths:
-      cc:  /data/ssd1/software/2023-03/opt/compilers/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-ghhsqtbsxkdrt76nulvtkoihzocdzsg4/bin/gcc
-      cxx: /data/ssd1/software/2023-03/opt/compilers/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-ghhsqtbsxkdrt76nulvtkoihzocdzsg4/bin/g++
-      f77: /data/ssd1/software/2023-03/opt/compilers/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-ghhsqtbsxkdrt76nulvtkoihzocdzsg4/bin/gfortran
-      fc:  /data/ssd1/software/2023-03/opt/compilers/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-ghhsqtbsxkdrt76nulvtkoihzocdzsg4/bin/gfortran
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-8.5.0-6ckvxqqkczqysnhuoxodyn2akgwjvxpx/bin/gcc
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-8.5.0-6ckvxqqkczqysnhuoxodyn2akgwjvxpx/bin/g++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-8.5.0-6ckvxqqkczqysnhuoxodyn2akgwjvxpx/bin/gfortran
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-8.5.0-6ckvxqqkczqysnhuoxodyn2akgwjvxpx/bin/gfortran
     flags: {}
     operating_system: rocky8
     target: x86_64
     modules: []
     environment: {}
     extra_rpaths:
-     - /data/ssd1/software/2023-03/opt/compilers/linux-rocky8-zen/gcc-8.5.0/gcc-10.4.0-ghhsqtbsxkdrt76nulvtkoihzocdzsg4/lib64
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-8.5.0-6ckvxqqkczqysnhuoxodyn2akgwjvxpx/lib64
+- compiler:
+    spec: gcc@9.5.0
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-9.5.0-ljzj2zh6yrb2wdn3jfuqftl4usiguhxu/bin/gcc
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-9.5.0-ljzj2zh6yrb2wdn3jfuqftl4usiguhxu/bin/g++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-9.5.0-ljzj2zh6yrb2wdn3jfuqftl4usiguhxu/bin/gfortran
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-9.5.0-ljzj2zh6yrb2wdn3jfuqftl4usiguhxu/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-9.5.0-ljzj2zh6yrb2wdn3jfuqftl4usiguhxu/lib64
+- compiler:
+    spec: gcc@10.4.0
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-10.4.0-o5nfktdrpgspzlw43m2rynlbtmag3vxg/bin/gcc
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-10.4.0-o5nfktdrpgspzlw43m2rynlbtmag3vxg/bin/g++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-10.4.0-o5nfktdrpgspzlw43m2rynlbtmag3vxg/bin/gfortran
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-10.4.0-o5nfktdrpgspzlw43m2rynlbtmag3vxg/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-10.4.0-o5nfktdrpgspzlw43m2rynlbtmag3vxg/lib64
+- compiler:
+    spec: gcc@11.3.0
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-11.3.0-pq6alkz5o5cpncqtmd33s4wzwtsswu5a/bin/gcc
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-11.3.0-pq6alkz5o5cpncqtmd33s4wzwtsswu5a/bin/g++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-11.3.0-pq6alkz5o5cpncqtmd33s4wzwtsswu5a/bin/gfortran
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-11.3.0-pq6alkz5o5cpncqtmd33s4wzwtsswu5a/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-11.3.0-pq6alkz5o5cpncqtmd33s4wzwtsswu5a/lib64
+- compiler:
+    spec: gcc@12.2.0
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-12.2.0-smglsh2lxvyc7p6qjdy45xtz7mwfvswu/bin/gcc
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-12.2.0-smglsh2lxvyc7p6qjdy45xtz7mwfvswu/bin/g++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-12.2.0-smglsh2lxvyc7p6qjdy45xtz7mwfvswu/bin/gfortran
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-12.2.0-smglsh2lxvyc7p6qjdy45xtz7mwfvswu/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-12.2.0-smglsh2lxvyc7p6qjdy45xtz7mwfvswu/lib64
+- compiler:
+    spec: gcc@13.1.0
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-13.1.0-xb3sb4l3hsiv447skhllehxjv54tksj2/bin/gcc
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-13.1.0-xb3sb4l3hsiv447skhllehxjv54tksj2/bin/g++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-13.1.0-xb3sb4l3hsiv447skhllehxjv54tksj2/bin/gfortran
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-13.1.0-xb3sb4l3hsiv447skhllehxjv54tksj2/bin/gfortran
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/gcc-13.1.0-xb3sb4l3hsiv447skhllehxjv54tksj2/lib64
+- compiler:
+    spec: clang@13.0.1
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/clang
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/clang++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/flang
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/bin/flang
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-13.0.1-btqqvgchctyqgpomfcbj7mruidgy74cu/lib
+- compiler:
+    spec: clang@14.0.1
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/clang
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/clang++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/flang
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/bin/flang
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-14.0.6-26z235nxk5pcqbiv6nhezxrkbtsfdae6/lib
+- compiler:
+    spec: clang@15.0.7
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/clang
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/clang++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/flang
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/bin/flang
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-15.0.7-awg373m4gt26uski2kbvqwulfkxdqwu6/lib
+- compiler:
+    spec: clang@16.0.2
+    paths:
+      cc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/clang
+      cxx: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/clang++
+      f77: /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/flang
+      fc:  /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/bin/flang
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths:
+     - /data/ssd1/software/2023-05/opt/compilers/linux-rocky8-zen2/gcc-10.4.0/llvm-16.0.2-uwbmg6ktdz3rtsp4x56554odzznohbeb/lib
