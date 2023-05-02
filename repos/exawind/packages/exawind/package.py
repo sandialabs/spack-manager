@@ -44,9 +44,12 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
             description="Enable Umpire")
     variant("tiny_profile", default=False,
             description="Turn on AMR-wind with tiny profile")
+    variant("sycl", default=False,
+            description="Enable SYCL backend for AMR-Wind")
 
-    conflicts("+amr_wind_gpu", when="~cuda~rocm")
+    conflicts("+amr_wind_gpu", when="~cuda~rocm~sycl")
     conflicts("+nalu_wind_gpu", when="~cuda~rocm")
+    conflicts("+nalu_wind_gpu", when="+sycl")
 
     for arch in CudaPackage.cuda_arch_values:
         depends_on("amr-wind+cuda cuda_arch=%s" % arch, when="+amr_wind_gpu+cuda cuda_arch=%s" % arch)
@@ -67,16 +70,17 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     depends_on("openfast+cxx@2.6.0:", when="+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^nalu-wind+openfast")
     depends_on("openfast+cxx@2.6.0:", when="^amr-wind+openfast")
-    depends_on("nalu-wind+hypre", when="+hypre+amr_wind_gpu+nalu_wind_gpu")
-    depends_on("nalu-wind+hypre", when="+hypre~amr_wind_gpu~nalu_wind_gpu")
-    depends_on("nalu-wind+hypre2", when="+hypre~amr_wind_gpu+nalu_wind_gpu")
-    depends_on("nalu-wind+hypre2", when="+hypre+amr_wind_gpu~nalu_wind_gpu")
+    depends_on("nalu-wind+hypre~hypre2", when="+hypre+amr_wind_gpu+nalu_wind_gpu")
+    depends_on("nalu-wind+hypre~hypre2", when="+hypre~amr_wind_gpu~nalu_wind_gpu")
+    depends_on("nalu-wind+hypre2~hypre", when="+hypre~amr_wind_gpu+nalu_wind_gpu")
+    depends_on("nalu-wind+hypre2~hypre", when="+hypre+amr_wind_gpu~nalu_wind_gpu")
     depends_on("amr-wind+hypre", when="+hypre")
     depends_on("amr-wind~hypre", when="~hypre")
     depends_on("nalu-wind~hypre", when="~hypre")
     depends_on("trilinos+ninja", when="+ninja")
     depends_on("nalu-wind+ninja", when="+ninja")
     depends_on("amr-wind+ninja", when="+ninja")
+    depends_on("amr-wind+sycl", when="+amr_wind_gpu+sycl")
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on("trilinos")

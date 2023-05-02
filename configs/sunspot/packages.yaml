@@ -1,0 +1,37 @@
+packages:
+  mpich:
+    require: "@51.2"
+    buildable: false
+    externals:
+      - spec: "mpich@51.2"
+        prefix: /soft/restricted/CNDA/updates/mpich/51.2/mpich-ofi-all-icc-default-pmix-gpu-drop51
+        modules:
+          - mpich/51.2/icc-all-pmix-gpu
+  m4:
+    require: "@1.4.19"
+    buildable: false
+    externals:
+      - spec: "m4@1.4.19"
+        prefix: /usr
+  libffi:
+    require: "@3.2.1"
+    buildable: false
+    externals:
+      - spec: "libffi@3.2.1"
+        prefix: /usr
+  nalu-wind:
+    require: "~trilinos-solvers"
+  amr-wind:
+    variants: +tiny_profile build_type=Release
+  trilinos:
+    require: "+tpetra+kokkos"
+  boost:
+    version: [1.78.0]
+    variants: ~shared+pic
+  all:
+    compiler: [intel]
+    variants: build_type=Release +mpi
+    providers:
+      mpi: [mpich]
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]

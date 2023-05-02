@@ -1,0 +1,19 @@
+compilers:
+  - compiler:
+      spec: intel@2022.12.30
+      paths:
+        cc: /soft/restricted/CNDA/updates/2022.12.30.001/oneapi/compiler/trunk-20230201/compiler/linux/bin/icx
+        cxx: /soft/restricted/CNDA/updates/2022.12.30.001/oneapi/compiler/trunk-20230201/compiler/linux/bin/icpx
+        f77: /soft/restricted/CNDA/updates/2022.12.30.001/oneapi/compiler/trunk-20230201/compiler/linux/bin/ifx
+        fc: /soft/restricted/CNDA/updates/2022.12.30.001/oneapi/compiler/trunk-20230201/compiler/linux/bin/ifx
+      flags: {}
+      operating_system: sles15
+      target: x86_64
+      modules: 
+        - gcc/11.2.0
+        - oneapi/eng-compiler/2022.12.30.003
+        - mpich/51.2/icc-all-pmix-gpu
+        - libfabric/1.15.2.0
+        - intel_compute_runtime/release/agama-devel-551
+      environment: {}
+      extra_rpaths: []
