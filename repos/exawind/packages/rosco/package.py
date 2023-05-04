@@ -7,9 +7,11 @@ from spack.package import *
 
 
 class Rosco(CMakePackage):
-    """ROSCO controls package for OpenFAST from NREL"""
-    # Note: this only builds ROSCO controls library for inclusion with OpenFAST
-    # If the toolbox or tuning scripts are needed, please build manually
+    """
+    ROSCO controls package for OpenFAST from NREL
+    Note: this only builds ROSCO controls library for inclusion with OpenFAST
+    If the toolbox or tuning scripts are needed, please build manually
+    """
 
     homepage = "https://rosco.readthedocs.io/en/latest/"
     git = "https://github.com/NREL/ROSCO.git"
