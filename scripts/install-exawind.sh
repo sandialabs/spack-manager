@@ -37,9 +37,13 @@ if [[ -f "${ENV_SCRIPT}" ]]; then
 fi
 
 printf "\nCreating Spack environment...\n"
-if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || [ "${SPACK_MANAGER_MACHINE}" == 'summit' ]; then
-  cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_matrix.yaml -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
-elif [ "${SPACK_MANAGER_MACHINE}" == 'spock' ] || [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ] || [ "${SPACK_MANAGER_MACHINE}" == 'frontier' ] || [ "${SPACK_MANAGER_MACHINE}" == 'azure' ]; then
+if [ "${SPACK_MANAGER_MACHINE}" == 'eagle' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'summit' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'spock' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'crusher' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'frontier' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'sunspot' ] || \
+   [ "${SPACK_MANAGER_MACHINE}" == 'azure' ]; then
   cmd "spack manager create-env -y ${SPACK_MANAGER}/env-templates/exawind_${SPACK_MANAGER_MACHINE}.yaml -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
 else
   cmd "spack manager create-env -s exawind+hypre+openfast+ninja -d ${SPACK_MANAGER}/environments/exawind-${SPACK_MANAGER_MACHINE}"
