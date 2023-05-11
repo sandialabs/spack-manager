@@ -46,10 +46,18 @@ def create_env(parser, args):
             user_view = environment.config_dict(user_yaml).get("view")
             if user_view:
                 has_view = True
-    env = environment.Environment(
-        theDir, init_file=args.yaml, with_view=has_view, keep_relative=True
-    )
-    yaml = env.yaml
+    try:
+        env = environment.Environment(
+            theDir, init_file=args.yaml, with_view=has_view, keep_relative=True
+        )
+        yaml = env.yaml
+    except TypeError:
+        if args.name:
+            # managed env
+            env = environment.create(args.name, init_file=args.yaml, keep_relative=True)
+        else:
+            env = environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
+        yaml = env.manifest
 
     def _unify_already_set(yaml):
         return (
