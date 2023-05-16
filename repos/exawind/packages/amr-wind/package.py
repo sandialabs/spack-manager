@@ -22,6 +22,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="Enable HDF5 plots with ZFP compression")
     variant("umpire", default=False,
             description="Enable Umpire")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
     variant("sycl", default=False,
             description="Enable SYCL backend")
 
@@ -30,6 +32,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("h5z-zfp", when="+hdf5")
     depends_on("zfp", when="+hdf5")
     depends_on("hypre+umpire", when="+umpire")
+    depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
     depends_on("hypre+sycl", when="+sycl")
 
     def setup_build_environment(self, env):

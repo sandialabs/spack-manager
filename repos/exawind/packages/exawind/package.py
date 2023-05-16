@@ -42,6 +42,8 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
             description="Enable SIMD in STK")
     variant("umpire", default=False,
             description="Enable Umpire")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
     variant("tiny_profile", default=False,
             description="Turn on AMR-wind with tiny profile")
     variant("sycl", default=False,
@@ -88,6 +90,8 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     depends_on("mpi")
     depends_on("nalu-wind+umpire", when="+umpire")
     depends_on("amr-wind+umpire", when="+umpire")
+    depends_on("nalu-wind+gpu-aware-mpi", when="+gpu-aware-mpi")
+    depends_on("amr-wind+gpu-aware-mpi", when="+gpu-aware-mpi")
     depends_on("amr-wind+tiny_profile", when="+tiny_profile")
 
     def cmake_args(self):

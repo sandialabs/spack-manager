@@ -35,6 +35,8 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
             description="Compile with namespaced Hypre support")
     variant("umpire", default=False,
             description="Enable Umpire")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
     conflicts("+shared", when="+cuda",
              msg="invalid device functions are generated with shared libs and cuda")
     conflicts("+shared", when="+rocm",
@@ -46,6 +48,7 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
 
     depends_on("hypre2@2.18.2: ~int64+mpi~superlu-dist~shared", when="+hypre2")
     depends_on("hypre+umpire", when="+umpire")
+    depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
     depends_on("trilinos gotype=long")
     depends_on("openfast@fsi+netcdf+cxx", when="+fsi")
 

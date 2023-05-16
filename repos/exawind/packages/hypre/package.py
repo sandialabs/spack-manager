@@ -8,7 +8,7 @@ import spack.util
 
 class Hypre(bHypre):
 
-    phases = ["autoreconf", "distclean", "configure", "clean", "build", "install"]
+    phases = ["autoreconf", "distclean", "configure", "clean", "build", "test", "install"]
 
     variant("gpu-aware-mpi", default=False, description="Use gpu-aware mpi")
     variant("rocblas", default=False, description="use rocblas")
@@ -20,6 +20,10 @@ class Hypre(bHypre):
     depends_on("umpire+rocm", when="+umpire+rocm")
     depends_on("umpire+cuda", when="+umpire+cuda")
     depends_on("rocprim", when="+rocm")
+
+    def test(self, spec, prefix):
+        with working_dir("src"):
+            make("test")
 
     def distclean(self, spec, prefix):
         with working_dir("src"):
