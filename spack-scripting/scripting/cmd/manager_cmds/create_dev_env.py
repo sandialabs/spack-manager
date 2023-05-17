@@ -32,7 +32,8 @@ def create_dev_env(parser, args):
     specs = spack.cmd.parse_specs(args.spec)
     for s in specs:
         # check that all specs were concrete
-        if not s.versions.concrete:
+        version = s.versions.concrete_range_as_version
+        if not version:
             print(
                 "\nWarning: {spec} is not concrete and will not "
                 "be setup as a develop spec."
@@ -44,6 +45,9 @@ def create_dev_env(parser, args):
                 "amr-wind@main and nalu-wind@master\n".format(spec=s)
             )
             continue
+        # need to assign version since the concrete property has changed
+        s.versions = spack.version.VersionList([version])
+
         dev_args = []
         yaml = env.manifest.pristine_yaml_content
         # kind of hacky, but spack will try to re-clone
