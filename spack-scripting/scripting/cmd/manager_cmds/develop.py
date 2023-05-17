@@ -8,6 +8,8 @@
 import os
 import shutil
 
+import llnl.util.tty as tty
+
 import spack.cmd
 import spack.cmd.develop as spack_develop
 import spack.util.executable

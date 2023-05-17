@@ -9,6 +9,7 @@ from environment_utils import SpackManagerEnvironmentManifest as smem
 
 import spack.util.spack_yaml as syaml
 
+
 def test_smManifestCanSetConfig(tmpdir):
     with tmpdir.as_cwd():
         with open("spack.yaml", "w") as f:

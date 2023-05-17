@@ -98,8 +98,13 @@ spack:
         e = env.Environment(env_root)
         assert e.manifest.pristine_yaml_content["spack"]["specs"][0] == "amr-wind"
         assert e.manifest.pristine_yaml_content["spack"]["specs"][1] == "nalu-wind"
-        assert e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]["spec"] == "amr-wind@main"
-        assert e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
+        assert (
+            e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]["spec"]
+            == "amr-wind@main"
+        )
+        assert (
+            e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
+        )
         assert "view" not in e.manifest.pristine_yaml_content["spack"].keys()
 
 
@@ -163,4 +168,7 @@ def test_local_source_tree_can_be_added_to_env(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind", "-l")
         e = env.Environment(tmpdir.strpath)
-        assert "$env/opt" in e.manifest.pristine_yaml_content["spack"]["config"]["install_tree"]["root"]
+        assert (
+            "$env/opt"
+            in e.manifest.pristine_yaml_content["spack"]["config"]["install_tree"]["root"]
+        )

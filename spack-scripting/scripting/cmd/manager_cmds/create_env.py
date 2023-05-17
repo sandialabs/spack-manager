@@ -13,14 +13,13 @@ on a given machine
 import os
 
 import manager_cmds.find_machine as fm
+from environment_utils import SpackManagerEnvironmentManifest
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
-from environment_utils import SpackManagerEnvironmentManifest
 
 import spack
 import spack.cmd
 import spack.environment.environment as environment
-import spack.util.spack_yaml as syaml
 
 
 def create_env(parser, args):
@@ -38,7 +37,6 @@ def create_env(parser, args):
     else:
         theDir = os.getcwd()
 
-
     if args.yaml:
         assert os.path.isfile(args.yaml)
 
@@ -47,7 +45,7 @@ def create_env(parser, args):
     manifest = SpackManagerEnvironmentManifest(theDir)
 
     if not args.yaml:
-        manifest.set_config_value("concretizer","unify", True)
+        manifest.set_config_value("concretizer", "unify", True)
 
     if args.machine is not None:
         machine = args.machine

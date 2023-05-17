@@ -8,8 +8,10 @@
 import spack.environment.environment as senv
 from spack.environment.environment import config_dict
 
+
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
     """Spack-Manager extensiont to the manifest file for prototyping"""
+
     def set_config_value(self, root, key, value):
         """Set/overwrite a config value
 
@@ -18,8 +20,8 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             key: next level where we will be updating
             value: value to set
         """
-        config_dict(self.pristine_yaml_content).setdefault(root, {})[key]=value
-        config_dict(self.yaml_content).setdefault(root, {})[key]=value
+        config_dict(self.pristine_yaml_content).setdefault(root, {})[key] = value
+        config_dict(self.yaml_content).setdefault(root, {})[key] = value
         self.changed = True
 
     def append_includes(self, value):
