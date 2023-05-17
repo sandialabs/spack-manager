@@ -46,6 +46,8 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
             description="Turn on AMR-wind with tiny profile")
     variant("sycl", default=False,
             description="Enable SYCL backend for AMR-Wind")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
 
     conflicts("+amr_wind_gpu", when="~cuda~rocm~sycl")
     conflicts("+nalu_wind_gpu", when="~cuda~rocm")
@@ -89,6 +91,8 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     depends_on("nalu-wind+umpire", when="+umpire")
     depends_on("amr-wind+umpire", when="+umpire")
     depends_on("amr-wind+tiny_profile", when="+tiny_profile")
+    depends_on("nalu-wind+gpu-aware-mpi", when="+gpu-aware-mpi")
+    depends_on("amr-wind+gpu-aware-mpi", when="+gpu-aware-mpi")
 
     def cmake_args(self):
         spec = self.spec

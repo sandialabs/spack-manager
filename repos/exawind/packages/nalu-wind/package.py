@@ -39,10 +39,14 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
              msg="invalid device functions are generated with shared libs and cuda")
     conflicts("+shared", when="+rocm",
              msg="invalid device functions are generated with shared libs and rocm")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
+
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
     conflicts("openfast@fsi", when="~fsi")
     conflicts("+hypre", when="+hypre2")
+    depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
 
     depends_on("hypre2@2.18.2: ~int64+mpi~superlu-dist~shared", when="+hypre2")
     depends_on("hypre+umpire", when="+umpire")
