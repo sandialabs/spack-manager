@@ -45,11 +45,13 @@ def create_dev_env(parser, args):
             )
             continue
         dev_args = []
+        yaml = env.manifest.pristine_yaml_content
         # kind of hacky, but spack will try to re-clone
         # if we don't give the --path argument even though
         # it is already in the spack.yaml
-        if env.is_develop(s) and "path" in env.yaml["spack"]["develop"][str(s.name)]:
-            dev_args.extend(["--path", env.yaml["spack"]["develop"][str(s.name)]["path"]])
+        if env.is_develop(s) and "path" in yaml["spack"]["develop"][str(s.name)]:
+            # keep pointing to the original path that is provided in the spack.yaml
+            dev_args.extend(["--path", yaml["spack"]["develop"][str(s.name)]["path"]])
         elif "nalu-wind" in str(s.name):
             dev_args.extend(["-rb", "git@github.com:Exawind/nalu-wind.git", str(s.version)])
         elif "trilinos" in str(s.name):
