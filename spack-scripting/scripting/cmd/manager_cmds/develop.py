@@ -8,6 +8,8 @@
 import os
 import shutil
 
+import llnl.util.tty as tty
+
 import spack.cmd
 import spack.cmd.develop as spack_develop
 import spack.util.executable
@@ -43,25 +45,46 @@ def _redundant_code_from_spack_develop(args):
     """
     env = spack.cmd.require_active_env(cmd_name="develop")
 
+    if not args.spec:
+        if args.clone is False:
+            raise SpackError("No spec provided to spack develop command")
+
+        # download all dev specs
+        for name, entry in env.dev_specs.items():
+            path = entry.get("path", name)
+            abspath = spack.util.path.canonicalize_path(path, default_wd=env.path)
+
+            if os.path.exists(abspath):
+                msg = "Skipping developer download of %s" % entry["spec"]
+                msg += " because its path already exists."
+                tty.msg(msg)
+                continue
+
+            # Both old syntax `spack develop pkg@x` and new syntax `spack develop pkg@=x`
+            # are currently supported.
+            spec = spack.spec.parse_with_version_concrete(entry["spec"])
+            pkg_cls = spack.repo.path.get_pkg_class(spec.name)
+            pkg_cls(spec).stage.steal_source(abspath)
+
+        if not env.dev_specs:
+            tty.warn("No develop specs to download")
+
+        return
+
     specs = spack.cmd.parse_specs(args.spec)
     if len(specs) > 1:
         raise SpackError("spack develop requires at most one named spec")
 
     spec = specs[0]
-    if not spec.versions.concrete:
+    version = spec.versions.concrete_range_as_version
+    if not version:
         raise SpackError("Packages to develop must have a concrete version")
 
-    spec = specs[0]
-    if not spec.versions.concrete:
-        raise SpackError("Packages to develop must have a concrete version")
+    spec.versions = spack.version.VersionList([version])
 
     # default path is relative path to spec.name
     path = args.path or spec.name
-
-    # get absolute path to check
-    abspath = path
-    if not os.path.isabs(abspath):
-        abspath = os.path.join(env.path, path)
+    abspath = spack.util.path.canonicalize_path(path, default_wd=env.path)
 
     # clone default: only if the path doesn't exist
     clone = args.clone
@@ -78,7 +101,6 @@ def _redundant_code_from_spack_develop(args):
             msg = "Path %s already exists and cannot be cloned to." % abspath
             msg += " Use `spack develop -f` to overwrite."
             raise SpackError(msg)
-
     return (clone, abspath)
 
 

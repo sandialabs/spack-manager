@@ -96,11 +96,16 @@ spack:
         )
 
         e = env.Environment(env_root)
-        assert e.yaml["spack"]["specs"][0] == "amr-wind"
-        assert e.yaml["spack"]["specs"][1] == "nalu-wind"
-        assert e.yaml["spack"]["develop"]["amr-wind"]["spec"] == "amr-wind@main"
-        assert e.yaml["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
-        assert not e.yaml["spack"]["view"]
+        assert e.manifest.pristine_yaml_content["spack"]["specs"][0] == "amr-wind"
+        assert e.manifest.pristine_yaml_content["spack"]["specs"][1] == "nalu-wind"
+        assert (
+            e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]["spec"]
+            == "amr-wind@main"
+        )
+        assert (
+            e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
+        )
+        assert "view" not in e.manifest.pristine_yaml_content["spack"].keys()
 
 
 def test_existingYamlViewIsNotOverwritten(tmpdir):
@@ -135,7 +140,7 @@ spack:
         )
 
         e = env.Environment(env_root)
-        assert e.yaml["spack"]["view"]
+        assert e.manifest.pristine_yaml_content["spack"]["view"]
 
 
 def test_specs_can_have_spaces(tmpdir):
@@ -156,11 +161,14 @@ spack:
 
         manager("create-env", "-y", "template.yaml")
         e = env.Environment(tmpdir.strpath)
-        assert "when_possible" == e.yaml["spack"]["concretizer"]["unify"]
+        assert "when_possible" == e.manifest.pristine_yaml_content["spack"]["concretizer"]["unify"]
 
 
 def test_local_source_tree_can_be_added_to_env(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind", "-l")
         e = env.Environment(tmpdir.strpath)
-        assert "$env/opt" in e.yaml["spack"]["config"]["install_tree"]["root"]
+        assert (
+            "$env/opt"
+            in e.manifest.pristine_yaml_content["spack"]["config"]["install_tree"]["root"]
+        )

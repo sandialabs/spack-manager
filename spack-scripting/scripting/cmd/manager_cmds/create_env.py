@@ -13,13 +13,13 @@ on a given machine
 import os
 
 import manager_cmds.find_machine as fm
+from environment_utils import SpackManagerEnvironmentManifest
 from manager_cmds.find_machine import find_machine
 from manager_cmds.includes_creator import IncludesCreator
 
 import spack
 import spack.cmd
 import spack.environment.environment as environment
-import spack.util.spack_yaml as syaml
 
 
 def create_env(parser, args):
@@ -37,31 +37,15 @@ def create_env(parser, args):
     else:
         theDir = os.getcwd()
 
-    has_view = False
     if args.yaml:
         assert os.path.isfile(args.yaml)
-        with open(args.yaml, "r") as fyaml:
-            print(fyaml)
-            user_yaml = syaml.load_config(fyaml)
-            user_view = environment.config_dict(user_yaml).get("view")
-            if user_view:
-                has_view = True
-    env = environment.Environment(
-        theDir, init_file=args.yaml, with_view=has_view, keep_relative=True
-    )
-    yaml = env.yaml
 
-    def _unify_already_set(yaml):
-        return (
-            "spack" in yaml
-            and "concretizer" in yaml["spack"]
-            and "unify" in yaml["spack"]["concretizer"]
-        )
+    environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
 
-    if not args.yaml or not _unify_already_set(yaml):
-        yaml["spack"]["concretizer"] = {"unify": True}
-        with env.write_transaction():
-            env.write()
+    manifest = SpackManagerEnvironmentManifest(theDir)
+
+    if not args.yaml:
+        manifest.set_config_value("concretizer", "unify", True)
 
     if args.machine is not None:
         machine = args.machine
@@ -73,13 +57,10 @@ def create_env(parser, args):
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)
         for s in spec_list:
-            env.add(s)
+            manifest.add_user_spec(str(s))
 
     if args.local_source:
-        if "config" in yaml["spack"]:
-            yaml["spack"]["config"]["install_tree"] = {"root": "$env/opt"}
-        else:
-            yaml["spack"]["config"] = {"install_tree": {"root": "$env/opt"}}
+        manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
     inc_creator = IncludesCreator()
     genPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "base")
@@ -97,12 +78,8 @@ def create_env(parser, args):
     include_file_name = "include.yaml"
     include_file = os.path.join(theDir, include_file_name)
     inc_creator.write_includes(include_file)
-    if "include" in yaml["spack"]:
-        yaml["spack"]["include"].append(include_file_name)
-    else:
-        yaml["spack"]["include"] = [include_file_name]
-
-    env.write()
+    manifest.append_includes(include_file_name)
+    manifest.flush()
 
     fpath = os.path.join(os.environ["SPACK_MANAGER"], ".tmp")
 

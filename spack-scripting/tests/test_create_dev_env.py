@@ -70,12 +70,12 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
             )
         )
         e = ev.Environment(tmpdir.strpath)
-        print(e.yaml)
+        print(e.manifest.pristine_yaml_content)
         print(list(e.user_specs))
         assert os.path.isfile(str(tmpdir.join("spack.yaml")))
         assert os.path.isfile(str(tmpdir.join("include.yaml")))
-        assert "path" in e.yaml["spack"]["develop"]["amr-wind"]
-        assert "path" in e.yaml["spack"]["develop"]["nalu-wind"]
+        assert "path" in e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]
+        assert "path" in e.manifest.pristine_yaml_content["spack"]["develop"]["nalu-wind"]
         # mocked out call that would update yaml with trilinos info but
         # assuming it works fine
         mock_dev.assert_any_call(["--path", amr_path.strpath, "amr-wind@main"])
@@ -93,9 +93,9 @@ def test_nonConcreteSpecsDontGetCloned(mock_dev, tmpdir):
         )
         mock_dev.assert_called_once_with(["exawind@master"])
         e = ev.Environment(tmpdir.strpath)
-        assert "nalu-wind" in e.yaml["spack"]["specs"]
-        assert "exawind@master" in e.yaml["spack"]["specs"]
-        assert "amr-wind" in e.yaml["spack"]["specs"]
+        assert "nalu-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
+        assert "exawind@master" in e.manifest.pristine_yaml_content["spack"]["specs"]
+        assert "amr-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
 
 
 @patch("manager_cmds.create_dev_env.develop")
@@ -105,4 +105,4 @@ def test_noSpecsIsNotAnErrorGivesBlankEnv(mock_develop, tmpdir):
         assert not mock_develop.called
         e = ev.Environment(tmpdir.strpath)
         assert len(e.user_specs) == 0
-        assert e.yaml["spack"]["specs"] == []
+        assert e.manifest.pristine_yaml_content["spack"]["specs"] == []

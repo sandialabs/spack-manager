@@ -16,6 +16,7 @@ import multiprocessing
 import os
 import sys
 
+from environment_utils import SpackManagerEnvironmentManifest
 from manager_cmds.find_machine import find_machine
 from manager_utils import path_extension, pruned_spec_string
 
@@ -387,9 +388,9 @@ def create_snapshots(args):
 
     e = ev.Environment(env_path)
 
-    with e.write_transaction():
-        e.yaml["spack"]["concretizer"] = {"unify": "when_possible"}
-        e.write()
+    manifest = SpackManagerEnvironmentManifest(env_path)
+    manifest.set_config_value("concretizer", "unify", "when_possible")
+    manifest.flush()
 
     spec_data = machine_specs[machine]
     add_view(e, extension, args.link_type)
