@@ -388,7 +388,6 @@ def create_snapshots(args):
 
     e = ev.Environment(env_path)
 
-
     manifest = SpackManagerEnvironmentManifest(env_path)
     manifest.set_config_value("concretizer", "unify", "when_possible")
     manifest.flush()
