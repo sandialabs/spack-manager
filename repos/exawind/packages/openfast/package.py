@@ -14,6 +14,11 @@ class Openfast(bOpenfast):
     patch("segfault_message.patch", when="%clang@12.0.1 build_type=RelWithDebInfo")
     version("fsi", git="https://github.com/gantech/openfast.git", branch="f/br_fsi_2")
 
+    variant("rosco", default=False,
+            description="Build ROSCO controller alongside OpenFAST")
+
+    depends_on("rosco", when="+rosco")
+
     #def setup_build_environment(self, env):
     #    spec = self.spec
     #    machine = find_machine(verbose=False, full_machine_name=False)

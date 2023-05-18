@@ -116,7 +116,6 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
     active_env = ev.active_environment()
 
     def update_dictionary(env, spec):
-
         ext_spec = create_external_detected_spec(env, spec)
         if ext_spec:
             if spec.name in external_spec_dict:

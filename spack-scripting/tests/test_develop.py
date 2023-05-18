@@ -23,7 +23,7 @@ class TestSpackManagerDevelop(object):
     def test_spackManagerDevelopCallsSpackDevelop(self, mock_develop):
         env("create", "test")
         with ev.read("test"):
-            manager("develop", "mpich@1.0")
+            manager("develop", "mpich@=1.0")
             mock_develop.assert_called_once()
 
     @patch("manager_cmds.develop.spack_develop.develop")
@@ -41,7 +41,7 @@ class TestSpackManagerDevelop(object):
             repo = "https://a.git.repo"
             name = "mpich"
             version = "1.0"
-            spec = "{n}@{v}".format(n=name, v=version)
+            spec = "{n}@={v}".format(n=name, v=version)
             path = os.path.join(e.path, name)
             manager_args = ["develop", "--repo-branch", repo, branch]
             if all_branches:

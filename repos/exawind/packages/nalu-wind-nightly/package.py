@@ -41,7 +41,8 @@ class NaluWindNightly(bNaluWind, CudaPackage):
         return compiler + cuda
 
     def dashboard_trilinos(self):
-        vstring = trilinos_version_filter(self.spec["trilinos"].version)
+        version = self.spec["trilinos"].versions.concrete_range_as_version
+        vstring = trilinos_version_filter(version)
         trilinos = "trilinos@{v}".format(v=vstring)
         uvm = self.spec["trilinos"].format("{variants.uvm}") if "cuda" in self.spec else ""
         return trilinos + uvm

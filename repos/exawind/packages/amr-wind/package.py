@@ -24,6 +24,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="Enable Umpire")
     variant("sycl", default=False,
             description="Enable SYCL backend")
+    variant("gpu-aware-mpi", default=False,
+            description="gpu-aware-mpi")
 
     depends_on("hdf5~mpi", when="+hdf5~mpi")
     depends_on("hdf5+mpi", when="+hdf5+mpi")
@@ -31,6 +33,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("zfp", when="+hdf5")
     depends_on("hypre+umpire", when="+umpire")
     depends_on("hypre+sycl", when="+sycl")
+    depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
