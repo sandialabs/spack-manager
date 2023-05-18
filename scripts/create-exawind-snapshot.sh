@@ -39,7 +39,7 @@ printf "\nRunning snapshot creator...\n"
 if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
   # TODO get cores right on these machines
   NUM_CORES=16
-  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast exawind%gcc+hypre+openfast+cuda+amr_wind_gpu+nalu_wind_gpu"
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast~cuda exawind%intel+hypre+openfast exawind%clang+hypre+openfast exawind%gcc+hypre+openfast+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
   NUM_CORES=8
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast+masa"
@@ -48,7 +48,7 @@ elif [[ "${SPACK_MANAGER_MACHINE}" == "rhodes" ]]; then
   cmd "nice -n19 spack manager snapshot -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "summit" ]]; then
   NUM_CORES=8
-  cmd "nice -n19 spack manager snapshot -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu exawind%gcc+hypre"
+  cmd "nice -n19 spack manager snapshot -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu exawind%gcc+hypre~cuda"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
   # TODO we should probably launch the install through slurm and exit on this one
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast"
@@ -60,13 +60,16 @@ printf "\nActivating snapshot environment...\n"
 cmd "spack env activate -d ${SPACK_MANAGER}/snapshots/exawind/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
 
 printf "\nInstalling environment...\n"
-cmd "spack env depfile -o Makefile"
 time (
-  make -j${NUM_CORES}
+  for i in {1..1}; do
+      nice -n19 spack install &
+  done
+  wait
 )
 
 printf "\nCreate modules...\n"
 cmd "spack module lmod refresh -y"
+cmd "spack module tcl refresh -y"
 
 cmd "spack env deactivate"
 
