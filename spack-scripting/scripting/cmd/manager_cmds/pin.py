@@ -8,6 +8,7 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
+from environment_utils import SpackManagerEnvironmentManifest
 from manager_utils import command, pruned_spec_string
 
 import llnl.util.tty as tty
@@ -105,7 +106,7 @@ def pin_env(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die("spack manager pin requires an active environment")
-    yaml = env.yaml
+    manifest = env.manifest
 
     cargs = ["--force"]
 
@@ -127,16 +128,10 @@ def pin_env(parser, args):
             for dep in root.dependencies():
                 spec_str += " ^{0}".format(spec_string_with_git_ref_for_version(dep))
 
-        yaml["spack"]["specs"][i] = spec_str
+        manifest.override_user_spec(spec_str, i)
 
     print("Updating the spack.yaml")
-    # spack environment has a member function "change_existing_spec" which would allow us
-    # to update the environment rather than having to rewrite the yaml file but then we
-    # don't capture the solved for dependencies in the DAG.
-    # we could play around with this more in the futute.
-    # this works for now but it is a little messy
-    with open(env.manifest_path, "w") as fout:
-        syaml.dump_config(yaml, stream=fout, default_flow_style=False)
+    manifest.flush()
     env._re_read()
 
     print("Reconcretizing with updated specs")
