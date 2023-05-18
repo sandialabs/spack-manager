@@ -8,7 +8,6 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
-from environment_utils import SpackManagerEnvironmentManifest
 from manager_utils import command, pruned_spec_string
 
 import llnl.util.tty as tty
@@ -16,7 +15,6 @@ import llnl.util.tty as tty
 import spack.environment as ev
 import spack.main
 import spack.util.executable
-import spack.util.spack_yaml as syaml
 from spack.version import GitVersion, Version
 
 git = spack.util.executable.which("git")
@@ -96,6 +94,17 @@ def spec_string_with_git_ref_for_version(spec):
     return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
 
 
+def pin_graph(root, pinRoot, pinDeps, pinAll):
+    if pinRoot or pinAll:
+        spec_str = spec_string_with_git_ref_for_version(root)
+    else:
+        spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
+    if pinDeps or pinAll:
+        for dep in root.dependencies():
+            spec_str += " ^{0}".format(spec_string_with_git_ref_for_version(dep))
+    return spec_str
+
+
 def pin_env(parser, args):
     """
     pin versions paired to git branches with latest sha
@@ -120,13 +129,7 @@ def pin_env(parser, args):
 
     print("Pinning branches to sha's")
     for i, root in enumerate(roots):
-        if args.roots or args.all:
-            spec_str = spec_string_with_git_ref_for_version(root)
-        else:
-            spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
-        if args.dependencies or args.all:
-            for dep in root.dependencies():
-                spec_str += " ^{0}".format(spec_string_with_git_ref_for_version(dep))
+        spec_str = pin_graph(root, args.root, args.dependencies, args.all)
 
         manifest.override_user_spec(spec_str, i)
 
