@@ -37,6 +37,5 @@ def setup_parser(subparser):
     manager_cmds.snapshot.add_command(sp, _subcommands)
 
 
-
 def manager(parser, args):
     _subcommands[args.manager_command](parser, args)

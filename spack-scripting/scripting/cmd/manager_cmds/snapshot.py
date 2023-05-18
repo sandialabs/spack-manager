@@ -153,12 +153,7 @@ def add_command(parser, command_dict):
         help="use machine name in the snapshot path " "instead of computed architecture",
     )
     sub_parser.add_argument(
-        "-s",
-        "--specs",
-        required=True,
-        default=[],
-        nargs="+",
-        help="Specs to create snapshots for",
+        "-s", "--specs", required=True, default=[], nargs="+", help="Specs to create snapshots for"
     )
     sub_parser.add_argument(
         "-i",
