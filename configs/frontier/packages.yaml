@@ -100,7 +100,7 @@ packages:
     buildable: false
     externals:
       - spec: umpire@6.0.0
-        prefix: /sw/frontier/spack-envs/base/opt/cray-sles15-zen3/clang-15.0.0-rocm5.3.0/umpire-6.0.0-4h6ox6p5o4zj6zhzgnly7a3b56jyghrz
+        prefix: /sw/frontier/spack-envs/base/opt/cray-sles15-zen3/clang-15.0.0-rocm5.4.3/umpire-6.0.0-uuewq7m3and2pbamaeem2ifextvpu2oa
         modules:
           - umpire/6.0.0
   trilinos:
