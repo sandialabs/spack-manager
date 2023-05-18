@@ -6,6 +6,7 @@
 # for more details.
 import os
 
+from environment_utils import SpackManagerEnvironmentManifest
 from manager_cmds.create_env import create_env
 from manager_cmds.pin import pin_env
 from manager_utils import path_extension
@@ -94,11 +95,9 @@ def create_snapshots(parser, args):
 
     env_path = create_env(None, cargs)
 
-    env = ev.Environment(env_path)
-
     # update module path based on the name given
-    yaml = env.yaml
-    yaml["spack"]["modules"]["default"]["roots"]["lmod"] = module_root
+    manifest = SpackManagerEnvironmentManifest(env_path)
+    manifest.set_config_value("modules", "default", {"roots": {"lmod": module_root}})
     # add core compilers
     includes = os.path.join(env_path, "include.yaml")
     if os.path.isfile(includes):
@@ -109,12 +108,12 @@ def create_snapshots(parser, args):
                 for compiler in iyaml["compilers"]:
                     print(compiler)
                     core_compilers.append(compiler["compiler"]["spec"])
-        yaml["spack"]["modules"]["default"]["lmod"]["core_compilers"] = core_compilers
+        manifest.set_config_value(
+            "modules", "default", {"lmod": {"core_compilers": core_compilers}}
+        )
+    manifest.flush()
 
-    with open(env.manifest_path, "w") as fout:
-        syaml.dump_config(yaml, stream=fout, default_flow_style=False)
-    env._re_read()
-
+    env = ev.Environment(env_path)
     ev.activate(env)
 
     pin_env(None, pargs)
