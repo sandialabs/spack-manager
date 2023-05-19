@@ -16,7 +16,7 @@ import spack.environment as ev
 import spack.main
 import spack.traverse as traverse
 import spack.util.executable
-from spack.version import GitVersion, Version
+from spack.version import GitVersion
 
 git = spack.util.executable.which("git")
 concretize = spack.main.SpackCommand("concretize")
@@ -31,7 +31,7 @@ def get_version_paired_git_branch(spec):
         # if it is already a GitVersion then we've probably already ran this
         # once we are going to recreate the paried version that the git hash
         # has been assigned to and use that
-        version = Version(spec.version.ref_version_str)
+        version = spec.version.ref_version
         version_dict = spec.package_class.versions[version]
     else:
         try:
@@ -85,7 +85,7 @@ def spec_string_with_git_ref_for_version(spec):
     base, rest = spec_str.split("%")
     name, version = base.split("@")
     if isinstance(spec.version, GitVersion):
-        version_str = spec.version.ref_version_str
+        version_str = str(spec.version.ref_version)
     else:
         version_str = spec.format("{version}")
     # get hash
@@ -133,7 +133,7 @@ def pin_env(parser, args):
     roots = list(env.roots())
 
     print("Pinning branches to sha's")
-    pinRoot = args.root or args.all
+    pinRoot = args.roots or args.all
     pinDeps = args.dependencies or args.all
     for i, root in enumerate(roots):
         spec_str = pin_graph(root, pinRoot, pinDeps)
