@@ -14,6 +14,7 @@ import llnl.util.tty as tty
 
 import spack.environment as ev
 import spack.main
+import spack.traverse as traverse
 import spack.util.executable
 from spack.version import GitVersion, Version
 
@@ -91,17 +92,21 @@ def spec_string_with_git_ref_for_version(spec):
     sha = find_latest_git_hash(spec)
     if sha:
         version_str = "git.{h}={v}".format(h=sha, v=version_str)
-    return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
+        return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
+    else:
+        return None
 
 
-def pin_graph(root, pinRoot, pinDeps, pinAll):
-    if pinRoot or pinAll:
+def pin_graph(root, pinRoot=True, pinDeps=True):
+    if pinRoot:
         spec_str = spec_string_with_git_ref_for_version(root)
     else:
         spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
-    if pinDeps or pinAll:
-        for dep in root.dependencies():
-            spec_str += " ^{0}".format(spec_string_with_git_ref_for_version(dep))
+    if pinDeps:
+        for dep in traverse.traverse_nodes([root], root=False):
+            test_spec = spec_string_with_git_ref_for_version(dep)
+            if test_spec:
+                spec_str += " ^{0}".format(test_spec)
     return spec_str
 
 
@@ -128,10 +133,12 @@ def pin_env(parser, args):
     roots = list(env.roots())
 
     print("Pinning branches to sha's")
+    pinRoot = args.root or args.all
+    pinDeps = args.dependencies or args.all
     for i, root in enumerate(roots):
-        spec_str = pin_graph(root, args.root, args.dependencies, args.all)
-
-        manifest.override_user_spec(spec_str, i)
+        spec_str = pin_graph(root, pinRoot, pinDeps)
+        if spec_str:
+            manifest.override_user_spec(spec_str, i)
 
     print("Updating the spack.yaml")
     manifest.flush()
