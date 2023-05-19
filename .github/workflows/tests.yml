@@ -191,7 +191,12 @@ jobs:
       run: |
         source start.sh
         spack-start
-        snapshot_creator.py --stop_after concretize --name test --modules --link_type soft --use_machine_name
+        spack manager snapshot -m --name git_refs -s exawind+openfast amr-wind+hypre
+        quick-activate $SPACK_MANAGER/snapshots/exawind/${SPACK_MANAGER_MACHINE}/git_refs
+        spack env deactivate        
+        spack manager snapshot -m --name regular_versions -r -s exawind+openfast amr-wind+hypre
+        quick-activate $SPACK_MANAGER/snapshots/exawind/${SPACK_MANAGER_MACHINE}/regular_versions
+        spack env deactivate        
 
 
 
