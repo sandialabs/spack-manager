@@ -97,12 +97,12 @@ packages:
           - openblas/0.3.17
   umpire:
     require: "@6.0.0"
-    buildable: false
-    externals:
-      - spec: umpire@6.0.0
-        prefix: /sw/frontier/spack-envs/base/opt/cray-sles15-zen3/clang-15.0.0-rocm5.4.3/umpire-6.0.0-uuewq7m3and2pbamaeem2ifextvpu2oa
-        modules:
-          - umpire/6.0.0
+  #  buildable: false
+  #  externals:
+  #    - spec: umpire@6.0.0
+  #      prefix: /sw/frontier/spack-envs/base/opt/cray-sles15-zen3/clang-15.0.0-rocm5.4.3/umpire-6.0.0-uuewq7m3and2pbamaeem2ifextvpu2oa
+  #      modules:
+  #        - umpire/6.0.0
   trilinos:
     require:
       - any_of: ["@13.4.0.2023.02.28", "@develop"]
