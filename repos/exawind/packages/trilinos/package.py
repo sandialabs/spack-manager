@@ -34,6 +34,8 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     patch("rocm_seacas.patch", when="@:13.4.0+rocm")
     patch("rocm_seacas_exo_format.patch", when="@14.0.0:+rocm")
     patch("kokkos_hip_subview.patch", when="@:13.4.0+rocm")
+    patch("stk_debugger.patch", when="@14.0.0:");
+    patch("stk_underscore.patch", when="@14.0.0:");
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
