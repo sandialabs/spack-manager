@@ -12,6 +12,8 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   export SPACK_ROOT=${SPACK_MANAGER}/spack
   export SPACK_USER_CACHE_PATH=${SPACK_MANAGER}/.cache
   export SPACK_USER_CONFIG_PATH=${SPACK_MANAGER}/.spack
+  # TODO(psakiev) this needs some logic. just embed with exawind for now
+  export SPACK_MANAGER_PROJECT=${SPACK_MANAGER}/projects/exawind
   export PYTHONPATH=${PYTHONPATH}:${SPACK_MANAGER}/scripts:${SPACK_MANAGER}/spack-scripting/scripting/cmd:${SPACK_MANAGER}/spack-scripting/scripting
   source ${SPACK_ROOT}/share/spack/setup-env.sh
 
@@ -37,10 +39,14 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
     spack config --scope site add "concretizer:unify:false"
   fi
 
+  # TODO(psakiev) this repo injection is potentially a problem that may need to be taken to spack
+  # we would need this to be dynamic based on the currently active project otherwise the prefernce
+  # will be embedded in the order that repos are used.  
   if [[ -z $(spack repo list | awk '{print $1" "$2}' | grep "exawind $SPACK_MANAGER") ]]; then
-    spack repo add ${SPACK_MANAGER}/repos/exawind
+    spack repo add ${SPACK_MANAGER_PROJECT}/repos/exawind
   fi
   
+  # TODO(psakiev) not sure if this should be here. Probably need to find a way to abstract this to the config
   if [[ -z $(spack config --scope site blame bootstrap | grep spack-bootstrap-store) ]]; then
     if [[ "${SPACK_MANAGER_MACHINE}" == "cee" ]]; then
       spack bootstrap add --scope site --trust wind-binaries /projects/wind/spack-bootstrap-store/metadata/binaries
@@ -51,10 +57,14 @@ if ! $(type '_spack_start_called' 2>/dev/null | grep -q 'function'); then
   if [[ "${SPACK_MANAGER_MACHINE}" == "NOT-FOUND" ]]; then
     echo "Machine not found."
   fi
-  if [[ -n "$(${SPACK_MANAGER}/scripts/supported_external_paths.py)" ]]; then
-    export SPACK_MANAGER_EXTERNAL=$(${SPACK_MANAGER}/scripts/supported_external_paths.py)
-  fi
-  export PATH=${PATH}:${SPACK_MANAGER}/scripts
+
+  # TODO(psakiev) this whole concept needs to be revisited. Snapshots aren't really a thing right now...
+  # if [[ -n "$(${SPACK_MANAGER}/scripts/supported_external_paths.py)" ]]; then
+  #   export SPACK_MANAGER_EXTERNAL=$(${SPACK_MANAGER}/scripts/supported_external_paths.py)
+  # fi
+
+  # TODO(psakiev) this should probably be dynamic and prepend path
+  export PATH=${PATH}:${SPACK_MANAGER_PROJECT}/scripts
   # define a function since environment variables are sometimes preserved in a subshell but functions aren't
   # see https://github.com/psakievich/spack-manager/issues/210
   function _spack_start_called(){

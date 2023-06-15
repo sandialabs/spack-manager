@@ -41,7 +41,7 @@ function spack-start() {
     echo "This function loads spack into your active shell"
     return
   fi
-  source $SPACK_MANAGER/scripts/spack_start.sh
+  source $SPACK_MANAGER/bin/spack_start.sh
 }
 
 # function to quickly activate an environment
