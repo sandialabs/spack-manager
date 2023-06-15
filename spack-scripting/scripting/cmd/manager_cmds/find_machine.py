@@ -17,10 +17,8 @@ class MachineData:
 
 
 def is_cee(hostname):
-    known_hosts = ("cee", "ews", "ecw", "ecs", "hpws", "ascic")
-    for k in known_hosts:
-        if k in hostname:
-            return True
+    if "SNLSITE" in os.environ:
+        return os.environ["SNLSITE"] == "cee"
     return False
 
 
