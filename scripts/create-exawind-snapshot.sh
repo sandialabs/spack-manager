@@ -42,13 +42,13 @@ if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
   cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast~cuda exawind%intel+hypre+openfast exawind%clang+hypre+openfast exawind%gcc+hypre+openfast+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
   NUM_CORES=8
-  cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast+masa"
+  cmd "nice -n19 spack manager snapshot -m -s exawind+hypre+openfast amr-wind+hypre+openfast+masa"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "rhodes" ]]; then
   NUM_CORES=16
-  cmd "nice -n19 spack manager snapshot -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast"
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "summit" ]]; then
   NUM_CORES=8
-  cmd "nice -n19 spack manager snapshot -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu exawind%gcc+hypre~cuda"
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu exawind%gcc+hypre~cuda"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
   # TODO we should probably launch the install through slurm and exit on this one
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast"
