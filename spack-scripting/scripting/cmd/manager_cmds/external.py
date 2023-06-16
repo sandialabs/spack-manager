@@ -10,6 +10,7 @@ import re
 from datetime import datetime
 
 from manager_utils import base_extension, pruned_spec_string
+from environment_utils import SpackManagerEnvironmentManifest
 
 import llnl.util.tty as tty
 
@@ -76,7 +77,8 @@ def get_ordered_dated_snapshots():
 
 
 def include_entry_exists(env, name):
-    includes = config_dict(env.yaml).get("include", [])
+    manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
+    includes = config_dict(manifest.pristine_yaml_content).get("include", [])
     for entry in includes:
         if entry == name:
             return True
@@ -84,16 +86,13 @@ def include_entry_exists(env, name):
 
 
 def add_include_entry(env, inc, prepend=True):
-    include = config_dict(env.yaml).get("include", [])
-    if len(include) == 0:
-        # includes is missing, need to add it
-        env.yaml["spack"].insert(0, "include", [])
-        include = config_dict(env.yaml).get("include", [])
+    manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
+    include = config_dict(manifest.pristine_yaml_content).get("include", [])
     if prepend:
-        include.insert(0, inc)
+        manifest.prepend_includes(inc)
     else:
-        include.append(inc)
-    env.write()
+        manifest.append_includes(inc)
+    manifest.flush()
 
 
 def create_external_detected_spec(env, spec):
