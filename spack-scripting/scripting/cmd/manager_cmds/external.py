@@ -9,8 +9,8 @@ import os
 import re
 from datetime import datetime
 
-from manager_utils import base_extension, pruned_spec_string
 from environment_utils import SpackManagerEnvironmentManifest
+from manager_utils import base_extension, pruned_spec_string
 
 import llnl.util.tty as tty
 
@@ -87,7 +87,6 @@ def include_entry_exists(env, name):
 
 def add_include_entry(env, inc, prepend=True):
     manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
-    include = config_dict(manifest.pristine_yaml_content).get("include", [])
     if prepend:
         manifest.prepend_includes(inc)
     else:

@@ -40,6 +40,6 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the beginning of the list
         """
-        config_dict(self.pristine_yaml_content).setdefault("include", [])[:0] = value
-        config_dict(self.yaml_content).setdefault("include", [])[:0] = value
+        config_dict(self.pristine_yaml_content).setdefault("include", [])[:0] = [value]
+        config_dict(self.yaml_content).setdefault("include", [])[:0] = [value]
         self.changed = True
