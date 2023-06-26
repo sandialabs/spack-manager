@@ -30,7 +30,7 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     variant("pic", default=True,
             description="Position independent code")
 
-    depends_on('cmake@3.23.1:', type='build')
+    depends_on('cmake@3.23.1:', type='build', when="@14.0.0:")
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
     patch("rocm_seacas.patch", when="@:13.4.0+rocm")
