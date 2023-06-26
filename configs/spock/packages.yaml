@@ -69,14 +69,14 @@ packages:
 #        prefix: /opt/cray/pe/parallel-netcdf/1.12.1.7/amd/4.3
 #        modules:
 #          - cray-parallel-netcdf/1.12.1.7
-  cmake:
-    version: [3.22.1]
-    buildable: false
-    externals:
-      - spec: cmake@3.22.1
-        prefix: /sw/spock/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.22.1-wd2ptgormfxhkw3fiac75fiznbzcvpah
-        modules:
-          - cmake/3.22.1
+#  cmake:
+#    version: [3.22.1]
+#    buildable: false
+#    externals:
+#      - spec: cmake@3.22.1
+#        prefix: /sw/spock/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.22.1-wd2ptgormfxhkw3fiac75fiznbzcvpah
+#        modules:
+#          - cmake/3.22.1
   zlib:
     version: [1.2.11]
     buildable: false
