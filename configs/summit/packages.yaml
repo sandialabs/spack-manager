@@ -29,7 +29,7 @@ packages:
       #  modules:
       #    - cuda/11.0.3
   netcdf-c:
-    version: [4.8.1]
+    require: "@4.8.1"
     buildable: false
     externals:
       - spec: "netcdf-c@4.8.1%gcc"
