@@ -11,7 +11,7 @@ packages:
     externals:
     - spec: cmake@3.25.0%clang@13.0.1~doc+ncurses+ownlibs~qt build_type=Release arch=linux-rhel7-x86_64
       prefix: /projects/wind/core-spack-manager/scripts/admin-system-setup/packages/.spack-env/view/clang/13.0.1/cmake/3.25.0/flff6w2l
-    - spec: cmake@3.25.0%gcc@10.3.0~doc+ncurses+ownlibs~qt build_type=Release arch=linux-rhel7-x86_64
+    - spec: cmake@3.25.0%gcc@10.3.0~doc+ncurses+ownlibs~qt build_type=Release
       prefix: /projects/wind/core-spack-manager/scripts/admin-system-setup/packages/.spack-env/view/gcc/10.3.0/cmake/3.25.0/vfumwtcx
     buildable: false
   cuda:
