@@ -18,9 +18,11 @@ def test_smManifestCanSetConfig(tmpdir):
         testManifest = smem(tmpdir.strpath)
         testManifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
         testManifest.append_includes("include.yaml")
+        testManifest.prepend_includes("first_include.yaml")
         testManifest.flush()
 
         with open("spack.yaml", "r") as f:
             yaml = syaml.load(f)
             assert "$env/opt" in yaml["spack"]["config"]["install_tree"]["root"]
             assert "include.yaml" in yaml["spack"]["include"]
+            assert "first_include.yaml" == yaml["spack"]["include"][0]

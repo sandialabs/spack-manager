@@ -1,4 +1,6 @@
 packages:
+  diffutils:
+    require: "@3.8"
   perl:
     require: "@5.32.0"
   slurm:

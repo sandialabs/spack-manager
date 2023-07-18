@@ -28,8 +28,18 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         """Add to the includes in the manifest
 
         Args:
-            value: value to add
+            value: value to add at the end of the list
         """
         config_dict(self.pristine_yaml_content).setdefault("include", []).append(value)
         config_dict(self.yaml_content).setdefault("include", []).append(value)
+        self.changed = True
+
+    def prepend_includes(self, value):
+        """Add to the includes in the manifest
+
+        Args:
+            value: value to add at the beginning of the list
+        """
+        config_dict(self.pristine_yaml_content).setdefault("include", [])[:0] = [value]
+        config_dict(self.yaml_content).setdefault("include", [])[:0] = [value]
         self.changed = True

@@ -8,15 +8,15 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
-from manager_utils import pruned_spec_string
+from manager_utils import command, pruned_spec_string
 
 import llnl.util.tty as tty
 
 import spack.environment as ev
 import spack.main
+import spack.traverse as traverse
 import spack.util.executable
-import spack.util.spack_yaml as syaml
-from spack.version import GitVersion, Version
+from spack.version import GitVersion
 
 git = spack.util.executable.which("git")
 concretize = spack.main.SpackCommand("concretize")
@@ -31,7 +31,7 @@ def get_version_paired_git_branch(spec):
         # if it is already a GitVersion then we've probably already ran this
         # once we are going to recreate the paried version that the git hash
         # has been assigned to and use that
-        version = Version(spec.version.ref_version_str)
+        version = spec.version.ref_version
         version_dict = spec.package_class.versions[version]
     else:
         try:
@@ -85,14 +85,29 @@ def spec_string_with_git_ref_for_version(spec):
     base, rest = spec_str.split("%")
     name, version = base.split("@")
     if isinstance(spec.version, GitVersion):
-        version_str = spec.version.ref_version_str
+        version_str = str(spec.version.ref_version)
     else:
         version_str = spec.format("{version}")
     # get hash
     sha = find_latest_git_hash(spec)
     if sha:
         version_str = "git.{h}={v}".format(h=sha, v=version_str)
-    return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
+        return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
+    else:
+        return None
+
+
+def pin_graph(root, pinRoot=True, pinDeps=True):
+    if pinRoot:
+        spec_str = spec_string_with_git_ref_for_version(root)
+    else:
+        spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
+    if pinDeps:
+        for dep in traverse.traverse_nodes([root], root=False):
+            test_spec = spec_string_with_git_ref_for_version(dep)
+            if test_spec:
+                spec_str += " ^{0}".format(test_spec)
+    return spec_str
 
 
 def pin_env(parser, args):
@@ -105,7 +120,7 @@ def pin_env(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die("spack manager pin requires an active environment")
-    yaml = env.yaml
+    manifest = env.manifest
 
     cargs = ["--force"]
 
@@ -113,34 +128,24 @@ def pin_env(parser, args):
         cargs.append("--fresh")
 
     print("Concretizing environment to resolve DAG")
-    concretize(*cargs)
+    command(concretize, *cargs)
 
     roots = list(env.roots())
 
     print("Pinning branches to sha's")
+    pinRoot = args.roots or args.all
+    pinDeps = args.dependencies or args.all
     for i, root in enumerate(roots):
-        if args.roots or args.all:
-            spec_str = spec_string_with_git_ref_for_version(root)
-        else:
-            spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
-        if args.dependencies or args.all:
-            for dep in root.dependencies():
-                spec_str += " ^{0}".format(spec_string_with_git_ref_for_version(dep))
-
-        yaml["spack"]["specs"][i] = spec_str
+        spec_str = pin_graph(root, pinRoot, pinDeps)
+        if spec_str:
+            manifest.override_user_spec(spec_str, i)
 
     print("Updating the spack.yaml")
-    # spack environment has a member function "change_existing_spec" which would allow us
-    # to update the environment rather than having to rewrite the yaml file but then we
-    # don't capture the solved for dependencies in the DAG.
-    # we could play around with this more in the futute.
-    # this works for now but it is a little messy
-    with open(env.manifest_path, "w") as fout:
-        syaml.dump_config(yaml, stream=fout, default_flow_style=False)
+    manifest.flush()
     env._re_read()
 
     print("Reconcretizing with updated specs")
-    concretize(*cargs)
+    command(concretize, *cargs)
 
 
 def setup_parser_args(sub_parser):

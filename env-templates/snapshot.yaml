@@ -1,0 +1,45 @@
+spack:
+  specs: []
+  view: true
+  concretizer:
+    unify: false
+  config:
+    install_tree:
+      root: ${env}/opt/
+  upstreams:
+    core:
+      install_tree: $spack/opt/spack
+  modules:
+    default:
+      enable:: [lmod]
+      arch_folder: false
+      roots:
+        lmod: ${SPACK_MANAGER}/modules/snapshot/$date
+      prefix_inspections:
+        bin: [PATH]
+        lib: [LIBRARY_PATH, LD_LIBRARY_PATH]
+        lib64: [LIBRARY_PATH, LD_LIBRARY_PATH]
+        lib/pkgconfig: [PKG_CONFIG_PATH]
+        lib64/pkgconfig: [PKG_CONFIG_PATH]
+        share/pkgconfig: [PKG_CONFIG_PATH]
+      lmod:
+        # TODO update if using manually
+        # core_compilers: [ coarcompiler ]
+        include: [gcc, intel, clang, apple-clang]
+        hash_length: 0
+        hierarchy: [mpi]
+        exclude_implicits: true
+        all:
+          conflict:
+          - '{name}'
+          environment:
+            set:
+              '{name}_ROOT': '{prefix}'
+              '{name}_VERSION': '{version}'
+              '{name}_BIN': '{prefix.bin}'
+              '{name}_INC': '{prefix.include}'
+              '{name}_LIB': '{prefix.lib}'
+        projections:
+          all: '{name}-{hash:4}/{version}'
+          ^cuda: '{cuda.name}-{cuda.version}/{name}-{hash:4}/{version}'
+          ^rocm: '{rocm.name}-{rocm.version}/{name}-{hash:4}/{version}'

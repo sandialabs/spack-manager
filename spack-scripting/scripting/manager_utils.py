@@ -15,9 +15,9 @@ arch = spack.main.SpackCommand("arch")
 
 def base_extension(use_machine_name):
     if use_machine_name:
-        return "exawind/snapshots/{machine}".format(machine=os.environ["SPACK_MANAGER_MACHINE"])
+        return "snapshots/exawind/{machine}".format(machine=os.environ["SPACK_MANAGER_MACHINE"])
     else:
-        return "exawind/snapshots/{arch}".format(arch=arch("-b").strip())
+        return "snapshots/exawind/{arch}".format(arch=arch("-b").strip())
 
 
 def path_extension(name, use_machine_name):
@@ -41,3 +41,12 @@ def pruned_spec_string(spec, variants_to_omit=["dev_path=", "patches=", "build_s
 
     pruned_spec = " ".join(pruned_components)
     return pruned_spec
+
+
+def command(command, *args):
+    """
+    Execute a spack.main.SpackCommand uniformly
+    and add some print statements
+    """
+    print("spack", command.command_name, *args)
+    print(command(*args, fail_on_error=False))

@@ -9,6 +9,7 @@ import os
 import re
 from datetime import datetime
 
+from environment_utils import SpackManagerEnvironmentManifest
 from manager_utils import base_extension, pruned_spec_string
 
 import llnl.util.tty as tty
@@ -28,8 +29,8 @@ def get_external_dir():
         manager_root = os.environ["SPACK_MANAGER_EXTERNAL"]
     else:
         manager_root = os.environ["SPACK_MANAGER"]
-    external_machine = os.path.join(manager_root, "environments", base_extension(True))
-    external_arch = os.path.join(manager_root, "environments", base_extension(False))
+    external_machine = os.path.join(manager_root, base_extension(True))
+    external_arch = os.path.join(manager_root, base_extension(False))
 
     if os.path.isdir(external_machine) and os.path.isdir(external_arch):
         raise Exception(
@@ -76,7 +77,8 @@ def get_ordered_dated_snapshots():
 
 
 def include_entry_exists(env, name):
-    includes = config_dict(env.yaml).get("include", [])
+    manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
+    includes = config_dict(manifest.pristine_yaml_content).get("include", [])
     for entry in includes:
         if entry == name:
             return True
@@ -84,16 +86,12 @@ def include_entry_exists(env, name):
 
 
 def add_include_entry(env, inc, prepend=True):
-    include = config_dict(env.yaml).get("include", [])
-    if len(include) == 0:
-        # includes is missing, need to add it
-        env.yaml["spack"].insert(0, "include", [])
-        include = config_dict(env.yaml).get("include", [])
+    manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
     if prepend:
-        include.insert(0, inc)
+        manifest.prepend_includes(inc)
     else:
-        include.append(inc)
-    env.write()
+        manifest.append_includes(inc)
+    manifest.flush()
 
 
 def create_external_detected_spec(env, spec):
@@ -162,6 +160,7 @@ def external(parser, args):
     if args.list:
         snaps = get_all_snapshots()
         dated = get_ordered_dated_snapshots()
+        non_dated = snaps
         if snaps and dated:
             non_dated = list(set(snaps) - set(dated))
 

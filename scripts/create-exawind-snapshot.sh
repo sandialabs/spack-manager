@@ -32,33 +32,43 @@ fi
 printf "\nActivating Spack-Manager...\n"
 cmd "source ${SPACK_MANAGER}/start.sh && spack-start"
 
-cmd "export SPACK_MANAGER_CLEAN_HYPRE=true"
-# Shouldn't use parallel DAG unless git hash installs work or hypre uses CMake
-# due to hypre using autotools which can't handle multiple concurrent builds
+# default to 8 core build
+NUM_CORES=8
 
 printf "\nRunning snapshot creator...\n"
 if [[ "${SPACK_MANAGER_MACHINE}" == 'eagle' ]]; then
-  cmd "unset SPACK_MANAGER_CLEAN_HYPRE"
-  cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize --link_type soft"
+  # TODO get cores right on these machines
+  NUM_CORES=16
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast~cuda exawind%intel+hypre+openfast exawind%clang+hypre+openfast exawind%gcc+hypre+openfast+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "e4s" ]]; then
-  cmd "unset SPACK_MANAGER_CLEAN_HYPRE"
-  cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --modules --use_machine_name --stop_after concretize --link_type soft"
+  NUM_CORES=8
+  cmd "nice -n19 spack manager snapshot -m -s exawind+hypre+openfast amr-wind+hypre+openfast+masa"
+elif [[ "${SPACK_MANAGER_MACHINE}" == "rhodes" ]]; then
+  NUM_CORES=16
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+openfast exawind%intel+hypre+openfast exawind%clang+hypre+openfast"
+elif [[ "${SPACK_MANAGER_MACHINE}" == "summit" ]]; then
+  NUM_CORES=8
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu exawind%gcc+hypre~cuda"
+elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
+  # TODO we should probably launch the install through slurm and exit on this one
+  cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast"
 else
-  cmd "nice -n19 ${SPACK_MANAGER}/scripts/snapshot_creator.py --use_develop --modules --use_machine_name --stop_after concretize"
+  cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast"
 fi
 
 printf "\nActivating snapshot environment...\n"
-cmd "spack env activate -d ${SPACK_MANAGER}/environments/exawind/snapshots/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
+cmd "spack env activate -d ${SPACK_MANAGER}/snapshots/exawind/${SPACK_MANAGER_MACHINE}/$(date +%Y-%m-%d)"
 
 printf "\nInstalling environment...\n"
 time (
   for i in {1..1}; do
-    nice -n19 spack install &
+      nice -n19 spack install &
   done
   wait
 )
 
 printf "\nCreate modules...\n"
+cmd "spack module lmod refresh -y"
 cmd "spack module tcl refresh -y"
 
 cmd "spack env deactivate"

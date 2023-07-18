@@ -39,8 +39,9 @@ def create_env(parser, args):
 
     if args.yaml:
         assert os.path.isfile(args.yaml)
-
-    environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
+        environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
+    else:
+        environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True, with_view=False)
 
     manifest = SpackManagerEnvironmentManifest(theDir)
 
