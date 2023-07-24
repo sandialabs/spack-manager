@@ -11,11 +11,10 @@ compilers:
       target: any
       modules:
       - PrgEnv-amd/8.3.3
-      #- rocm/5.4.3
       - amd/5.4.3
       - libfabric
       - craype-x86-trento
       extra_rpaths: []
       environment:
         prepend_path:
-          PKG_CONFIG_PATH: /opt/cray/xpmem/2.5.2-2.4_3.45__gd0f7936.shasta/lib64/pkgconfig
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.6.2-2.5_2.22__gd067c3f.shasta/lib64/pkgconfig
