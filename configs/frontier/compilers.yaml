@@ -17,4 +17,4 @@ compilers:
       extra_rpaths: []
       environment:
         prepend_path:
-          PKG_CONFIG_PATH: /opt/cray/xpmem/2.6.2-2.5_2.22__gd067c3f.shasta/lib64/pkgconfig
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.6.2-2.5_2.22__gd067c3f.shasta/lib64/pkgconfig:/sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/zlib-1.2.11-zuyclcfig4tizmb2bm2h4roqsp3rwn2y/lib/pkgconfig
