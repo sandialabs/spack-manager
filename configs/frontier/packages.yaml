@@ -97,7 +97,8 @@ packages:
           - openblas/0.3.17
   umpire:
     require: "@6.0.0"
-
+  python:
+    require: "~ssl"
   trilinos:
     require:
       - any_of: ["@13.4.0.2023.02.28", "@develop"]
