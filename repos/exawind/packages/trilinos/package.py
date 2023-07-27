@@ -40,6 +40,9 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     def setup_build_environment(self, env):
         spec = self.spec
         if "+cuda" in spec and "+wrapper" in spec:
+            machine = find_machine(verbose=False, full_machine_name=False)
+            if machine == "perlmutter":
+                env.set("NVCC_WRAPPER_DEFAULT_COMPILER", "CC")
             if spec.variants["build_type"].value == "RelWithDebInfo" or spec.variants["build_type"].value == "Debug":
                 env.append_flags("CXXFLAGS", "-Xcompiler -rdynamic -lineinfo")
             if "+mpi" in spec:

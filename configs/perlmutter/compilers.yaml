@@ -17,6 +17,7 @@ compilers:
       - libfabric/1.15.2.0
       - craype-network-ofi 
       - craype/2.7.20
+      - craype-accel-nvidia80
       extra_rpaths: []
       environment:
         prepend_path:

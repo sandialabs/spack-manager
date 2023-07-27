@@ -28,6 +28,9 @@ packages:
         prefix: /global/common/software/nersc/pm-2022q4/spack/linux-sles15-zen/cmake-3.24.3-k5msymx
         modules:
           - cmake/3.24.3
+  trilinos:
+    require:
+      - any_of: ["@13.4.0.2023.02.28", "@develop"]
   all:
     compiler:
       - gcc@11.2.0
