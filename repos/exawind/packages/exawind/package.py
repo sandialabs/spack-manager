@@ -111,7 +111,7 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
         if spec.satisfies("+cuda"):
             args.append(self.define("EXAWIND_ENABLE_CUDA", True))
             args.append(self.define("CUDAToolkit_ROOT", self.spec["cuda"].prefix))
-            args.append("-DEXAWIND_CUDA_ARCH=" + ";".join(str(x) for x in CudaPackage.cuda_arch_values))
+            args.append(self.define("EXAWIND_CUDA_ARCH", self.spec.variants["cuda_arch"].value))
 
         if spec.satisfies("+rocm"):
             targets = self.spec.variants["amdgpu_target"].value
