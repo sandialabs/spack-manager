@@ -17,7 +17,7 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     # the trilinos github page appended with the date of the commit.
     # this preserves the Trilinos versioning scheme and will allow for valid
     # version comparisons in spack's internals.
-    version("14.0.0.2023.05.25", commit="5aa488c")
+    version("14.0.0.2023.07.31", commit="dc01d4acaf0c0e629a2ee1ac5a6ccd52dab8998f")
     version("13.4.0.2023.02.28", commit="8b3e2e1")
     version("13.4.0.2022.10.27", commit="da54d929ea62e78ba8e19c7d5aa83dc1e1f767c1")
     version("13.2.0.2022.06.05", commit="7498bcb9b0392c830b83787f3fb0c17079431f06")
@@ -34,10 +34,7 @@ class Trilinos(bTrilinos, SMCMakeExtension):
 
     patch("kokkos_zero_length_team.patch", when="@:13.3.0")
     patch("rocm_seacas.patch", when="@:13.4.0+rocm")
-    patch("rocm_seacas_exo_format.patch", when="@14.0.0:+rocm")
     patch("kokkos_hip_subview.patch", when="@:13.4.0+rocm")
-    patch("stk_debugger.patch", when="@14.0.0:");
-    patch("stk_underscore.patch", when="@14.0.0:");
 
     machine = find_machine(verbose=False, full_machine_name=False)
     if machine == "eagle":
