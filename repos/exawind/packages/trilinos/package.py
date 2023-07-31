@@ -33,16 +33,12 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     patch("rocm_seacas.patch", when="@develop+rocm")
     patch("kokkos_hip_subview.patch", when="@develop+rocm")
 
-    machine = find_machine(verbose=False, full_machine_name=False)
-    if machine == "eagle":
+    if find_machine(verbose=False, full_machine_name=False) == "eagle":
         patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.4.0.2022.12.15")
 
     def setup_build_environment(self, env):
         spec = self.spec
         if "+cuda" in spec and "+wrapper" in spec:
-            machine = find_machine(verbose=False, full_machine_name=False)
-            if machine == "perlmutter":
-                env.set("NVCC_WRAPPER_DEFAULT_COMPILER", "CC")
             if spec.variants["build_type"].value == "RelWithDebInfo" or spec.variants["build_type"].value == "Debug":
                 env.append_flags("CXXFLAGS", "-Xcompiler -rdynamic -lineinfo")
             if "+mpi" in spec:
