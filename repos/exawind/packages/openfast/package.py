@@ -18,6 +18,7 @@ class Openfast(bOpenfast):
             description="Build ROSCO controller alongside OpenFAST")
 
     depends_on("rosco", when="+rosco")
+    depends_on("netcdf-c", when="@fsi")
 
     #def setup_build_environment(self, env):
     #    spec = self.spec
