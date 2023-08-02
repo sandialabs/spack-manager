@@ -1,0 +1,24 @@
+compilers:
+  - compiler:
+      spec: gcc@11.2.0
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: sles15
+      target: any
+      modules:
+      - PrgEnv-gnu/8.3.3
+      - gcc/11.2.0
+      - cudatoolkit/11.7
+      - craype-x86-milan
+      - libfabric/1.15.2.0
+      - craype-network-ofi 
+      - craype/2.7.20
+      - craype-accel-nvidia80
+      extra_rpaths: []
+      environment:
+        prepend_path:
+          PKG_CONFIG_PATH: /opt/cray/xpmem/2.5.2-2.4_3.49__gd0f7936.shasta/lib64/pkgconfig

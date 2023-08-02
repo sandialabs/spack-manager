@@ -33,8 +33,7 @@ class Trilinos(bTrilinos, SMCMakeExtension):
     patch("rocm_seacas.patch", when="@develop+rocm")
     patch("kokkos_hip_subview.patch", when="@develop+rocm")
 
-    machine = find_machine(verbose=False, full_machine_name=False)
-    if machine == "eagle":
+    if find_machine(verbose=False, full_machine_name=False) == "eagle":
         patch("stk-coupling-versions-func-overload.patch", when="@13.3.0:13.4.0.2022.12.15")
 
     def setup_build_environment(self, env):
@@ -72,6 +71,15 @@ class Trilinos(bTrilinos, SMCMakeExtension):
             self.spec.kokkos_cxx = os.path.join(os.getenv("SPACK_MANAGER"), "bin", "nvcc_wrapper")
         else:
             self.spec.kokkos_cxx = spack_cxx
+
+    def flag_handler(self, name, flags):
+        base_flags = bTrilinos.flag_handler(self, name, flags)
+        if find_machine(verbose=False, full_machine_name=False) == "perlmutter":
+            expt_lambda_flag = "--expt-extended-lambda"
+            if expt_lambda_flag in base_flags[0]:
+                updated_flags = base_flags[0].remove(expt_lambda_flag)
+                return (updated_flags, None, None)
+        return base_flags
 
     def cmake_args(self):
         spec = self.spec

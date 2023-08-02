@@ -85,6 +85,10 @@ machine_list = {
     "e4s": MachineData(lambda: is_e4s(), "e4s.nodomain.gov"),
     # Azure
     "azure": MachineData(lambda: is_azure(), "azure.nodomain.com"),
+    # NERSC
+    "perlmutter": MachineData(
+        lambda: os.environ["NERSC_HOST"] == "perlmutter", "perlmutter-p1.nersc.gov"
+    ),
     # General
     "darwin": MachineData(lambda: sys.platform == "darwin", "darwin.nodomain.gov"),
 }

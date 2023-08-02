@@ -1,0 +1,40 @@
+packages:
+  cray-mpich:
+    version: [8.1.25]
+    buildable: false
+    externals:
+      - spec: "cray-mpich@8.1.25%gcc@11.2.0"
+        modules:
+          - cray-mpich/8.1.25
+          - gcc/11.2.0
+          - libfabric/1.15.2.0
+          - craype-network-ofi
+          - xpmem/2.2.40-2.1_3.9__g3cf3325.shasta
+          - craype-x86-milan
+          - xalt/2.10.2
+  cuda:
+    version: [11.7]
+    buildable: false
+    externals:
+      - spec: cuda@11.7
+        prefix: /opt/nvidia/hpc_sdk/Linux_x86_64/22.7/cuda/11.7
+        modules:
+          - cudatoolkit/11.7
+  cmake:
+    version: [3.24.3]
+    buildable: false
+    externals:
+      - spec: cmake@3.24.3
+        prefix: /global/common/software/nersc/pm-2022q4/spack/linux-sles15-zen/cmake-3.24.3-k5msymx
+        modules:
+          - cmake/3.24.3
+  trilinos:
+    require:
+      - any_of: ["@13.4.0.2023.02.28", "@develop"]
+  all:
+    compiler:
+      - gcc@11.2.0
+    providers:
+      mpi: [cray-mpich@8.1.25]
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]
