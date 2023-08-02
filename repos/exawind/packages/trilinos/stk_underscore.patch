@@ -1,0 +1,13 @@
+diff --git a/packages/stk/CMakeLists.txt b/packages/stk/CMakeLists.txt
+index 29d3cf7f346..ef26a6ca1ba 100644
+--- a/packages/stk/CMakeLists.txt
++++ b/packages/stk/CMakeLists.txt
+@@ -89,7 +89,7 @@ ELSEIF("${FC_FN_UNDERSCORE}" STREQUAL "SECOND_UNDER")
+   SET(FORTRAN_TWO_UNDERSCORES ON)
+ ELSE()
+   MESSAGE("Could not determine the Fortran mangling defaulting to no underscore.")
+-  SET(FORTRAN_NO_UNDERSCORE ON)
++  SET(FORTRAN_ONE_UNDERSCORE ON)
+ ENDIF()
+ 
+ TRIBITS_CONFIGURE_FILE(STK_Trilinos_config.h)
