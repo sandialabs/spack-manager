@@ -5,7 +5,7 @@ compilers:
         PATH: /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/binutils-2.34-2drppsfmkeudqr3ll7zz7pqxlsszuh4b/bin
     extra_rpaths: []
     modules: []
-   operating_system: rhel7
+    operating_system: rhel7
     paths:
       cc: /usr/bin/gcc
       cxx: /usr/bin/g++
