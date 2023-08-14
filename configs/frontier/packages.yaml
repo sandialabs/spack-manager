@@ -97,8 +97,6 @@ packages:
           - openblas/0.3.17
   umpire:
     require: "@6.0.0"
-  hypre:
-    require: "+gpu-aware-mpi"
   python:
     require: "~ssl"
   trilinos:
