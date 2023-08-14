@@ -68,6 +68,7 @@ class Hypre(bHypre):
                 env.set("F77", spec["mpi"].mpif77)
             if "+gpu-aware-mpi" in spec and "+rocm" in spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
                 env.append_flags("HIPFLAGS", "--amdgpu-target=gfx90a")
+                env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
 
         if "+cuda" in spec:
             env.set("CUDA_HOME", spec["cuda"].prefix)
