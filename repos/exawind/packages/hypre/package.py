@@ -48,7 +48,7 @@ class Hypre(bHypre):
                 make("distclean")
 
     def flag_handler(self, name, flags):
-        if find_machine(verbose=False, full_machine_name=False) == "frontier" and name == "cxxflags" and "+gpu-aware-mpi" in self.spec:
+        if find_machine(verbose=False, full_machine_name=False) == "frontier" and name == "cxxflags" and "+gpu-aware-mpi" in self.spec and "+rocm" in self.spec:
             mpi_include_dir = "-I" + os.path.join(os.getenv("MPICH_DIR"), "include")
             mpi_lib_dir = "-L" + os.path.join(os.getenv("MPICH_DIR"), "lib")
             cray_xpmem_opts = os.path.join(os.getenv("CRAY_XPMEM_POST_LINK_OPTS"), "lib")
@@ -63,7 +63,7 @@ class Hypre(bHypre):
             env.set("CXX", spec["mpi"].mpicxx)
             if "+fortran" in spec:
                 env.set("F77", spec["mpi"].mpif77)
-            if "+gpu-aware-mpi" in spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
+            if "+gpu-aware-mpi" in spec and "+rocm" in spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
                 env.append_flags("HIPFLAGS", "--amdgpu-target=gfx90a")
 
         if "+cuda" in spec:
