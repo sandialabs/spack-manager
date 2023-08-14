@@ -49,10 +49,13 @@ class Hypre(bHypre):
 
     def flag_handler(self, name, flags):
         if find_machine(verbose=False, full_machine_name=False) == "frontier" and name == "cxxflags" and "+gpu-aware-mpi" in self.spec and "+rocm" in self.spec:
-            mpi_include_dir = "-I" + os.path.join(os.getenv("MPICH_DIR"), "include")
-            mpi_lib_dir = "-L" + os.path.join(os.getenv("MPICH_DIR"), "lib")
-            cray_xpmem_opts = os.path.join(os.getenv("CRAY_XPMEM_POST_LINK_OPTS"), "lib")
-            flags.append(mpi_include_dir, mpi_lib_dir, "-lmpi", cray_xpmem_opts, "-lxpmem", os.getenv("PE_MPICH_GTL_DIR_amd_gfx90a"), os.getenv("PE_MPICH_GTL_LIBS_amd_gfx90a"))
+            flags.append("-I" + os.path.join(os.getenv("MPICH_DIR"), "include"))
+            flags.append("-L" + os.path.join(os.getenv("MPICH_DIR"), "lib"))
+            flags.append("-lmpi")
+            flags.append(os.getenv("CRAY_XPMEM_POST_LINK_OPTS"))
+            flags.append("-lxpmem")
+            flags.append(os.getenv("PE_MPICH_GTL_DIR_amd_gfx90a"))
+            flags.append(os.getenv("PE_MPICH_GTL_LIBS_amd_gfx90a"))
 
         return (flags, None, None)
 
