@@ -8,6 +8,8 @@
 from spack import *
 from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 from smpackages import *
 
 class AmrWind(SMCMakeExtension, bAmrWind):
