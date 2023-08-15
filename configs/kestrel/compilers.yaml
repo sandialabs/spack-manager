@@ -16,5 +16,7 @@ compilers:
       - craype-x86-spr
       - cray-dsmml/0.2.2
       - cray-libsci/22.11.1.2
+      - gcc/12.1.0
+      - libfabric/1.15.2.0
       extra_rpaths: []
       environment: {}

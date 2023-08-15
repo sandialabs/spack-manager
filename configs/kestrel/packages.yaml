@@ -8,7 +8,6 @@ packages:
         modules:
           - cray-mpich/8.1.21
           - craype-network-ofi
-          - libfabric/1.15.2.0
   trilinos:
     require:
       - any_of: ["@13.4.0.2023.02.28", "@develop"]
