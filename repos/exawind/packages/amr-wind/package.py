@@ -43,7 +43,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
         if "%intel" in self.spec:
             env.append_flags("CXXFLAGS", "-no-ipo")
-        if "+mpi" in self.spec and "+gpu-aware-mpi" in spec and "+rocm" in spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
+        if "+mpi" in self.spec and "+gpu-aware-mpi" in self.spec and "+rocm" in self.spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
             env.append_flags("HIPFLAGS", "--amdgpu-target=gfx90a")
             env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
 
@@ -56,6 +56,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             flags.append("-lxpmem")
             flags.append(os.getenv("PE_MPICH_GTL_DIR_amd_gfx90a"))
             flags.append(os.getenv("PE_MPICH_GTL_LIBS_amd_gfx90a"))
+
+        return (flags, None, None)
 
     def cmake_args(self):
         spec = self.spec
