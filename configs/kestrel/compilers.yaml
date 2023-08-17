@@ -18,5 +18,12 @@ compilers:
       - cray-libsci/22.11.1.2
       - gcc/12.1.0
       - libfabric/1.15.2.0
-      extra_rpaths: []
+      - craype-network-ofi
+      - cray-pmi
+      extra_rpaths:
+        - /nopt/intel/oneapi/compiler/2023.0.0/linux/lib
+        - /nopt/intel/oneapi/compiler/2023.0.0/linux/lib/x64
+        - /nopt/intel/oneapi/compiler/2023.0.0/linux/lib/oclfpga/host/linux64/lib
+        - /nopt/intel/oneapi/compiler/2023.0.0/linux/compiler/lib/intel64_lin
+        - /opt/cray/pe/gcc/12.2.0/snos/lib64
       environment: {}
