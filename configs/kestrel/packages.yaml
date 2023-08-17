@@ -1,13 +1,14 @@
 packages:
   cray-mpich:
-    require: "@=8.1.21"
+    require: "@=8.1.23"
     buildable: false
     externals:
-      - spec: "cray-mpich@=8.1.21%oneapi@2023.0.0"
-        prefix: /opt/cray/pe/mpich/8.1.21/ofi/intel/19.0
+      - spec: "cray-mpich@=8.1.23%oneapi@2023.0.0"
+        prefix: /opt/cray/pe/mpich/8.1.23/ofi/intel/19.0
         modules:
-          - cray-mpich/8.1.21
+          - cray-mpich/8.1.23
           - craype-network-ofi
+          - libfabric/1.15.2.0
   trilinos:
     require:
       - any_of: ["@13.4.0.2023.02.28", "@develop"]
@@ -17,7 +18,7 @@ packages:
     compiler:
       - oneapi@2023.0.0
     providers:
-      mpi: [cray-mpich@8.1.21]
+      mpi: [cray-mpich@8.1.23]
       blas: [openblas]
       lapack: [openblas]
     variants: build_type=Release cuda_arch=80

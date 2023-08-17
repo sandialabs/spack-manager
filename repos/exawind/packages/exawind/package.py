@@ -94,6 +94,12 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     depends_on("nalu-wind+gpu-aware-mpi", when="+gpu-aware-mpi")
     depends_on("amr-wind+gpu-aware-mpi", when="+gpu-aware-mpi")
 
+
+    def setup_build_environment(self, env):
+        env.set("OMPI_CXX", spack_cxx)
+        env.set("MPICH_CXX", spack_cxx)
+        env.set("MPICXX_CXX", spack_cxx)
+
     def cmake_args(self):
         spec = self.spec
 
