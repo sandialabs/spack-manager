@@ -8,7 +8,13 @@ packages:
         modules:
           - cray-mpich/8.1.23
           - craype-network-ofi
-          - libfabric/1.15.2.0
+          - libfabric
+  cmake:
+    require: "@=3.25.2"
+    buildable: false
+    externals:
+      - spec: "cmake@=3.25.2%oneapi@2023.0.0"
+        prefix: /nopt/nrel/apps/compilers/07-23/spack/opt/spack/linux-rhel8-icelake/gcc-8.4.0/cmake-3.25.2-6mbuvgfmkrmtaic25e4zwfsk4r2atuw5
   trilinos:
     require:
       - any_of: ["@13.4.0.2023.02.28", "@develop"]
