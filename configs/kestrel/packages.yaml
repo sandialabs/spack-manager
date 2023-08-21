@@ -8,21 +8,25 @@ packages:
         modules:
           - cray-mpich/8.1.23
           - craype-network-ofi
-          - libfabric
+  boost:
+    require: "@=1.78.0 cxxstd=17 %gcc"
   cmake:
-    require: "@=3.25.2"
-    buildable: false
-    externals:
-      - spec: "cmake@=3.25.2%oneapi@2023.0.0"
-        prefix: /nopt/nrel/apps/compilers/07-23/spack/opt/spack/linux-rhel8-icelake/gcc-8.4.0/cmake-3.25.2-6mbuvgfmkrmtaic25e4zwfsk4r2atuw5
+    require: "%gcc"
   trilinos:
     require:
-      - any_of: ["@13.4.0.2023.02.28", "@develop"]
+      - any_of: ["@=13.4.0.2023.02.28", "@develop"]
   nalu-wind:
     variants: ~trilinos-solvers
+  openssl:
+    version: [1.1.1b]
+    buildable: false
+    externals:
+      - spec: "openssl@1.1.1b%oneapi@2023.0.0"
+        prefix: /usr
   all:
     compiler:
       - oneapi@2023.0.0
+      - gcc@8.5.0
     providers:
       mpi: [cray-mpich@8.1.23]
       blas: [openblas]
