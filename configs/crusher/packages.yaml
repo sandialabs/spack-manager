@@ -109,6 +109,8 @@ packages:
     variants: ~trilinos-solvers
   libffi:
     require: "@3.4.2"
+  python:
+    require: "~ssl"
   all:
     compiler:
       - clang@15.0.0
