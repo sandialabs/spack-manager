@@ -30,7 +30,7 @@ packages:
           - cmake/3.24.3
   trilinos:
     require:
-      - any_of: ["@develop"]
+      - any_of: ["@13.4.0", "@develop"]
   all:
     compiler:
       - gcc@11.2.0
@@ -38,3 +38,4 @@ packages:
       mpi: [cray-mpich@8.1.25]
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
+    variants: build_type=Release cuda_arch=80
