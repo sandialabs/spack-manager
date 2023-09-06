@@ -9,7 +9,7 @@ packages:
           - gcc/11.2.0
           - libfabric/1.15.2.0
           - craype-network-ofi
-          - xpmem/2.2.40-2.1_3.9__g3cf3325.shasta
+          - xpmem/2.5.2-2.4_3.50__gd0f7936.shasta
           - craype-x86-milan
           - xalt/2.10.2
   cuda:
@@ -30,7 +30,7 @@ packages:
           - cmake/3.24.3
   trilinos:
     require:
-      - any_of: ["@13.4.0.2023.02.28", "@develop"]
+      - any_of: ["@13.4.0", "@develop"]
   all:
     compiler:
       - gcc@11.2.0
@@ -38,3 +38,4 @@ packages:
       mpi: [cray-mpich@8.1.25]
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
+    variants: build_type=Release cuda_arch=80
