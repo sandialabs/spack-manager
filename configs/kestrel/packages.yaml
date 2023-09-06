@@ -3,7 +3,7 @@ packages:
     require: "@=8.1.23"
     buildable: false
     externals:
-      - spec: "cray-mpich@=8.1.23%oneapi@2023.0.0"
+      - spec: "cray-mpich@=8.1.23%oneapi@2023.2.0"
         prefix: /opt/cray/pe/mpich/8.1.23/ofi/intel/19.0
         modules:
           - cray-mpich/8.1.23
@@ -21,11 +21,11 @@ packages:
     version: [1.1.1b]
     buildable: false
     externals:
-      - spec: "openssl@1.1.1b%oneapi@2023.0.0"
+      - spec: "openssl@1.1.1b%oneapi@2023.2.0"
         prefix: /usr
   all:
     compiler:
-      - oneapi@2023.0.0
+      - oneapi@2023.2.0
       - gcc@8.5.0
     providers:
       mpi: [cray-mpich@8.1.23]
