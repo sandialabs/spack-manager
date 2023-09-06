@@ -20,8 +20,6 @@ def is_cee(hostname):
     site = False
     system = False
     if "SNLSITE" in os.environ:
-        return os.environ["SNLSITE"] == "cee"
-    return False
         site = os.environ["SNLSITE"] == "cee"
     if "SNLSYSTEM" in os.environ:
         system = os.environ["SNLSYSTEM"] == "cee"
