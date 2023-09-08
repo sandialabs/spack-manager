@@ -1,0 +1,31 @@
+compilers:
+  - compiler:
+      spec: oneapi@2023.2.0
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-intel/8.3.3
+      - intel/2023.2.0
+      - libfabric
+      - craype-x86-spr
+      extra_rpaths: []
+      environment: {}
+  - compiler:
+      spec: gcc@8.5.0
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules: []
+      extra_rpaths: []
+      environment: {}

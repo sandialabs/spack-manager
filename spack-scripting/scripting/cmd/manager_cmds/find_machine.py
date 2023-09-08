@@ -17,9 +17,14 @@ class MachineData:
 
 
 def is_cee(hostname):
+    site = False
+    system = False
     if "SNLSITE" in os.environ:
-        return os.environ["SNLSITE"] == "cee"
-    return False
+        site = os.environ["SNLSITE"] == "cee"
+    if "SNLSYSTEM" in os.environ:
+        system = os.environ["SNLSYSTEM"] == "cee"
+    detected = site or system
+    return detected
 
 
 def is_snl_hpc(hostname):
@@ -62,6 +67,9 @@ machine_list = {
     "cee": MachineData(lambda: is_cee(socket.gethostname()), socket.gethostname()),
     "snl-hpc": MachineData(lambda: is_snl_hpc(socket.gethostname()), socket.gethostname()),
     # NREL
+    "kestrel": MachineData(
+        lambda: os.environ["NREL_CLUSTER"] == "kestrel", "kestrel.hpc.nrel.gov"
+    ),
     "eagle": MachineData(lambda: os.environ["NREL_CLUSTER"] == "eagle", "eagle.hpc.nrel.gov"),
     "rhodes": MachineData(lambda: os.environ["NREL_CLUSTER"] == "rhodes", "rhodes.hpc.nrel.gov"),
     "ellis": MachineData(lambda: os.environ["NREL_CLUSTER"] == "ellis", "ellis.hpc.nrel.gov"),

@@ -1,0 +1,34 @@
+packages:
+  cray-mpich:
+    require: "@=8.1.23"
+    buildable: false
+    externals:
+      - spec: "cray-mpich@=8.1.23%oneapi@2023.2.0"
+        prefix: /opt/cray/pe/mpich/8.1.23/ofi/intel/19.0
+        modules:
+          - cray-mpich/8.1.23
+          - craype-network-ofi
+  boost:
+    require: "@=1.78.0 cxxstd=17 %gcc"
+  cmake:
+    require: "%gcc"
+  trilinos:
+    require:
+      - any_of: ["@=13.4.0.2023.02.28", "@develop"]
+  nalu-wind:
+    variants: ~trilinos-solvers
+  openssl:
+    version: [1.1.1b]
+    buildable: false
+    externals:
+      - spec: "openssl@1.1.1b%oneapi@2023.2.0"
+        prefix: /usr
+  all:
+    compiler:
+      - oneapi@2023.2.0
+      - gcc@8.5.0
+    providers:
+      mpi: [cray-mpich@8.1.23]
+      blas: [openblas]
+      lapack: [openblas]
+    variants: build_type=Release cuda_arch=80
