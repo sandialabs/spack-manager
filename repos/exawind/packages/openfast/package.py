@@ -20,8 +20,8 @@ class Openfast(bOpenfast):
     depends_on("rosco", when="+rosco")
     depends_on("netcdf-c", when="@fsi")
 
-    #def setup_build_environment(self, env):
-    #    spec = self.spec
-    #    machine = find_machine(verbose=False, full_machine_name=False)
-    #    if machine == "crusher" or machine == "frontier":
-    #        env.unset("SPACK_TARGET_ARGS")
+    def setup_build_environment(self, env):
+        spec = self.spec
+        machine = find_machine(verbose=False, full_machine_name=False)
+        if machine == "crusher" or machine == "frontier":
+            env.unset("SPACK_TARGET_ARGS")

@@ -10,10 +10,18 @@ compilers:
       operating_system: sles15
       target: any
       modules:
-      - PrgEnv-amd/8.3.3
-      - amd/5.4.3
-      - libfabric
-      - craype-x86-trento
+        - PrgEnv-cray-amd/8.4.0
+        - PrgEnv-cray/8.3.3
+        - libfabric/1.15.2.0
+        - cce/15.0.0
+        - DefApps/default
+        - cray-dsmml/0.2.2
+        - craype-network-ofi
+        - amd-mixed/5.4.3
+        - cray-mpich/8.1.23
+        - craype-x86-trento
+        - craype/2.7.19
+        - cray-libsci/22.12.1.1
       extra_rpaths: []
       environment:
         prepend_path:
