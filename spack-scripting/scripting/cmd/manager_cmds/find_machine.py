@@ -100,7 +100,7 @@ machine_list = {
     # General
     "darwin": MachineData(lambda: sys.platform == "darwin", "darwin.nodomain.gov"),
     "containercpu": MachineData(
-        lambda: os.environ["SPACK_MACHINE_MANAGER"] == "containercpu", "containcpu.nodomain.gov"
+        lambda: os.environ["CONTAINER_BUILD"] == "cpu", "containcpu.nodomain.gov"
     ),
 }
 
