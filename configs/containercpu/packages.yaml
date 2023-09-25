@@ -10,34 +10,42 @@ packages:
     variants: build_type=Release
 # External packages from Ubuntu repos
   m4:
+    buildable: false
     externals:
     - spec: m4@1.4.18
       prefix: /usr
   gmake:
+    buildable: false
     externals:
     - spec: gmake@4.3
       prefix: /usr
   automake:
+    buildable: false
     externals:
     - spec: automake@1.16.5
       prefix: /usr
   autoconf:
+    buildable: false
     externals:
     - spec: autoconf@2.71
       prefix: /usr
   libtool:
+    buildable: false
     externals:
     - spec: libtool@2.4.6
       prefix: /usr
   git:
+    buildable: false
     externals:
     - spec: git@2.34.1~tcltk
       prefix: /usr
   cmake:
+    buildable: false
     externals:
     - spec: cmake@3.22.1
       prefix: /usr
   mpich:
+    buildable: false
     externals:
     - spec: mpich@4.0+hydra device=ch4 netmod=ofi
       prefix: /usr
