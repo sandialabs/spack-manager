@@ -7,7 +7,7 @@ compilers:
       f77: ftn
       fc: ftn
     flags: {}
-    operating_system: sles15
+    operating_system: ubuntu22.04
     target: any
     modules:
     - PrgEnv-gnu/8.3.3
