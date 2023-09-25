@@ -1,0 +1,13 @@
+compilers:
+- compiler:
+    spec:
+    paths:
+      cc: /usr/bin/gcc
+      cxx: /usr/bin/g++
+      f77: /usr/bin/gfortran
+      fc: /usr/bin/gfortran
+    flags: {}
+    operating_system: ubuntu22.04
+    target: any
+    modules: []
+    extra_rpaths: []

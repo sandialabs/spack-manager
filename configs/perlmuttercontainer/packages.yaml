@@ -1,0 +1,31 @@
+packages:
+  mpich:
+    version: []
+    buildable: 
+    externals:
+      - spec:
+        modules: []
+  cuda:
+    version: []
+    buildable: false
+    externals:
+      - spec: 
+        prefix:
+        modules:
+  cmake:
+    version: []
+    buildable:
+    externals:
+      - spec:
+        prefix:
+        modules:
+  trilinos:
+    require:
+      - any_of: ["@13.4.0", "@develop"]
+  all:
+    compiler:
+    providers:
+      mpi: []
+      blas: []
+      lapack: []
+    variants: build_type=Release cuda_arch=80
