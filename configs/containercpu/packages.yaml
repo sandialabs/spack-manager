@@ -1,0 +1,55 @@
+packages:
+# Global settings
+  all:
+    compiler:
+    - gcc@11.4.0
+    providers:
+      mpi: [mpich]
+      blas: [netlib-lapack]
+      lapack: [netlib-lapack]
+    variants: build_type=Release
+# External packages from Ubuntu repos
+  mpi:
+    require: mpich
+# Package preferences to be built by Spack for correct Exawind
+# Nota bene: use libtool from Spack for correct linking
+  ascent:
+    variants: ~fortran~openmp
+  amr-wind:
+    variants: +tiny_profile
+  conduit:
+    variants: ~fortran~hdf5_compat
+  boost:
+    version: [1.78.0]
+    variants: cxxstd=17
+  cmake:
+    version: [3.26.3]
+    variants: build_type=Release
+  hdf5:
+    version: [1.10.7]
+    variants: +cxx+hl
+  libtool:
+    version: [2.4.7]
+  masa:
+    variants: ~fortran~python
+  netcdf-c:
+    require: '@4.7.4'
+    variants: +parallel-netcdf maxdims=65536 maxvars=524288
+  openfast:
+    version: [master]
+    variants: +cxx
+  parallel-netcdf:
+    version: [1.12.2]
+    variants: ~fortran
+  perl:
+    require: '@5.34.1'
+  tioga:
+    version: [develop]
+  hypre:
+    require: '@develop'
+    variants: ~fortran
+  hypre2:
+    require: '@develop'
+    variants: ~fortran
+  yaml-cpp:
+    version: [0.6.3]
