@@ -60,8 +60,7 @@ class Rosco(CMakePackage):
     def flag_handler(self, name, flags):
         spec = self.spec
         is_gcc = spec.compiler.name in ["gcc"]
-
-        if is_gcc:
-            flags.append("-ffree-line-length-0")
         
-        return (flags, None, None)
+        if is_gcc and name in ["fflags"]:
+            flags.append("-ffree-line-length-0")
+            return (None, flags, None)
