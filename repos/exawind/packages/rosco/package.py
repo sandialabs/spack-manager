@@ -58,9 +58,7 @@ class Rosco(CMakePackage):
         env.set('ROSCO_DISCON_DIR', self.prefix.lib)
 
     def flag_handler(self, name, flags):
-        spec = self.spec
-        is_gcc = spec.compiler.name in ["gcc"]
-        
-        if is_gcc and name in ["fflags"]:
-            flags.append("-ffree-line-length-0")
-            return (None, flags, None)
+        if name == "fflags" and self.compiler.fc.endswith("gfortran"):
+            flags.extend(["-ffree-line-length-0"])
+
+        return (None, None, flags)
