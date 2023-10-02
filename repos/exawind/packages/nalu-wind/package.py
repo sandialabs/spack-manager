@@ -22,6 +22,7 @@ def trilinos_version_filter(name):
 
 class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
     version("master", branch="master", submodules=True)
+    version("multiphase", branch="multiphase_dev", submodules=True)
 
     variant("asan", default=False,
             description="Turn on address sanitizer")
