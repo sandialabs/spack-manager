@@ -9,7 +9,7 @@ packages:
           - gcc/11.2.0
           - libfabric/1.15.2.0
           - craype-network-ofi
-          - xpmem/2.5.2-2.4_3.50__gd0f7936.shasta
+          - xpmem/2.6.2-2.5_2.27__gd067c3f.shasta
           - craype-x86-milan
           - xalt/2.10.2
   cuda:
