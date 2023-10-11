@@ -6,5 +6,4 @@ spack:
     reuse: false 
   view: false
   specs:
-    - 'exawind+hypre~amr_wind_gpu~nalu_wind_gpu~cuda'
-    #- 'exawind~hypre+amr_wind_gpu~nalu_wind_gpu+cuda cuda_arch=80 ^nalu-wind+hypre ^amr-wind~hypre'
+    - 'exawind+hypre~cuda'

@@ -45,6 +45,9 @@ packages:
     require: '@5.34.1'
   tioga:
     version: [develop]
+  trilinos:
+    require:
+      - any_of: ["@13.4.0", "@develop"]
   hypre:
     require: '@develop'
     variants: ~fortran
