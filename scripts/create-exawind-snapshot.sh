@@ -1,4 +1,7 @@
 #!/bin/bash -l
+    hwloc-nox \
+    libhwloc-dev \
+    libhwloc15 \
 #
 # Copyright (c) 2022, National Technology & Engineering Solutions of Sandia,
 # LLC (NTESS). Under the terms of Contract DE-NA0003525 with NTESS, the U.S.
@@ -50,6 +53,9 @@ elif [[ "${SPACK_MANAGER_MACHINE}" == "summit" ]]; then
   NUM_CORES=8
   cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu exawind%gcc+hypre~cuda"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "perlmutter" ]]; then
+  NUM_CORES=8
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
+elif [[ "${SPACK_MANAGER_MACHINE}" == "containergpucuda" ]]; then
   NUM_CORES=8
   cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
