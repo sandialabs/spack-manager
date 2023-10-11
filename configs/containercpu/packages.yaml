@@ -8,7 +8,6 @@ packages:
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
     variants: build_type=Release
-# External packages from Ubuntu repos
   mpi:
     require: mpich
 # Package preferences to be built by Spack for correct Exawind
