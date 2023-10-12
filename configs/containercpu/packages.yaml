@@ -10,6 +10,11 @@ packages:
     variants: build_type=Release
   mpi:
     require: mpich
+# Use Ubuntu libncurses-dev, b/c Spack version failes 
+  ncurses:
+    externals:
+    - spec: ncurses@6.3
+      prefix: /usr
 # Package preferences to be built by Spack for correct Exawind
 # Nota bene: use libtool from Spack for correct linking
   ascent:
