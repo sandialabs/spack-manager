@@ -1,6 +1,10 @@
 packages:
   ascent:
     variants: ~fortran~openmp
+  exawind:
+    version: [master]
+  nalu-wind:
+    version: [master]
   amr-wind:
     version: [main]
     variants: +tiny_profile
