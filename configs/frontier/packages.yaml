@@ -95,6 +95,8 @@ packages:
         prefix: /sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/openblas-0.3.17-54x7v5e4i6yxqs6j5nebrbztpy4lftj4
         modules:
           - openblas/0.3.17
+  amr-wind:
+    require: "~tests"
   umpire:
     require: "@6.0.0"
   python:
