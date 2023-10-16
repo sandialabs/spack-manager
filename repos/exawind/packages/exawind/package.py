@@ -25,6 +25,7 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     # Testing is currently always enabled, but should be optional in the future
     # to avoid cloning the mesh submodule
     version("master", branch="main", submodules=True)
+    version("multiphase", branch="multiphase_dev", submodules=True)
 
     variant("asan", default=False,
             description="turn on address sanitizer")
@@ -83,6 +84,8 @@ class Exawind(SMCMakeExtension, CudaPackage, ROCmPackage):
     depends_on("nalu-wind+ninja", when="+ninja")
     depends_on("amr-wind+ninja", when="+ninja")
     depends_on("amr-wind+sycl", when="+amr_wind_gpu+sycl")
+    depends_on("nalu-wind@multiphase", when="@multiphase")
+    depends_on("amr-wind@multiphase", when="@multiphase")
     # not required but added so these get picked up as a
     # direct dependency when creating snapshots
     depends_on("trilinos")

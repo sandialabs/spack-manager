@@ -13,7 +13,8 @@ from manager_cmds.find_machine import find_machine
 from smpackages import *
 
 class AmrWind(SMCMakeExtension, bAmrWind):
-
+    version("multiphase", branch="multiphase_dev", submodules=True)
+    
     variant("asan", default=False,
             description="Turn on address sanitizer")
     variant("cppcheck", default=False,
