@@ -1,0 +1,85 @@
+MAINTAINER Philip Sakievich, Sandia National Laboratories <psakiev@sandia.gov>
+MAINTAINER Jon Rood, NREL <Jon.Rood@nrel.gov>
+
+# NVIDIA base images:  https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda/tags
+
+ARG REGISTRY=nvcr.io/nvidia
+ARG IMAGE=cuda
+ARG TAG=12.2.0-devel-ubuntu22.04
+
+FROM ${REGISTRY}/${IMAGE}:${TAG}
+
+# Make bash the default $SHELL
+SHELL ["/bin/bash", "-c"]
+
+# Install Spack Prereqs: https://spack.readthedocs.io/en/latest/getting_started.html#system-prerequisites
+
+RUN apt-get update -y && \
+    apt-get -y upgrade && \
+    apt-get -y install \
+    autoconf \
+    automake \
+    clangd \
+    curl \
+    emacs-nox \
+    file \
+    flex \
+    gcc \
+    gcc-multilib \
+    gcc-doc \
+    g++ \
+    gfortran \
+    gfortran-multilib \
+    gfortran-doc \
+    git \
+    git-doc \
+    git-man \
+    libffi-dev \
+    libfmt-dev \
+    libgmp-dev \
+    libjpeg-dev \
+    libmpc-dev \
+    libx11-dev \
+    lsb-release \
+    m4 \
+    nano \
+    python3 \
+    python3-distutils \
+    python3-venv \
+    unzip \
+    vim \
+    wget \
+    wget2 \
+    zip \
+    zlib1g-dev
+
+RUN apt clean -y
+
+# Exawind GPU snapshot 
+WORKDIR /exawind-entry
+#RUN git clone --recursive https://github.com/sandialabs/spack-manager
+# Pre-merge fork
+#RUN git clone --recursive https://github.com/ajpowelsnl/spack-manager
+# Needed by "create-exawind-snapshot.sh"
+ENV SPACK_MANAGER_MACHINE=containergpucuda
+ENV CONTAINER_BUILD=gpucuda
+ENV SPACK_MANAGER=/exawind-entry/spack-manager
+
+#WORKDIR /exawind-entry/spack-manager
+
+# Pre-merge branch from ajpowelsnl/spack-manager fork
+#RUN git checkout gpucontainer
+
+# Snapshot will be generated upon running container
+#RUN echo "export SPACK_MANAGER=$SPACK_MANAGER" >> /etc/bash.bashrc && \
+#    echo "source $SPACK_MANAGER/start.sh && spack-start" >> /etc/bash.bashrc && \
+#    echo "spack external find" >> /etc/bash.bashrc && \
+#    echo "spack config add packages:all:target:[$uarch]" >> /etc/bash.bashrc && \
+#    echo "$SPACK_MANAGER/scripts/create-exawind-snapshot.sh" >> /etc/bash.bashrc && \
+#    echo "spack clean -a" >> /etc/bash.bashrc
+
+# Verify .bashrc
+# RUN ["/bin/bash", "-c", "tail -n 6 /etc/bash.bashrc"]
+
+WORKDIR /exawind-entry
+CMD [ "/bin/bash" ]
