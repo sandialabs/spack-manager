@@ -39,6 +39,9 @@ RUN apt-get update -y && \
     libgmp-dev \
     libjpeg-dev \
     libmpc-dev \
+    libnccl2 \
+    libnccl-dev \
+    libncurses-dev \
     libx11-dev \
     lsb-release \
     m4 \
@@ -59,16 +62,16 @@ RUN apt clean -y
 WORKDIR /exawind-entry
 #RUN git clone --recursive https://github.com/sandialabs/spack-manager
 # Pre-merge fork
-#RUN git clone --recursive https://github.com/ajpowelsnl/spack-manager
+RUN git clone --recursive https://github.com/ajpowelsnl/spack-manager
 # Needed by "create-exawind-snapshot.sh"
 ENV SPACK_MANAGER_MACHINE=containergpucuda
 ENV CONTAINER_BUILD=gpucuda
 ENV SPACK_MANAGER=/exawind-entry/spack-manager
 
-#WORKDIR /exawind-entry/spack-manager
+WORKDIR /exawind-entry/spack-manager
 
 # Pre-merge branch from ajpowelsnl/spack-manager fork
-#RUN git checkout gpucontainer
+RUN git checkout gpucontainer
 
 # Snapshot will be generated upon running container
 #RUN echo "export SPACK_MANAGER=$SPACK_MANAGER" >> /etc/bash.bashrc && \

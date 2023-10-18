@@ -1,6 +1,6 @@
 compilers:
 - compiler:
-    spec: gcc@11.4.0
+    spec: nvcc@=12.2.91
     paths:
       cc: /usr/bin/gcc
       cxx: /usr/bin/g++
@@ -11,3 +11,5 @@ compilers:
     target: any
     modules: []
     extra_rpaths: []
+
+# See example:  https://spack.readthedocs.io/en/latest/gpu_configuration.html
