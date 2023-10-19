@@ -15,11 +15,15 @@ SHELL ["/bin/bash", "-c"]
 # Install Spack Prereqs: https://spack.readthedocs.io/en/latest/getting_started.html#system-prerequisites
 
 RUN apt-get update -y && \
-    apt-get -y upgrade && \
-    apt-get -y install \
+    apt-get upgrade -y
+
+RUN apt-get install -y \
     autoconf \
     automake \
+    bzip2 \
+    ca-certificates \
     clangd \
+    coreutils \
     curl \
     emacs-nox \
     file \
@@ -34,7 +38,9 @@ RUN apt-get update -y && \
     git \
     git-doc \
     git-man \
+    gnupg2 \
     hwloc-nox \
+    libbz2-dev \
     libffi-dev \
     libfmt-dev \
     libgmp-dev \
@@ -49,6 +55,7 @@ RUN apt-get update -y && \
     libx11-dev \
     lsb-release \
     m4 \
+    make \
     nano \
     python3 \
     python3-distutils \
@@ -57,6 +64,7 @@ RUN apt-get update -y && \
     vim \
     wget \
     wget2 \
+    xz-utils \
     zip \
     zlib1g-dev
 

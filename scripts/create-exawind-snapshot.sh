@@ -54,6 +54,7 @@ elif [[ "${SPACK_MANAGER_MACHINE}" == "perlmutter" ]]; then
   cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "containergpucuda" ]]; then
   cmd "nice -n19 spack -d manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
+  NUM_CORES=8
 elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
   # TODO we should probably launch the install through slurm and exit on this one
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast"
