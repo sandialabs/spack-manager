@@ -34,9 +34,13 @@ RUN apt-get update -y && \
     git \
     git-doc \
     git-man \
+    hwloc-nox \
     libffi-dev \
     libfmt-dev \
     libgmp-dev \
+    libhwloc-common \
+    libhwloc-dev \
+    libhwloc15 \
     libjpeg-dev \
     libmpc-dev \
     libnccl2 \
@@ -76,13 +80,12 @@ RUN git checkout gpucontainer
 # Snapshot will be generated upon running container
 #RUN echo "export SPACK_MANAGER=$SPACK_MANAGER" >> /etc/bash.bashrc && \
 #    echo "source $SPACK_MANAGER/start.sh && spack-start" >> /etc/bash.bashrc && \
-#    echo "spack external find" >> /etc/bash.bashrc && \
-#    echo "spack config add packages:all:target:[$uarch]" >> /etc/bash.bashrc && \
+#    echo "spack external find --all" >> /etc/bash.bashrc && \
 #    echo "$SPACK_MANAGER/scripts/create-exawind-snapshot.sh" >> /etc/bash.bashrc && \
 #    echo "spack clean -a" >> /etc/bash.bashrc
 
 # Verify .bashrc
 # RUN ["/bin/bash", "-c", "tail -n 6 /etc/bash.bashrc"]
 
-WORKDIR /exawind-entry
+#WORKDIR /exawind-entry
 CMD [ "/bin/bash" ]

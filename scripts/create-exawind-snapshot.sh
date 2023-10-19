@@ -1,7 +1,4 @@
-#!/bin/bash -l
-    hwloc-nox \
-    libhwloc-dev \
-    libhwloc15 \
+#!/bin/bash
 #
 # Copyright (c) 2022, National Technology & Engineering Solutions of Sandia,
 # LLC (NTESS). Under the terms of Contract DE-NA0003525 with NTESS, the U.S.
@@ -57,7 +54,7 @@ elif [[ "${SPACK_MANAGER_MACHINE}" == "perlmutter" ]]; then
   cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "containergpucuda" ]]; then
   NUM_CORES=8
-  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
+  cmd "nice -n19 spack -d manager snapshot -m -s exawind%gcc+hypre+cuda+amr_wind_gpu+nalu_wind_gpu"
 elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
   # TODO we should probably launch the install through slurm and exit on this one
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast"
