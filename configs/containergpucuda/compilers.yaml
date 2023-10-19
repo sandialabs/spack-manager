@@ -1,6 +1,6 @@
 compilers:
 - compiler:
-    spec: nvcc@=12.2.91
+    spec: gcc@11.4.0 
     paths:
       cc: /usr/bin/gcc
       cxx: /usr/bin/g++

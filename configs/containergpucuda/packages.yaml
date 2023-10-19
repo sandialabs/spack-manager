@@ -7,40 +7,12 @@ packages:
       mpi: [mpich]
       blas: [netlib-lapack]
       lapack: [netlib-lapack]
-    variants: build_type=Release
+    variants: build_type=Release cuda_arch=80
   mpi:
     require: mpich
 # GPU-aware MPICH; See - https://spack.readthedocs.io/en/latest/build_settings.html#package-settings-packages-yaml
   mpich:
-    require:
-      - one_of: ["+cuda", "+rocm"]
-# Use CUDA resources from NVIDIA base image: 
-# See example:  https://spack.readthedocs.io/en/latest/gpu_configuration.html
-  cuda:
-    buildable: false
-    externals:
-    - spec: cuda@12.2.91
-      prefix: /usr/local/cuda
-  cusparse:
-    buildable: false
-    externals:
-    - spec: cuda@12.2.91
-      prefix: /usr/local/cuda
-  cublas:
-    buildable: false
-    externals:
-    - spec: cuda@12.2.91
-      prefix: /usr/local/cuda
-  cusolver:
-    buildable: false
-    externals:
-    - spec: cuda@12.2.91
-      prefix: /usr/local/cuda
-  cufft:
-    buildable: false
-    externals:
-    - spec: cuda@12.2.91
-      prefix: /usr/local/cuda
+    require: "+cuda"
 # Use Ubuntu libncurses-dev, b/c Spack version fails 
   ncurses:
     externals:
