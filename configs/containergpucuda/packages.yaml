@@ -13,10 +13,18 @@ packages:
 # GPU-aware MPICH; See - https://spack.readthedocs.io/en/latest/build_settings.html#package-settings-packages-yaml
   mpich:
     require: "+cuda"
-# Use Ubuntu libncurses-dev, b/c Spack version fails 
+# Use Ubuntu libncurses-dev, etc., b/c Spack version fails 
   ncurses:
     externals:
     - spec: ncurses@6.3
+      prefix: /usr
+  gdbm:
+    externals:
+    - spec: gdbm@1.23
+      prefix: /usr
+  gdbm6:
+    externals:
+    - spec: gdbm6@1.23
       prefix: /usr
 # Package preferences to be built by Spack for correct Exawind
 # Nota bene: use libtool from Spack for correct linking
