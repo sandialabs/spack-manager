@@ -6,8 +6,6 @@ MAINTAINER Jon Rood, NREL <Jon.Rood@nrel.gov>
 ARG REGISTRY=nvcr.io/nvidia
 ARG IMAGE=cuda
 ARG TAG=11.8.0-devel-ubuntu22.04
-#ARG TAG=12.1.0-devel-ubuntu22.04
-#ARG TAG=12.2.0-devel-ubuntu22.04
 
 FROM ${REGISTRY}/${IMAGE}:${TAG}
 
