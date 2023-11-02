@@ -1,11 +1,11 @@
-MAINTAINER Philip Sakievich, Sandia National Laboratories <psakiev@sandia.gov>
-MAINTAINER Jon Rood, NREL <Jon.Rood@nrel.gov>
+LABEL maintainer="Philip Sakievich, Sandia National Laboratories <psakiev@sandia.gov>"
 
 # NVIDIA base images:  https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda/tags
 
 ARG REGISTRY=nvcr.io/nvidia
 ARG IMAGE=cuda
-ARG TAG=11.8.0-devel-ubuntu22.04
+#ARG TAG=11.8.0-devel-ubuntu22.04
+ARG TAG=12.2.0-devel-ubuntu22.04
 
 FROM ${REGISTRY}/${IMAGE}:${TAG}
 
@@ -14,10 +14,10 @@ SHELL ["/bin/bash", "-c"]
 
 # Install Spack Prereqs: https://spack.readthedocs.io/en/latest/getting_started.html#system-prerequisites
 
-RUN apt-get update -y && \
-    apt-get upgrade -y
+RUN apt-get update -yqq && \
+    apt-get upgrade -yqq
 
-RUN apt-get install -y \
+RUN apt-get install -yqq \
     autoconf \
     automake \
     bzip2 \
@@ -72,6 +72,7 @@ RUN apt clean -y
 
 # Exawind GPU snapshot 
 WORKDIR /exawind-entry
+#
 #RUN git clone --recursive https://github.com/sandialabs/spack-manager
 # Pre-merge fork
 RUN git clone --recursive https://github.com/ajpowelsnl/spack-manager
@@ -82,18 +83,45 @@ ENV SPACK_MANAGER=/exawind-entry/spack-manager
 
 WORKDIR /exawind-entry/spack-manager
 
+# Nota bene: commented code is needed, but does not work in container env
 # Pre-merge branch from ajpowelsnl/spack-manager fork
-RUN git checkout gpucontainer
+# RUN git checkout gpucontainer
+
+# Temp. code:  Use branch of Spack w/ patch
+# DOESN'T BUILD CORRECTLY
+#RUN cd spack
+#RUN git remote add amy_fork https://github.com/ajpowelsnl/spack.git
+#RUN git fetch amy_fork
+#RUN git checkout amy_fork/spack/patch_yaksa
+
 
 # Snapshot will be generated upon running container
-#RUN echo "export SPACK_MANAGER=$SPACK_MANAGER" >> /etc/bash.bashrc && \
-#    echo "source $SPACK_MANAGER/start.sh && spack-start" >> /etc/bash.bashrc && \
-#    echo "spack external find --all" >> /etc/bash.bashrc && \
-#    echo "$SPACK_MANAGER/scripts/create-exawind-snapshot.sh" >> /etc/bash.bashrc && \
-#    echo "spack clean -a" >> /etc/bash.bashrc
+RUN  echo "pwd" >> /etc/bash.bashrc && \
+     echo "cd spack" >> /etc/bash.bashrc && \
+     echo "git remote add amy_fork https://github.com/ajpowelsnl/spack.git" >> /etc/bash.bashrc && \
+     echo "git fetch amy_fork" >> /etc/bash.bashrc && \
+     echo "git checkout amy_fork/spack/patch_yaksa" >> /etc/bash.bashrc && \
+     echo "cd .." >> /etc/bash.bashrc && \
+     echo "pwd" >> /etc/bash.bashrc && \
+     echo "git checkout gpucontainer" >> /etc/bash.bashrc && \
+     echo "export SPACK_MANAGER=$SPACK_MANAGER" >> /etc/bash.bashrc && \
+     echo "source $SPACK_MANAGER/start.sh && spack-start" >> /etc/bash.bashrc && \
+     echo "spack external find --all" >> /etc/bash.bashrc && \
+     echo "$SPACK_MANAGER/scripts/create-exawind-snapshot.sh" >> /etc/bash.bashrc && \
+     echo "spack clean --all" >> /etc/bash.bashrc && \
+     echo "spack env activate -d snapshots/exawind/containergpucuda/$(date +%Y-%m-%d)" >> /etc/bash.bashrc && \
+     echo "spack load exawind" >> /etc/bash.bashrc
 
 # Verify .bashrc
 # RUN ["/bin/bash", "-c", "tail -n 6 /etc/bash.bashrc"]
+
+# Verify executable:
+#   66  spack env activate -d snapshots/exawind/containergpucuda/2023-11-01/
+#   67  spack load exawind
+#   68  which exawind
+#   69  exawind --help
+
+
 
 #WORKDIR /exawind-entry
 CMD [ "/bin/bash" ]
