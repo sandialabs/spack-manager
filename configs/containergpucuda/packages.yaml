@@ -11,13 +11,14 @@ packages:
   mpi:
     require: mpich
 # GPU-aware MPICH; See - https://spack.readthedocs.io/en/latest/build_settings.html#package-settings-packages-yaml
-  mpich:
-    require: "+cuda"
+#  mpich:
+#    require: "+cuda"
 # Use Ubuntu libncurses-dev, etc., b/c Spack version fails
 # Spack-pinned version of mpich builds fail  
   mpich:
     externals:
     - spec: mpich@4.0
+      require: "+cuda"
       prefix: /usr
   ncurses:
     externals:
