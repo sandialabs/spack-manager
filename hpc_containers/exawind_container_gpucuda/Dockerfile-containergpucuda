@@ -4,8 +4,8 @@ LABEL maintainer="Philip Sakievich, Sandia National Laboratories <psakiev@sandia
 
 ARG REGISTRY=nvcr.io/nvidia
 ARG IMAGE=cuda
-#ARG TAG=11.8.0-devel-ubuntu22.04
-ARG TAG=12.2.0-devel-ubuntu22.04
+ARG TAG=11.8.0-devel-ubuntu22.04
+#ARG TAG=12.2.0-devel-ubuntu22.04
 
 FROM ${REGISTRY}/${IMAGE}:${TAG}
 
@@ -52,10 +52,15 @@ RUN apt-get install -yqq \
     libjpeg-dev \
     libmpc-dev \
     libncurses-dev \
+    libtool \
+    libtool-bin \
+    libtool-doc \
     libx11-dev \
     lsb-release \
     m4 \
     make \
+    mpich \
+    mpich-doc \
     nano \
     python3 \
     python3-distutils \
