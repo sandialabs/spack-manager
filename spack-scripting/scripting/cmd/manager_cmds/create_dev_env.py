@@ -7,8 +7,8 @@
 
 import argparse
 
-import manager_cmds.create_env as create_env
-import manager_cmds.develop
+import manager.cmd.manager_cmds.create_env as create_env
+import manager.cmd.manager_cmds.develop as mgr_develop
 
 import spack.cmd
 import spack.environment as ev
@@ -20,9 +20,9 @@ def develop(args):
     """
     parser = argparse.ArgumentParser("develop")
     sub_parser = parser.add_subparsers()
-    manager_cmds.develop.add_command(sub_parser, {})
+    mgr_develop.add_command(sub_parser, {})
     args = parser.parse_args(["develop", *args])
-    manager_cmds.develop.manager_develop(parser, args)
+    mgr_develop.manager_develop(parser, args)
 
 
 def create_dev_env(parser, args):

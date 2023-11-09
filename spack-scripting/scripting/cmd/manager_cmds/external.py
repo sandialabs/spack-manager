@@ -9,8 +9,8 @@ import os
 import re
 from datetime import datetime
 
-from environment_utils import SpackManagerEnvironmentManifest
-from manager_utils import base_extension, pruned_spec_string
+from manager.environment_utils import SpackManagerEnvironmentManifest
+from manager.manager_utils import base_extension, pruned_spec_string
 
 import llnl.util.tty as tty
 

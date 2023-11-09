@@ -7,15 +7,16 @@
 
 import sys
 
-import manager_cmds.create_dev_env
-import manager_cmds.create_env
-import manager_cmds.develop
-import manager_cmds.external
-import manager_cmds.find_machine
-import manager_cmds.pin
-import manager_cmds.snapshot
+from manager.cmd.manager_cmds import create_dev_env
+from manager.cmd.manager_cmds import create_env
+from manager.cmd.manager_cmds import develop
+from manager.cmd.manager_cmds import external
+from manager.cmd.manager_cmds import find_machine
+from manager.cmd.manager_cmds import pin
+from manager.cmd.manager_cmds import snapshot
 
 if sys.version_info[0] < 3:
+    # TODO use tty
     print("spack-manager commands only support python 3")
     exit(1)
 
@@ -28,13 +29,13 @@ _subcommands = {}
 
 def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar="spack-manager commands", dest="manager_command")
-    manager_cmds.create_env.add_command(sp, _subcommands)
-    manager_cmds.create_dev_env.add_command(sp, _subcommands)
-    manager_cmds.develop.add_command(sp, _subcommands)
-    manager_cmds.find_machine.add_command(sp, _subcommands)
-    manager_cmds.external.add_command(sp, _subcommands)
-    manager_cmds.pin.add_command(sp, _subcommands)
-    manager_cmds.snapshot.add_command(sp, _subcommands)
+    create_env.add_command(sp, _subcommands)
+    create_dev_env.add_command(sp, _subcommands)
+    develop.add_command(sp, _subcommands)
+    find_machine.add_command(sp, _subcommands)
+    external.add_command(sp, _subcommands)
+    pin.add_command(sp, _subcommands)
+    snapshot.add_command(sp, _subcommands)
 
 
 def manager(parser, args):

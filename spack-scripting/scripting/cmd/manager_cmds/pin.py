@@ -8,7 +8,7 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
-from manager_utils import command, pruned_spec_string
+from manager.manager_utils import command, pruned_spec_string
 
 import llnl.util.tty as tty
 
