@@ -7,13 +7,13 @@
 
 import sys
 
-from manager.cmd.manager_cmds import create_dev_env
-from manager.cmd.manager_cmds import create_env
-from manager.cmd.manager_cmds import develop
-from manager.cmd.manager_cmds import external
-from manager.cmd.manager_cmds import find_machine
-from manager.cmd.manager_cmds import pin
-from manager.cmd.manager_cmds import snapshot
+from scripting.cmd.manager_cmds import create_dev_env
+from scripting.cmd.manager_cmds import create_env
+from scripting.cmd.manager_cmds import develop
+from scripting.cmd.manager_cmds import external
+from scripting.cmd.manager_cmds import find_machine
+from scripting.cmd.manager_cmds import pin
+from scripting.cmd.manager_cmds import snapshot
 
 if sys.version_info[0] < 3:
     # TODO use tty

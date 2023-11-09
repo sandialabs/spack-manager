@@ -7,8 +7,8 @@
 
 import argparse
 
-import manager.cmd.manager_cmds.create_env as create_env
-import manager.cmd.manager_cmds.develop as mgr_develop
+import scripting.cmd.manager_cmds.create_env as create_env
+import scripting.cmd.manager_cmds.develop as mgr_develop
 
 import spack.cmd
 import spack.environment as ev

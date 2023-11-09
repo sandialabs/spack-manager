@@ -5,7 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-from manager_cmds.pin import pin_graph
+from scripting.cmd.manager_cmds.pin import pin_graph
 
 from spack.spec import Spec
 from spack.version import GitVersion

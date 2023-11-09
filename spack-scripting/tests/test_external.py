@@ -8,10 +8,10 @@
 import os
 from unittest.mock import patch
 
-import manager_cmds
-import manager_cmds.external
+import scripting.cmd.manager_cmds
+import scripting.cmd.manager_cmds.external
 import pytest
-from manager_utils import pruned_spec_string
+from manager.manager_utils import pruned_spec_string
 
 import spack.environment as ev
 import spack.main
@@ -111,7 +111,7 @@ def test_errorsIfThereIsNoView(tmpdir):
         args = ParserMock(ext_env)
         with pytest.raises(SystemExit):
             with ev.Environment("test"):
-                manager_cmds.external.external(None, args)
+                scripting.cmd.manager_cmds.external.external(None, args)
 
 
 class ExtPackage:
@@ -145,11 +145,11 @@ def evaluate_external(tmpdir, yaml_file):
     with ev.Environment("test") as e:
         args = ParserMock(ext_path, merge=True)
         with patch(
-            "manager_cmds.external.write_spec",
-            return_value=str(ExtPackage("cmake", "cmake@3.20.0", "/path/top/some/view")),
+            "scripting.cmd.manager_cmds.external.write_spec",
+            rscripting.cmd.eturn_value=str(ExtPackage("cmake", "cmake@3.20.0", "/path/top/some/view")),
         ) as mock_write:
-            manager_cmds.external.external(None, args)
-        # check that the include entry was added to the spack.yaml
+            scripting.cmd.manager_cmds.external.external(None, args)
+        # chscripting.cmd.eck that the include entry was added to the spack.yaml
         assert mock_write.called_once()
         includes = config_dict(e.yaml).get("include", [])
         assert 1 == len(includes)

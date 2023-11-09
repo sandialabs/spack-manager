@@ -19,16 +19,16 @@ manager = spack.main.SpackCommand("manager")
 
 @pytest.mark.usefixtures("mutable_mock_env_path", "mock_packages", "mock_fetch")
 class TestSpackManagerDevelop(object):
-    @patch("manager_cmds.develop.spack_develop.develop")
+    @patch("scripting.cmd.manager_cmds.develop.spack_develop.develop")
     def test_spackManagerDevelopCallsSpackDevelop(self, mock_develop):
         env("create", "test")
         with ev.read("test"):
             manager("develop", "mpich@=1.0")
             mock_develop.assert_called_once()
 
-    @patch("manager_cmds.develop.spack_develop.develop")
-    @patch("manager_cmds.develop.git_clone")
-    @patch("manager_cmds.develop.git_remote_add")
+    @patch("scripting.cmd.manager_cmds.develop.spack_develop.develop")
+    @patch("scripting.cmd.manager_cmds.develop.git_clone")
+    @patch("scripting.cmd.manager_cmds.develop.git_remote_add")
     @pytest.mark.parametrize("all_branches", [True, False])
     @pytest.mark.parametrize("shallow", [True, False])
     @pytest.mark.parametrize("add_remote", [True, False])

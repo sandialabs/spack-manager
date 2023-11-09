@@ -7,8 +7,8 @@
 import os
 
 from manager.environment_utils import SpackManagerEnvironmentManifest
-from manager.cmd.manager_cmds.create_env import create_env
-from manager.cmd.manager_cmds.pin import pin_env
+from scripting.cmd.manager_cmds.create_env import create_env
+from scripting.cmd.manager_cmds.pin import pin_env
 from manager.manager_utils import path_extension
 
 import spack.cmd.install

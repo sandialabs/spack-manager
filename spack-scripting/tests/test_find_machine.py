@@ -6,7 +6,7 @@
 # for more details.
 
 import pytest
-from manager_cmds.find_machine import is_cee, is_jlse, is_snl_hpc
+from scripting.cmd.manager_cmds.find_machine import is_cee, is_jlse, is_snl_hpc
 
 
 @pytest.mark.parametrize("test_function", [is_cee, is_snl_hpc, is_jlse])
