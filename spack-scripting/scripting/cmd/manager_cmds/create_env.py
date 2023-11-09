@@ -12,10 +12,10 @@ on a given machine
 
 import os
 
-import scripting.cmd.manager_cmds.find_machine as fm
+import manager.cmd.manager_cmds.find_machine as fm
 from manager.environment_utils import SpackManagerEnvironmentManifest
-from scripting.cmd.manager_cmds.find_machine import find_machine
-from scripting.cmd.manager_cmds.includes_creator import IncludesCreator
+from manager.cmd.manager_cmds.find_machine import find_machine
+from manager.cmd.manager_cmds.includes_creator import IncludesCreator
 
 import spack
 import spack.cmd
