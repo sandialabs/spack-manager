@@ -5,7 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-from environment_utils import SpackManagerEnvironmentManifest as smem
+from manager.environment_utils import SpackManagerEnvironmentManifest as smem
 
 import spack.util.spack_yaml as syaml
 

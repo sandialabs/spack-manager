@@ -7,8 +7,8 @@
 # for more details.
 
 from tempfile import TemporaryDirectory
-from manager_cmds.find_machine import find_machine as find_machine
-from manager_cmds.find_machine import machine_list
+from manager.cmd.manager_cmds.find_machine import find_machine as find_machine
+from manager.cmd.manager_cmds.find_machine import machine_list
 import spack.environment as env
 import spack.main
 import argparse

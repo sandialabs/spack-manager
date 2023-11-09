@@ -7,7 +7,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 #
-import manager_cmds.find_machine as find_machine
+import manager.cmd.manager_cmds.find_machine as find_machine
 
 
 def get_path_to_externals():
