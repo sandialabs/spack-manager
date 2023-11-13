@@ -5,15 +5,20 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import os
 import sys
 
-import manager_cmds.create_dev_env
-import manager_cmds.create_env
-import manager_cmds.develop
-import manager_cmds.external
+# required to get the modules in the manager directory to show up
+module_dir = os.path.realpath(os.path.abspath(os.path.join(__file__, "..", "..")))
+sys.path.append(module_dir)
+
+# import manager_cmds.create_dev_env
+# import manager_cmds.create_env
+# import manager_cmds.develop
+# import manager_cmds.external
 import manager_cmds.find_machine
-import manager_cmds.pin
-import manager_cmds.snapshot
+# import manager_cmds.pin
+# import manager_cmds.snapshot
 
 if sys.version_info[0] < 3:
     print("spack-manager commands only support python 3")
@@ -28,13 +33,13 @@ _subcommands = {}
 
 def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar="spack-manager commands", dest="manager_command")
-    manager_cmds.create_env.add_command(sp, _subcommands)
-    manager_cmds.create_dev_env.add_command(sp, _subcommands)
-    manager_cmds.develop.add_command(sp, _subcommands)
+    # manager_cmds.create_env.add_command(sp, _subcommands)
+    # manager_cmds.create_dev_env.add_command(sp, _subcommands)
+    # manager_cmds.develop.add_command(sp, _subcommands)
     manager_cmds.find_machine.add_command(sp, _subcommands)
-    manager_cmds.external.add_command(sp, _subcommands)
-    manager_cmds.pin.add_command(sp, _subcommands)
-    manager_cmds.snapshot.add_command(sp, _subcommands)
+    # manager_cmds.external.add_command(sp, _subcommands)
+    # manager_cmds.pin.add_command(sp, _subcommands)
+    # manager_cmds.snapshot.add_command(sp, _subcommands)
 
 
 def manager(parser, args):

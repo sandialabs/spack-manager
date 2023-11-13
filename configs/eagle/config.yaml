@@ -1,4 +1,0 @@
-config:
-  build_stage:
-    - $spack/../stage
-  build_jobs: 16
