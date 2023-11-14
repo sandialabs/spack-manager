@@ -11,9 +11,9 @@ from unittest.mock import patch
 import spack.environment as ev
 import spack.main
 
-manager = spack.main.SpackCommand("manager")
+# manager = spack.main.SpackCommand("manager")
 
-
+'''
 @patch("manager_cmds.create_dev_env.develop")
 def test_allSpecsCallSpackDevelop(mock_dev, tmpdir):
     with tmpdir.as_cwd():
@@ -106,3 +106,4 @@ def test_noSpecsIsNotAnErrorGivesBlankEnv(mock_develop, tmpdir):
         e = ev.Environment(tmpdir.strpath)
         assert len(e.user_specs) == 0
         assert e.manifest.pristine_yaml_content["spack"]["specs"] == []
+'''

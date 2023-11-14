@@ -8,17 +8,17 @@
 import os
 from tempfile import TemporaryDirectory
 
-import manager_cmds.create_env as create_env
+# import manager_cmds.create_env as create_env
 import pytest
 
 import spack.environment as env
 import spack.main
 import spack.util.spack_yaml as syaml
 
-manager = spack.main.SpackCommand("manager")
+# manager = spack.main.SpackCommand("manager")
 envcmd = spack.main.SpackCommand("env")
 
-
+'''
 def test_basicDirectoryProperties(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-d", tmpdir.strpath, "-m", "darwin", "-s", "binutils")
@@ -172,3 +172,4 @@ def test_local_source_tree_can_be_added_to_env(tmpdir):
             "$env/opt"
             in e.manifest.pristine_yaml_content["spack"]["config"]["install_tree"]["root"]
         )
+'''

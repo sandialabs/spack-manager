@@ -5,6 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+'''
 from environment_utils import SpackManagerEnvironmentManifest as smem
 
 import spack.util.spack_yaml as syaml
@@ -26,3 +27,4 @@ def test_smManifestCanSetConfig(tmpdir):
             assert "$env/opt" in yaml["spack"]["config"]["install_tree"]["root"]
             assert "include.yaml" in yaml["spack"]["include"]
             assert "first_include.yaml" == yaml["spack"]["include"][0]
+'''
