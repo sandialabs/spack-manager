@@ -27,6 +27,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="Enable SYCL backend")
     variant("gpu-aware-mpi", default=False,
             description="gpu-aware-mpi")
+    variant("helics", default=False,
+            description="Enable HELICS support for control interface")
 
     depends_on("hdf5~mpi", when="+hdf5~mpi")
     depends_on("hdf5+mpi", when="+hdf5+mpi")
@@ -35,6 +37,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+umpire", when="+umpire")
     depends_on("hypre+sycl", when="+sycl")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
+    depends_on("helics", when="+helics")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
@@ -91,6 +94,10 @@ class AmrWind(SMCMakeExtension, bAmrWind):
                     "AMReX's SYCL GPU Backend requires DPC++ (dpcpp)"
                     + " or the oneAPI CXX (icpx) compiler."
                 )
+
+        if "+helics" in self.spec:
+            cmake_options.append(self.define_from_variant("AMR_WIND_ENABLE_HELICS", "helics"))
+            cmake_options.append(self.define("HELICS_DIR", self.spec["helics"].prefix))
 
         if "+tests" in spec:
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
