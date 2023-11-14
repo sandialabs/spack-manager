@@ -16,7 +16,7 @@ import spack.main
 env = spack.main.SpackCommand("env")
 # manager = spack.main.SpackCommand("manager")
 
-'''
+"""
 @pytest.mark.usefixtures("mutable_mock_env_path", "mock_packages", "mock_fetch")
 class TestSpackManagerDevelop(object):
     @patch("manager_cmds.develop.spack_develop.develop")
@@ -60,4 +60,4 @@ class TestSpackManagerDevelop(object):
                 mock_git_remote.assert_called_once_with(path, remote_name, remote_repo)
             else:
                 assert not mock_git_remote.called
-'''
+"""

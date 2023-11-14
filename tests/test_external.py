@@ -11,13 +11,16 @@ from unittest.mock import patch
 # import manager_cmds
 # import manager_cmds.external
 import pytest
-# from manager_utils import pruned_spec_string
 
 import spack.environment as ev
 import spack.main
 import spack.util.spack_yaml as syaml
+
 # from spack.environment import config_dict
 from spack.spec import Spec
+
+# from manager_utils import pruned_spec_string
+
 
 env = spack.main.SpackCommand("env")
 manager = spack.main.SpackCommand("manager")

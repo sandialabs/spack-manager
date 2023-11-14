@@ -17,6 +17,7 @@ sys.path.append(module_dir)
 # import manager_cmds.develop
 # import manager_cmds.external
 import manager_cmds.find_machine
+
 # import manager_cmds.pin
 # import manager_cmds.snapshot
 
