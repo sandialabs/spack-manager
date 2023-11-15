@@ -6,7 +6,26 @@
 # for more details.
 
 import os
+import spack.util.spack_yaml as syaml
 
+_default_config = """
+spack-manager:
+    projects: {}
+"""
 config_path = os.path.realpath(
     os.path.abspath(os.path.join(__file__, "..", "..", "spack-manager.yaml"))
 )
+
+config_yaml = {}
+
+def populate_config():
+    """ Update the spack-manager config in memory"""
+    global config_yaml
+    if os.path.isfile(config_path):
+        with open(config_path, "r") as f:
+            config_yaml = syaml.load(f)
+    else:
+        config_yaml = syaml.load(_default_config)
+
+# module init stuff
+populate_config()

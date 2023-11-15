@@ -16,3 +16,9 @@ def test_spackManagerHasConfigPath():
         os.path.abspath(os.path.join(__file__, "..", "..", "spack-manager.yaml"))
     )
     assert manager.config_path == expected_config_path
+
+def test_defaultConfigIsPopulatedInMemory():
+    assert "spack-manager" in manager.config_yaml
+    manager_node = manager.config_yaml["spack-manager"]
+    assert "projects" in manager_node
+
