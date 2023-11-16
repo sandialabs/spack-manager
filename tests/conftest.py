@@ -6,40 +6,20 @@
 # for more details.
 
 
+import manager
 import os
 
 import pytest
 
-import spack.paths
-import spack.repo
-from spack.cmd import parse_specs
-from spack.spec import Spec
 from spack.test.conftest import *  # noqa: F401 F403
 
+_test_root = os.path.dirname(__file__)
 
-@pytest.fixture(scope="session")
-def builtin_repo_path():
-    yield spack.paths.packages_path
-
-
-@pytest.fixture(scope="session")
-def exawind_repo_path():
-    yield os.path.join(os.environ["SPACK_MANAGER"], "repos", "exawind")
+@pytest.fixture
+def mock_manager_config_path(monkeypatch):
+    """"Setup to use a testing project repo embedded in the tests"""
+    monkeypatch.setattr(manager, "config_path", os.path.join(_test_root, "mock", "mock_config.yaml"))
+    manager.populate_config()
 
 
-@pytest.fixture(scope="session")
-def create_package(builtin_repo_path, exawind_repo_path):
-    packages = {}
 
-    def _create(spec):
-        if spec not in packages:
-            packages[spec] = _create_new(spec)
-        return packages[spec]
-
-    def _create_new(spec):
-        with spack.repo.use_repositories(builtin_repo_path, exawind_repo_path):
-            specs = parse_specs(spec)
-            pkg_class = spack.repo.path.get_pkg_class(str(specs[0].name))
-            return pkg_class(Spec(spec))
-
-    return _create

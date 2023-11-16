@@ -11,14 +11,26 @@ import manager
 
 
 def test_spackManagerHasConfigPath():
+    """ Confirm that the manager module is the correct one for populating configs"""
     assert hasattr(manager, "config_path")
     expected_config_path = os.path.realpath(
         os.path.abspath(os.path.join(__file__, "..", "..", "spack-manager.yaml"))
     )
     assert manager.config_path == expected_config_path
 
+
 def test_defaultConfigIsPopulatedInMemory():
+    """Show that the config will always be populated"""
     assert "spack-manager" in manager.config_yaml
     manager_node = manager.config_yaml["spack-manager"]
     assert "projects" in manager_node
 
+
+def test_mockMangerSoftareProject(mock_manager_config_path):
+    """Test verify that we are moking a software project's deployment"""
+    assert os.path.isfile(manager.config_path)
+    print(manager.config_path)
+    manager_node = manager.config_yaml["spack-manager"]
+    projects_node = manager.config_yaml["spack-manager"]["projects"]
+    print(manager_node, projects_node)
+    assert "project_a" in projects_node
