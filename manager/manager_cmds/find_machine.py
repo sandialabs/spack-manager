@@ -11,7 +11,7 @@ import sys
 import manager
 
 
-def find_machine(parser, args, verbose=True, full_machine_name=False):
+def find_machine(parser, args, verbose=True):
     if args.list:
         print("Project:\t Machine:\t Detectable: (+/-)")
         print("-"*60)
@@ -20,20 +20,22 @@ def find_machine(parser, args, verbose=True, full_machine_name=False):
                 print("{proj} \t {machine} \t {detectable}".format(proj=name, machine=m_name, detectable="+" if m_detector else "-"))
         return
 
+    machine_found = False
+    machine_name = ["NOT-FOUND"]
+
+    # only allow one project for now
+    if len(manager.projects) > 1:
+        raise Exception("Spack-Manager only supports one project in production right now")
+
     for project in manager.projects:
-        for machine_name, data in project.machines.items():
+        for this_name, data in project.machines.items():
             """
             Since we don't expect uniform environments on all machines
             we bury our checks in a try/except
             """
             try:
                 if data.i_am_this_machine():
-                    if verbose:
-                        print(machine_name)
-                    if full_machine_name:
-                        return data.full_machine_name
-                    else:
-                        return machine_name
+                    machine_name.append(this_name)
             except KeyError:
                 """
                 expect key errors when an environment variable is not defined
@@ -47,9 +49,13 @@ def find_machine(parser, args, verbose=True, full_machine_name=False):
                 in the future
                 """
                 raise
-            if verbose:
-                print("NOT-FOUND")
-            return "NOT-FOUND"
+
+    if len(machine_name) > 2:
+        raise Exception("Too many machines matched. Please make sure your detection scripts map uniquely.")
+
+    if verbose:
+        print(machine_name[-1])
+    return machine_name[-1]
 
 def setup_parser_args(sub_parser):
     sub_parser.add_argument("-l",
