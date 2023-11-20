@@ -7,6 +7,37 @@
 
 import os
 import spack.util.spack_yaml as syaml
+# from project import Project
+from spack.util.path import canonicalize_path
+
+class Project:
+    """
+    This class is the in memory representation of how a software project is
+    organized in spack-manager.
+    It is designed to be an easy way to access the filesystem without needing a
+    a bunch of os.path.join's.
+    Due to the need to be synced with the filesystem it will not be something
+    you want to access inside a performant loop
+    """
+    def __init__(self, path):
+        self.root = canonicalize_path(path)
+        self.config_path = os.path.join(self.root, "configs")
+        self.repo_path = os.path.join(self.root, "repo")
+        os.makedirs(self.config_path, exist_ok=True)
+        os.makedirs(self.repo_path, exist_ok=True)
+        self.populate_machines()
+
+    def machine_detector(self, path):
+        return None
+
+    def populate_machines(self):
+        self.machines = {}
+        machine_path = os.path.join(self.root, "configs")
+        machine_dirs = list(os.scandir(os.path.join(self.root, "configs")))
+        for machine in machine_dirs:
+            print(machine.path)
+            self.machines[machine.name] = self.machine_detector(machine.path)
+
 
 _default_config = """
 spack-manager:
@@ -17,6 +48,7 @@ config_path = os.path.realpath(
 )
 
 config_yaml = {}
+projects = {}
 
 def populate_config():
     """ Update the spack-manager config in memory"""
@@ -27,5 +59,13 @@ def populate_config():
     else:
         config_yaml = syaml.load(_default_config)
 
+def load_projects():
+    global projects
+    projects_node = config_yaml["spack-manager"]["projects"]
+    for key, path in projects_node.items():
+        projects[key] = Project(path)
+
 # module init stuff
 populate_config()
+load_projects()
+

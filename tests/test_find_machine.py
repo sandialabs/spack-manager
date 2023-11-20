@@ -6,11 +6,12 @@
 # for more details.
 
 import pytest
-from manager_cmds.find_machine import is_cee, is_jlse, is_snl_hpc
 
+import spack.main
 
-@pytest.mark.parametrize("test_function", [is_cee, is_snl_hpc, is_jlse])
-def test_functional_checks_dont_return_false_positives(test_function):
-    assert test_function("abcdefghijklmnopqrstuvwxyz") is False
-    assert test_function("ABCDEFGHIJKLMNOPQRSTUVWXYZ") is False
-    assert test_function("0123456789") is False
+mgrCmd = spack.main.SpackCommand("manager")
+
+def test_find_machine_detects_project_machines(mock_manager_config_path):
+    out = mgrCmd("find-machine", "--list")
+    assert "moonlight" in out
+

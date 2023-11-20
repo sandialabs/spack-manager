@@ -20,6 +20,7 @@ def mock_manager_config_path(monkeypatch):
     """"Setup to use a testing project repo embedded in the tests"""
     monkeypatch.setattr(manager, "config_path", os.path.join(_test_root, "mock", "mock_config.yaml"))
     manager.populate_config()
+    manager.load_projects()
 
 
 
