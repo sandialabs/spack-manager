@@ -10,6 +10,8 @@ import spack.util.spack_yaml as syaml
 # from project import Project
 from spack.util.path import canonicalize_path
 
+DETECTION_SCRIPT_NAME = "dectector.py"
+
 class Project:
     """
     This class is the in memory representation of how a software project is
@@ -23,20 +25,28 @@ class Project:
         self.root = canonicalize_path(path)
         self.config_path = os.path.join(self.root, "configs")
         self.repo_path = os.path.join(self.root, "repo")
+        # create missing directories
         os.makedirs(self.config_path, exist_ok=True)
         os.makedirs(self.repo_path, exist_ok=True)
         self.populate_machines()
+        self.machine_detector()
 
-    def machine_detector(self, path):
-        return None
+
+    def machine_detector(self):
+        self.detector = lambda _ : False
+        detection_script = os.path.join(self.root, "find-machine.py")
+        if os.path.isfile(detection_script):
+            locals = {}
+            exec(detection_script, globals(), locals)
+            self.detector = locals["detector"]
+
 
     def populate_machines(self):
-        self.machines = {}
+        self.machines = []
         machine_path = os.path.join(self.root, "configs")
         machine_dirs = list(os.scandir(os.path.join(self.root, "configs")))
         for machine in machine_dirs:
-            print(machine.path)
-            self.machines[machine.name] = self.machine_detector(machine.path)
+            self.machines.append(machine.name)
 
 
 _default_config = """

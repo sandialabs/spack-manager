@@ -1,5 +1,4 @@
 spack-manager:
   projects:
     project_a: test/mock/project_a
-    project_b: test/mock/project_b
 

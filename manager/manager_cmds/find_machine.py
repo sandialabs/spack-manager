@@ -13,11 +13,11 @@ import manager
 
 def find_machine(parser, args, verbose=True):
     if args.list:
-        print("Project:\t Machine:\t Detectable: (+/-)")
+        print("Project:\t Machine:\t Detected: (+/-)")
         print("-"*60)
         for name, project in manager.projects.items():
-            for m_name, m_detector in project.machines.items():
-                print("{proj} \t {machine} \t {detectable}".format(proj=name, machine=m_name, detectable="+" if m_detector else "-"))
+            for machine in project.machines:
+                print("{proj} \t {machine} \t {detected}".format(proj=name, machine=machine, detected="+" if project.detector(machine) else "-"))
         return
 
     machine_found = False
@@ -28,14 +28,14 @@ def find_machine(parser, args, verbose=True):
         raise Exception("Spack-Manager only supports one project in production right now")
 
     for project in manager.projects:
-        for this_name, data in project.machines.items():
+        for machine in project.machines:
             """
             Since we don't expect uniform environments on all machines
             we bury our checks in a try/except
             """
             try:
-                if data.i_am_this_machine():
-                    machine_name.append(this_name)
+                if project.detector(machine):
+                    machine_name.append(machine)
             except KeyError:
                 """
                 expect key errors when an environment variable is not defined
