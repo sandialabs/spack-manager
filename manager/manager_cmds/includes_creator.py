@@ -28,7 +28,8 @@ class IncludesCreator:
 
     def write_includes(self, path):
         abspath = os.path.abspath(path)
-        sections = list(spack.config.section_schemas.keys())
+        # TODO this is spack version dependent
+        sections = list(spack.config.SECTION_SCHEMAS.keys())
         data = syaml.syaml_dict()
         try:
             for s in sections:

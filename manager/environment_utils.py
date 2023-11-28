@@ -8,6 +8,7 @@
 import spack.environment.environment as senv
 
 
+#TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
     """Spack-Manager extensiont to the manifest file for prototyping"""
 
