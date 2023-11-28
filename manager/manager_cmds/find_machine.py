@@ -27,7 +27,7 @@ def find_machine(parser, args, verbose=True):
     if len(manager.projects) > 1:
         raise Exception("Spack-Manager only supports one project in production right now")
 
-    for project in manager.projects:
+    for _, project  in manager.projects.items():
         for machine in project.machines:
             """
             Since we don't expect uniform environments on all machines

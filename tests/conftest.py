@@ -18,6 +18,7 @@ _test_root = os.path.dirname(__file__)
 @pytest.fixture
 def mock_manager_config_path(monkeypatch):
     """"Setup to use a testing project repo embedded in the tests"""
+    print(_test_root)
     monkeypatch.setattr(manager, "config_path", os.path.join(_test_root, "mock", "mock_config.yaml"))
     manager.populate_config()
     manager.load_projects()

@@ -26,11 +26,10 @@ def test_defaultConfigIsPopulatedInMemory():
     assert "projects" in manager_node
 
 
-def test_mockMangerSoftareProject(mock_manager_config_path):
+def test_mockManagerSoftareProject(mock_manager_config_path):
     """Test verify that we are moking a software project's deployment"""
     assert os.path.isfile(manager.config_path)
-    print(manager.config_path)
+    assert "tests" in str(manager.config_path)
     manager_node = manager.config_yaml["spack-manager"]
     projects_node = manager.config_yaml["spack-manager"]["projects"]
-    print(manager_node, projects_node)
     assert "project_a" in projects_node

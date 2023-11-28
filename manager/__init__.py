@@ -5,7 +5,9 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import importlib.util
 import os
+import sys
 import spack.util.spack_yaml as syaml
 # from project import Project
 from spack.util.path import canonicalize_path
@@ -34,11 +36,17 @@ class Project:
 
     def machine_detector(self):
         self.detector = lambda _ : False
-        detection_script = os.path.join(self.root, "find-machine.py")
+        name = os.path.basename(self.root)
+        detection_script = os.path.join(self.root, "find-{name}.py".format(name=name))
         if os.path.isfile(detection_script):
-            locals = {}
-            exec(detection_script, globals(), locals)
-            self.detector = locals["detector"]
+            # dynamically import the find script for the project here
+            # so we can just load the detection script
+            mod_name = "find_{n}".format(n=name)
+            spec = importlib.util.spec_from_file_location(mod_name, detection_script)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            self.detector = mod.detector
+
 
 
     def populate_machines(self):
