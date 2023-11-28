@@ -29,15 +29,15 @@ class Project:
     Due to the need to be synced with the filesystem it will not be something
     you want to access inside a performant loop
     """
-    def __init__(self, path):
-        self.root = canonicalize_path(path, config_path=None, repo_path=None)
+    def __init__(self, path, config_path=None, repo_path=None):
+        self.root = canonicalize_path(path)
         if config_path:
-            self.config_path = config_path
+            self.config_path = canonicalize_path(config_path)
         else:
             self.config_path = os.path.join(self.root, "configs")
 
         if repo_path:
-            self.repo_path = repo_path
+            self.repo_path = canonicalize_path(repo_path)
         else:
             self.repo_path = os.path.join(self.root, "repo")
 

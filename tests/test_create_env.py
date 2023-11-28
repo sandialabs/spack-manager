@@ -8,20 +8,20 @@
 import os
 from tempfile import TemporaryDirectory
 
-# import manager_cmds.create_env as create_env
+import manager_cmds.create_env as create_env
 import pytest
 
 import spack.environment as env
 import spack.main
 import spack.util.spack_yaml as syaml
 
-# manager = spack.main.SpackCommand("manager")
+
+manager = spack.main.SpackCommand("manager")
 envcmd = spack.main.SpackCommand("env")
 
-'''
-def test_basicDirectoryProperties(tmpdir):
+def test_basicDirectoryProperties(tmpdir, on_moonlight):
     with tmpdir.as_cwd():
-        manager("create-env", "-d", tmpdir.strpath, "-m", "darwin", "-s", "binutils")
+        manager("create-env", "-d", tmpdir.strpath, "-m", "moonlight", "-s", "binutils")
         assert os.path.isfile("spack.yaml")
         assert os.path.isfile("include.yaml")
 
@@ -30,13 +30,14 @@ def test_basicDirectoryProperties(tmpdir):
             assert "concretizer" in yaml["spack"]
             assert yaml["spack"]["concretizer"]["unify"] is True
 
-
+@pytest.mark.skip(reason="not addressed yet")
 def test_failsWithAnUnregisteredMachine():
     with TemporaryDirectory() as tmpdir:
         with pytest.raises(Exception):
             manager("create-env", "-d", tmpdir, "-m", "theGOAT_HPC")
 
 
+@pytest.mark.skip(reason="not addressed yet")
 def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
     TESTMACHINE = "test_machine"
     with TemporaryDirectory() as tmpdir:
@@ -66,6 +67,7 @@ def test_missingReferenceYamlFilesDontBreakEnv(monkeypatch):
         env.Environment(tmpdir)
 
 
+@pytest.mark.skip(reason="not addressed yet")
 def test_specsCanBeAddedToExisitingYaml(tmpdir):
     with tmpdir.as_cwd():
         preset_yaml = """
@@ -108,6 +110,7 @@ spack:
         assert "view" not in e.manifest.pristine_yaml_content["spack"].keys()
 
 
+@pytest.mark.skip(reason="not addressed yet")
 def test_existingYamlViewIsNotOverwritten(tmpdir):
     with tmpdir.as_cwd():
         preset_yaml = """
@@ -143,11 +146,13 @@ spack:
         assert e.manifest.pristine_yaml_content["spack"]["view"]
 
 
+@pytest.mark.skip(reason="not addressed yet")
 def test_specs_can_have_spaces(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind ", " build_type=Release", "%gcc")
 
 
+@pytest.mark.skip(reason="not addressed yet")
 def test_unify_in_yaml_preserved(tmpdir):
     with tmpdir.as_cwd():
         preset_yaml = """
@@ -164,6 +169,7 @@ spack:
         assert "when_possible" == e.manifest.pristine_yaml_content["spack"]["concretizer"]["unify"]
 
 
+@pytest.mark.skip(reason="not addressed yet")
 def test_local_source_tree_can_be_added_to_env(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind", "-l")
@@ -172,4 +178,3 @@ def test_local_source_tree_can_be_added_to_env(tmpdir):
             "$env/opt"
             in e.manifest.pristine_yaml_content["spack"]["config"]["install_tree"]["root"]
         )
-'''

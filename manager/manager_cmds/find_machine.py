@@ -11,21 +11,9 @@ import sys
 import manager
 
 
-def find_machine(parser, args, verbose=True):
-    if args.list:
-        print("Project:\t Machine:\t Detected: (+/-)")
-        print("-"*60)
-        for name, project in manager.projects.items():
-            for machine in project.machines:
-                print("{proj} \t {machine} \t {detected}".format(proj=name, machine=machine, detected="+" if project.detector(machine) else "-"))
-        return
-
+def find_machine(verbose=False):
     machine_found = False
     machine_name = ["NOT-FOUND"]
-
-    # only allow one project for now
-    if len(manager.projects) > 1:
-        raise Exception("Spack-Manager only supports one project in production right now")
 
     for _, project  in manager.projects.items():
         for machine in project.machines:
@@ -45,11 +33,28 @@ def find_machine(parser, args, verbose=True):
                 raise
 
     if len(machine_name) > 2:
+        # TODO this doesn't need to be an exception here I suppose, will have to think about it
         raise Exception("Too many machines matched. Please make sure your detection scripts map uniquely.")
 
     if verbose:
         print(machine_name[-1])
     return machine_name[-1]
+
+
+def find_machine_cmd(parser, args):
+    if args.list:
+        print("Project:\t Machine:\t Detected: (+/-)")
+        print("-"*60)
+        for name, project in manager.projects.items():
+            for machine in project.machines:
+                print("{proj} \t {machine} \t {detected}".format(proj=name, machine=machine, detected="+" if project.detector(machine) else "-"))
+        return
+
+    # only allow one project for now
+    if len(manager.projects) > 1:
+        raise Exception("Spack-Manager only supports one project in production right now")
+
+    find_machine(verbose=True)
 
 def setup_parser_args(sub_parser):
     sub_parser.add_argument("-l",
@@ -62,4 +67,4 @@ def setup_parser_args(sub_parser):
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser("find-machine", help="get the current machine detected by spack-manager")
     setup_parser_args(sub_parser)
-    command_dict["find-machine"] = find_machine
+    command_dict["find-machine"] = find_machine_cmd

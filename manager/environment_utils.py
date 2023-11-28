@@ -6,7 +6,6 @@
 # for more details.
 
 import spack.environment.environment as senv
-from spack.environment.environment import config_dict
 
 
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
@@ -20,8 +19,8 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             key: next level where we will be updating
             value: value to set
         """
-        config_dict(self.pristine_yaml_content).setdefault(root, {})[key] = value
-        config_dict(self.yaml_content).setdefault(root, {})[key] = value
+        self.pristine_yaml_content.get(root, {})[key] = value
+        self.yaml_content.get(root, {})[key] = value
         self.changed = True
 
     def append_includes(self, value):
@@ -30,8 +29,8 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the end of the list
         """
-        config_dict(self.pristine_yaml_content).setdefault("include", []).append(value)
-        config_dict(self.yaml_content).setdefault("include", []).append(value)
+        self.pristine_yaml_content.get("include", []).append(value)
+        self.yaml_content.get("include", []).append(value)
         self.changed = True
 
     def prepend_includes(self, value):
@@ -40,6 +39,6 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the beginning of the list
         """
-        config_dict(self.pristine_yaml_content).setdefault("include", [])[:0] = [value]
-        config_dict(self.yaml_content).setdefault("include", [])[:0] = [value]
+        self.pristine_yaml_content.get("include", [])[:0] = [value]
+        self.yaml_content.get("include", [])[:0] = [value]
         self.changed = True

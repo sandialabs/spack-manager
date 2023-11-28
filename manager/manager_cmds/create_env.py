@@ -11,6 +11,7 @@ on a given machine
 """
 
 import os
+import llnl.util.tty as tty
 
 import manager_cmds.find_machine as fm
 from environment_utils import SpackManagerEnvironmentManifest
@@ -49,11 +50,9 @@ def create_env(parser, args):
         manifest.set_config_value("concretizer", "unify", True)
 
     if args.machine is not None:
-        machine = args.machine
-        if machine not in fm.machine_list.keys():
-            raise Exception("Specified machine %s is not defined" % machine)
-    else:
-        machine = find_machine(verbose=False)
+        machine = find_machine()
+        if machine == "NOT-FOUND":
+            tty.warn("Specified machine {m} was not found. No machine specific config will be applied".format(m=args.machine))
 
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)
