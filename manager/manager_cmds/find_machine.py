@@ -36,15 +36,9 @@ def find_machine(parser, args, verbose=True):
             try:
                 if project.detector(machine):
                     machine_name.append(machine)
-            except KeyError:
-                """
-                expect key errors when an environment variable is not defined
-                so these are skipped
-                """
-                pass
             except Exception:
                 """
-                all other errors will be raised and kill the program
+                all  errors will be raised and kill the program
                 we can add more excpetions to the pass list as needed
                 in the future
                 """

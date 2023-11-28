@@ -12,44 +12,57 @@ import spack.util.spack_yaml as syaml
 # from project import Project
 from spack.util.path import canonicalize_path
 
-DETECTION_SCRIPT_NAME = "dectector.py"
+DETECTION_SCRIPT = "find-{n}.py"
+DETECTION_MODULE = "find_{n}"
 
 class Project:
     """
     This class is the in memory representation of how a software project is
     organized in spack-manager.
-    It is designed to be an easy way to access the filesystem without needing a
+
+    At its base a Project is a collection of a spack repo and specialized configs.
+    This is the basic unit that spack-manager is designed to organize.
+
+    This class is designed to be an easy way to access the filesystem without needing a
     a bunch of os.path.join's.
+
     Due to the need to be synced with the filesystem it will not be something
     you want to access inside a performant loop
     """
     def __init__(self, path):
-        self.root = canonicalize_path(path)
-        self.config_path = os.path.join(self.root, "configs")
-        self.repo_path = os.path.join(self.root, "repo")
+        self.root = canonicalize_path(path, config_path=None, repo_path=None)
+        if config_path:
+            self.config_path = config_path
+        else:
+            self.config_path = os.path.join(self.root, "configs")
+
+        if repo_path:
+            self.repo_path = repo_path
+        else:
+            self.repo_path = os.path.join(self.root, "repo")
+
+        self.detector = lambda _ : False
+
         # create missing directories
         os.makedirs(self.config_path, exist_ok=True)
         os.makedirs(self.repo_path, exist_ok=True)
-        self.populate_machines()
-        self.machine_detector()
+        self._populate_machines()
+        self._machine_detector()
 
 
-    def machine_detector(self):
-        self.detector = lambda _ : False
+    def _machine_detector(self):
         name = os.path.basename(self.root)
-        detection_script = os.path.join(self.root, "find-{name}.py".format(name=name))
+        detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=name))
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            mod_name = "find_{n}".format(n=name)
-            spec = importlib.util.spec_from_file_location(mod_name, detection_script)
+            spec = importlib.util.spec_from_file_location(DETECTION_MODULE.format(n=name), detection_script)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             self.detector = mod.detector
 
 
-
-    def populate_machines(self):
+    def _populate_machines(self):
         self.machines = []
         machine_path = os.path.join(self.root, "configs")
         machine_dirs = list(os.scandir(os.path.join(self.root, "configs")))
