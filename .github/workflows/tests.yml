@@ -54,8 +54,8 @@ jobs:
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install dependencies
       run: |
-        ls "$PWD"
-        ls "$PWD/spack/.github/workflow"
+        ls -lh "$PWD/spack"
+        ls -lh "$PWD/spack/.github/"
         cp ${GITHUB_WORKSPACE}/spack/.github/workflow/style/requirements.txt "$PWD"
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
