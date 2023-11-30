@@ -5,8 +5,6 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
-import socket
 import sys
 
 import manager

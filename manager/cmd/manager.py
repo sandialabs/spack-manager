@@ -13,14 +13,14 @@ module_dir = os.path.realpath(os.path.abspath(os.path.join(__file__, "..", "..")
 sys.path.append(module_dir)
 
 # import manager_cmds.create_dev_env
-import manager_cmds.create_env
+import manager_cmds.create_env  # noqa E402
 
-# import manager_cmds.develop
-# import manager_cmds.external
-import manager_cmds.find_machine
+# import manager_cmds.develop # noqa E402
+# import manager_cmds.external # noqa E402
+import manager_cmds.find_machine  # noqa E402
 
-# import manager_cmds.pin
-# import manager_cmds.snapshot
+# import manager_cmds.pin # noqa E402
+# import manager_cmds.snapshot # noqa E402
 
 if sys.version_info[0] < 3:
     print("spack-manager commands only support python 3")

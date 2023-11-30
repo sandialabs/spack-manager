@@ -50,14 +50,14 @@ def create_env(parser, args):
     if not args.yaml:
         manifest.set_config_value("concretizer", "unify", True)
 
+    msg = (
+        "Specified machine {m} was not found. "
+        "To see registered machines run `spack manager find-machine --list`"
+    )
     if args.machine is not None:
         project = machine_defined(args.machine)
         if not project:
-            tty.error(
-                "Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(
-                    m=args.machine
-                )
-            )
+            tty.error(msg.format(m=args.machine))
             sys.exit(1)
         else:
             machine = args.machine
@@ -66,11 +66,7 @@ def create_env(parser, args):
         print(find_machine())
         project, machine = find_machine()
         if machine == "NOT-FOUND":
-            tty.warn(
-                "Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(
-                    m=args.machine
-                )
-            )
+            tty.warn(msg.format(m=args.machine))
 
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)

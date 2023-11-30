@@ -7,7 +7,6 @@
 
 import importlib.util
 import os
-import sys
 
 import spack.util.spack_yaml as syaml
 
@@ -68,7 +67,6 @@ class Project:
 
     def _populate_machines(self):
         self.machines = []
-        machine_path = os.path.join(self.root, "configs")
         machine_dirs = list(os.scandir(os.path.join(self.root, "configs")))
         for machine in machine_dirs:
             self.machines.append(machine.name)
