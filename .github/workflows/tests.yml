@@ -32,7 +32,9 @@ jobs:
     - name: Install extension
       run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Run unit tests
-      run: spack unit-test --extension manager
+      run: |
+        . spack/share/spack/setup-env.sh
+        spack unit-test --extension manager
   style-checks:
     runs-on: ubuntu-latest
     strategy:
