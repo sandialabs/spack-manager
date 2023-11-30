@@ -56,7 +56,7 @@ jobs:
       run: |
         ls -lh "$PWD/spack"
         ls -lh "$PWD/spack/.github/"
-        cp ${GITHUB_WORKSPACE}/spack/.github/workflow/style/requirements.txt "$PWD"
+        cp ${GITHUB_WORKSPACE}/spack/.github/workflows/style/requirements.txt "$PWD"
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install extension
