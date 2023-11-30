@@ -18,8 +18,6 @@ jobs:
         python-version: [3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v3
-      with:
-        path: spack-manager
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -32,7 +30,7 @@ jobs:
     - name: Setup Spack
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
-      run: spack config add config:extensions:[spack-manager]
+      run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Run unit tests
       run: spack unit-test --extension manager
   style-checks:
@@ -43,8 +41,6 @@ jobs:
         python-version: [3.9]
     steps:
     - uses: actions/checkout@v3
-      with:
-        path: spack-manager
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -62,6 +58,8 @@ jobs:
     - name: Setup Spack
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
-      run: spack config add config:extensions:[spack-manager]
+      run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Spack Style
-      run: spack style spack-manager/manager
+      run: |
+        spack style ${GITHUB_WORKSPACE}/manager
+        spack style ${GITHUB_WORKSPACE}/tests
