@@ -13,6 +13,7 @@ on a given machine
 import os
 import sys
 
+import manager
 from environment_utils import SpackManagerEnvironmentManifest
 from manager_cmds.find_machine import find_machine, machine_defined
 from manager_cmds.includes_creator import IncludesCreator
@@ -63,7 +64,6 @@ def create_env(parser, args):
             machine = args.machine
 
     else:
-        print(find_machine())
         project, machine = find_machine()
         if machine == "NOT-FOUND":
             tty.warn(msg.format(m=args.machine))
@@ -76,24 +76,30 @@ def create_env(parser, args):
     if args.local_source:
         manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
-    inc_creator = IncludesCreator()
-    genPath = os.path.join(project.config_path, "base")
-    hostPath = os.path.join(project.config_path, machine)
-    userPath = os.path.join(project.config_path, "user")
+    # the machine is not found we take the first/default project
+    if not project:
+        _, project = manager.projects.popitem(last=False)
 
-    if os.path.exists(genPath):
-        inc_creator.add_scope("base", genPath)
+    # if no projects are configured then there will be zero includes
+    if project:
+        inc_creator = IncludesCreator()
+        genPath = os.path.join(project.config_path, "base")
+        hostPath = os.path.join(project.config_path, machine)
+        userPath = os.path.join(project.config_path, "user")
 
-    if os.path.exists(hostPath):
-        inc_creator.add_scope("machine", hostPath)
+        if os.path.exists(genPath):
+            inc_creator.add_scope("base", genPath)
 
-    if os.path.exists(userPath):
-        inc_creator.add_scope("sm_user", userPath)
+        if os.path.exists(hostPath):
+            inc_creator.add_scope("machine", hostPath)
 
-    include_file_name = "include.yaml"
-    include_file = os.path.join(theDir, include_file_name)
-    inc_creator.write_includes(include_file)
-    manifest.append_includes(include_file_name)
+        if os.path.exists(userPath):
+            inc_creator.add_scope("sm_user", userPath)
+
+        include_file_name = "include.yaml"
+        include_file = os.path.join(theDir, include_file_name)
+        inc_creator.write_includes(include_file)
+        manifest.append_includes(include_file_name)
     manifest.flush()
 
     fpath = os.path.join(project.root, ".tmp")
