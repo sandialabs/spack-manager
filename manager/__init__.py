@@ -31,6 +31,7 @@ class Project:
     """
     def __init__(self, path, config_path=None, repo_path=None):
         self.root = canonicalize_path(path)
+        self.name = os.path.basename(self.root)
         if config_path:
             self.config_path = canonicalize_path(config_path)
         else:
@@ -51,12 +52,11 @@ class Project:
 
 
     def _machine_detector(self):
-        name = os.path.basename(self.root)
-        detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=name))
+        detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=self.name))
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            spec = importlib.util.spec_from_file_location(DETECTION_MODULE.format(n=name), detection_script)
+            spec = importlib.util.spec_from_file_location(DETECTION_MODULE.format(n=self.name), detection_script)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             self.detector = mod.detector

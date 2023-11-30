@@ -20,8 +20,13 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             key: next level where we will be updating
             value: value to set
         """
-        self.pristine_yaml_content.get(root, {})[key] = value
-        self.yaml_content.get(root, {})[key] = value
+        if root not in self.pristine_configuration:
+            self.pristine_configuration[root]={}
+        if root not in self.configuration:
+            self.configuration[root]={}
+
+        self.pristine_configuration.get(root, {})[key] = value
+        self.configuration.get(root, {})[key] = value
         self.changed = True
 
     def append_includes(self, value):
@@ -30,8 +35,11 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the end of the list
         """
-        self.pristine_yaml_content.get("include", []).append(value)
-        self.yaml_content.get("include", []).append(value)
+        if "include" not in self.pristine_configuration:
+            self.pristine_configuration["include"] = []
+            self.configuration["include"] = []
+        self.pristine_configuration.get("include", []).append(value)
+        self.configuration.get("include", []).append(value)
         self.changed = True
 
     def prepend_includes(self, value):
@@ -40,6 +48,9 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the beginning of the list
         """
-        self.pristine_yaml_content.get("include", [])[:0] = [value]
-        self.yaml_content.get("include", [])[:0] = [value]
+        if "include" not in self.pristine_configuration:
+            self.pristine_configuration["include"] = []
+            self.configuration["include"] = []
+        self.pristine_configuration.get("include", [])[:0] = [value]
+        self.configuration.get("include", [])[:0] = [value]
         self.changed = True

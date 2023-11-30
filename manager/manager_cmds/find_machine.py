@@ -11,9 +11,16 @@ import sys
 import manager
 
 
+def machine_defined(name):
+    for _, project in manager.projects.items():
+        for machine in project.machines:
+            if machine == name:
+                return project
+    return None
+
+
 def find_machine(verbose=False):
-    machine_found = False
-    machine_name = ["NOT-FOUND"]
+    machine_name = "NOT-FOUND"
 
     for _, project  in manager.projects.items():
         for machine in project.machines:
@@ -23,7 +30,10 @@ def find_machine(verbose=False):
             """
             try:
                 if project.detector(machine):
-                    machine_name.append(machine)
+                    machine_name = machine
+                    if verbose:
+                        print(project.name, machine_name)
+                    return project, machine
             except Exception:
                 """
                 all  errors will be raised and kill the program
@@ -32,13 +42,9 @@ def find_machine(verbose=False):
                 """
                 raise
 
-    if len(machine_name) > 2:
-        # TODO this doesn't need to be an exception here I suppose, will have to think about it
-        raise Exception("Too many machines matched. Please make sure your detection scripts map uniquely.")
-
     if verbose:
-        print(machine_name[-1])
-    return machine_name[-1]
+        print("NONE", machine_name)
+    return None, machine_name
 
 
 def find_machine_cmd(parser, args):

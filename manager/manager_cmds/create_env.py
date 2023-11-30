@@ -11,11 +11,11 @@ on a given machine
 """
 
 import os
+import sys
 import llnl.util.tty as tty
 
-import manager_cmds.find_machine as fm
 from environment_utils import SpackManagerEnvironmentManifest
-from manager_cmds.find_machine import find_machine
+from manager_cmds.find_machine import find_machine, machine_defined
 from manager_cmds.includes_creator import IncludesCreator
 
 import spack
@@ -50,9 +50,18 @@ def create_env(parser, args):
         manifest.set_config_value("concretizer", "unify", True)
 
     if args.machine is not None:
-        machine = find_machine()
+        project = machine_defined(args.machine)
+        if not project:
+            tty.error("Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(m=args.machine))
+            sys.exit(1)
+        else:
+            machine = args.machine
+
+    else:
+        print(find_machine())
+        project, machine = find_machine()
         if machine == "NOT-FOUND":
-            tty.warn("Specified machine {m} was not found. No machine specific config will be applied".format(m=args.machine))
+            tty.warn("Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(m=args.machine))
 
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)
@@ -63,15 +72,16 @@ def create_env(parser, args):
         manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
     inc_creator = IncludesCreator()
-    genPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "base")
-    inc_creator.add_scope("base", genPath)
-    hostPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", machine)
-    userPath = os.path.join(os.environ["SPACK_MANAGER"], "configs", "user")
+    genPath = os.path.join(project.config_path, "base")
+    hostPath = os.path.join(project.config_path, machine)
+    userPath = os.path.join(project.config_path, "user")
+
+    if os.path.exists(genPath):
+        inc_creator.add_scope("base", genPath)
 
     if os.path.exists(hostPath):
         inc_creator.add_scope("machine", hostPath)
-    else:
-        print("Host not setup in spack-manager: %s" % hostPath)
+
     if os.path.exists(userPath):
         inc_creator.add_scope("sm_user", userPath)
 
@@ -81,7 +91,7 @@ def create_env(parser, args):
     manifest.append_includes(include_file_name)
     manifest.flush()
 
-    fpath = os.path.join(os.environ["SPACK_MANAGER"], ".tmp")
+    fpath = os.path.join(project.root, ".tmp")
 
     os.makedirs(fpath, exist_ok=True)
 
@@ -101,7 +111,7 @@ def setup_parser_args(sub_parser):
         "-n",
         "--name",
         required=False,
-        help="Name of directory to copy files that will be in " "$SPACK_MANAGER/environments",
+        help="Name of directory to copy files that will be in " r"{PROJECT}/environments",
     )
     sub_parser.add_argument(
         "-y", "--yaml", required=False, help="Reference spack.yaml to copy to directory"
