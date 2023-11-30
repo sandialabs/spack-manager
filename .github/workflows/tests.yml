@@ -45,10 +45,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Checkout Spack
       uses: actions/checkout@v3
       with:
@@ -56,6 +52,11 @@ jobs:
         path: spack
     - name: Setup Spack
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
+    - name: Install dependencies
+      run: |
+        cp "$PWD/spack/.github/workflow/style/requirements.txt" "$PWD"
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install extension
       run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Spack Style Manager
