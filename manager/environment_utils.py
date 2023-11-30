@@ -8,7 +8,7 @@
 import spack.environment.environment as senv
 
 
-#TODO spack version dependent code
+# TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
     """Spack-Manager extensiont to the manifest file for prototyping"""
 
@@ -21,9 +21,9 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             value: value to set
         """
         if root not in self.pristine_configuration:
-            self.pristine_configuration[root]={}
+            self.pristine_configuration[root] = {}
         if root not in self.configuration:
-            self.configuration[root]={}
+            self.configuration[root] = {}
 
         self.pristine_configuration.get(root, {})[key] = value
         self.configuration.get(root, {})[key] = value

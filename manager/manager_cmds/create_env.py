@@ -12,11 +12,12 @@ on a given machine
 
 import os
 import sys
-import llnl.util.tty as tty
 
 from environment_utils import SpackManagerEnvironmentManifest
 from manager_cmds.find_machine import find_machine, machine_defined
 from manager_cmds.includes_creator import IncludesCreator
+
+import llnl.util.tty as tty
 
 import spack
 import spack.cmd
@@ -52,7 +53,11 @@ def create_env(parser, args):
     if args.machine is not None:
         project = machine_defined(args.machine)
         if not project:
-            tty.error("Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(m=args.machine))
+            tty.error(
+                "Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(
+                    m=args.machine
+                )
+            )
             sys.exit(1)
         else:
             machine = args.machine
@@ -61,7 +66,11 @@ def create_env(parser, args):
         print(find_machine())
         project, machine = find_machine()
         if machine == "NOT-FOUND":
-            tty.warn("Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(m=args.machine))
+            tty.warn(
+                "Specified machine {m} was not found. To see registered machines run `spack manager find-machine --list`".format(
+                    m=args.machine
+                )
+            )
 
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)

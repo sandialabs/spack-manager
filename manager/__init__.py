@@ -8,12 +8,15 @@
 import importlib.util
 import os
 import sys
+
 import spack.util.spack_yaml as syaml
+
 # from project import Project
 from spack.util.path import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"
 DETECTION_MODULE = "find_{n}"
+
 
 class Project:
     """
@@ -29,6 +32,7 @@ class Project:
     Due to the need to be synced with the filesystem it will not be something
     you want to access inside a performant loop
     """
+
     def __init__(self, path, config_path=None, repo_path=None):
         self.root = canonicalize_path(path)
         self.name = os.path.basename(self.root)
@@ -42,7 +46,7 @@ class Project:
         else:
             self.repo_path = os.path.join(self.root, "repo")
 
-        self.detector = lambda _ : False
+        self.detector = lambda _: False
 
         # create missing directories
         os.makedirs(self.config_path, exist_ok=True)
@@ -50,17 +54,17 @@ class Project:
         self._populate_machines()
         self._machine_detector()
 
-
     def _machine_detector(self):
         detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=self.name))
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            spec = importlib.util.spec_from_file_location(DETECTION_MODULE.format(n=self.name), detection_script)
+            spec = importlib.util.spec_from_file_location(
+                DETECTION_MODULE.format(n=self.name), detection_script
+            )
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             self.detector = mod.detector
-
 
     def _populate_machines(self):
         self.machines = []
@@ -81,8 +85,9 @@ config_path = os.path.realpath(
 config_yaml = {}
 projects = {}
 
+
 def populate_config():
-    """ Update the spack-manager config in memory"""
+    """Update the spack-manager config in memory"""
     global config_yaml
     if os.path.isfile(config_path):
         with open(config_path, "r") as f:
@@ -90,13 +95,14 @@ def populate_config():
     else:
         config_yaml = syaml.load(_default_config)
 
+
 def load_projects():
     global projects
     projects_node = config_yaml["spack-manager"]["projects"]
     for key, path in projects_node.items():
         projects[key] = Project(path)
 
+
 # module init stuff
 populate_config()
 load_projects()
-

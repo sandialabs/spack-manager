@@ -11,7 +11,7 @@ import manager
 
 
 def test_spackManagerHasConfigPath():
-    """ Confirm that the manager module is the correct one for populating configs"""
+    """Confirm that the manager module is the correct one for populating configs"""
     assert hasattr(manager, "config_path")
     expected_config_path = os.path.realpath(
         os.path.abspath(os.path.join(__file__, "..", "..", "spack-manager.yaml"))

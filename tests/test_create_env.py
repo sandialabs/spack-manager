@@ -15,9 +15,9 @@ import spack.environment as env
 import spack.main
 import spack.util.spack_yaml as syaml
 
-
 manager = spack.main.SpackCommand("manager")
 envcmd = spack.main.SpackCommand("env")
+
 
 def test_basicDirectoryProperties(tmpdir, on_moonlight):
     with tmpdir.as_cwd():
@@ -97,16 +97,7 @@ spack:
 
         assert os.path.isfile("test.yaml")
 
-        manager(
-            "create-env",
-            "-d",
-            env_root,
-            "-y",
-            "test.yaml",
-            "-s",
-            "amr-wind",
-            "nalu-wind",
-        )
+        manager("create-env", "-d", env_root, "-y", "test.yaml", "-s", "amr-wind", "nalu-wind")
 
         e = env.Environment(env_root)
         assert e.manifest.pristine_yaml_content["spack"]["view"]
