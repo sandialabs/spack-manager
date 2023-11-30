@@ -59,7 +59,8 @@ jobs:
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
       run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
-    - name: Spack Style
-      run: |
-        spack style ${GITHUB_WORKSPACE}/manager
-        spack style ${GITHUB_WORKSPACE}/tests
+    - name: Spack Style Manager
+      run: spack style ${GITHUB_WORKSPACE}/manager
+    - name: Spack Style Tests
+      run: spack style ${GITHUB_WORKSPACE}/tests
+        
