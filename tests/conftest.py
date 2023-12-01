@@ -33,3 +33,4 @@ def mock_manager_config_path(monkeypatch):
 @pytest.fixture
 def on_moonlight(monkeypatch, mock_manager_config_path):
     monkeypatch.setenv("MOONLIGHT", "1")
+    print(os.environ)
