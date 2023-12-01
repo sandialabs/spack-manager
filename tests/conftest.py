@@ -20,9 +20,12 @@ _test_root = os.path.dirname(__file__)
 def mock_manager_config_path(monkeypatch):
     """ "Setup to use a testing project repo embedded in the tests"""
     print(_test_root)
+    config_path = os.path.join(_test_root, "mock", "mock_config.yaml")
+    print("CONFIG PATH:", config_path, os.path.isfile(config_path))
     monkeypatch.setattr(
-        manager, "config_path", os.path.join(_test_root, "mock", "mock_config.yaml")
+        manager, "config_path", config_path
     )
+    print("MOCK CONFIG PATH:", manager.config_path, os.path.isfile(manager.config_path))
     manager.populate_config()
     manager.load_projects()
 

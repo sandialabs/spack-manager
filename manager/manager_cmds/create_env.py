@@ -78,7 +78,8 @@ def create_env(parser, args):
 
     # the machine is not found we take the first/default project
     if not project:
-        _, project = manager.projects.popitem(last=False)
+        _, project = manager.projects.values()[0]
+        sys.exit(1)
 
     # if no projects are configured then there will be zero includes
     if project:
