@@ -7,9 +7,9 @@
 
 import importlib.util
 import os
-import sys
 
 import spack.util.spack_yaml as syaml
+import llnl.util.lang
 
 # from project import Project
 from spack.util.path import canonicalize_path
@@ -60,17 +60,14 @@ class Project:
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            spec = importlib.util.spec_from_file_location(
-                DETECTION_MODULE.format(n=self.name), detection_script
-            )
-            mod = importlib.util.module_from_spec(spec)
-            sys.modules[spec.name] = mod
-            spec.loader.exec_module(mod)
+            mod = llnl.util.lang.load_module_from_file(DETECTION_MODULE.format(n=self.name), detection_script)
+            assert mod
+            print(mod, mod.detector)
             self.detector = mod.detector
 
     def _populate_machines(self):
         self.machines = []
-        machine_dirs = list(os.scandir(os.path.join(self.root, "configs")))
+        machine_dirs = list(os.scandir(self.config_path))
         for machine in machine_dirs:
             self.machines.append(machine.name)
 

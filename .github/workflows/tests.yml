@@ -30,7 +30,9 @@ jobs:
     - name: Setup Spack
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
-      run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
+      run: |
+        spack config add config:extensions:[${GITHUB_WORKSPACE}]
+        spack manager --help
     - name: Run unit tests
       run: |
         . spack/share/spack/setup-env.sh
