@@ -10,11 +10,14 @@ import os
 import pytest
 
 import spack.main
+import manager
 
 mgrCmd = spack.main.SpackCommand("manager")
 
 
 def test_find_machine_detects_project_machines(mock_manager_config_path):
+    print(manager.projects)
+    print(manager.config_path)
     out = mgrCmd("find-machine", "--list")
     assert "moonlight" in out
 

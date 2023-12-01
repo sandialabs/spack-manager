@@ -7,6 +7,7 @@
 
 import importlib.util
 import os
+import sys
 
 import spack.util.spack_yaml as syaml
 
@@ -55,6 +56,7 @@ class Project:
 
     def _machine_detector(self):
         detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=self.name))
+        assert os.path.isfile(detection_script)
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
@@ -62,6 +64,7 @@ class Project:
                 DETECTION_MODULE.format(n=self.name), detection_script
             )
             mod = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = mod
             spec.loader.exec_module(mod)
             self.detector = mod.detector
 

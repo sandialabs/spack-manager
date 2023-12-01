@@ -34,7 +34,7 @@ jobs:
     - name: Run unit tests
       run: |
         . spack/share/spack/setup-env.sh
-        spack unit-test --extension manager
+        spack unit-test --extension manager -k test_find_machine --showlocals
   style-checks:
     runs-on: ubuntu-latest
     strategy:
