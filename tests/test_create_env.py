@@ -8,7 +8,7 @@
 import os
 from tempfile import TemporaryDirectory
 
-import manager_cmds.create_env as create_env
+import spack.extensions.manager.manager_cmds.create_env as create_env
 import pytest
 
 import spack.environment as env

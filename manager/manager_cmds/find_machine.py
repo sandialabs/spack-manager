@@ -5,7 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import manager
+import spack.extensions.manager as manager
 
 
 def machine_defined(name):

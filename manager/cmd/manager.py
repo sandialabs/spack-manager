@@ -5,19 +5,14 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
 import sys
 
-# required to get the modules in the manager directory to show up
-module_dir = os.path.realpath(os.path.abspath(os.path.join(__file__, "..", "..")))
-sys.path.append(module_dir)
-
 # import manager_cmds.create_dev_env
-import manager_cmds.create_env  # noqa E402
+import spack.extensions.manager.manager_cmds.create_env as create_env
 
 # import manager_cmds.develop # noqa E402
 # import manager_cmds.external # noqa E402
-import manager_cmds.find_machine  # noqa E402
+import spack.extensions.manager.manager_cmds.find_machine as find_machine
 
 # import manager_cmds.pin # noqa E402
 # import manager_cmds.snapshot # noqa E402
@@ -35,13 +30,13 @@ _subcommands = {}
 
 def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar="spack-manager commands", dest="manager_command")
-    manager_cmds.create_env.add_command(sp, _subcommands)
-    # manager_cmds.create_dev_env.add_command(sp, _subcommands)
-    # manager_cmds.develop.add_command(sp, _subcommands)
-    manager_cmds.find_machine.add_command(sp, _subcommands)
-    # manager_cmds.external.add_command(sp, _subcommands)
-    # manager_cmds.pin.add_command(sp, _subcommands)
-    # manager_cmds.snapshot.add_command(sp, _subcommands)
+    create_env.add_command(sp, _subcommands)
+    # create_dev_env.add_command(sp, _subcommands)
+    # develop.add_command(sp, _subcommands)
+    find_machine.add_command(sp, _subcommands)
+    # external.add_command(sp, _subcommands)
+    # pin.add_command(sp, _subcommands)
+    # snapshot.add_command(sp, _subcommands)
 
 
 def manager(parser, args):
