@@ -8,6 +8,6 @@
 import os
 import sys
 
-# required to get the modules in the manager directory to show up
-module_dir = os.path.realpath(os.path.abspath(os.path.join(__file__, "..", "..", "manager")))
-sys.path.append(module_dir)
+import spack.extensions
+
+spack.extensions.get_module("manager")

@@ -10,12 +10,8 @@ import os
 
 import pytest
 
-import spack.extensions
+import spack.extensions.manager as manager
 from spack.test.conftest import *  # noqa: F401 F403
-
-spack.extensions.get_module("manager")
-
-import spack.extensions.manager as manager  # noqa E402
 
 _test_root = os.path.dirname(__file__)
 
