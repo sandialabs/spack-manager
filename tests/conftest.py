@@ -7,8 +7,6 @@
 
 
 import os
-from importlib import reload
-
 import pytest
 
 import spack.extensions
