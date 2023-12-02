@@ -20,3 +20,13 @@ def detector(name):
         return machine_list[name].i_am_this_machine()
     else:
         return False
+
+class Detector:
+    def __init__(self):
+        self.machine_list = {"moonlight": MachineData(lambda: "MOONLIGHT" in os.environ)}
+
+    def __call__(self, name):
+        if name in machine_list:
+            return machine_list[name].i_am_this_machine()
+        else:
+            return False

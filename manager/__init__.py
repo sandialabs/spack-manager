@@ -62,7 +62,7 @@ class Project:
                 DETECTION_MODULE.format(n=self.name), detection_script
             )
             assert mod
-            self.detector = mod.detector
+            self.detector = mod.Detector()
 
     def _populate_machines(self):
         self.machines = []
