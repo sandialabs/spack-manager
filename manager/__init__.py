@@ -10,7 +10,6 @@ import os
 import llnl.util.lang
 
 import spack.util.spack_yaml as syaml
-
 from spack.util.path import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"

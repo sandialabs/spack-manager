@@ -6,6 +6,7 @@
 # for more details.
 
 import os
+
 import pytest
 
 import spack.environment as env
