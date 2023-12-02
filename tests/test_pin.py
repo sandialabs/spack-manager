@@ -7,10 +7,10 @@
 
 # from manager_cmds.pin import pin_graph
 
+"""
 from spack.spec import Spec
 from spack.version import GitVersion
 
-"""
 # =============================================================================
 # These tests  are really slow because we have to concretize
 # it would be good to come up with a quick concretization test suite

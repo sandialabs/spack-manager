@@ -6,8 +6,6 @@
 # for more details.
 
 import os
-from tempfile import TemporaryDirectory
-
 import pytest
 
 import spack.environment as env
@@ -31,8 +29,8 @@ def test_basicDirectoryProperties(tmpdir, on_moonlight):
             assert yaml["spack"]["concretizer"]["unify"] is True
 
 
-def test_failsWithAnUnregisteredMachine():
-    with TemporaryDirectory() as tmpdir:
+def test_failsWithAnUnregisteredMachine(tmpdir):
+    with tmpdir.as_cwd():
         with pytest.raises(Exception):
             manager("create-env", "-d", tmpdir, "-m", "theGOAT_HPC")
 

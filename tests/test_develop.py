@@ -5,6 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+"""
 import os
 from unittest.mock import patch
 
@@ -16,7 +17,6 @@ import spack.main
 env = spack.main.SpackCommand("env")
 # manager = spack.main.SpackCommand("manager")
 
-"""
 @pytest.mark.usefixtures("mutable_mock_env_path", "mock_packages", "mock_fetch")
 class TestSpackManagerDevelop(object):
     @patch("manager_cmds.develop.spack_develop.develop")

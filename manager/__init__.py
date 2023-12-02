@@ -5,14 +5,12 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import importlib.util
 import os
 
 import llnl.util.lang
 
 import spack.util.spack_yaml as syaml
 
-# from project import Project
 from spack.util.path import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"

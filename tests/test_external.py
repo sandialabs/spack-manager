@@ -5,6 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+'''
 import os
 from unittest.mock import patch
 
@@ -25,7 +26,6 @@ from spack.spec import Spec
 env = spack.main.SpackCommand("env")
 manager = spack.main.SpackCommand("manager")
 
-'''
 @pytest.mark.parametrize(
     "spec_str",
     [

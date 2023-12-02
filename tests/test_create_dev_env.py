@@ -5,6 +5,7 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+'''
 import os
 from unittest.mock import patch
 
@@ -13,7 +14,6 @@ import spack.main
 
 # manager = spack.main.SpackCommand("manager")
 
-'''
 @patch("manager_cmds.create_dev_env.develop")
 def test_allSpecsCallSpackDevelop(mock_dev, tmpdir):
     with tmpdir.as_cwd():
