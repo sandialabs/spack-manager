@@ -5,9 +5,6 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
-import sys
-
 import spack.extensions
 
 spack.extensions.get_module("manager")
