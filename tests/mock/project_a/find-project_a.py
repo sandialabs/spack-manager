@@ -26,7 +26,7 @@ class Detector:
         self.machine_list = {"moonlight": MachineData(lambda: "MOONLIGHT" in os.environ)}
 
     def __call__(self, name):
-        if name in machine_list:
-            return machine_list[name].i_am_this_machine()
+        if name in self.machine_list:
+            return self.machine_list[name].i_am_this_machine()
         else:
             return False

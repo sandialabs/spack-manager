@@ -77,7 +77,7 @@ spack:
         assert "view" not in e.manifest.pristine_yaml_content["spack"].keys()
 
 
-def test_existingYamlViewIsNotOverwritten(tmpdir, on_moonlight):
+def test_existingYamlViewIsNotOverwritten(tmpdir):
     with tmpdir.as_cwd():
         preset_yaml = """
 spack:
@@ -101,12 +101,12 @@ spack:
         assert e.manifest.pristine_yaml_content["spack"]["view"]
 
 
-def test_specs_can_have_spaces(tmpdir, on_moonlight):
+def test_specs_can_have_spaces(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind ", " build_type=Release", "%gcc")
 
 
-def test_unify_in_yaml_preserved(tmpdir, on_moonlight):
+def test_unify_in_yaml_preserved(tmpdir):
     with tmpdir.as_cwd():
         preset_yaml = """
 spack:
@@ -122,7 +122,7 @@ spack:
         assert "when_possible" == e.manifest.pristine_yaml_content["spack"]["concretizer"]["unify"]
 
 
-def test_local_source_tree_can_be_added_to_env(tmpdir, on_moonlight):
+def test_local_source_tree_can_be_added_to_env(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind", "-l")
         e = env.Environment(tmpdir.strpath)
