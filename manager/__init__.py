@@ -8,8 +8,9 @@
 import importlib.util
 import os
 
-import spack.util.spack_yaml as syaml
 import llnl.util.lang
+
+import spack.util.spack_yaml as syaml
 
 # from project import Project
 from spack.util.path import canonicalize_path
@@ -60,9 +61,10 @@ class Project:
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            mod = llnl.util.lang.load_module_from_file(DETECTION_MODULE.format(n=self.name), detection_script)
+            mod = llnl.util.lang.load_module_from_file(
+                DETECTION_MODULE.format(n=self.name), detection_script
+            )
             assert mod
-            print(mod, mod.detector)
             self.detector = mod.detector
 
     def _populate_machines(self):
@@ -76,10 +78,11 @@ _default_config = """
 spack-manager:
     projects: {}
 """
-config_path = os.path.realpath(
+_default_config_path = os.path.realpath(
     os.path.abspath(os.path.join(__file__, "..", "..", "spack-manager.yaml"))
 )
 
+config_path = _default_config_path
 config_yaml = {}
 projects = {}
 
@@ -101,6 +104,6 @@ def load_projects():
         projects[key] = Project(path)
 
 
-# module init stuff
-populate_config()
-load_projects()
+def __init__():
+    populate_config()
+    load_projects()

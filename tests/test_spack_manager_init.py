@@ -7,7 +7,7 @@
 
 import os
 
-import manager
+import spack.extensions.manager as manager
 
 
 def test_spackManagerHasConfigPath():

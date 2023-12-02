@@ -13,16 +13,15 @@ on a given machine
 import os
 import sys
 
-import spack.extensions.manager as manager
-from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
-from spack.extensions.manager.manager_cmds.find_machine import find_machine, machine_defined
-from spack.extensions.manager.manager_cmds.includes_creator import IncludesCreator
-
 import llnl.util.tty as tty
 
 import spack
 import spack.cmd
 import spack.environment.environment as environment
+import spack.extensions.manager as manager
+from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
+from spack.extensions.manager.manager_cmds.find_machine import find_machine, machine_defined
+from spack.extensions.manager.manager_cmds.includes_creator import IncludesCreator
 
 
 def create_env(parser, args):
