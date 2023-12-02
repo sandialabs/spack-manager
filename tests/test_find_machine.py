@@ -7,9 +7,6 @@
 
 import os
 
-import pytest
-
-import spack.extensions.manager as manager
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 import spack.main
 
