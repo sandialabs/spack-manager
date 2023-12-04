@@ -44,7 +44,8 @@ class Project:
         else:
             self.repo_path = os.path.join(self.root, "repo")
 
-        self.detector = lambda _: breakpoint(); False
+        # default is to detect nothing.
+        self.detector = lambda _: False
 
         # create missing directories
         os.makedirs(self.config_path, exist_ok=True)
