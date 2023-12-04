@@ -24,11 +24,13 @@ def detector(name):
     else:
         return False
 
+
 class Detector:
     """
     class based implementation of a machine detector
     to make debugging a little easier with hasattr etc
     """
+
     def __init__(self):
         self.machine_list = {"moonlight": MachineData(lambda: "MOONLIGHT" in os.environ)}
 
@@ -37,6 +39,7 @@ class Detector:
             return self.machine_list[name].i_am_this_machine()
         else:
             return False
+
 
 def load_detector(use_class=False):
     """function to load a callable dectector object"""
