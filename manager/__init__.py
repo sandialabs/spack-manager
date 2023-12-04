@@ -44,7 +44,7 @@ class Project:
         else:
             self.repo_path = os.path.join(self.root, "repo")
 
-        self.detector = lambda _: False
+        self.detector = lambda _: breakpoint(); False
 
         # create missing directories
         os.makedirs(self.config_path, exist_ok=True)
@@ -62,7 +62,7 @@ class Project:
                 DETECTION_MODULE.format(n=self.name), detection_script
             )
             assert mod
-            self.detector = mod.Detector()
+            self.detector = mod.detector
 
     def _populate_machines(self):
         self.machines = []
