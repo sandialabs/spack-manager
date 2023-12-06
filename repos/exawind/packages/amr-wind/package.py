@@ -37,7 +37,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+umpire", when="+umpire")
     depends_on("hypre+sycl", when="+sycl")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
-    depends_on("helics", when="+helics")
+    depends_on("helics@:3.3.2", when="+helics")
+    depends_on("helics@:3.3.2+mpi", when="+helics+mpi")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
