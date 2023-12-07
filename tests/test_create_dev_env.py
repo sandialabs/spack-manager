@@ -5,16 +5,18 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-'''
 import os
+import spack.extensions
+
+spack.extensions.get_module("manager")
 from unittest.mock import patch
 
 import spack.environment as ev
 import spack.main
 
-# manager = spack.main.SpackCommand("manager")
+manager = spack.main.SpackCommand("manager")
 
-@patch("manager_cmds.create_dev_env.develop")
+@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
 def test_allSpecsCallSpackDevelop(mock_dev, tmpdir):
     with tmpdir.as_cwd():
         manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
@@ -27,13 +29,14 @@ def test_allSpecsCallSpackDevelop(mock_dev, tmpdir):
 
 def test_newEnvironmentIsCreated(tmpdir):
     with tmpdir.as_cwd():
-        with patch("manager_cmds.create_dev_env.develop"):
+        with patch("spack.extensions.manager.manager_cmds.create_dev_env.develop"):
             manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
         assert os.path.isfile(tmpdir.join("spack.yaml"))
         assert os.path.isfile(tmpdir.join("include.yaml"))
 
 
-@patch("manager_cmds.create_dev_env.develop")
+'''
+@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
 def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
     with tmpdir.as_cwd():
         amr_path = tmpdir.join("test_amr-wind")
@@ -85,7 +88,7 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
         )
 
 
-@patch("manager_cmds.create_dev_env.develop")
+@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
 def test_nonConcreteSpecsDontGetCloned(mock_dev, tmpdir):
     with tmpdir.as_cwd():
         manager(
@@ -98,7 +101,7 @@ def test_nonConcreteSpecsDontGetCloned(mock_dev, tmpdir):
         assert "amr-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
 
 
-@patch("manager_cmds.create_dev_env.develop")
+@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
 def test_noSpecsIsNotAnErrorGivesBlankEnv(mock_develop, tmpdir):
     with tmpdir.as_cwd():
         manager("create-dev-env", "-d", tmpdir.strpath)

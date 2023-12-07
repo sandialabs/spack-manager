@@ -7,7 +7,7 @@
 
 import sys
 
-# import manager_cmds.create_dev_env
+import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.extensions.manager.manager_cmds.create_env as create_env
 
 # import manager_cmds.develop # noqa E402
