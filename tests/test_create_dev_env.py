@@ -6,37 +6,50 @@
 # for more details.
 
 import os
-import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 
 import spack.environment as ev
+import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.main
 
 manager = spack.main.SpackCommand("manager")
 
 
-def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, argtest):
+def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
-        monkeypatch.setattr(create_dev_env, "develop", argtest)
+        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
         manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
-        assert argtest.num_calls == 3
-        assert ["amr-wind@main"] == argtest.args[0]
-        assert ["-rb", "git@github.com:Exawind/nalu-wind.git", "master", "nalu-wind@master"] == argtest.args[1]
-        assert ["exawind@master"] == argtest.args[2]
+        assert arg_capture.num_calls == 3
+
+        arg_capture.assert_call_matches(0, ["amr-wind@main"])
+        arg_capture.assert_call_matches(
+            1, ["-rb", "git@github.com:Exawind/nalu-wind.git", "master", "nalu-wind@master"]
+        )
+        arg_capture.assert_call_matches(2, ["exawind@master"])
 
 
-def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, argtest):
+def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, arg_capture_patch):
     assert hasattr(create_dev_env, "develop")
     with tmpdir.as_cwd():
-        monkeypatch.setattr(create_dev_env, "develop", argtest)
+
+        def dev_patch(*args):
+            arg_list = list(args)
+            spec = arg_list[0][-1]
+            name = spec.split("@")[0]
+            os.mkdir(name)
+
+        mock = arg_capture_patch(dev_patch)
+        monkeypatch.setattr(create_dev_env, "develop", mock)
         manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
         assert os.path.isfile(tmpdir.join("spack.yaml"))
         assert os.path.isfile(tmpdir.join("include.yaml"))
+        assert os.path.isdir(tmpdir.join("amr-wind"))
+        assert os.path.isdir(tmpdir.join("nalu-wind"))
+        assert os.path.isdir(tmpdir.join("exawind"))
 
 
-'''
-@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
-def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
+def test_newEnvironmentKeepingUserSpecifiedYAML(tmpdir, on_moonlight, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
+        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
         amr_path = tmpdir.join("test_amr-wind")
         nalu_path = tmpdir.join("test_nalu-wind")
         os.makedirs(amr_path.strpath)
@@ -79,32 +92,31 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(mock_dev, tmpdir):
         assert "path" in e.manifest.pristine_yaml_content["spack"]["develop"]["nalu-wind"]
         # mocked out call that would update yaml with trilinos info but
         # assuming it works fine
-        mock_dev.assert_any_call(["--path", amr_path.strpath, "amr-wind@main"])
-        mock_dev.assert_any_call(["--path", nalu_path.strpath, "nalu-wind@master"])
-        mock_dev.assert_called_with(
+        arg_capture.assert_any_call(["--path", amr_path.strpath, "amr-wind@main"])
+        arg_capture.assert_any_call(["--path", nalu_path.strpath, "nalu-wind@master"])
+        arg_capture.assert_any_call(
             ["-rb", "git@github.com:trilinos/trilinos.git", "master", "trilinos@master"]
         )
 
 
-@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
-def test_nonConcreteSpecsDontGetCloned(mock_dev, tmpdir):
+def test_nonConcreteSpecsDontGetCloned(tmpdir, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
+        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
         manager(
             "create-dev-env", "-s", "amr-wind", "nalu-wind", "exawind@master", "-d", tmpdir.strpath
         )
-        mock_dev.assert_called_once_with(["exawind@master"])
+        arg_capture.assert_call_matches(-1, ["exawind@master"])
         e = ev.Environment(tmpdir.strpath)
         assert "nalu-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
         assert "exawind@master" in e.manifest.pristine_yaml_content["spack"]["specs"]
         assert "amr-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
 
 
-@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
-def test_noSpecsIsNotAnErrorGivesBlankEnv(mock_develop, tmpdir):
+def test_noSpecsIsNotAnErrorGivesBlankEnv(tmpdir, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
+        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
         manager("create-dev-env", "-d", tmpdir.strpath)
-        assert not mock_develop.called
+        assert arg_capture.num_calls == 0
         e = ev.Environment(tmpdir.strpath)
         assert len(e.user_specs) == 0
         assert e.manifest.pristine_yaml_content["spack"]["specs"] == []
-'''

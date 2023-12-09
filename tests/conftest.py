@@ -15,19 +15,61 @@ from spack.test.conftest import *  # noqa: F401 F403
 
 _test_root = os.path.dirname(__file__)
 
-# mocking fixture idea taken from 
-# https://stackoverflow.com/questions/28716832/how-to-test-function-is-called-with-correct-arguments-with-pytest/28719648#28719648
+
+class Patcher(object):
+    """
+    Class to capture arguments, and potentially patch the behavior of any attribute
+    to be paired with monkeypatch.setattr
+    # mocking fixture idea taken from
+    # https://stackoverflow.com/questions/28716832/how-to-test-function-is-called-with-correct-arguments-with-pytest/28719648#28719648
+    """
+
+    def __init__(self, patch_func=None):
+        self.args = []
+        self.patch_func = patch_func
+
+    @property
+    def num_calls(self):
+        return len(self.args)
+
+    def __call__(self, *args):
+        self.args.extend(list(args))
+        if self.patch_func:
+            self.patch_func(*args)
+
+    def assert_any_call(self, call_args):
+        assert call_args in self.args
+
+    def assert_call_matches(self, call_index, call_args):
+        assert call_index <= self.num_calls
+        assert call_args == self.args[call_index]
+
+
 @pytest.fixture
-def argtest():
-    class TestArgs(object):
-        def __init__(self):
-            self.args = []
-        @property
-        def num_calls(self):
-            return len(self.args)
-        def __call__(self, *args): 
-            self.args.extend(list(args))
-    return TestArgs()
+def arg_capture():
+    """
+    Fixture to capture arguments each time a patched
+    function is called.
+    Needs to be used in conjuction
+    with monkeypatch.setattr
+    """
+    return Patcher()
+
+
+@pytest.fixture
+def arg_capture_patch():
+    """
+    Fixture to record arguments each time called
+    and patch behavior
+    Needs to be used in conjuction
+    with monkeypatch.setattr
+    """
+
+    def _patch(patch_func=None):
+        return Patcher(patch_func)
+
+    return _patch
+
 
 @pytest.fixture
 def mock_manager_config_path():
