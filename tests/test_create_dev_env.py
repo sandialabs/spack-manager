@@ -6,31 +6,29 @@
 # for more details.
 
 import os
-import spack.extensions
-
-spack.extensions.get_module("manager")
-from unittest.mock import patch
+import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 
 import spack.environment as ev
 import spack.main
 
 manager = spack.main.SpackCommand("manager")
 
-@patch("spack.extensions.manager.manager_cmds.create_dev_env.develop")
-def test_allSpecsCallSpackDevelop(mock_dev, tmpdir):
+
+def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, argtest):
     with tmpdir.as_cwd():
+        monkeypatch.setattr(create_dev_env, "develop", argtest)
         manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
-        mock_dev.assert_any_call(["amr-wind@main"])
-        mock_dev.assert_any_call(
-            ["-rb", "git@github.com:Exawind/nalu-wind.git", "master", "nalu-wind@master"]
-        )
-        mock_dev.assert_any_call(["exawind@master"])
+        assert argtest.num_calls == 3
+        assert ["amr-wind@main"] == argtest.args[0]
+        assert ["-rb", "git@github.com:Exawind/nalu-wind.git", "master", "nalu-wind@master"] == argtest.args[1]
+        assert ["exawind@master"] == argtest.args[2]
 
 
-def test_newEnvironmentIsCreated(tmpdir):
+def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, argtest):
+    assert hasattr(create_dev_env, "develop")
     with tmpdir.as_cwd():
-        with patch("spack.extensions.manager.manager_cmds.create_dev_env.develop"):
-            manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
+        monkeypatch.setattr(create_dev_env, "develop", argtest)
+        manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
         assert os.path.isfile(tmpdir.join("spack.yaml"))
         assert os.path.isfile(tmpdir.join("include.yaml"))
 

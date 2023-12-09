@@ -15,6 +15,19 @@ from spack.test.conftest import *  # noqa: F401 F403
 
 _test_root = os.path.dirname(__file__)
 
+# mocking fixture idea taken from 
+# https://stackoverflow.com/questions/28716832/how-to-test-function-is-called-with-correct-arguments-with-pytest/28719648#28719648
+@pytest.fixture
+def argtest():
+    class TestArgs(object):
+        def __init__(self):
+            self.args = []
+        @property
+        def num_calls(self):
+            return len(self.args)
+        def __call__(self, *args): 
+            self.args.extend(list(args))
+    return TestArgs()
 
 @pytest.fixture
 def mock_manager_config_path():
