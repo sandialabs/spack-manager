@@ -16,21 +16,20 @@ import spack.main
 env = spack.main.SpackCommand("env")
 manager = spack.main.SpackCommand("manager")
 
-@pytest.mark.usefixtures("mock_packages", "mock_fetch")
-def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture, tmpdir):
-    eDir = tmpdir.join("test")
-    env("create" "-d", eDir)
-    with ev.read(eDir):
+@pytest.mark.usefixtures("mutable_mock_env_path_wh_manager", "mock_packages", "mock_fetch")
+def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture):
+    env("create", "test")
+    with ev.read("test"):
         monkeypatch.setattr(m_develop, "s_develop", arg_capture)
         manager("develop", "mpich@=1.0")
         assert arg_capture.num_calls == 1
 
-@pytest.mark.usefixtures("mutable_mock_env_path", "mock_packages", "mock_fetch")
+@pytest.mark.usefixtures("mutable_mock_env_path_wh_manager", "mock_packages", "mock_fetch")
 @pytest.mark.parametrize("all_branches", [True, False])
 @pytest.mark.parametrize("shallow", [True, False])
 @pytest.mark.parametrize("add_remote", [True, False])
 def test_spackManagerExtensionArgsLeadToGitCalls(
-    tmpdir, monkeypatch, arg_capture_patch, all_branches, shallow, add_remote
+    monkeypatch, arg_capture_patch, all_branches, shallow, add_remote
 ):
     mock_develop = arg_capture_patch()
     mock_git_clone = arg_capture_patch()
@@ -38,9 +37,8 @@ def test_spackManagerExtensionArgsLeadToGitCalls(
     monkeypatch.setattr(m_develop, "s_develop", mock_develop)
     monkeypatch.setattr(m_develop, "git_clone", mock_git_clone)
     monkeypatch.setattr(m_develop, "git_remote_add", mock_git_remote)
-    eDir = tmpdir.join("test")
-    env("create", "-d", eDir)
-    with ev.read(eDir) as e:
+    env("create", "test")
+    with ev.read("test") as e:
         branch = "master"
         repo = "https://a.git.repo"
         name = "mpich"

@@ -87,3 +87,8 @@ def mock_manager_config_path():
 @pytest.fixture
 def on_moonlight(monkeypatch, mock_manager_config_path):
     monkeypatch.setenv("MOONLIGHT", "1")
+
+
+@pytest.fixture
+def mutable_mock_env_path_wh_manager(mutable_mock_env_path, mutable_config):
+    mutable_config.set("config:extensions", [os.path.join(__file__, "..", "..")])
