@@ -18,7 +18,6 @@ manager = spack.main.SpackCommand("manager")
 
 @pytest.mark.usefixtures("mock_packages", "mock_fetch")
 def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture, tmpdir):
-    spack.extensions.get_module("manager")
     env("create", "test", "-d", tmpdir.strpath)
     with ev.read("test"):
         monkeypatch.setattr(m_develop, "s_develop", arg_capture)
@@ -32,7 +31,6 @@ def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture, tmpdir):
 def test_spackManagerExtensionArgsLeadToGitCalls(
     monkeypatch, arg_capture_patch, all_branches, shallow, add_remote
 ):
-    spack.extensions.get_module("manager")
     mock_develop = arg_capture_patch()
     mock_git_clone = arg_capture_patch()
     mock_git_remote = arg_capture_patch()
