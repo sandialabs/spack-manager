@@ -9,13 +9,15 @@ import os
 from datetime import date
 
 import spack.main
+from spack.extensions.manager.manager_cmds.find_machine import find_machine
 
 arch = spack.main.SpackCommand("arch")
 
 
 def base_extension(use_machine_name):
     if use_machine_name:
-        return "snapshots/exawind/{machine}".format(machine=os.environ["SPACK_MANAGER_MACHINE"])
+        machine = find_machine()
+        return "snapshots/exawind/{0}".format(machine)
     else:
         return "snapshots/exawind/{arch}".format(arch=arch("-b").strip())
 

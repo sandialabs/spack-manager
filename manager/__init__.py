@@ -46,6 +46,8 @@ class Project:
 
         # default is to detect nothing.
         self.detector = lambda _: False
+        # machine upstream root for creating externals
+        self.upstream_root = lambda _: False
 
         # create missing directories
         os.makedirs(self.config_path, exist_ok=True)
