@@ -55,7 +55,7 @@ def test_stripPatchesFromExternals(spec_str):
     assert "patches" not in pruned_string
 
 
-def test_mustHaveActiveEnvironment(tmpdir):
+def test_mustHaveActiveEnvironment(tmpdir, on_moonlight):
     with tmpdir.as_cwd():
         with pytest.raises(spack.main.SpackCommandError):
             manager("external", "/path/to/view")
@@ -96,7 +96,24 @@ def setupExternalEnv(tmpdir, has_view=True):
     return env_path
 
 
-def test_errorsIfThereIsNoView(tmpdir):
+def test_failsWithNoProject(tmpdir, capsys):
+    yaml_file = """spack:
+  view: true
+  specs: [mpileaks]"""
+    with tmpdir.as_cwd():
+        ext_env = setupExternalEnv(tmpdir, False)
+        path = tmpdir.join("spack.yaml")
+        with open(str(path), "w") as f:
+            f.write(yaml_file)
+        env("create", "-d", "test", "spack.yaml")
+        args = ParserMock(ext_env)
+        with pytest.raises(SystemExit):
+            with ev.Environment("test"):
+                external(None, args)
+                assert "No project detected." in capsys.readouterr()
+
+
+def test_errorsIfThereIsNoView(tmpdir, on_moonlight):
     yaml_file = """spack:
   view: true
   specs: [mpileaks]"""
@@ -130,7 +147,7 @@ class ExtPackage:
         return self.package_str
 
 
-def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch):
+def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch, on_moonlight):
     ext_path = setupExternalEnv(tmpdir)
     manifest = tmpdir.join("spack.yaml")
 
@@ -141,8 +158,8 @@ def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch):
     assert os.path.isfile("test/spack.yaml")
 
     with ev.Environment("test") as e:
-
         args = ParserMock(ext_path, merge=True)
+
         def impl_mock(*args):
             return str(ExtPackage("cmake", "cmake@3.20.0", "/path/top/some/view"))
 

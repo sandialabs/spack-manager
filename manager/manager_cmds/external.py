@@ -18,15 +18,24 @@ import spack.environment as ev
 import spack.util.spack_yaml as syaml
 from spack.detection.common import _pkg_config_dict
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
+from spack.extensions.manager.manager_cmds.find_machine import find_machine
 from spack.extensions.manager.manager_utils import base_extension, pruned_spec_string
 from spack.spec import Spec
 
 
 def get_external_dir():
-    if "SPACK_MANAGER_EXTERNAL" in os.environ:
-        manager_root = os.environ["SPACK_MANAGER_EXTERNAL"]
+    project, machine = find_machine()
+    if not project:
+        tty.error(
+            "No project detected. Spack-Manager must have a configured project to use "
+            "the external command"
+        )
+        exit(-1)
+    upstream_root = project.upstream_root(machine)
+    if upstream_root:
+        manager_root = upstream_root
     else:
-        manager_root = os.environ["SPACK_MANAGER"]
+        manager_root = project.root
     external_machine = os.path.join(manager_root, base_extension(True))
     external_arch = os.path.join(manager_root, base_extension(False))
 
