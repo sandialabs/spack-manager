@@ -10,7 +10,7 @@ import sys
 import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.extensions.manager.manager_cmds.create_env as create_env
 
-# import manager_cmds.develop # noqa E402
+import spack.extensions.manager.manager_cmds.develop as develop
 # import manager_cmds.external # noqa E402
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 
@@ -32,7 +32,7 @@ def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar="spack-manager commands", dest="manager_command")
     create_env.add_command(sp, _subcommands)
     create_dev_env.add_command(sp, _subcommands)
-    # develop.add_command(sp, _subcommands)
+    develop.add_command(sp, _subcommands)
     find_machine.add_command(sp, _subcommands)
     # external.add_command(sp, _subcommands)
     # pin.add_command(sp, _subcommands)

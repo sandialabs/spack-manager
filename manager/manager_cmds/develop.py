@@ -11,7 +11,8 @@ import shutil
 import llnl.util.tty as tty
 
 import spack.cmd
-import spack.cmd.develop as spack_develop
+from spack.cmd.develop import develop as s_develop
+from spack.cmd.develop import setup_parser as s_setup_parser
 import spack.util.executable
 from spack.error import SpackError
 
@@ -116,7 +117,7 @@ def manager_develop(parser, args):
         git_clone(branch, repo, path, args.shallow, args.all_branches)
         args.clone = False
 
-    spack_develop.develop(None, args)
+    s_develop(None, args)
 
     if args.add_remote:
         # a clone must have taken place at this point so we can
@@ -131,7 +132,7 @@ def add_command(parser, command_dict):
         help="a more intuitieve interface for " "spack develop",
         conflict_handler="resolve",
     )
-    spack_develop.setup_parser(subparser)
+    s_setup_parser(subparser)
     clone_group = subparser.add_mutually_exclusive_group()
     clone_group.add_argument(
         "-rb",
