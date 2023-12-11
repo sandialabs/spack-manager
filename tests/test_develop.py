@@ -18,8 +18,9 @@ manager = spack.main.SpackCommand("manager")
 
 @pytest.mark.usefixtures("mock_packages", "mock_fetch")
 def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture, tmpdir):
-    env("create" "-d", tmpdir.strpath)
-    with ev.read(tmpdir.strpath):
+    eDir = tmpdir.join("test")
+    env("create" "-d", eDir)
+    with ev.read(eDir):
         monkeypatch.setattr(m_develop, "s_develop", arg_capture)
         manager("develop", "mpich@=1.0")
         assert arg_capture.num_calls == 1
@@ -37,8 +38,9 @@ def test_spackManagerExtensionArgsLeadToGitCalls(
     monkeypatch.setattr(m_develop, "s_develop", mock_develop)
     monkeypatch.setattr(m_develop, "git_clone", mock_git_clone)
     monkeypatch.setattr(m_develop, "git_remote_add", mock_git_remote)
-    env("create", "-d", tmpdir.strpath)
-    with ev.read(tmpdir.strpath) as e:
+    eDir = tmpdir.join("test")
+    env("create", "-d", eDir)
+    with ev.read(eDir) as e:
         branch = "master"
         repo = "https://a.git.repo"
         name = "mpich"
