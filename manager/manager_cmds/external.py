@@ -9,9 +9,6 @@ import os
 import re
 from datetime import datetime
 
-from environment_utils import SpackManagerEnvironmentManifest
-from manager_utils import base_extension, pruned_spec_string
-
 import llnl.util.tty as tty
 
 import spack
@@ -20,7 +17,8 @@ import spack.detection
 import spack.environment as ev
 import spack.util.spack_yaml as syaml
 from spack.detection.common import _pkg_config_dict
-from spack.environment import config_dict
+from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
+from spack.extensions.manager.manager_utils import base_extension, pruned_spec_string
 from spack.spec import Spec
 
 
@@ -78,7 +76,7 @@ def get_ordered_dated_snapshots():
 
 def include_entry_exists(env, name):
     manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
-    includes = config_dict(manifest.pristine_yaml_content).get("include", [])
+    includes = manifest.pristine_configuration.get("include", [])
     for entry in includes:
         if entry == name:
             return True
