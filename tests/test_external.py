@@ -142,6 +142,7 @@ def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch):
 
     with ev.Environment("test") as e:
 
+        args = ParserMock(ext_path, merge=True)
         def impl_mock(*args):
             return str(ExtPackage("cmake", "cmake@3.20.0", "/path/top/some/view"))
 
