@@ -6,6 +6,7 @@
 # for more details.
 
 import os
+
 import pytest
 
 import spack.environment as ev
@@ -16,6 +17,7 @@ import spack.main
 env = spack.main.SpackCommand("env")
 manager = spack.main.SpackCommand("manager")
 
+
 @pytest.mark.usefixtures("mutable_mock_env_path_wh_manager", "mock_packages", "mock_fetch")
 def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture):
     env("create", "test")
@@ -23,6 +25,7 @@ def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture):
         monkeypatch.setattr(m_develop, "s_develop", arg_capture)
         manager("develop", "mpich@=1.0")
         assert arg_capture.num_calls == 1
+
 
 @pytest.mark.usefixtures("mutable_mock_env_path_wh_manager", "mock_packages", "mock_fetch")
 @pytest.mark.parametrize("all_branches", [True, False])
@@ -57,8 +60,8 @@ def test_spackManagerExtensionArgsLeadToGitCalls(
         manager_args.append(spec)
         manager(*manager_args)
         assert mock_develop.num_calls == 1
-        mock_git_clone.assert_call_matches(1, [branch, repo, path, shallow, all_branches])
+        mock_git_clone.assert_call_matches(0, [branch, repo, path, shallow, all_branches])
         if add_remote:
-            mock_git_remote.assert_call_matches(1, [path, remote_name, remote_repo])
+            mock_git_remote.assert_call_matches(0, [path, remote_name, remote_repo])
         else:
             assert not bool(mock_git_remote.num_calls)

@@ -11,9 +11,9 @@ import shutil
 import llnl.util.tty as tty
 
 import spack.cmd
+import spack.util.executable
 from spack.cmd.develop import develop as s_develop
 from spack.cmd.develop import setup_parser as s_setup_parser
-import spack.util.executable
 from spack.error import SpackError
 
 
