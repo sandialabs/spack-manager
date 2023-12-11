@@ -33,7 +33,7 @@ def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, arg_capture_
 
         def dev_patch(*args):
             arg_list = list(args)
-            spec = arg_list[0][-1]
+            spec = arg_list[-1]
             name = spec.split("@")[0]
             os.mkdir(name)
 
