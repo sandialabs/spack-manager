@@ -33,7 +33,7 @@ class Patcher(object):
         return len(self.args)
 
     def __call__(self, *args):
-        self.args.extend(list(args))
+        self.args.append(list(args))
         if self.patch_func:
             self.patch_func(*args)
 
@@ -41,7 +41,7 @@ class Patcher(object):
         assert call_args in self.args
 
     def assert_call_matches(self, call_index, call_args):
-        assert call_index <= self.num_calls
+        assert call_index < self.num_calls
         assert call_args == self.args[call_index]
 
 
@@ -87,3 +87,8 @@ def mock_manager_config_path():
 @pytest.fixture
 def on_moonlight(monkeypatch, mock_manager_config_path):
     monkeypatch.setenv("MOONLIGHT", "1")
+
+
+@pytest.fixture
+def mutable_mock_env_path_wh_manager(mutable_mock_env_path, mutable_config):
+    mutable_config.set("config:extensions", [os.path.join(__file__, "..", "..")])

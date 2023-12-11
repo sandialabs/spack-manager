@@ -67,8 +67,6 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install extension
       run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
-    - name: Spack Style Manager
-      run: spack style ${GITHUB_WORKSPACE}/manager
-    - name: Spack Style Tests
-      run: spack style ${GITHUB_WORKSPACE}/tests
+    - name: Spack Style
+      run: spack style ${GITHUB_WORKSPACE}/manager ${GITHUB_WORKSPACE}/tests
         

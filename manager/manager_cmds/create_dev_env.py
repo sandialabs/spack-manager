@@ -13,7 +13,7 @@ import spack.extensions.manager.manager_cmds.create_env as create_env
 import spack.extensions.manager.manager_cmds.develop as mdevelop
 
 
-def develop(args):
+def develop(*args):
     """
     wrapper around manager.develop
     """
@@ -60,7 +60,7 @@ def create_dev_env(parser, args):
         elif "trilinos" in str(s.name):
             dev_args.extend(["-rb", "git@github.com:trilinos/trilinos.git", str(s.version)])
         dev_args.append(str(s.format("{name}{@version}")))
-        develop(dev_args)
+        develop(*dev_args)
     ev.deactivate()
 
 
