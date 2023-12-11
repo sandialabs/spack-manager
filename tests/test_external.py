@@ -5,26 +5,21 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-'''
 import os
-from unittest.mock import patch
 
-# import manager_cmds
-# import manager_cmds.external
 import pytest
 
 import spack.environment as ev
+import spack.extensions.manager.manager_cmds.external as m_external
 import spack.main
 import spack.util.spack_yaml as syaml
-
-# from spack.environment import config_dict
+from spack.extensions.manager.manager_cmds.external import external
+from spack.extensions.manager.manager_utils import pruned_spec_string
 from spack.spec import Spec
-
-# from manager_utils import pruned_spec_string
-
 
 env = spack.main.SpackCommand("env")
 manager = spack.main.SpackCommand("manager")
+
 
 @pytest.mark.parametrize(
     "spec_str",
@@ -60,7 +55,7 @@ def test_stripPatchesFromExternals(spec_str):
     assert "patches" not in pruned_string
 
 
-def test_mustHaveActiveEnvironment(tmpdir):
+def test_mustHaveActiveEnvironment(tmpdir, on_moonlight):
     with tmpdir.as_cwd():
         with pytest.raises(spack.main.SpackCommandError):
             manager("external", "/path/to/view")
@@ -101,7 +96,7 @@ def setupExternalEnv(tmpdir, has_view=True):
     return env_path
 
 
-def test_errorsIfThereIsNoView(tmpdir):
+def test_failsWithNoProject(tmpdir, capsys):
     yaml_file = """spack:
   view: true
   specs: [mpileaks]"""
@@ -114,7 +109,24 @@ def test_errorsIfThereIsNoView(tmpdir):
         args = ParserMock(ext_env)
         with pytest.raises(SystemExit):
             with ev.Environment("test"):
-                manager_cmds.external.external(None, args)
+                external(None, args)
+                assert "No project detected." in capsys.readouterr()
+
+
+def test_errorsIfThereIsNoView(tmpdir, on_moonlight):
+    yaml_file = """spack:
+  view: true
+  specs: [mpileaks]"""
+    with tmpdir.as_cwd():
+        ext_env = setupExternalEnv(tmpdir, False)
+        path = tmpdir.join("spack.yaml")
+        with open(str(path), "w") as f:
+            f.write(yaml_file)
+        env("create", "-d", "test", "spack.yaml")
+        args = ParserMock(ext_env)
+        with pytest.raises(SystemExit):
+            with ev.Environment("test"):
+                external(None, args)
 
 
 class ExtPackage:
@@ -135,7 +147,7 @@ class ExtPackage:
         return self.package_str
 
 
-def evaluate_external(tmpdir, yaml_file):
+def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch, on_moonlight):
     ext_path = setupExternalEnv(tmpdir)
     manifest = tmpdir.join("spack.yaml")
 
@@ -147,14 +159,16 @@ def evaluate_external(tmpdir, yaml_file):
 
     with ev.Environment("test") as e:
         args = ParserMock(ext_path, merge=True)
-        with patch(
-            "manager_cmds.external.write_spec",
-            return_value=str(ExtPackage("cmake", "cmake@3.20.0", "/path/top/some/view")),
-        ) as mock_write:
-            manager_cmds.external.external(None, args)
+
+        def impl_mock(*args):
+            return str(ExtPackage("cmake", "cmake@3.20.0", "/path/top/some/view"))
+
+        mock_write = arg_capture_patch(impl_mock)
+        monkeypatch.setattr(m_external, "write_spec", mock_write)
+        external(None, args)
         # check that the include entry was added to the spack.yaml
-        assert mock_write.called_once()
-        includes = config_dict(e.yaml).get("include", [])
+        assert mock_write.num_calls == 1
+        includes = e.pristine_configuration.get("include", [])
         assert 1 == len(includes)
         assert "externals.yaml" == str(includes[0])
 
@@ -194,4 +208,3 @@ def test_addToExistingExternal(tmpdir):
             yaml = syaml.load(f)
             assert yaml["packages"]["openmpi"]
             assert yaml["packages"]["cmake"]
-'''
