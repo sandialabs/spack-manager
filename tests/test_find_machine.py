@@ -16,8 +16,6 @@ mgrCmd = spack.main.SpackCommand("manager")
 
 def test_find_machine_detects_project_machines(mock_manager_config_path):
     assert manager.config_path != manager._default_config_path
-    print(manager.config_path)
-    print(manager.projects)
     assert find_machine.machine_defined("moonlight")
     out = mgrCmd("find-machine", "--list")
     assert "moonlight" in out

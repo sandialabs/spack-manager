@@ -76,7 +76,7 @@ class Project:
 
 _default_config = """
 spack-manager:
-    projects: {}
+    projects: []
 """
 _default_config_path = os.path.realpath(
     os.path.abspath(os.path.join(__file__, "..", "..", "spack-manager.yaml"))
@@ -84,7 +84,7 @@ _default_config_path = os.path.realpath(
 
 config_path = _default_config_path
 config_yaml = {}
-projects = {}
+projects = []
 
 
 def populate_config():
@@ -94,14 +94,16 @@ def populate_config():
         with open(config_path, "r") as f:
             config_yaml = syaml.load(f)
     else:
+        with open(config_path, 'w') as f:
+            f.write(_default_config)
         config_yaml = syaml.load(_default_config)
 
 
 def load_projects():
     global projects
     projects_node = config_yaml["spack-manager"]["projects"]
-    for key, path in projects_node.items():
-        projects[key] = Project(path)
+    for path in projects_node:
+        projects.append(Project(path))
 
 
 def __init__():
