@@ -40,12 +40,12 @@ Project:         Machine:        Detected: (+/-)
 $ tree $SCRATCH/exawind-demo
 /Users/psakiev/scratch/exawind-demo
 ├── configs
-└── repo
+└── repos
 
 3 directories, 0 files
 ```
 
-Once the first `spack manager` command is run the project `configs` and `repo` directories get populated.
+Once the first `spack manager` command is run the project `configs` and `repos` directories get populated.
 The `configs` directory is where machine specific spack configuration files are stored. 
 Since this directory is currently empty no machines show up when `spack manager find-machine --list` is run.
 The next step is to add some machines and configuration files.
@@ -68,9 +68,26 @@ exawind-demo     darwin          -
 `darwin` is automatically picked up as an available machine by the `find-machine` command, and any configuration files that 
 are added inside this directory will be added to an environment created with a `darwin` machine specified.
 It should also be noted that the project name `exawind-demo` comes from the name of the parent directory.
-Spack-Manager specific constructs are associated with the directory names they are in as much as possible to reduce the need
-for in memory variables and extra book keeping. 
-The filesystem is a sufficient bookkeeper for the operations Spack-Manager performs.
+Now configurations can be added.
+The following two configurations are used by ExaWind.
+
+``` yaml
+# config.yaml
+config:
+  mirrors:
+    e4s: https://cache.e4s.io
+```
+
+``` yaml
+# packages.yaml
+packages:
+  hypre:
+    variants: +shared~fortran
+  all:
+    compiler: [apple-clang, gcc, clang]
+    providers:
+      mpi: [mpich, openmpi]
+```
 
 ### Anonymous Machines
 There are two anonymous machines that are reserved for project and users to utilize: `base` and `user`.
@@ -88,14 +105,131 @@ The hierarchy of precedent for these configs are:
 3. `base`
 where the smaller number means higher precedent.
 
-So a things in `base` are not the law and can be overridden on each machine as necessary.
+So any configurations in `base` are not the law and can be overridden on each machine as necessary.
 An example of this would be if the project prefers to build with `+shared` but on specific platform can only support `~shared`. 
 As a reminder, this hierarchy is only for creating the default environment configuration on each platform when it is created.
 These are added to the `spack.yaml` via entries in the `includes` [list](https://spack.readthedocs.io/en/latest/environments.html#included-configurations).
 Each environment can still be customized by modifying the `spack.yaml` file and using [additional configuration techniques](https://spack.readthedocs.io/en/latest/environments.html#configuring-environments).
 
+For completeness, the optional `base` and `user` directories will now be added to the `exawind-demo` project.
+
+``` console
+$ mkdir $SCRATCH/exawind-demo/configs/base
+$ mkdir $SCRATCH/exawind-demo/configs/user
+$ spack manager find-machine --list
+Project:         Machine:        Detected: (+/-)
+------------------------------------------------------------
+exawind-demo     darwin          -
+```
+
+The output above shows how these config directories are ignored by the `find-maachine` command.
+Next we'll add some of the `base` configs used by ExaWind to the `base` directory.
+
+``` yaml
+# config.yaml
+config:
+  source_cache: ~/.spack_downloads
+  misc_cache: $spack/../.cache
+  build_stage:
+    - $spack/../stage
+  concretizer: clingo
+```
+
+``` yaml
+# concretizer.yaml
+concretizer:
+  unify: false
+  reuse: false
+```
+
+Now if we create an environment using `spack manager create-env --machine darwin` we will see all the configs that have been added in the `include.yaml` file.
+
+``` console
+$ spack manager create-env --machine darwin -d $SCRATCH/example-env
+making /Users/psakiev/scratch/example-env
+
+$ cat $SCRATCH/example-env/spack.yaml
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  concretizer:
+    unify: true
+  include:
+  - include.yaml
+
+$ cat $SCRATCH/example-env/include.yaml
+concretizer:
+  unify: false
+  reuse: false
+packages:
+  hypre:
+    variants: +shared~fortran
+  all:
+    compiler: [apple-clang, gcc, clang]
+    providers:
+      mpi: [mpich, openmpi]
+config:
+  mirrors:
+    e4s: https://cache.e4s.io
+  source_cache: ~/.spack_downloads
+  misc_cache: $spack/../.cache
+  build_stage:
+  - $spack/../stage
+  concretizer: clingo
+```
 
 ## Configuring Machine Auto-detection
+
+The last column from the output of `spack manager find-machine --list` indicates if the configuration
+was detected for the current machine.
+The default behavior is to detect nothing and require users to specify the machine they want to use.
+However, setting up automatic detection is simple and highly configurable for each project and each machine.
+
+To add detection a project must have a python file named `find-[project].py` in the top-level directory of the project (`exawind-demo` in this example).
+`find-[project].py` needs to have a method named `detector` that takes a string with the machine name and returns 
+`True` or `False` depending on if the current machine meets the criteria for that name.
+
+Here is an example `find-exawind-demo.py` script
+
+``` python
+import sys
+
+def detector(name):
+    """
+    A function that will check if the supplied name/machine
+    matches a known machine configuration
+    """
+    # dictionary that is easily extensible where key is the name we want to match
+    # and the value is function that can be evaluated to test the actual system we
+    # are one
+    known_machines = {
+        "darwin": lambda: sys.platform == "darwin",
+    }
+
+    if name in known_machines:
+        return known_machines[name]()
+    else:
+        return False
+        
+```
+
+Now when the `find-machine` command is run the `darwin` machine will be detected.
+``` console
+$ spack manager find-machine --list
+Project:         Machine:        Detected: (+/-)
+------------------------------------------------------------
+exawind-demo     darwin          +
+```
+
+Users are free to implement and sort of detection script they want.  
+The only requirements are that the method `detector` have a positional
+argument for the name of the machine to check for, and returns a boolean to indicate if that supplied name 
+was detected.
 
 ## Setting up Spack Package Repositories
 

@@ -42,7 +42,7 @@ class Project:
         if repo_path:
             self.repo_path = canonicalize_path(repo_path)
         else:
-            self.repo_path = os.path.join(self.root, "repo")
+            self.repo_path = os.path.join(self.root, "repos")
 
         # default is to detect nothing.
         self.detector = lambda _: False
