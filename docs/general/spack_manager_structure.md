@@ -16,7 +16,7 @@ changed when the machine/system is changed.
 
 `Projects` can be registered with Spack-Manager by adding them to the `spack-manager.yaml` configuration file.
 This file lives in the Spack-Manager directory and controls settings for `Spack-Manager` and the `Projects` that
-are registerd.
+are registered.
 
 ``` yaml
 spack-manager:
@@ -24,4 +24,7 @@ spack-manager:
     - /path/to/project_a
       default_view: False
     - $HOME/project_b
+```
 
+Additional data about this file can be found at *TBD*.
+Information on configuring a new `Project` can be found in the system administrator profile documentation (add link).

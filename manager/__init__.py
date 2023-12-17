@@ -57,21 +57,28 @@ class Project:
 
     def _machine_detector(self):
         detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=self.name))
-        assert os.path.isfile(detection_script)
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
             mod = llnl.util.lang.load_module_from_file(
                 DETECTION_MODULE.format(n=self.name), detection_script
             )
-            assert mod
             self.detector = mod.detector
 
     def _populate_machines(self):
+
+        def is_reserved(entry):
+            reserved_paths = ["user", "base"]
+            # remove reserved paths that are not machines
+            if os.path.basename(entry) in reserved_paths:
+                return True
+            return False
+
         self.machines = []
         machine_dirs = list(os.scandir(self.config_path))
         for machine in machine_dirs:
-            self.machines.append(machine.name)
+            if not is_reserved(machine):
+                self.machines.append(machine.name)
 
 
 _default_config = """
@@ -106,6 +113,12 @@ def load_projects():
         projects.append(Project(path))
 
 
-def __init__():
+def initialize():
+    """"
+    Function to setup spack-manager data structures in memory.
+    This needs to be refined further
+    """
     populate_config()
     load_projects()
+
+initialize()
