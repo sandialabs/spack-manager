@@ -23,10 +23,8 @@ def test_find_machine_detects_project_machines(mock_manager_config_path):
 
 def test_find_machineFindsExpectedMachine(mock_manager_config_path):
     assert manager.config_path != manager._default_config_path
-    breakpoint()
     out = mgrCmd("find-machine")
     assert "moonlight" not in out
     os.environ["MOONLIGHT"] = "1"
     out = mgrCmd("find-machine")
-    breakpoint()
     assert "moonlight" in out
