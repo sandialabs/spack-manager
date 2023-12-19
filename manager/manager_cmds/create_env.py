@@ -14,6 +14,7 @@ import os
 import sys
 
 import llnl.util.tty as tty
+from llnl.util.filesystem import copy_tree
 
 import spack
 import spack.cmd
@@ -99,6 +100,8 @@ def create_env(parser, args):
         include_file = os.path.join(theDir, include_file_name)
         inc_creator.write_includes(include_file)
         manifest.append_includes(include_file_name)
+        if project.copy_repo:
+            copy_tree(project.repo_path, os.path.join(theDir, "repos"))
     manifest.flush()
 
     fpath = os.path.join(project.root, ".tmp")

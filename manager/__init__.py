@@ -31,7 +31,7 @@ class Project:
     you want to access inside a performant loop
     """
 
-    def __init__(self, path, config_path=None, repo_path=None):
+    def __init__(self, path, copy_repo=False, config_path=None, repo_path=None):
         self.root = canonicalize_path(path)
         self.name = os.path.basename(self.root)
         if config_path:
@@ -43,6 +43,8 @@ class Project:
             self.repo_path = canonicalize_path(repo_path)
         else:
             self.repo_path = os.path.join(self.root, "repos")
+
+        self.copy_repo = copy_repo
 
         # default is to detect nothing.
         self.detector = lambda _: False
@@ -66,7 +68,6 @@ class Project:
             self.detector = mod.detector
 
     def _populate_machines(self):
-
         def is_reserved(entry):
             reserved_paths = ["user", "base"]
             # remove reserved paths that are not machines
@@ -101,7 +102,7 @@ def populate_config():
         with open(config_path, "r") as f:
             config_yaml = syaml.load(f)
     else:
-        with open(config_path, 'w') as f:
+        with open(config_path, "w") as f:
             f.write(_default_config)
         config_yaml = syaml.load(_default_config)
 
@@ -114,11 +115,12 @@ def load_projects():
 
 
 def initialize():
-    """"
+    """ "
     Function to setup spack-manager data structures in memory.
     This needs to be refined further
     """
     populate_config()
     load_projects()
+
 
 initialize()

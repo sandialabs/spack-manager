@@ -78,10 +78,10 @@ def mock_manager_config_path():
     """
     config_path = os.path.join(_test_root, "mock", "mock_config.yaml")
     manager.config_path = config_path
-    manager.__init__()
+    manager.initialize()
     yield
     manager.config_path = manager._default_config_path
-    manager.__init__()
+    manager.initialize()
 
 
 @pytest.fixture

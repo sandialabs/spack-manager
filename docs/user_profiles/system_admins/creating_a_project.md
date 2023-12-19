@@ -232,5 +232,59 @@ argument for the name of the machine to check for, and returns a boolean to indi
 was detected.
 
 ## Setting up Spack Package Repositories
+The `[Project]/repos` directory is a place holder for package repositories that are paired with the softwware applications development/deployment.
+The simplest way to ensure the appropriate repos are included is to add a reference to them in 
+`[Project]/configs/base/repos.yaml` file.
+This is a way to ensure that any environment created with Spack-Manager for the desired project will include the repos.  
+
+An example for ExaWind is as follows:
+``` yaml
+# repos.yaml
+repos:
+  - $spack/../repos/exawind
+```
+
+Where the `$spack` is a supported 
+[configuration variable](https://spack.readthedocs.io/en/latest/configuration.html#config-file-variables)
+that will be expanded by spack.
+This works for ExaWind because ExaWind creates a fixed mirror of spack that is submoduled
+into their Project repository.
+
+Utilizing a configuration variable, environment variable, or manually updating  the repo paths are currently
+the only way to point to repos in arbitrary locations on the filesystem.
+Users may also add the `copy_repos: true` flag to their projects inside the `spack-manager.yaml` configuration 
+file if they wish to just automatically copy the repo files locally to an environment when it is created.
+
+``` yaml
+spack-manager:
+  projects:
+  - $SCRATCH/exawind-demo
+    copy_repos: true
+```
+
+In this case the repo specification would be properly resolved with the following `repo.yaml` file in the `base` configs.
+
+``` yaml
+# repos.yaml
+repos:
+  - $env/repos/exawind
+```
+
+Now when an environment is created the `[Projects]/repos` directory will be copied completely to the environment, and 
+the environment will look for the copy relative to its own location.
+
+Please note, that these are mainly small tricks to utilize spack's builtin path resolution strategies.
+Additional work in the future is anticipated to make this a more seamless setup and transition.
 
 ## Adding Version Control
+At this point the `exawind-demo` project is populated with an initial set of configurations.
+It is highly suggested that it be placed under some form of version control.
+`git` is by far the most popular tool for version control at the moment.
+A suggested `.gitignore` file would look something like the following:
+``` bash
+# basic python files
+__pycache__
+*pyc
+# some operations in spack-manager can currently create this directory
+.tmp
+```
