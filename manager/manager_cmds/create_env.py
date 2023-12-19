@@ -77,7 +77,7 @@ def create_env(parser, args):
         manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
     # the machine is not found we take the first/default project
-    if not project and not manager.projects.empty():
+    if not project and manager.projects:
         project = manager.projects[0]
 
     # if no projects are configured then there will be zero includes
