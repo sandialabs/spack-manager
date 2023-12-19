@@ -104,14 +104,14 @@ def create_env(parser, args):
             copy_tree(project.repo_path, os.path.join(theDir, "repos"))
     manifest.flush()
 
-    fpath = os.path.join(project.root, ".tmp")
+        fpath = os.path.join(project.root, ".tmp")
 
-    os.makedirs(fpath, exist_ok=True)
+        os.makedirs(fpath, exist_ok=True)
 
-    storage = os.path.join(fpath, "created_env_path.txt")
+        storage = os.path.join(fpath, "created_env_path.txt")
 
-    with open(storage, "w") as f:
-        f.write(theDir)
+        with open(storage, "w") as f:
+            f.write(theDir)
 
     return theDir
 
