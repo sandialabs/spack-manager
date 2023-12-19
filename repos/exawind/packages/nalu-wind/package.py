@@ -27,7 +27,7 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
     variant("asan", default=False,
             description="Turn on address sanitizer")
     variant("fsi", default=False,
-            description="Use FSI branch of openfast")
+            description="Enable fluid-structure-interaction simulation capabilities")
     variant("stk_simd", default=False,
             description="Enable SIMD in STK")
     variant("shared", default=True,
@@ -45,14 +45,13 @@ class NaluWind(SMCMakeExtension, bNaluWind, ROCmPackage):
 
     conflicts("+cuda", when="+rocm")
     conflicts("+rocm", when="+cuda")
-    conflicts("openfast@fsi", when="~fsi")
     conflicts("+hypre", when="+hypre2")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
 
     depends_on("hypre2@2.18.2: ~int64+mpi~superlu-dist~shared", when="+hypre2")
     depends_on("hypre+umpire", when="+umpire")
     depends_on("trilinos gotype=long")
-    depends_on("openfast@fsi+netcdf+cxx", when="+fsi")
+    depends_on("openfast@4.0.0:+netcdf+cxx", when="+fsi")
 
     for _arch in ROCmPackage.amdgpu_targets:
         depends_on("trilinos@13.4.0.2022.10.27: ~shared+exodus+tpetra+zoltan+stk+boost~superlu-dist~superlu+hdf5+shards~hypre+gtest+rocm amdgpu_target={0}".format(_arch),
