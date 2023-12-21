@@ -106,7 +106,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             cmake_options.append("-DAMDGPU_TARGETS=" + ";".join(str(x) for x in targets))
             cmake_options.append("-DGPU_TARGETS=" + ";".join(str(x) for x in targets))
             if "+roctx-profile" in self.spec:
-                cmake_options.append(self.define("AMReX_USE_ROCTX", True))
+                cmake_options.append(self.define("AMReX_ROCTX", True))
 
         if "+sycl" in self.spec:
             cmake_options.append(self.define("AMR_WIND_ENABLE_SYCL", True))
