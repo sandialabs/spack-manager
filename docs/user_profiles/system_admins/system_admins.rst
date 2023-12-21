@@ -8,4 +8,4 @@ the software development process for software developers and/or end users on spe
   :glob:
   :maxdepth: 2
 
-  nightly_testing
+  creating_a_project

@@ -5,7 +5,10 @@
 
 `Spack-Manager <https://github.com/sandialabs/spack-manager>`_ is a light-weight extension to 
 `Spack <https://github.com/spack/spack>`_ that is intended to streamline the software development and deployment cycle
-for individual software projects on specific machines.
+for software projects on specific machines.
+A given software project typically has multiple configurations across many machines.
+Spack-Manager is quite literal in its name, in that it provides a way to manage and organize these configurations
+across multiple machines, and multiple projets.
 
 The intent of this project is to maintain as thin of a buffer as possible between software packages and Spack, and to be pushing ideas and workflow
 improvements back to Spack on a regular basis to reduce the code that is maintained here.
@@ -46,9 +49,6 @@ Benefits of Spack-Manager
    - Build reproducibiilty, and scalability
    - Buy-in and feedback from HPC vendors and software developers over thousands of projects
    - Support options, extended documentation and testing through the much larger Spack project
-
-Spack-Manager is currently focused on providing the needs of the `Exawind <https://github.com/Exawind>`_ project,
-but the long term intent is to make it project agnostic. 
 
 Additional details about the philosophy, and general knowledge can be found in the following documentation section.
 
