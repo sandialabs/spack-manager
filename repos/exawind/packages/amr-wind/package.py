@@ -41,7 +41,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
 
     requires("+rocm", "+cuda",
              policy="one_of",
-             when="~cuda~rocm",
+             when="+gpu-aware-mpi",
              msg="gpu-aware-mpi requires supported hardware builds")
 
     def setup_build_environment(self, env):
