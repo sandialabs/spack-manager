@@ -37,10 +37,12 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+umpire", when="+umpire")
     depends_on("hypre+sycl", when="+sycl")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
-    depends_on("+mpi", when="+gpu-aware-mpi")
+    requires("+mpi", when="+gpu-aware-mpi")
 
-    conflicts("+gpu-aware-mpi", when="~cuda~rocm",
-              msg="gpu-aware-mpi requires supported hardware builds")
+    requires("+rocm", "+cuda",
+             policy="one_of",
+             when="~cuda~rocm",
+             msg="gpu-aware-mpi requires supported hardware builds")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
