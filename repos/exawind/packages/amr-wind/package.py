@@ -29,7 +29,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="Enable SYCL backend")
     variant("gpu-aware-mpi", default=False,
             description="gpu-aware-mpi")
-
+    variant("roctx-profile", default=False,
+            description="do profiling with roctx")
     depends_on("hdf5~mpi", when="+hdf5~mpi")
     depends_on("hdf5+mpi", when="+hdf5+mpi")
     depends_on("h5z-zfp", when="+hdf5")
@@ -38,11 +39,11 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+sycl", when="+sycl")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
     requires("+mpi", when="+gpu-aware-mpi")
-
     requires("+rocm", "+cuda",
              policy="one_of",
              when="+gpu-aware-mpi",
              msg="gpu-aware-mpi requires supported hardware builds")
+    requires("+rocm", when="+roctx-profile")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
@@ -104,6 +105,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             cmake_options.append("-DCMAKE_HIP_ARCHITECTURES=" + ";".join(str(x) for x in targets))
             cmake_options.append("-DAMDGPU_TARGETS=" + ";".join(str(x) for x in targets))
             cmake_options.append("-DGPU_TARGETS=" + ";".join(str(x) for x in targets))
+            if "+roctx-profile" in self.spec:
+                cmake_options.append(self.define("AMReX_ROCTX", True))
 
         if "+sycl" in self.spec:
             cmake_options.append(self.define("AMR_WIND_ENABLE_SYCL", True))
