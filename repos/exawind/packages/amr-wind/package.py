@@ -8,6 +8,8 @@
 from spack import *
 from spack.pkg.builtin.amr_wind import AmrWind as bAmrWind
 import os
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 from smpackages import *
 
 class AmrWind(SMCMakeExtension, bAmrWind):
@@ -35,6 +37,12 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+umpire", when="+umpire")
     depends_on("hypre+sycl", when="+sycl")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
+    requires("+mpi", when="+gpu-aware-mpi")
+
+    requires("+rocm", "+cuda",
+             policy="one_of",
+             when="+gpu-aware-mpi",
+             msg="gpu-aware-mpi requires supported hardware builds")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
@@ -42,6 +50,21 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
         if "%intel" in self.spec:
             env.append_flags("CXXFLAGS", "-no-ipo")
+        if "+gpu-aware-mpi" and find_machine(verbose=False, full_machine_name=False) == "frontier":
+            env.append_flags("HIPFLAGS", "--amdgpu-target=gfx90a")
+            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+
+    def flag_handler(self, name, flags):
+        if find_machine(verbose=False, full_machine_name=False) == "frontier" and name == "cxxflags" and "+gpu-aware-mpi" in self.spec and "+rocm" in self.spec:
+            flags.append("-I" + os.path.join(os.getenv("MPICH_DIR"), "include"))
+            flags.append("-L" + os.path.join(os.getenv("MPICH_DIR"), "lib"))
+            flags.append("-lmpi")
+            flags.append(os.getenv("CRAY_XPMEM_POST_LINK_OPTS"))
+            flags.append("-lxpmem")
+            flags.append(os.getenv("PE_MPICH_GTL_DIR_amd_gfx90a"))
+            flags.append(os.getenv("PE_MPICH_GTL_LIBS_amd_gfx90a"))
+
+        return (flags, None, None)
 
     def cmake_args(self):
         spec = self.spec
