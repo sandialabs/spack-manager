@@ -37,6 +37,10 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+umpire", when="+umpire")
     depends_on("hypre+sycl", when="+sycl")
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
+    depends_on("+mpi", when="+gpu-aware-mpi")
+
+    conflicts("+gpu-aware-mpi", when="~cuda~rocm",
+              msg="gpu-aware-mpi requires supported hardware builds")
 
     def setup_build_environment(self, env):
         if "+asan" in self.spec:
@@ -44,7 +48,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             env.set("LSAN_OPTIONS", "suppressions={0}".format(join_path(self.package_dir, "sup.asan")))
         if "%intel" in self.spec:
             env.append_flags("CXXFLAGS", "-no-ipo")
-        if "+mpi" in self.spec and "+gpu-aware-mpi" in self.spec and "+rocm" in self.spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
+        if "+gpu-aware-mpi" and find_machine(verbose=False, full_machine_name=False) == "frontier":
             env.append_flags("HIPFLAGS", "--amdgpu-target=gfx90a")
             env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
 
