@@ -31,4 +31,4 @@ def test_mockManagerSoftareProject(mock_manager_config_path):
     assert os.path.isfile(manager.config_path)
     assert "tests" in str(manager.config_path)
     projects_node = manager.config_yaml["spack-manager"]["projects"]
-    assert "project_a" in projects_node
+    assert "project_a" in projects_node[0]

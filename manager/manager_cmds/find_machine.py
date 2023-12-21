@@ -9,7 +9,7 @@ import spack.extensions.manager as manager
 
 
 def machine_defined(name):
-    for _, project in manager.projects.items():
+    for project in manager.projects:
         for machine in project.machines:
             if machine == name:
                 return project
@@ -19,7 +19,7 @@ def machine_defined(name):
 def find_machine(verbose=False):
     machine_name = "NOT-FOUND"
 
-    for _, project in manager.projects.items():
+    for project in manager.projects:
         for machine in project.machines:
             """
             Since we don't expect uniform environments on all machines
@@ -48,21 +48,16 @@ def find_machine_cmd(parser, args):
     if args.list:
         print("Project:\t Machine:\t Detected: (+/-)")
         print("-" * 60)
-        for name, project in manager.projects.items():
+        for project in manager.projects:
             for machine in project.machines:
                 print(
                     "{proj} \t {machine} \t {detected}".format(
-                        proj=name,
+                        proj=project.name,
                         machine=machine,
                         detected="+" if project.detector(machine) else "-",
                     )
                 )
         return
-
-    # only allow one project for now
-    if len(manager.projects) > 1:
-        raise Exception("Spack-Manager only supports one project in production right now")
-
     find_machine(verbose=True)
 
 

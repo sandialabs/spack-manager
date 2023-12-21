@@ -13,8 +13,8 @@ import spack.extensions.manager.manager_cmds.develop as develop
 import spack.extensions.manager.manager_cmds.external as external
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 
-# import manager_cmds.pin # noqa E402
-# import manager_cmds.snapshot # noqa E402
+# import spack.extensions.manager.manager_cmds.pin as pin
+# import spack.extensions.manager.manager_cmds.snapshot as snapshot
 
 if sys.version_info[0] < 3:
     print("spack-manager commands only support python 3")

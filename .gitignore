@@ -6,6 +6,7 @@ stage
 .bootstrap
 .jython_cache
 # file types
+spack-manager.yaml
 Makefile
 __pycache__
 *.lock

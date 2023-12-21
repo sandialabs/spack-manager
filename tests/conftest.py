@@ -77,11 +77,13 @@ def mock_manager_config_path():
     Setup to use a testing project repo embedded in the tests, then reset to default when finished
     """
     config_path = os.path.join(_test_root, "mock", "mock_config.yaml")
+    manager.projects = []
     manager.config_path = config_path
-    manager.__init__()
+    manager.initialize()
     yield
+    manager.projects = []
     manager.config_path = manager._default_config_path
-    manager.__init__()
+    manager.initialize()
 
 
 @pytest.fixture

@@ -14,6 +14,7 @@ import os
 import sys
 
 import llnl.util.tty as tty
+from llnl.util.filesystem import copy_tree
 
 import spack
 import spack.cmd
@@ -76,8 +77,8 @@ def create_env(parser, args):
         manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
     # the machine is not found we take the first/default project
-    if not project:
-        project = list(manager.projects.values())[0]
+    if not project and manager.projects:
+        project = manager.projects[0]
 
     # if no projects are configured then there will be zero includes
     if project:
@@ -99,16 +100,9 @@ def create_env(parser, args):
         include_file = os.path.join(theDir, include_file_name)
         inc_creator.write_includes(include_file)
         manifest.append_includes(include_file_name)
+        if project.copy_repo:
+            copy_tree(project.repo_path, os.path.join(theDir, "repos"))
     manifest.flush()
-
-    fpath = os.path.join(project.root, ".tmp")
-
-    os.makedirs(fpath, exist_ok=True)
-
-    storage = os.path.join(fpath, "created_env_path.txt")
-
-    with open(storage, "w") as f:
-        f.write(theDir)
 
     return theDir
 
