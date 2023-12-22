@@ -3,6 +3,8 @@ from spack.pkg.builtin.hypre import Hypre as bHypre
 import glob
 import os
 import shutil
+import manager_cmds.find_machine as fm
+from manager_cmds.find_machine import find_machine
 
 import spack.util
 
@@ -44,6 +46,41 @@ class Hypre(bHypre):
                 make = spack.util.executable.which("make")
                 make("clean")
                 make("distclean")
+
+    def flag_handler(self, name, flags):
+        if find_machine(verbose=False, full_machine_name=False) == "frontier" and name == "cxxflags" and "+gpu-aware-mpi" in self.spec and "+rocm" in self.spec:
+            flags.append("-I" + os.path.join(os.getenv("MPICH_DIR"), "include"))
+            flags.append("-L" + os.path.join(os.getenv("MPICH_DIR"), "lib"))
+            flags.append("-lmpi")
+            flags.append(os.getenv("CRAY_XPMEM_POST_LINK_OPTS"))
+            flags.append("-lxpmem")
+            flags.append(os.getenv("PE_MPICH_GTL_DIR_amd_gfx90a"))
+            flags.append(os.getenv("PE_MPICH_GTL_LIBS_amd_gfx90a"))
+
+        return (flags, None, None)
+
+    def setup_build_environment(self, env):
+        spec = self.spec
+        if "+mpi" in spec:
+            env.set("CC", spec["mpi"].mpicc)
+            env.set("CXX", spec["mpi"].mpicxx)
+            if "+fortran" in spec:
+                env.set("F77", spec["mpi"].mpif77)
+            if "+gpu-aware-mpi" in spec and "+rocm" in spec and find_machine(verbose=False, full_machine_name=False) == "frontier":
+                env.append_flags("HIPFLAGS", "--amdgpu-target=gfx90a")
+                env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+
+        if "+cuda" in spec:
+            env.set("CUDA_HOME", spec["cuda"].prefix)
+            env.set("CUDA_PATH", spec["cuda"].prefix)
+            # In CUDA builds hypre currently doesn't handle flags correctly
+            env.append_flags("CXXFLAGS", "-O2" if "~debug" in spec else "-g")
+
+        if "+rocm" in spec:
+            # As of 2022/04/05, the following are set by 'llvm-amdgpu' and
+            # override hypre's default flags, so we unset them.
+            env.unset("CFLAGS")
+            env.unset("CXXFLAGS")
 
     def configure_args(self):
         spec = self.spec
