@@ -1,0 +1,92 @@
+MAINTAINER Philip Sakievich, Sandia National Laboratories <psakiev@sandia.gov>
+MAINTAINER Jon Rood, NREL <Jon.Rood@nrel.gov>
+
+ARG REGISTRY=docker.io/library
+ARG IMAGE=ubuntu
+ARG TAG=jammy
+
+FROM ${REGISTRY}/${IMAGE}:${TAG}
+
+# Make bash the default $SHELL
+SHELL ["/bin/bash", "-c"]
+
+# Install Spack Prereqs: https://spack.readthedocs.io/en/latest/getting_started.html#system-prerequisites
+
+RUN apt-get update -yqq && \
+    apt-get upgrade -yqq
+
+RUN apt-get install -yqq \
+    ca-certificates \
+    autoconf \
+    automake \
+    bzip2 \
+    clangd \
+    coreutils \
+    curl \
+    emacs-nox \
+    file \
+    flex \
+    gcc \
+    gcc-multilib \
+    gcc-doc \
+    g++ \
+    gfortran \
+    gfortran-multilib \
+    gfortran-doc \
+    git \
+    git-doc \
+    git-man \
+    gnupg2 \
+    libffi-dev \
+    libfmt-dev \
+    libgmp-dev \
+    libjpeg-dev \
+    libmpc-dev \
+    libncurses-dev \
+    libx11-dev \
+    lsb-release \
+    m4 \
+    make \
+    nano \
+    openssl \
+    patch \
+    python3 \
+    python3-distutils \
+    python3-venv \
+    unzip \
+    vim \
+    wget \
+    wget2 \
+    xz-utils \
+    zip \
+    zlib1g-dev
+
+RUN apt clean -yqq
+
+## Exawind CPU snapshot 
+WORKDIR /exawind-entry
+##RUN git clone --recursive https://github.com/sandialabs/spack-manager
+
+## Pre-merge fork
+RUN git clone --recursive https://github.com/ajpowelsnl/spack-manager
+#
+WORKDIR /exawind-entry/spack-manager
+## Pre-merge branch from ajpowelsnl/spack-manager fork
+RUN git checkout perlmutter/new_configs
+
+## Needed by "create-exawind-snapshot.sh"
+ENV SPACK_MANAGER=/exawind-entry/spack-manager
+ENV SPACK_MANAGER_MACHINE=containercpu
+ENV CONTAINER_BUILD=cpu
+
+# Snapshot for CPU Exawind will be generated upon running container
+RUN echo "export SPACK_MANAGER=$SPACK_MANAGER" >> /etc/bash.bashrc && \
+    echo "source $SPACK_MANAGER/start.sh && spack-start" >> /etc/bash.bashrc && \
+    echo "spack external find" >> /etc/bash.bashrc && \
+    echo "$SPACK_MANAGER/scripts/create-exawind-snapshot.sh" >> /etc/bash.bashrc && \
+    echo "spack clean -a" >> /etc/bash.bashrc && \
+    echo "spack env activate -d snapshots/exawind/containercpu/$(date +%Y-%m-%d)" >> /etc/bash.bashrc && \
+    echo "spack load exawind" >> /etc/bash.bashrc
+
+
+CMD ["/usr/bin/bash"]

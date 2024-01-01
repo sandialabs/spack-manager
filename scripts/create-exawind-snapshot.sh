@@ -55,6 +55,8 @@ elif [[ "${SPACK_MANAGER_MACHINE}" == "perlmutter" ]]; then
 elif [[ "${SPACK_MANAGER_MACHINE}" == "snl-hpc" ]]; then
   # TODO we should probably launch the install through slurm and exit on this one
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast amr-wind+hypre+openfast"
+elif [[ "${SPACK_MANAGER_MACHINE}" == "containercpu" ]]; then
+  cmd "nice -n19 spack manager snapshot -m -s exawind%gcc+hypre~cuda"
 else
   cmd "nice -n19 spack manager snapshot -s exawind+hypre+openfast"
 fi
