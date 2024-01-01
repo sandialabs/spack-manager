@@ -27,6 +27,7 @@ def test_basicDirectoryProperties(tmpdir, on_moonlight):
             yaml = syaml.load(f)
             assert "concretizer" in yaml["spack"]
             assert yaml["spack"]["concretizer"]["unify"] is True
+            assert yaml["spack"]["view"] is False
 
 
 def test_failsWithAnUnregisteredMachine(tmpdir):

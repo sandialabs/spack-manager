@@ -10,19 +10,14 @@ A script for creating a new environment
 on a given machine
 """
 
+import argparse
 import os
-import sys
-
-import llnl.util.tty as tty
-from llnl.util.filesystem import copy_tree
 
 import spack
 import spack.cmd
 import spack.environment.environment as environment
-import spack.extensions.manager as manager
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
-from spack.extensions.manager.manager_cmds.find_machine import find_machine, machine_defined
-from spack.extensions.manager.manager_cmds.includes_creator import IncludesCreator
+from spack.extensions.manager.manager_cmds.include import include_creator
 
 
 def create_env(parser, args):
@@ -51,23 +46,6 @@ def create_env(parser, args):
     if not args.yaml:
         manifest.set_config_value("concretizer", "unify", True)
 
-    msg = (
-        "Specified machine {m} was not found. "
-        "To see registered machines run `spack manager find-machine --list`"
-    )
-    if args.machine is not None:
-        project = machine_defined(args.machine)
-        if not project:
-            tty.error(msg.format(m=args.machine))
-            sys.exit(1)
-        else:
-            machine = args.machine
-
-    else:
-        project, machine = find_machine()
-        if machine == "NOT-FOUND":
-            tty.warn(msg.format(m=args.machine))
-
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)
         for s in spec_list:
@@ -76,32 +54,15 @@ def create_env(parser, args):
     if args.local_source:
         manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
-    # the machine is not found we take the first/default project
-    if not project and manager.projects:
-        project = manager.projects[0]
+    # handle includes, if it is not set up right then nothing gets created
+    include_dict = {"machine": args.machine, "file": os.path.join(theDir, "include.yaml")}
 
-    # if no projects are configured then there will be zero includes
-    if project:
-        inc_creator = IncludesCreator()
-        genPath = os.path.join(project.config_path, "base")
-        hostPath = os.path.join(project.config_path, machine)
-        userPath = os.path.join(project.config_path, "user")
+    inc_args = argparse.Namespace(**include_dict)
+    include_file_name = include_creator(None, inc_args)
 
-        if os.path.exists(genPath):
-            inc_creator.add_scope("base", genPath)
-
-        if os.path.exists(hostPath):
-            inc_creator.add_scope("machine", hostPath)
-
-        if os.path.exists(userPath):
-            inc_creator.add_scope("sm_user", userPath)
-
-        include_file_name = "include.yaml"
-        include_file = os.path.join(theDir, include_file_name)
-        inc_creator.write_includes(include_file)
+    if include_file_name:
         manifest.append_includes(include_file_name)
-        if project.copy_repo:
-            copy_tree(project.repo_path, os.path.join(theDir, "repos"))
+
     manifest.flush()
 
     return theDir
