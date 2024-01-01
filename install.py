@@ -12,22 +12,27 @@ the extension with spack.
 """
 
 import argparse
+import llnl.util.tty as tty
 import os
 import spack.main
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--scope", required=False, help="Spack scope to register spack-manager")
 
 if __name__ == "__main__":
     args = parser.parse_args()
+
+    extension_path = os.path.realpath(os.getcwd())
+    if not os.path.isdir(os.path.join(extension_path, "manager")):
+        tty.die("Spack-Manager installation script must be run from inside the source directory")
+
     register_args = []
 
     if args.scope:
         register_args.extend(["--scope", args.scope])
 
-    register_args.extend(
-        ["add", "config", "extensions:[{0}]".format(os.path.dirname(__file__))]
-    )
+    register_args.extend(["add", "config:extensions:[{0}]".format(extension_path)])
 
     config = spack.main.SpackCommand("config")
     config(*register_args)
