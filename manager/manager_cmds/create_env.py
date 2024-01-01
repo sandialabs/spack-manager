@@ -18,6 +18,7 @@ import spack.cmd
 import spack.environment.environment as environment
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
 from spack.extensions.manager.manager_cmds.include import include_creator
+from spack.extensions.manager.manager_cmds.location import location
 
 
 def create_env(parser, args):
@@ -64,6 +65,12 @@ def create_env(parser, args):
         manifest.append_includes(include_file_name)
 
     manifest.flush()
+
+    fpath = os.path.join(location(), ".tmp")
+    os.makedirs(fpath, exist_ok=True)
+    storage = os.path.join(fpath, "created_env_path.txt")
+    with open(storage, "w") as f:
+        f.write(theDir)
 
     return theDir
 

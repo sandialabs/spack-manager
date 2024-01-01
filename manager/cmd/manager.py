@@ -13,6 +13,7 @@ import spack.extensions.manager.manager_cmds.develop as develop
 import spack.extensions.manager.manager_cmds.external as external
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 import spack.extensions.manager.manager_cmds.include as include
+import spack.extensions.manager.manager_cmds.location as location
 
 # import spack.extensions.manager.manager_cmds.pin as pin
 # import spack.extensions.manager.manager_cmds.snapshot as snapshot
@@ -36,6 +37,7 @@ def setup_parser(subparser):
     external.add_command(sp, _subcommands)
     find_machine.add_command(sp, _subcommands)
     include.add_command(sp, _subcommands)
+    location.add_command(sp, _subcommands)
     # pin.add_command(sp, _subcommands)
     # snapshot.add_command(sp, _subcommands)
 
