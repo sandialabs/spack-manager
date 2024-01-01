@@ -12,7 +12,7 @@ import spack.environment.environment as senv
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
     """Spack-Manager extensiont to the manifest file for prototyping"""
 
-    def set_config_value(self, root, key, value):
+    def set_config_value(self, root, key, value=None):
         """Set/overwrite a config value
 
         Args:
@@ -20,13 +20,18 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             key: next level where we will be updating
             value: value to set
         """
-        if root not in self.pristine_configuration:
-            self.pristine_configuration[root] = {}
-        if root not in self.configuration:
-            self.configuration[root] = {}
+        if value:
+            if root not in self.pristine_configuration:
+                self.pristine_configuration[root] = {}
+            if root not in self.configuration:
+                self.configuration[root] = {}
 
-        self.pristine_configuration.get(root, {})[key] = value
-        self.configuration.get(root, {})[key] = value
+            self.pristine_configuration.get(root, {})[key] = value
+            self.configuration.get(root, {})[key] = value
+        else:
+            self.pristine_configuration[root] = key
+            self.configuration[root] = key
+
         self.changed = True
 
     def append_includes(self, value):

@@ -55,10 +55,6 @@ def create_dev_env(parser, args):
         if env.is_develop(s) and "path" in yaml["spack"]["develop"][str(s.name)]:
             # keep pointing to the original path that is provided in the spack.yaml
             dev_args.extend(["--path", yaml["spack"]["develop"][str(s.name)]["path"]])
-        elif "nalu-wind" in str(s.name):
-            dev_args.extend(["-rb", "git@github.com:Exawind/nalu-wind.git", str(s.version)])
-        elif "trilinos" in str(s.name):
-            dev_args.extend(["-rb", "git@github.com:trilinos/trilinos.git", str(s.version)])
         dev_args.append(str(s.format("{name}{@version}")))
         develop(*dev_args)
     ev.deactivate()
