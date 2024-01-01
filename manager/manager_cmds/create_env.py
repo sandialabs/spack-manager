@@ -22,8 +22,6 @@ from spack.extensions.manager.manager_cmds.location import location
 
 
 def create_env(parser, args):
-    if args.yaml:
-        assert os.path.isfile(args.yaml)
     if args.name is not None:
         theDir = environment.create(args.name, init_file=args.yaml, keep_relative=True).path
     else:
@@ -40,6 +38,7 @@ def create_env(parser, args):
 
     if not args.yaml:
         manifest.set_config_value("concretizer", "unify", True)
+        manifest.set_config_value("view", False)
 
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)
