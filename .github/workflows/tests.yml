@@ -33,7 +33,7 @@ jobs:
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
       run: |
-        spack config add config:extensions:[${GITHUB_WORKSPACE}]
+        ./install.py --scope site
         spack manager --help
     - name: Run unit tests
       run: |
