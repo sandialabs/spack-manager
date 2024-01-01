@@ -100,7 +100,7 @@ jobs:
         . scripts/quick_commands.sh
         quick-create --name managed -s zlib
         spack env deactivate
-        quick-create --dir unmnaged -s zlib
+        quick-create --dir unmanaged -s zlib
         spack env deactivate
         quick-create-dev --name develop -s nalu-wind@master
         

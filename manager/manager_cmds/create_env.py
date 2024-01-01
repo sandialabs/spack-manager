@@ -22,25 +22,19 @@ from spack.extensions.manager.manager_cmds.location import location
 
 
 def create_env(parser, args):
-    if args.directory is not None:
-        if os.path.exists(args.directory) is False:
-            print("making", args.directory)
-            os.makedirs(args.directory)
-
-        theDir = args.directory
-    elif args.name is not None:
-        theDir = os.path.join(os.environ["SPACK_MANAGER"], "environments", args.name)
-        if os.path.exists(theDir) is False:
-            print("making", theDir)
-            os.makedirs(theDir)
-    else:
-        theDir = os.getcwd()
-
     if args.yaml:
         assert os.path.isfile(args.yaml)
-        environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
+    if args.name is not None:
+        theDir = environment.create(args.name, init_file=args.yaml, keep_relative=True).path
     else:
-        environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True, with_view=False)
+        if args.directory is not None:
+            if os.path.exists(args.directory) is False:
+                print("making", args.directory)
+                os.makedirs(args.directory)
+            theDir = args.directory
+        else:
+            theDir = os.getcwd()
+        environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
 
     manifest = SpackManagerEnvironmentManifest(theDir)
 
