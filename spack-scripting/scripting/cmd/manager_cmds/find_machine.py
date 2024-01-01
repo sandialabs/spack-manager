@@ -97,6 +97,9 @@ machine_list = {
     "perlmutter": MachineData(
         lambda: os.environ["NERSC_HOST"] == "perlmutter", "perlmutter-p1.nersc.gov"
     ),
+    "containergpucuda": MachineData(
+        lambda: os.environ["CONTAINER_BUILD"] == "gpucuda", "containgpucuda.nodomain.gov"
+    ),
     # General
     "darwin": MachineData(lambda: sys.platform == "darwin", "darwin.nodomain.gov"),
 }
