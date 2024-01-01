@@ -18,33 +18,27 @@ import spack.cmd
 import spack.environment.environment as environment
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
 from spack.extensions.manager.manager_cmds.include import include_creator
+from spack.extensions.manager.manager_cmds.location import location
 
 
 def create_env(parser, args):
-    if args.directory is not None:
-        if os.path.exists(args.directory) is False:
-            print("making", args.directory)
-            os.makedirs(args.directory)
-
-        theDir = args.directory
-    elif args.name is not None:
-        theDir = os.path.join(os.environ["SPACK_MANAGER"], "environments", args.name)
-        if os.path.exists(theDir) is False:
-            print("making", theDir)
-            os.makedirs(theDir)
+    if args.name is not None:
+        theDir = environment.create(args.name, init_file=args.yaml, keep_relative=True).path
     else:
-        theDir = os.getcwd()
-
-    if args.yaml:
-        assert os.path.isfile(args.yaml)
+        if args.directory is not None:
+            if os.path.exists(args.directory) is False:
+                print("making", args.directory)
+                os.makedirs(args.directory)
+            theDir = args.directory
+        else:
+            theDir = os.getcwd()
         environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True)
-    else:
-        environment.create_in_dir(theDir, init_file=args.yaml, keep_relative=True, with_view=False)
 
     manifest = SpackManagerEnvironmentManifest(theDir)
 
     if not args.yaml:
         manifest.set_config_value("concretizer", "unify", True)
+        manifest.set_config_value("view", False)
 
     if args.spec:
         spec_list = spack.cmd.parse_specs(args.spec)
@@ -64,6 +58,12 @@ def create_env(parser, args):
         manifest.append_includes(include_file_name)
 
     manifest.flush()
+
+    fpath = os.path.join(location(), ".tmp")
+    os.makedirs(fpath, exist_ok=True)
+    storage = os.path.join(fpath, "created_env_path.txt")
+    with open(storage, "w") as f:
+        f.write(theDir)
 
     return theDir
 

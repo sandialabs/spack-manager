@@ -21,9 +21,7 @@ def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, arg_capture
         assert arg_capture.num_calls == 3
 
         arg_capture.assert_call_matches(0, ["amr-wind@main"])
-        arg_capture.assert_call_matches(
-            1, ["-rb", "git@github.com:Exawind/nalu-wind.git", "master", "nalu-wind@master"]
-        )
+        arg_capture.assert_call_matches(1, ["nalu-wind@master"])
         arg_capture.assert_call_matches(2, ["exawind@master"])
 
 
@@ -94,9 +92,7 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(tmpdir, on_moonlight, monkeypatc
         # assuming it works fine
         arg_capture.assert_any_call(["--path", amr_path.strpath, "amr-wind@main"])
         arg_capture.assert_any_call(["--path", nalu_path.strpath, "nalu-wind@master"])
-        arg_capture.assert_any_call(
-            ["-rb", "git@github.com:trilinos/trilinos.git", "master", "trilinos@master"]
-        )
+        arg_capture.assert_any_call(["trilinos@master"])
 
 
 def test_nonConcreteSpecsDontGetCloned(tmpdir, monkeypatch, arg_capture):

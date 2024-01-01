@@ -69,4 +69,38 @@ jobs:
       run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Spack Style
       run: spack style ${GITHUB_WORKSPACE}/manager ${GITHUB_WORKSPACE}/tests
+  quick-commands:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+        spack-version: [0.21.0, develop]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Checkout Spack
+      uses: actions/checkout@v3
+      with:
+        repository: spack/spack
+        ref: ${{ matrix.spack-verions }}
+        path: spack
+    - name: Setup Spack ${{ matrix.spack-verion }}
+      run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
+    - name: Install extension
+      run: |
+        ./install.py --scope site
+        spack manager --help
+    - name: Run quick-tests
+      run: |
+        . spack/share/spack/setup-env.sh
+        . scripts/quick_commands.sh
+        quick-create --name managed -s zlib
+        spack env deactivate
+        quick-create --dir unmanaged -s zlib
+        spack env deactivate
+        quick-create-dev --name develop -s nalu-wind@master
         
