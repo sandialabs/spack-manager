@@ -21,7 +21,7 @@ def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, arg_capture
         assert arg_capture.num_calls == 3
 
         arg_capture.assert_call_matches(0, ["amr-wind@main"])
-        arg_capture.assert_call_matches(1, [ "nalu-wind@master"])
+        arg_capture.assert_call_matches(1, ["nalu-wind@master"])
         arg_capture.assert_call_matches(2, ["exawind@master"])
 
 
