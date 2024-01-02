@@ -5,11 +5,11 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import spack.extensions.manager as manager
+import spack.extensions.manager.projects as m_proj
 
 
 def machine_defined(name):
-    for project in manager.projects:
+    for project in m_proj.get_projects():
         for machine in project.machines:
             if machine == name:
                 return project
@@ -19,7 +19,7 @@ def machine_defined(name):
 def find_machine(verbose=False):
     machine_name = "NOT-FOUND"
 
-    for project in manager.projects:
+    for project in m_proj.get_projects():
         for machine in project.machines:
             """
             Since we don't expect uniform environments on all machines
@@ -48,7 +48,7 @@ def find_machine_cmd(parser, args):
     if args.list:
         print("Project:\t Machine:\t Detected: (+/-)")
         print("-" * 60)
-        for project in manager.projects:
+        for project in m_proj.get_projects():
             for machine in project.machines:
                 print(
                     "{proj} \t {machine} \t {detected}".format(

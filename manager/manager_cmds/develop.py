@@ -15,6 +15,7 @@ import spack.util.executable
 from spack.cmd.develop import develop as s_develop
 from spack.cmd.develop import setup_parser as s_setup_parser
 from spack.error import SpackError
+from spack.extensions.manager.manager_utils import canonicalize_path
 
 
 def git_clone(branch, repo, path, shallow, all_branches):
@@ -53,7 +54,7 @@ def _redundant_code_from_spack_develop(args):
         # download all dev specs
         for name, entry in env.dev_specs.items():
             path = entry.get("path", name)
-            abspath = spack.util.path.canonicalize_path(path, default_wd=env.path)
+            abspath = canonicalize_path(path, default_wd=env.path)
 
             if os.path.exists(abspath):
                 msg = "Skipping developer download of %s" % entry["spec"]
@@ -85,7 +86,7 @@ def _redundant_code_from_spack_develop(args):
 
     # default path is relative path to spec.name
     path = args.path or spec.name
-    abspath = spack.util.path.canonicalize_path(path, default_wd=env.path)
+    abspath = canonicalize_path(path, default_wd=env.path)
 
     # clone default: only if the path doesn't exist
     clone = args.clone

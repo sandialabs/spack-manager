@@ -6,17 +6,39 @@
 # for more details.
 
 import os
+import re
 from datetime import date
 
 import spack.main
 from spack.extensions.manager.manager_cmds.find_machine import find_machine
+from spack.extensions.manager.manager_cmds.location import location
+from spack.util.path import canonicalize_path as spack_path_resolve
 
 arch = spack.main.SpackCommand("arch")
 
 
+def canonicalize_path(path, default_wd=None):
+    """
+    wrapper around spack's path expansion to add our own variables
+    wouldn't be too hard to allow natural extension of spack's core command
+    """
+    _replacements = {"spack_manager": lambda: location()}
+
+    # Look up replacements
+    def repl(match):
+        m = match.group(0)
+        key = m.strip("${}").lower()
+        repl = _replacements.get(key, lambda: m)()
+        return m if repl is object() else str(repl)
+
+    # Replace $var or ${var}.
+    path = re.sub(r"(\$\w+\b|\$\{\w+\})", repl, path)
+    return spack_path_resolve(path, default_wd=default_wd)
+
+
 def base_extension(use_machine_name):
     if use_machine_name:
-        machine = find_machine()
+        _, machine = find_machine()
         return "snapshots/exawind/{0}".format(machine)
     else:
         return "snapshots/exawind/{arch}".format(arch=arch("-b").strip())

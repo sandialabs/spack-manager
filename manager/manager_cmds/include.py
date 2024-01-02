@@ -11,6 +11,7 @@ import sys
 import llnl.util.tty as tty
 
 import spack.extensions.manager as manager
+import spack.extensions.manager.projects as projects
 from spack.extensions.manager.manager_cmds.find_machine import find_machine, machine_defined
 from spack.extensions.manager.manager_cmds.includes_creator import IncludesCreator
 
@@ -22,7 +23,8 @@ def include_creator(parser, args):
         "To see registered machines run `spack manager find-machine --list`"
     )
     # the machine is not found we take the first/default project
-    if args.machine is not None:
+    all_projects = projects.get_projects()
+    if args.machine:
         project = machine_defined(args.machine)
         if not project:
             tty.error(msg.format(m=args.machine))
@@ -35,8 +37,8 @@ def include_creator(parser, args):
             tty.warn(msg.format(m=args.machine))
 
     # the machine is not found we take the first/default project
-    if not project and manager.projects:
-        project = manager.projects[0]
+    if not project and all_projects:
+        project = all_projects[0]
 
     # if no projects are configured then there is nothing to create
     if project:
