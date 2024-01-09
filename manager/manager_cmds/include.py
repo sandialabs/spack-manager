@@ -55,11 +55,14 @@ def include_creator(parser, args):
         if os.path.exists(userPath):
             inc_creator.add_scope("sm_user", userPath)
 
+        write_path = os.getcwd()
+        if args.dir:
+            write_path = args.dir
         if args.file:
             include_file = args.file
         else:
-            include_file = os.path.join(os.getcwd(), "include.yaml")
-        inc_creator.write_includes(include_file)
+            include_file = "include.yaml"
+        inc_creator.write_includes(include_file, write_path)
     return include_file
 
 
@@ -70,5 +73,8 @@ def add_command(parser, command_dict):
     sub_parser.add_argument("-m", "--machine", required=False, help="Machine to match configs")
     sub_parser.add_argument(
         "-f", "--file", required=False, help="Name of the include file to create"
+    )
+    sub_parser.add_argument(
+        "-d", "--dir", required=False, help="directory where the file should be created"
     )
     command_dict["include"] = include_creator

@@ -49,7 +49,7 @@ def create_env(parser, args):
         manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
     # handle includes, if it is not set up right then nothing gets created
-    include_dict = {"machine": args.machine, "file": os.path.join(theDir, "include.yaml")}
+    include_dict = {"machine": args.machine, "dir": theDir, "file": "include.yaml"}
 
     inc_args = argparse.Namespace(**include_dict)
     include_file_name = include_creator(None, inc_args)
