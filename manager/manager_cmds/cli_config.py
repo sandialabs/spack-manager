@@ -35,9 +35,8 @@ def _impl_remove(parser, args):
                 manager.remove_project_via_path(name_or_path)
                 return
 
-    index = -1e6
     try:
-        index = int(args.project)
+        int(args.project)
     except ValueError:
         # bad conversion, not index
         remove_name_based(args.project)
@@ -66,7 +65,7 @@ def add_command(parser, command_dict):
 
 
 def list_command(parser, command_dict):
-    sub_parser = parser.add_parser("list", help="list the registered projects")
+    parser.add_parser("list", help="list the registered projects")
 
     command_dict["list"] = _impl_list
 
@@ -77,7 +76,10 @@ def remove_command(parser, command_dict):
     )
     sub_parser.add_argument(
         "project",
-        help="the project index, name, or path to remove (tried in that order if there are conflicts)",
+        help=(
+            "the project index, name, or path to remove (tried in that order if there "
+            "are conflicts)"
+        ),
     )
 
     command_dict["remove"] = _impl_remove

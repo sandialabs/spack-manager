@@ -6,7 +6,7 @@
 # for more details.
 
 """
-This module is the top level and deals specifically with manipulating the configuration 
+This module is the top level and deals specifically with manipulating the configuration
 file.  The data from the configuration file is then available and immutable to all
 other modules.
 """
