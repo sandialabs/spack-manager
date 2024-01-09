@@ -5,9 +5,15 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+"""
+This module is the top level and deals specifically with manipulating the configuration 
+file.  The data from the configuration file is then available and immutable to all
+other modules.
+"""
 import os
 
 import llnl.util.filesystem as fs
+import llnl.util.tty as tty
 
 import spack.util.spack_yaml as syaml
 
@@ -41,6 +47,38 @@ def write_config():
     with fs.write_tmp_and_move(os.path.realpath(config_path)) as f:
         syaml.dump(config_yaml, f)
     populate_config()
+
+
+class MissingProjectException(Exception):
+    pass
+
+
+def add_project(path):
+    global config_yaml
+    if path not in config_yaml["spack-manager"]["projects"]:
+        config_yaml["spack-manager"]["projects"].insert(0, path)
+        write_config()
+    else:
+        tty.warn("Project is already registered")
+
+
+def remove_project_via_path(path):
+    global config_yaml
+    if path in config_yaml["spack-manager"]["projects"]:
+        config_yaml["spack-manager"]["projects"].remove(path)
+        write_config()
+    else:
+        raise MissingProjectException("No project is registered with the path {0}".format(path))
+
+
+def remove_project_via_index(index):
+    global config_yaml
+    if len(config_yaml["spack-manager"]["projects"]) > abs(index):
+        config_yaml["spack-manager"]["projects"].pop(index)
+        write_config()
+    else:
+        breakpoint()
+        raise MissingProjectException("No project is registered with the index {0}".format(index))
 
 
 def initialize():

@@ -80,6 +80,9 @@ class Project:
             if not is_reserved(machine):
                 self.machines.append(machine.name)
 
+    def __str__(self):
+        return self.name
+
 
 def get_projects():
     projects = []
