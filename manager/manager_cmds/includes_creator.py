@@ -26,8 +26,10 @@ class IncludesCreator:
         scope = spack.config.ConfigScope(name, os.path.abspath(path))
         self.config.push_scope(scope)
 
-    def write_includes(self, path):
-        abspath = os.path.abspath(path)
+    def write_includes(self, filename, path=None):
+        if path:
+            filename = os.path.abspath(os.path.join(path, filename))
+        abspath = os.path.abspath(filename)
         # TODO this is spack version dependent
         sections = list(spack.config.SECTION_SCHEMAS.keys())
         data = syaml.syaml_dict()
