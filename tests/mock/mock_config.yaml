@@ -1,4 +1,4 @@
 spack-manager:
   projects:
-  - tests/mock/project_a
+  - $spack_manager/tests/mock/project_a
 

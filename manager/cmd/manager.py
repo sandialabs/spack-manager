@@ -7,6 +7,7 @@
 
 import sys
 
+import spack.extensions.manager.manager_cmds.cli_config as cli_config
 import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.extensions.manager.manager_cmds.create_env as create_env
 import spack.extensions.manager.manager_cmds.develop as develop
@@ -31,6 +32,11 @@ _subcommands = {}
 
 def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar="spack-manager commands", dest="manager_command")
+
+    cli_config.cli_commands["add"](sp, _subcommands)
+    cli_config.cli_commands["remove"](sp, _subcommands)
+    cli_config.cli_commands["list"](sp, _subcommands)
+
     create_env.add_command(sp, _subcommands)
     create_dev_env.add_command(sp, _subcommands)
     develop.add_command(sp, _subcommands)
