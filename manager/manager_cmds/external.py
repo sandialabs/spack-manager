@@ -6,8 +6,6 @@
 # for more details.
 
 import os
-import re
-from datetime import datetime
 
 import llnl.util.tty as tty
 
@@ -18,9 +16,17 @@ import spack.environment as ev
 import spack.util.spack_yaml as syaml
 from spack.detection.common import _pkg_config_dict
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
-from spack.extensions.manager.manager_cmds.find_machine import find_machine
 from spack.extensions.manager.manager_utils import pruned_spec_string
 from spack.spec import Spec
+
+
+def include_entry_exists(env, name):
+    manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
+    includes = manifest.pristine_configuration.get("include", [])
+    for entry in includes:
+        if entry == name:
+            return True
+    return False
 
 
 def add_include_entry(env, inc, prepend=True):
