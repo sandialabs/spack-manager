@@ -70,13 +70,24 @@ def create_env(parser, args):
 
 def setup_parser_args(sub_parser):
     sub_parser.add_argument("-m", "--machine", required=False, help="Machine to match configs")
+    sub_parser.add_argument(
+        "-p",
+        "--project",
+        required=False,
+        help="Project to search for machine in. (takes first match otherwise)",
+    )
     name_group = sub_parser.add_mutually_exclusive_group()
-    name_group.add_argument("-d", "--directory", required=False, help="Directory to copy files")
+    name_group.add_argument(
+        "-d",
+        "--directory",
+        required=False,
+        help="Directory to for environment (anonymous environment)",
+    )
     name_group.add_argument(
         "-n",
         "--name",
         required=False,
-        help="Name of directory to copy files that will be in " r"{PROJECT}/environments",
+        help="Name of directory for environment (managed environment)",
     )
     sub_parser.add_argument(
         "-y", "--yaml", required=False, help="Reference spack.yaml to copy to directory"
