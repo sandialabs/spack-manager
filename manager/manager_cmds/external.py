@@ -19,77 +19,8 @@ import spack.util.spack_yaml as syaml
 from spack.detection.common import _pkg_config_dict
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
 from spack.extensions.manager.manager_cmds.find_machine import find_machine
-from spack.extensions.manager.manager_utils import base_extension, pruned_spec_string
+from spack.extensions.manager.manager_utils import pruned_spec_string
 from spack.spec import Spec
-
-
-def get_external_dir():
-    project, machine = find_machine()
-    if not project:
-        tty.error(
-            "No project detected. Spack-Manager must have a configured project to use "
-            "the external command"
-        )
-        exit(-1)
-    upstream_root = project.upstream_root(machine)
-    if upstream_root:
-        manager_root = upstream_root
-    else:
-        manager_root = project.root
-    external_machine = os.path.join(manager_root, base_extension(True))
-    external_arch = os.path.join(manager_root, base_extension(False))
-
-    if os.path.isdir(external_machine) and os.path.isdir(external_arch):
-        raise Exception(
-            "ERROR: Snapshots based on arch and machine are both valid. "
-            "Please contact system admins and spack-manager maintainers"
-            " to sort this out"
-        )
-
-    if os.path.isdir(external_arch):
-        external = external_arch
-    else:
-        external = external_machine
-
-    if os.path.isdir(external):
-        return external
-    else:
-        return None
-
-
-def get_all_snapshots():
-    base_dir = get_external_dir()
-    if not base_dir:
-        # if no snapshots have been created the directory may not exist
-        return
-    # get environment directories, make sure we're only pulling in directories
-    snapshots = [s for s in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, s))]
-    return snapshots
-
-
-def get_ordered_dated_snapshots():
-    """
-    Get the path for the latest snapshot created by snapshot_creator.py
-    based on the name/date created (not necessarily file creation date)
-    """
-    snapshots = get_all_snapshots()
-    base_dir = get_external_dir()
-    # remove anything that isn't a date stamp i.e. (custom snapshots)
-    if base_dir and snapshots:
-        dates = [d for d in snapshots if re.search(r"\d{4}-\d{2}-\d{2}", d)]
-        dates.sort(reverse=True, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
-        return list(dates)
-    else:
-        return
-
-
-def include_entry_exists(env, name):
-    manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
-    includes = manifest.pristine_configuration.get("include", [])
-    for entry in includes:
-        if entry == name:
-            return True
-    return False
 
 
 def add_include_entry(env, inc, prepend=True):
@@ -163,59 +94,19 @@ def _get_first_view_containing_spec(env, spec):
 
 
 def external(parser, args):
-    extern_dir = get_external_dir()
-    if args.list:
-        snaps = get_all_snapshots()
-        dated = get_ordered_dated_snapshots()
-        non_dated = snaps
-        if snaps and dated:
-            non_dated = list(set(snaps) - set(dated))
-
-        def print_snapshots(snaps):
-            for s in snaps:
-                env_dir = os.path.join(extern_dir, s)
-                print(" - {path}".format(path=env_dir))
-
-        print("-" * 54)
-        print("Available snapshot directories are:")
-        print("-" * 54)
-        if dated:
-            print("\nDated Snapshots (ordered)")
-            print("-" * 54)
-            print_snapshots(dated)
-        if non_dated:
-            print("\nAdditional Snapshots (unordered)")
-            print("-" * 54)
-            print_snapshots(non_dated)
-        return
     env = ev.active_environment()
     if not env:
         tty.die("spack manager external requires an active environment")
-    if args.latest:
-        snaps = get_ordered_dated_snapshots()
-        if not snaps:
-            print(
-                "WARNING: No 'externals.yaml' created because no valid "
-                "snapshots were found. \n"
-                "  If you are trying to use a system level snapshot make "
-                "sure you have SPACK_MANAGER_EXTERNAL pointing to "
-                "spack-manager directory for the system.\n"
-            )
-            return
-        else:
-            snap_path = os.path.join(extern_dir, snaps[0])
-    else:
-        snap_path = args.path
 
     # check that directory of ext view exists
-    if not snap_path or not ev.is_env_dir(snap_path):
+    if not ev.is_env_dir(args.path):
         tty.die(
             "External path must point to a spack environment with a view. "
             "Auto detection of the latest dated snapshot can be achived"
             " with the '--latest' flag."
         )
 
-    snap_env = ev.Environment(snap_path)
+    snap_env = ev.Environment(args.path)
     snap_env.check_views()
 
     if not snap_env.views:
@@ -224,7 +115,7 @@ def external(parser, args):
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        detected = assemble_dict_of_detected_externals(snap_env, args.blacklist, args.whitelist)
+        detected = assemble_dict_of_detected_externals(snap_env, args.exclude, args.include)
         src = create_yaml_from_detected_externals(detected)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
@@ -274,24 +165,20 @@ def add_command(parser, command_dict):
     select = ext.add_mutually_exclusive_group()
 
     select.add_argument(
-        "-w",
-        "--whitelist",
+        "-i",
+        "--include",
         nargs="*",
         required=False,
         help="(not implemeted) specs that should " "be added (omit all others)",
     )
     select.add_argument(
-        "-b",
-        "--blacklist",
+        "-e",
+        "--exclude",
         nargs="*",
         required=False,
         help="(not implemented) specs that should " "be omitted (add all others)",
     )
     ext.add_argument("path", nargs="?", help="The location of the external install " "directory")
-    ext.add_argument("--latest", action="store_true", help="use the latest snapshot available")
-    ext.add_argument(
-        "--list", action="store_true", help="print a list of the available externals to use."
-    )
-    ext.set_defaults(merge=False, name="externals.yaml", latest=False, list=False)
+    ext.set_defaults(merge=False, name="externals.yaml")
 
     command_dict["external"] = external

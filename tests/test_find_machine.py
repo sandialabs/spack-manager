@@ -11,20 +11,27 @@ import spack.extensions.manager as manager
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 import spack.main
 
-mgrCmd = spack.main.SpackCommand("manager")
+mgr_cmd = spack.main.SpackCommand("manager")
 
 
 def test_find_machine_detects_project_machines(mock_manager_config_path):
     assert manager.config_path != manager._default_config_path
     assert find_machine.machine_defined("moonlight")
-    out = mgrCmd("find-machine", "--list")
+    out = mgr_cmd("find-machine", "--list")
     assert "moonlight" in out
 
 
-def test_find_machineFindsExpectedMachine(mock_manager_config_path):
+def test_find_machine_finds_expected_machine(mock_manager_config_path):
     assert manager.config_path != manager._default_config_path
-    out = mgrCmd("find-machine")
+    out = mgr_cmd("find-machine")
     assert "moonlight" not in out
     os.environ["MOONLIGHT"] = "1"
-    out = mgrCmd("find-machine")
+    out = mgr_cmd("find-machine")
     assert "moonlight" in out
+
+
+def test_find_machine_filters_on_project(mock_manager_config_path):
+    out = mgr_cmd("find-machine", "--project", "project_a", "--list")
+    assert "moonlight" in out
+    out = mgr_cmd("find-machine", "--project", "project_b", "--list")
+    assert "moonlight" not in out

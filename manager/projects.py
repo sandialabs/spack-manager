@@ -56,6 +56,10 @@ class Project:
         self._populate_machines()
         self._machine_detector()
 
+    def satisifies(self, key):
+        # two ways to match a project
+        return key == self.name or canonicalize_path(key) == self.root
+
     def _machine_detector(self):
         detection_script = os.path.join(self.root, DETECTION_SCRIPT.format(n=self.name))
         if os.path.isfile(detection_script):
@@ -84,9 +88,17 @@ class Project:
         return self.name
 
 
-def get_projects():
+def get_projects(selector=None):
     projects = []
     projects_node = manager.config_yaml["spack-manager"]["projects"]
-    for path in projects_node:
-        projects.append(Project(path))
+    for i, path in enumerate(projects_node):
+        p = Project(path)
+        if selector:
+            str_selector = str(selector)
+            str_i = str(i)
+            if p.satisifies(str_selector) or str_i == str_selector:
+                projects.append(p)
+        else:
+            projects.append(Project(path))
+
     return projects
