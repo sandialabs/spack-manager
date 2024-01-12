@@ -16,10 +16,10 @@ def machine_defined(name):
     return None
 
 
-def find_machine(verbose=False):
+def find_machine(verbose=False, projects=m_proj.get_projects()):
     machine_name = "NOT-FOUND"
 
-    for project in m_proj.get_projects():
+    for project in projects:
         for machine in project.machines:
             """
             Since we don't expect uniform environments on all machines
@@ -48,7 +48,7 @@ def find_machine_cmd(parser, args):
     if args.list:
         print("Project:\t Machine:\t Detected: (+/-)")
         print("-" * 60)
-        for project in m_proj.get_projects():
+        for project in m_proj.get_projects(args.project):
             for machine in project.machines:
                 print(
                     "{proj} \t {machine} \t {detected}".format(
@@ -58,10 +58,20 @@ def find_machine_cmd(parser, args):
                     )
                 )
         return
-    find_machine(verbose=True)
+    find_machine(verbose=True, projects=m_proj.get_projects(args.project))
 
 
 def setup_parser_args(sub_parser):
+    sub_parser.add_argument(
+        "-p",
+        "--project",
+        required=False,
+        help=(
+            "filter results to the project specified. argument can be the name, path or list "
+            "index of the project"
+        ),
+    )
+
     sub_parser.add_argument(
         "-l",
         "--list",

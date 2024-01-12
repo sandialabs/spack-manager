@@ -5,12 +5,9 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
 import re
-from datetime import date
 
 import spack.main
-from spack.extensions.manager.manager_cmds.find_machine import find_machine
 from spack.extensions.manager.manager_cmds.location import location
 from spack.util.path import canonicalize_path as spack_path_resolve
 
@@ -34,21 +31,6 @@ def canonicalize_path(path, default_wd=None):
     # Replace $var or ${var}.
     path = re.sub(r"(\$\w+\b|\$\{\w+\})", repl, path)
     return spack_path_resolve(path, default_wd=default_wd)
-
-
-def base_extension(use_machine_name):
-    if use_machine_name:
-        _, machine = find_machine()
-        return "snapshots/exawind/{0}".format(machine)
-    else:
-        return "snapshots/exawind/{arch}".format(arch=arch("-b").strip())
-
-
-def path_extension(name, use_machine_name):
-    return os.path.join(
-        base_extension(use_machine_name),
-        "{date}".format(date=name if name else date.today().strftime("%Y-%m-%d")),
-    )
 
 
 def pruned_spec_string(spec, variants_to_omit=["dev_path=", "patches=", "build_system="]):
