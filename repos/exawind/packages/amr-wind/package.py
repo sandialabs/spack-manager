@@ -31,6 +31,8 @@ class AmrWind(SMCMakeExtension, bAmrWind):
             description="gpu-aware-mpi")
     variant("helics", default=False,
             description="Enable HELICS support for control interface")
+    variant("waves2amr", default=False,
+            description="Enable Waves2AMR support for ocean wave input")
     variant("roctx-profile", default=False,
             description="do profiling with roctx")
 
@@ -43,6 +45,7 @@ class AmrWind(SMCMakeExtension, bAmrWind):
     depends_on("hypre+gpu-aware-mpi", when="+gpu-aware-mpi")
     depends_on("helics@:3.3.2", when="+helics")
     depends_on("helics@:3.3.2+mpi", when="+helics+mpi")
+    depends_on("fftw", when="+waves2amr")
 
     requires("+mpi", when="+gpu-aware-mpi")
     requires("+rocm", "+cuda",
@@ -128,6 +131,10 @@ class AmrWind(SMCMakeExtension, bAmrWind):
         if "+helics" in self.spec:
             cmake_options.append(self.define_from_variant("AMR_WIND_ENABLE_HELICS", "helics"))
             cmake_options.append(self.define("HELICS_DIR", self.spec["helics"].prefix))
+
+        if "+waves2amr" in self.spec:
+            cmake_options.append(self.define_from_variant("AMR_WIND_ENABLE_W2A", "waves2amr"))
+            cmake_options.append(self.define("FFTW_DIR", self.spec["fftw"].prefix))
 
         if "+tests" in spec:
             spack_manager_local_golds = os.path.join(os.getenv("SPACK_MANAGER"), "golds")
