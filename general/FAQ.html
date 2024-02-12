@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frequently Asked Questions: &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="General Information" href="general.html" />
+    <link rel="prev" title="Creating and configuring a Spack-Manager Project" href="../user_profiles/system_admins/creating_a_project.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_profiles/user_profiles.html">User Profiles</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-setup-and-build-custom-branches-of-amr-wind-and-openfast-together">How do I setup and build custom branches of <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">openfast</span></code> together?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-should-i-do-if-spack-keeps-failing-to-clone-code-for-me-on-eagle">What should I do if Spack Keeps failing to clone code for me on Eagle?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-build-for-gpu-s">How do I build for GPU’s?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-m-getting-lots-of-weird-spack-errors-what-should-i-do">I’m getting lots of weird Spack errors, what should I do?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-clingo-and-why-is-spack-saying-it-is-bootstrapping-it">What is Clingo and why is Spack saying it is <strong>bootstrapping</strong> it?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-are-the-in-the-specs">What are the ^ in the specs?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-turn-on-an-optional-dependency-for-my-software">How do I turn on an optional dependency for my software?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-is-my-build-directory-where-is-my-install-directory">Where is my build directory/where is my install directory?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-run-tests-after-building-the-software">How do I run tests after building the software?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#should-i-worry-about-warning-included-configuration-files-should-be-updated-manually">Should I worry about <em>Warning: included configuration files should be updated manually</em>?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#should-i-worry-abour-warning-the-original-concretizer-is-currently-being-used">Should I worry abour <em>Warning: the original concretizer is currently being used.</em>?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-use-the-executables-i-built-in-my-development-environment">How do I use the executables I built in my development environment?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-to-do-about-error-couldn-t-find-patch-for-package-exawind-hdf5">What to do about <em>Error: Couldn’t find patch for package exawind.hdf5</em>?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-m-getting-an-error-saying-there-is-a-missing-variant-error-variant-foo-not-found">I’m getting an error saying there is a missing variant? <em>Error: variant [foo] not found …</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#permissions-issues-on-nrel-s-eagle-machine-errno-13-permission-denied">Permissions issues on NREL’s Eagle machine: <strong>[Errno 13] Permission denied:</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-compile-faster-using-a-parallel-dag">How do I compile faster using a parallel DAG?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Frequently Asked Questions:</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/general/FAQ.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="frequently-asked-questions">
+<h1>Frequently Asked Questions:<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h1>
+<section id="how-do-i-setup-and-build-custom-branches-of-amr-wind-and-openfast-together">
+<h2>How do I setup and build custom branches of <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">openfast</span></code> together?<a class="headerlink" href="#how-do-i-setup-and-build-custom-branches-of-amr-wind-and-openfast-together" title="Link to this heading"></a></h2>
+<p>A simple script below is the minimum commands you need.
+It is highly encouraged that users with this question review <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html">Developers: What you need to know about Spack</a>.
+A detailed guide explaining many of the other questions you are likely to encounter can be found in the <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html">Quick-Start: Developer Workflow</a>
+documentation.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">quick-create -n build-based-on-FAQ -s amr-wind+openfast</span>
+<span class="go">spack manager develop -rb https://github.com/[your fork]/amr-wind [your feature branch name] amr-wind@main</span>
+<span class="go">spack manager develop -rb https://github.com/[your fork]/openfast [your feature branch name] openfast@master</span>
+<span class="go">spack install</span>
+</pre></div>
+</div>
+</section>
+<section id="what-should-i-do-if-spack-keeps-failing-to-clone-code-for-me-on-eagle">
+<h2>What should I do if Spack Keeps failing to clone code for me on Eagle?<a class="headerlink" href="#what-should-i-do-if-spack-keeps-failing-to-clone-code-for-me-on-eagle" title="Link to this heading"></a></h2>
+<p>Eagle’s default version of Git is very old and fails to do many operations.
+To fix the cloning issue please make sure you have a more recent version of Git in your path.
+Adding the following lines to your <code class="docutils literal notranslate"><span class="pre">bashrc</span></code> will fix the issue.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/nopt/nrel/ecom/hpacf/env.sh
+module<span class="w"> </span>load<span class="w"> </span>git
+</pre></div>
+</div>
+<p>This is the minimum set of commands we’ve found to remove the problem.
+The suggested modules to load are:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># HPACF Environment</span>
+<span class="nb">source</span><span class="w"> </span>/nopt/nrel/ecom/hpacf/env.sh
+module<span class="w"> </span>load<span class="w"> </span>gcc/9.3.0
+module<span class="w"> </span>load<span class="w"> </span>binutils
+module<span class="w"> </span>load<span class="w"> </span>git
+module<span class="w"> </span>load<span class="w"> </span>python
+</pre></div>
+</div>
+</section>
+<section id="how-do-i-build-for-gpu-s">
+<h2>How do I build for GPU’s?<a class="headerlink" href="#how-do-i-build-for-gpu-s" title="Link to this heading"></a></h2>
+<p>If you are using a machine with a profile in Spack-Manager simply add <code class="docutils literal notranslate"><span class="pre">+cuda</span></code> or <code class="docutils literal notranslate"><span class="pre">+rocm</span></code> to your current specs.
+If you are on an unsupported machine you will need to add the device architecture as well.
+<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">[spec]</span></code> will show you the options for this, and further questions will need to be addressed with your
+system administrator.</p>
+</section>
+<section id="i-m-getting-lots-of-weird-spack-errors-what-should-i-do">
+<h2>I’m getting lots of weird Spack errors, what should I do?<a class="headerlink" href="#i-m-getting-lots-of-weird-spack-errors-what-should-i-do" title="Link to this heading"></a></h2>
+<p>If you have multiple Spack instances or have recently updated spack things can get a little mangled.
+For example if you have used Spack in the past or have more than one instance then both pull configs
+from the <code class="docutils literal notranslate"><span class="pre">~/.spack</span></code> directory.
+This is a common source of user issues.
+Please try the <code class="docutils literal notranslate"><span class="pre">sm-clean</span></code> function (available after <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">$SPACK_MANAGER/start.sh</span></code>)  and see if it solves your issue.
+If this doesn’t work then raise/create an issue on slack/github and we will help you figure it out.</p>
+</section>
+<section id="what-is-clingo-and-why-is-spack-saying-it-is-bootstrapping-it">
+<h2>What is Clingo and why is Spack saying it is <strong>bootstrapping</strong> it?<a class="headerlink" href="#what-is-clingo-and-why-is-spack-saying-it-is-bootstrapping-it" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://potassco.org/clingo/">Clingo</a> is a powerful answer-set solver that Spack uses to solve your software dependency DAG
+during concretization.
+Spack first tries to bootstrap the install from pre-built binaries to avoid making you build Clingo
+and all of it’s dependencies when you use a new instance of Spack.
+If you wish to build it yourself, or are having issues with the bootstrap process you can run <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">bootstrap</span> <span class="pre">disable</span></code>.
+There are several options here which you can learn about by running <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">bootstrap</span> <span class="pre">--help</span></code>.
+Further information about bootstrapping can be found in the Spack documentation.</p>
+</section>
+<section id="what-are-the-in-the-specs">
+<h2>What are the ^ in the specs?<a class="headerlink" href="#what-are-the-in-the-specs" title="Link to this heading"></a></h2>
+<p>^ characters in a spec such as <code class="docutils literal notranslate"><span class="pre">nalu-wind</span> <span class="pre">^trilinos</span></code> are spec delimiters.  Using this character allows you to specify the details of dependencies of the root spec.  So <code class="docutils literal notranslate"><span class="pre">nalu-wind</span> <span class="pre">^trilinos</span> <span class="pre">build_type=Debug</span></code> is saying I want to build <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> and I want the build of Trilinos to be a debug build.</p>
+</section>
+<section id="how-do-i-turn-on-an-optional-dependency-for-my-software">
+<h2>How do I turn on an optional dependency for my software?<a class="headerlink" href="#how-do-i-turn-on-an-optional-dependency-for-my-software" title="Link to this heading"></a></h2>
+<p>In Spack all optional build features are called varinats. You can see what variants are available for any package (piece of software) by running the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span></code> command.  For example to build <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> with <code class="docutils literal notranslate"><span class="pre">openfast</span></code> you can see what the syntax is by typing:
+<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">amr-wind</span></code> and under the variants you will see <code class="docutils literal notranslate"><span class="pre">openfast</span></code>.<br />
+So make your spec <code class="docutils literal notranslate"><span class="pre">amr-wind+openfast</span></code> and it will put <code class="docutils literal notranslate"><span class="pre">openfast</span></code> in the DAG and link/build for you.</p>
+</section>
+<section id="where-is-my-build-directory-where-is-my-install-directory">
+<h2>Where is my build directory/where is my install directory?<a class="headerlink" href="#where-is-my-build-directory-where-is-my-install-directory" title="Link to this heading"></a></h2>
+<p>Spack manages directories by using hashes.  This is not convenient for just looking at things and knowing what they are, but it is very efficient for keeping things organized.  You can find the location of build/install with <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">location</span> <span class="pre">-b</span> <span class="pre">[spec]</span></code> for a build or <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">location</span> <span class="pre">-i</span> <span class="pre">[spec]</span></code> for the install.  Similarly, you can navigate to any directory with <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">cd</span> <span class="pre">-b</span> <span class="pre">[spec]</span></code> or <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">cd</span> <span class="pre">-i</span> <span class="pre">[spec]</span></code>.</p>
+</section>
+<section id="how-do-i-run-tests-after-building-the-software">
+<h2>How do I run tests after building the software?<a class="headerlink" href="#how-do-i-run-tests-after-building-the-software" title="Link to this heading"></a></h2>
+<p>The first thing to understand is that Spack is going to build your software in a different environment than your active shell.  To run a command in this environment you can use <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">build-env</span> <span class="pre">[spec]</span> <span class="pre">[command]</span></code> and the <code class="docutils literal notranslate"><span class="pre">[command]</span></code> will be exectued for you in the build environment (don’t forget to <a class="reference internal" href="#where-is-my-build-directory-where-is-my-install-directory">navigate to the build directory</a> first!).
+Spack-Manager also provides a convenience function <code class="docutils literal notranslate"><span class="pre">build-env-dive</span> <span class="pre">[spec]</span></code> which will navigate to the build directory for you and launch a sub-shell using the build environment. You will need to type <code class="docutils literal notranslate"><span class="pre">exit</span></code> to get back to your original shell when you are done. The former is recommended for one-off commands, and the latter if you have a lot of commands to run in the environment.</p>
+<p>Please note that</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spack</span> <span class="n">build</span><span class="o">-</span><span class="n">env</span> <span class="n">nalu</span><span class="o">-</span><span class="n">wind</span> <span class="n">ctest</span> <span class="o">-</span><span class="n">R</span> <span class="n">ablNeutral</span>
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">-</span><span class="n">env</span><span class="o">-</span><span class="n">dive</span> <span class="n">nalu</span><span class="o">-</span><span class="n">wind</span>
+<span class="n">ctest</span> <span class="o">-</span><span class="n">R</span> <span class="n">ablNeutral</span>
+<span class="n">exit</span>
+</pre></div>
+</div>
+<p>are equivalent.</p>
+<blockquote>
+<div><p><strong>Note</strong>: When running the tests through <code class="docutils literal notranslate"><span class="pre">ctest</span></code>, it is the developer’s responsibility to ensure that the gold files, located in <code class="docutils literal notranslate"><span class="pre">${SPACK_MANAGER}/golds/current</span></code>, have been populated. This can typically be done by copying the gold files from <code class="docutils literal notranslate"><span class="pre">${SPACK_MANAGER}/golds/tmp</span></code> (generated from an initial <code class="docutils literal notranslate"><span class="pre">ctest</span></code> run). For example, populating the gold files for Nalu-Wind for Linux entails:</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cp -r ${SPACK_MANAGER}/tmp/nalu-wind/Linux ${SPACK_MANAGER}/golds/current/nalu-wind/
+</pre></div>
+</div>
+</section>
+<section id="should-i-worry-about-warning-included-configuration-files-should-be-updated-manually">
+<h2>Should I worry about <em>Warning: included configuration files should be updated manually</em>?<a class="headerlink" href="#should-i-worry-about-warning-included-configuration-files-should-be-updated-manually" title="Link to this heading"></a></h2>
+<p>No, this is just a warning from Spack saying it won’t automatically update the custom files we’ve created
+for dialing in machine specific data for your environment <code class="docutils literal notranslate"><span class="pre">include.yaml</span></code> or the list of externals we’re using
+to provide pre-compiled binaries for you to link against <code class="docutils literal notranslate"><span class="pre">externals.yaml</span></code>.</p>
+</section>
+<section id="should-i-worry-abour-warning-the-original-concretizer-is-currently-being-used">
+<h2>Should I worry abour <em>Warning: the original concretizer is currently being used.</em>?<a class="headerlink" href="#should-i-worry-abour-warning-the-original-concretizer-is-currently-being-used" title="Link to this heading"></a></h2>
+<p>No, we are using the original concretizer when you use externals from snapshots as a stop gap until
+the Spack team fixes a bug for us.</p>
+</section>
+<section id="how-do-i-use-the-executables-i-built-in-my-development-environment">
+<h2>How do I use the executables I built in my development environment?<a class="headerlink" href="#how-do-i-use-the-executables-i-built-in-my-development-environment" title="Link to this heading"></a></h2>
+<p>You need to activate the environment <code class="docutils literal notranslate"><span class="pre">quick-activate</span></code>, and then call <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">load</span> <span class="pre">[package]</span></code>.
+This will load the binaries you need into your <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Example
+quick-activate $SPACK_MANAGER/environments/exawind
+spack load amr-wind
+mpirun -np 20 amr_wind -i [foo]
+</pre></div>
+</div>
+</section>
+<section id="what-to-do-about-error-couldn-t-find-patch-for-package-exawind-hdf5">
+<h2>What to do about <em>Error: Couldn’t find patch for package exawind.hdf5</em>?<a class="headerlink" href="#what-to-do-about-error-couldn-t-find-patch-for-package-exawind-hdf5" title="Link to this heading"></a></h2>
+<p>Please let us know if you see this. We are trying to make sure you don’t see it.
+To get rid of the error run <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">clean</span> <span class="pre">-m</span></code></p>
+</section>
+<section id="i-m-getting-an-error-saying-there-is-a-missing-variant-error-variant-foo-not-found">
+<h2>I’m getting an error saying there is a missing variant? <em>Error: variant [foo] not found …</em><a class="headerlink" href="#i-m-getting-an-error-saying-there-is-a-missing-variant-error-variant-foo-not-found" title="Link to this heading"></a></h2>
+<p>Typically this means your Spack submodule is out of date.  To check run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd $SPACK_MANAGER
+git status
+</pre></div>
+</div>
+<p>If you see <code class="docutils literal notranslate"><span class="pre">spack</span></code> in there then you need to re-sync the submodule. <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">submodule</span> <span class="pre">update</span></code> etc</p>
+</section>
+<section id="permissions-issues-on-nrel-s-eagle-machine-errno-13-permission-denied">
+<h2>Permissions issues on NREL’s Eagle machine: <strong>[Errno 13] Permission denied:</strong><a class="headerlink" href="#permissions-issues-on-nrel-s-eagle-machine-errno-13-permission-denied" title="Link to this heading"></a></h2>
+<p>To build successfully on Eagle, in general you want the following in your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> to avoid issues with <code class="docutils literal notranslate"><span class="pre">tmp</span></code> directories:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p /scratch/${USER}/.tmp &amp;&amp; export TMPDIR=/scratch/${USER}/.tmp
+</pre></div>
+</div>
+</section>
+<section id="how-do-i-compile-faster-using-a-parallel-dag">
+<h2>How do I compile faster using a parallel DAG?<a class="headerlink" href="#how-do-i-compile-faster-using-a-parallel-dag" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> command gives you parallel builds inside each <code class="docutils literal notranslate"><span class="pre">make</span></code> command. However, further parallelism can be had on large DAGs by invoking concurrent <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> commands. Spack will find parallelism within the DAG and build any packages it can simultaneously using file locks. You can do this in bash with the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">{</span><span class="mf">1..4</span><span class="p">};</span> <span class="n">do</span> <span class="n">nice</span> <span class="n">spack</span> <span class="n">install</span> <span class="o">&amp;</span> <span class="n">done</span><span class="p">;</span> <span class="n">wait</span>
+</pre></div>
+</div>
+<p>If you have really large DAGs, it’s even possible to use <code class="docutils literal notranslate"><span class="pre">srun</span></code> on multiple nodes for the install process.</p>
+<p>Another newer method for this in Spack is to use depfiles where Spack can generate standard makefiles which can expose the DAG parallelism. More documentation on this can be found <a class="reference external" href="https://spack.readthedocs.io/en/latest/environments.html#generating-depfiles-from-environments">here</a>. In summary, once you have an environment concretized you can generate a makefile and replace the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> with a <code class="docutils literal notranslate"><span class="pre">make</span></code> command as such:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spack</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span> <span class="n">env</span> <span class="n">depfile</span> <span class="o">-</span><span class="n">o</span> <span class="n">Makefile</span>
+<span class="n">make</span> <span class="o">-</span><span class="n">j8</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../user_profiles/system_admins/creating_a_project.html" class="btn btn-neutral float-left" title="Creating and configuring a Spack-Manager Project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="general.html" class="btn btn-neutral float-right" title="General Information" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
