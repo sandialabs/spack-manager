@@ -1,20 +1,12 @@
 # directories
 spack
-stage
-snapshots
-environments
-snapshots
-golds
-logs
 tmp
-views
-modules
 cache
-configs/user
 stage
 .bootstrap
 .jython_cache
 # file types
+spack-manager.yaml
 Makefile
 __pycache__
 *.lock

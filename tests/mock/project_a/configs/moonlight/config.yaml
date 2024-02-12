@@ -1,0 +1,4 @@
+config:
+    aliases:
+        quick-create: "manager create-env"
+

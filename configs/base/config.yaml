@@ -1,6 +1,0 @@
-config:
-  source_cache: ~/.spack_downloads
-  misc_cache: $spack/../.cache
-  build_stage:
-    - $spack/../stage
-  concretizer: clingo

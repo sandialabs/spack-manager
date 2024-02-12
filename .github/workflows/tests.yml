@@ -5,200 +5,102 @@ name: Spack-Manager Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
     strategy:
       fail-fast: false
       matrix:
         python-version: [3.7, 3.8, 3.9]
+        spack-version: [0.21.0, develop]
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Checkout Spack
+      uses: actions/checkout@v3
+      with:
+        repository: spack/spack
+        ref: ${{ matrix.spack-verions }}
+        path: spack
+    - name: Setup Spack ${{ matrix.spack-verion }}
+      run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
+    - name: Install extension
+      run: |
+        ./install.py --scope site
+        spack manager --help
     - name: Run unit tests
-      run: ./scripts/run_tests.sh
+      run: |
+        . spack/share/spack/setup-env.sh
+        spack unit-test --extension manager
   style-checks:
     runs-on: ubuntu-latest
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
     strategy:
       fail-fast: false
       matrix:
         python-version: [3.9]
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Checkout Spack
+      uses: actions/checkout@v3
+      with:
+        repository: spack/spack
+        path: spack
+    - name: Setup Spack
+      run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install dependencies
       run: |
+        ls -lh "$PWD/spack"
+        ls -lh "$PWD/spack/.github/"
+        cp ${GITHUB_WORKSPACE}/spack/.github/workflows/style/requirements.txt "$PWD"
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install extension
+      run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Spack Style
-      run: |
-        # check our spack extension with spack's style guide
-        source start.sh
-        spack-start
-        spack style spack-scripting
-        spack style scripts
-  concretization-basic:
-    runs-on: ${{matrix.os}}
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.7]
-        os: [ubuntu-latest, macos-latest]
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Run concretization tests
-      run: |
-        source start.sh
-        spack-start
-        # test and make sure the solver is working for env using clingo
-        spack solve exawind 1> /dev/null 
-        tests/ci_config_concretization.py -y env-templates/exawind_basic.yaml
-        tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml
-  concretization-matrix:
-    runs-on: ${{matrix.os}}
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.7]
-        os: [ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Run concretization tests
-      run: |
-        source start.sh
-        spack-start
-        # test and make sure the solver is working for env using clingo
-        spack solve exawind 1> /dev/null 
-        tests/ci_config_concretization.py -y env-templates/exawind_matrix.yaml
+      run: spack style ${GITHUB_WORKSPACE}/manager ${GITHUB_WORKSPACE}/tests
   quick-commands:
     runs-on: ubuntu-latest
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        python-version: [3.7]
-        os: [ubuntu-latest]
+        python-version: [3.7, 3.8, 3.9]
+        spack-version: [0.21.0, develop]
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Checkout Spack
+      uses: actions/checkout@v3
+      with:
+        repository: spack/spack
+        ref: ${{ matrix.spack-verions }}
+        path: spack
+    - name: Setup Spack ${{ matrix.spack-verion }}
+      run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
+    - name: Install extension
       run: |
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test quick-commands
+        ./install.py --scope site
+        spack manager --help
+    - name: Run quick-tests
       run: |
-        source start.sh
-        quick-create --name quick-create --spec exawind
+        . spack/share/spack/setup-env.sh
+        . scripts/quick_commands.sh
+        quick-create --name managed -s zlib
         spack env deactivate
-        quick-create-dev --name quick-create-dev --spec amr-wind@main
+        quick-create --dir unmanaged -s zlib
         spack env deactivate
-        quick-activate ${SPACK_MANAGER}/environments/quick-create-dev
-        spack env deactivate
-        quick-create --name spec-with-spaces --spec exawind+hypre build_type=Debug ^amr-wind
-  reinitialization:
-    runs-on: ubuntu-latest
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: [3.7]
-        os: [ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test multiple spack-start calls
-      run: |
-        source start.sh
-        spack-start
-        bash -c "source ${SPACK_MANAGER}/start.sh;spack-start"
-  snapshot-workflow:
-    runs-on: ubuntu-latest
-    env:
-      SPACK_MANAGER: ${{github.workspace}}
-      E4S_MACHINE: true
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: [3.7]
-        os: [ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test snapshot command
-      run: |
-        source start.sh
-        spack-start
-        spack manager snapshot -m --name git_refs -s exawind+openfast amr-wind+hypre
-        quick-activate $SPACK_MANAGER/snapshots/exawind/${SPACK_MANAGER_MACHINE}/git_refs
-        spack env deactivate        
-        spack manager snapshot -m --name regular_versions -r -s exawind+openfast amr-wind+hypre
-        quick-activate $SPACK_MANAGER/snapshots/exawind/${SPACK_MANAGER_MACHINE}/regular_versions
-        spack env deactivate        
-
-
-
+        quick-create-dev --name develop -s nalu-wind@master
         
-    

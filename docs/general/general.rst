@@ -8,5 +8,6 @@ and documentation that is applicable to all users of this software.
    :glob:
    :maxdepth: 2
 
-   history
+   spack_manager_structure
    spack_features
+   history
