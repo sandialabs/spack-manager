@@ -10,10 +10,11 @@ compilers:
       operating_system: rhel8
       target: any
       modules:
-      - PrgEnv-intel/8.3.3
+      - PrgEnv-intel/8.5.0
       - intel/2023.2.0
       - libfabric
       - craype-x86-spr
+      - cray-libsci/22.12.1.1
       extra_rpaths: []
       environment: {}
   - compiler:
