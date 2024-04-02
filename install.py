@@ -17,7 +17,7 @@ import os
 import spack.main
 import importlib
 
-check = importlib.import_moduel("check")
+check = importlib.import_module("check")
 
 
 parser = argparse.ArgumentParser()
