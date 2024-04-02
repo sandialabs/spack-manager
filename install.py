@@ -15,6 +15,9 @@ import argparse
 import llnl.util.tty as tty
 import os
 import spack.main
+import importlib
+
+check = importlib.import_moduel("check")
 
 
 parser = argparse.ArgumentParser()
@@ -22,6 +25,7 @@ parser.add_argument("-s", "--scope", required=False, help="Spack scope to regist
 
 if __name__ == "__main__":
     args = parser.parse_args()
+    check.check_spack_manager_requirements()
 
     extension_path = os.path.realpath(os.getcwd())
     if not os.path.isdir(os.path.join(extension_path, "manager")):
