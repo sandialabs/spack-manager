@@ -5,6 +5,8 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import os
+
 import spack.extensions.manager.projects as m_proj
 
 
