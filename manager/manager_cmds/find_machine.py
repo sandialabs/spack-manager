@@ -58,7 +58,16 @@ def find_machine_cmd(parser, args):
                     )
                 )
         return
-    find_machine(verbose=True, projects=m_proj.get_projects(args.project))
+    elif args.config:
+        project, machine = find_machine()
+        if not project or machine == "NOT-FOUND":
+            return
+        else:
+            path = os.path.join(project.config_path, machine)
+            print(path)
+            return path
+    else:
+        find_machine(verbose=True, projects=m_proj.get_projects(args.project))
 
 
 def setup_parser_args(sub_parser):
@@ -71,6 +80,8 @@ def setup_parser_args(sub_parser):
             "index of the project"
         ),
     )
+    sub_parser.add_argument("-c", "--config", action="store_true", required=False,
+                           help="location of the machine specific configs")
 
     sub_parser.add_argument(
         "-l",
