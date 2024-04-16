@@ -17,13 +17,12 @@ output_types.add_argument("--scope", help="spack scope where the configs should 
 args = parser.parse_args()
 
 input_path = pathlib.PurePath(args.input)
-scope_tempalate = "--scope={}"
 if args.output:
     output_path = pathlib.PurePath(args.output)
     os.environ["SPACK_USER_CONFIG_PATH"] = str(output_path)
-    scope = scope_template.format("user")
+    scope = "user"
 else:
-    scope = scope_template.format(args.scope)
+    scope = args.scope
     
 exe_env = os.environ.copy()
 
@@ -36,16 +35,16 @@ external_cmd = spack.main.SpackCommand("external", subprocess=True)
 if "compilers" in manifest:
     for c in manifest["compilers"]:
         module("load", c)
-        print(compiler("find", scope, env=exe_env))
+        print(compiler("find", "--scope", scope, env=exe_env))
         module("unload", c)
 
 if "externals" in manifest:
-    print(external_cmd("find", *manifest["externals"], env=exe_env))
+    print(external_cmd("find", "--scope", scope, *manifest["externals"], env=exe_env))
 
 if "modules" in manifest:
     for entry in manifest["modules"]:
         m = entry["module"]
         p = entry["packages"]
         module("load", m)
-        print(external_cmd("find", *p, env=exe_env))
+        print(external_cmd("find", "--scope", scope, *p, env=exe_env))
         module("unload", m)
