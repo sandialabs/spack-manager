@@ -5,7 +5,6 @@ import pathlib
 
 import spack.main
 import spack.util.spack_yaml as syaml
-
 from spack.util.module_cmd import module
 
 parser = argparse.ArgumentParser()
@@ -23,7 +22,7 @@ if args.output:
     scope = "user"
 else:
     scope = args.scope
-    
+
 exe_env = os.environ.copy()
 
 with open(input_path, "r") as f:

@@ -80,8 +80,13 @@ def setup_parser_args(sub_parser):
             "index of the project"
         ),
     )
-    sub_parser.add_argument("-c", "--config", action="store_true", required=False,
-                           help="location of the machine specific configs")
+    sub_parser.add_argument(
+        "-c",
+        "--config",
+        action="store_true",
+        required=False,
+        help="location of the machine specific configs",
+    )
 
     sub_parser.add_argument(
         "-l",

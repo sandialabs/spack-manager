@@ -37,7 +37,7 @@ def test_find_machine_filters_on_project(mock_manager_config_path):
     assert "moonlight" not in out
 
 
-def test_find_machine_config_points_to_path(mock_manager_config_path):
+def test_find_machine_config_points_to_path(on_moonlight):
     assert manager.config_path != manager._default_config_path
     assert find_machine.machine_defined("moonlight")
     out = mgr_cmd("find-machine", "--config")

@@ -13,9 +13,11 @@ are met.
 """
 import sys
 
+
 def check_spack_manager_requirements():
-    if sys.version_info < (3,8):
+    if sys.version_info < (3, 8):
         raise ValueError("Spack-Manager requires Python 3.8 or higher.")
+
 
 if __name__ == "__main__":
     check_spack_manager_requirements()
