@@ -6,7 +6,7 @@
 # for more details.
 
 """
-a script to make sure minimum requirements for spack-manager 
+a script to make sure minimum requirements for spack-manager
 are met.
 
 - python@3.8 or higher

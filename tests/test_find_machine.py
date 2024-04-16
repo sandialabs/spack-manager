@@ -42,4 +42,4 @@ def test_find_machine_config_points_to_path(on_moonlight):
     assert find_machine.machine_defined("moonlight")
     out = mgr_cmd("find-machine", "--config")
     assert "moonlight" in out
-    assert os.path.isdir(out)
+    assert os.path.isdir(out.strip())

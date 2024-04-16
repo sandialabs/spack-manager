@@ -47,10 +47,11 @@ def find_machine(verbose=False, projects=m_proj.get_projects()):
 
 
 def find_machine_cmd(parser, args):
+    projects = m_proj.get_projects(args.project)
     if args.list:
         print("Project:\t Machine:\t Detected: (+/-)")
         print("-" * 60)
-        for project in m_proj.get_projects(args.project):
+        for project in projects:
             for machine in project.machines:
                 print(
                     "{proj} \t {machine} \t {detected}".format(
@@ -61,7 +62,7 @@ def find_machine_cmd(parser, args):
                 )
         return
     elif args.config:
-        project, machine = find_machine()
+        project, machine = find_machine(verbose=False, projects=projects)
         if not project or machine == "NOT-FOUND":
             return
         else:
@@ -69,7 +70,7 @@ def find_machine_cmd(parser, args):
             print(path)
             return path
     else:
-        find_machine(verbose=True, projects=m_proj.get_projects(args.project))
+        find_machine(verbose=True, projects=projects)
 
 
 def setup_parser_args(sub_parser):
