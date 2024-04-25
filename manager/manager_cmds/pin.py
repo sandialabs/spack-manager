@@ -8,15 +8,18 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
-from manager_utils import command, pruned_spec_string
-
 import llnl.util.tty as tty
 
 import spack.environment as ev
 import spack.main
 import spack.traverse as traverse
 import spack.util.executable
+from spack.extensions.manager.manager_utils import command, pruned_spec_string
 from spack.version import GitVersion
+try:
+    from spack.version.common import COMMIT_VERSION
+except:
+    from spack.version import COMMIT_VERSION
 
 git = spack.util.executable.which("git")
 concretize = spack.main.SpackCommand("concretize")
@@ -61,16 +64,16 @@ def find_latest_git_hash(spec):
         query = (
             git("ls-remote", "-h", spec.package.git, branch, output=str, error=str)
             .strip()
-            .split("\n")
+            .split()
         )
+        sha = [ hunk for hunk in query if bool(COMMIT_VERSION.match(hunk))]
         try:
-            assert len(query) == 1
+            assert len(sha) == 1
         except Exception:
             print("Too many hits for the remote branch:", spec.name, query)
             exit()
 
-        sha, _ = query[0].split("\t")
-
+        print("HIT", spec.name, sha)
         return sha
     else:
         return None
@@ -128,7 +131,7 @@ def pin_env(parser, args):
         cargs.append("--fresh")
 
     print("Concretizing environment to resolve DAG")
-    command(concretize, *cargs)
+    #command(concretize, *cargs)
 
     roots = list(env.roots())
 
@@ -145,7 +148,7 @@ def pin_env(parser, args):
     env._re_read()
 
     print("Reconcretizing with updated specs")
-    command(concretize, *cargs)
+    #command(concretize, *cargs)
 
 
 def setup_parser_args(sub_parser):
