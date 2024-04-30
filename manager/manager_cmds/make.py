@@ -5,20 +5,20 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import argparse
 import os
 
 import llnl.util.tty as tty
+from llnl.util.filesystem import working_dir
+
 import spack.build_environment as build_environment
 import spack.builder
 import spack.cmd
 import spack.paths
-from llnl.util.filesystem import working_dir
 from spack.util.executable import Executable
 
 """
 This was originally implemented by Tim Fuller @tjfulle
-With his permission it is being published in the spack manager 
+With his permission it is being published in the spack manager
 subset of commands
 """
 description = "make SPEC directly with `make` or `ninja`"
@@ -26,28 +26,23 @@ section = "manager"
 level = "short"
 
 
-
 def setup_parser(parser):
     parser.add_argument(
-        "spec",
-        metavar="SPEC",
-        nargs="+",
-        help="Spack package to build (must be a develop spec)",
+        "spec", metavar="SPEC", nargs="+", help="Spack package to build (must be a develop spec)"
     )
     build_args = parser.add_mutually_exclusive_group()
     build_args.add_argument(
         "--args",
         "-a",
-        nargs="+",
-        default=[],
+        default="",
         required=False,
-        help="Additional arguments to pass to make i.e. `-j16`"
+        help="Additional arguments to pass to make as a string i.e. `--args='test -j16'`",
     )
     build_args.add_argument(
         "-j",
         type=int,
         required=False,
-        help="number of ranks to build with (specialized implementation of --args)"
+        help="number of ranks to build with (specialized implementation of --args)",
     )
 
 
@@ -55,9 +50,9 @@ def make(parser, args):
     env = spack.cmd.require_active_env(cmd_name="make")
     specs = spack.cmd.parse_specs(args.spec)
     if args.j:
-        extra_make_args=[f"-j{args.j}"]
+        extra_make_args = [f"-j{args.j}"]
     else:
-        extra_make_args = args.args
+        extra_make_args = args.args.split()
     if not specs:
         tty.die("You must supply a spec.")
     if len(specs) != 1:
@@ -73,12 +68,16 @@ def make(parser, args):
         build_directory = pkg.stage.source_path
     try:
         build_environment.setup_package(spec.package, False, "build")
-    except:
+    except TypeError:
         build_environment.setup_package(spec.package, False)
 
     if not os.path.isdir(build_directory):
         tty.die(
-            "Build directory does not exist. Please run `spack install` to ensure the build is configured properly"
+            (
+                "Build directory does not exist. "
+                "Please run `spack install` to ensure the build is "
+                "configured properly"
+            )
         )
 
     with working_dir(build_directory):
