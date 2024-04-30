@@ -60,6 +60,8 @@ def make(parser, args):
     spec = env.matching_spec(specs[0])
     if spec is None:
         tty.die(f"{specs[0]}: spec not found in environment")
+    elif not spec.is_develop:
+        tty.die(f"{specs[0]}: must be a develop spec")
     pkg = spec.package
     builder = spack.builder.create(pkg)
     if hasattr(builder, "build_directory"):
