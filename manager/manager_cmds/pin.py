@@ -23,6 +23,7 @@ except:
 
 git = spack.util.executable.which("git")
 concretize = spack.main.SpackCommand("concretize")
+change = spack.main.SpackCommand("change")
 
 
 def get_version_paired_git_branch(spec):
@@ -35,15 +36,16 @@ def get_version_paired_git_branch(spec):
         # once we are going to recreate the paried version that the git hash
         # has been assigned to and use that
         version = spec.version.ref_version
+        version_dict = {}
         version_dict = spec.package_class.versions[version]
     else:
         try:
             version_dict = spec.package_class.versions[spec.version]
         except KeyError:
-            print(
-                "Skipping {s}@{v} since this version is no longer valid and is likely from"
+            tty.warn(
+                f"Skipping {spec.name}@{spec.version} since this version is no longer valid and is likely from"
                 " --reuse. If this is not desired then please add a version constraint to "
-                "the spec".format(s=spec.name, v=spec.version)
+                "the spec"
             )
             return None
     if "branch" in version_dict.keys():
@@ -60,6 +62,7 @@ def find_latest_git_hash(spec):
     """
     branch = get_version_paired_git_branch(spec)
     if branch:
+        tty.debug(f"{spec.name} has paired to git branch {branch}")
         # get the matching entry and shas for github
         query = (
             git("ls-remote", "-h", spec.package.git, branch, output=str, error=str)
@@ -70,11 +73,9 @@ def find_latest_git_hash(spec):
         try:
             assert len(sha) == 1
         except Exception:
-            print("Too many hits for the remote branch:", spec.name, query)
-            exit()
+            tty.die("Too many hits for the remote branch:", spec.name, query)
 
-        print("HIT", spec.name, sha)
-        return sha
+        return sha[0]
     else:
         return None
 
@@ -83,10 +84,10 @@ def spec_string_with_git_ref_for_version(spec):
     """
     if a spec is using a git branch for the version replace the version with sha of latest commit
     """
+    if not spec.concrete:
+        tty.warn(f"Skipping {spec.name} because it is not concrete. Reconcretize to include in pin analysis")
+        return
     # create string representation of the spec and break it into parts
-    spec_str = str(spec).strip().split(" ^")[0]
-    base, rest = spec_str.split("%")
-    name, version = base.split("@")
     if isinstance(spec.version, GitVersion):
         version_str = str(spec.version.ref_version)
     else:
@@ -95,22 +96,34 @@ def spec_string_with_git_ref_for_version(spec):
     sha = find_latest_git_hash(spec)
     if sha:
         version_str = "git.{h}={v}".format(h=sha, v=version_str)
-        return pruned_spec_string("{n}@{v}%{r}".format(n=name, v=version_str, r=rest))
+        new_spec_str =  f"{spec.name}@{version_str}"
+        tty.debug(f"Pin: Reformatting {spec.name} to {new_spec_str}")
+        return new_spec_str
     else:
         return None
 
 
 def pin_graph(root, pinRoot=True, pinDeps=True):
+    updated_spec=""
+    new_root = ""
+    new_deps = ""
     if pinRoot:
-        spec_str = spec_string_with_git_ref_for_version(root)
-    else:
-        spec_str = pruned_spec_string(str(root).strip().split(" ^")[0])
+        new_root = spec_string_with_git_ref_for_version(root)
     if pinDeps:
         for dep in traverse.traverse_nodes([root], root=False):
-            test_spec = spec_string_with_git_ref_for_version(dep)
-            if test_spec:
-                spec_str += " ^{0}".format(test_spec)
-    return spec_str
+            pinned_dep = spec_string_with_git_ref_for_version(dep)
+            if pinned_dep:
+                new_deps += f" ^{pinned_dep}"
+    # case 1: update root
+    if new_root:
+        updated_spec = new_root
+        if new_deps:
+            updated_spec += new_deps
+    elif new_deps:
+        updated_spec = root.name + new_deps
+    if updated_spec:
+        tty.debug(f"Pin: Generating new root spec - {updated_spec}")
+        command(change, updated_spec)
 
 
 def pin_env(parser, args):
@@ -130,25 +143,16 @@ def pin_env(parser, args):
     if args.fresh:
         cargs.append("--fresh")
 
-    print("Concretizing environment to resolve DAG")
-    #command(concretize, *cargs)
-
     roots = list(env.roots())
 
-    print("Pinning branches to sha's")
+    tty.debug("Pin: Pinning branches to sha's")
     pinRoot = args.roots or args.all
     pinDeps = args.dependencies or args.all
     for i, root in enumerate(roots):
-        spec_str = pin_graph(root, pinRoot, pinDeps)
-        if spec_str:
-            manifest.override_user_spec(spec_str, i)
+        pin_graph(root, pinRoot, pinDeps)
 
-    print("Updating the spack.yaml")
-    manifest.flush()
-    env._re_read()
-
-    print("Reconcretizing with updated specs")
-    #command(concretize, *cargs)
+    tty.debug("Pin: Reconcretizing with updated specs")
+    command(concretize, *cargs)
 
 
 def setup_parser_args(sub_parser):
@@ -164,7 +168,7 @@ def setup_parser_args(sub_parser):
         help="only pin root spec dependencie versions",
     )
     spec_types.add_argument(
-        "-a", "--all", action="store_true", default=False, help="pin all specs in the DAG"
+        "-a", "--all", action="store_true", default=True, help="pin all specs in the DAG"
     )
     sub_parser.add_argument(
         "--fresh",
