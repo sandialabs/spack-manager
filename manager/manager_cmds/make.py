@@ -61,9 +61,7 @@ def make(parser, args):
     pkg = spec.package
     builder = spack.builder.create(pkg)
     if hasattr(builder, "build_directory"):
-        build_directory = os.path.normpath(
-            os.path.join(pkg.stage.path, builder.build_directory)
-        )
+        build_directory = os.path.normpath(os.path.join(pkg.stage.path, builder.build_directory))
     else:
         build_directory = pkg.stage.source_path
     try:
@@ -71,8 +69,18 @@ def make(parser, args):
     except:
         build_environment.setup_package(spec.package, False)
 
+    if not os.path.isdir(build_directory):
+        tty.die(
+            "Build directory does not exist. Please run `spack install` to ensure the build is configured properly"
+        )
+
     with working_dir(build_directory):
         make_program = "ninja" if os.path.exists("build.ninja") else "make"
         make = Executable(make_program)
         make(*extra_make_args)
 
+
+def add_command(parser, command_dict):
+    subparser = parser.add_parser("make", help=description)
+    setup_parser(subparser)
+    command_dict["make"] = make
