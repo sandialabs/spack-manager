@@ -25,32 +25,39 @@ description = "make SPEC directly with `make` or `ninja`"
 section = "manager"
 level = "short"
 
-epilog = """\
-Additional arguments can be sent to the build system directly by separating them
-from SPEC by '--'.  Eg, `spack make SPEC -- -j16`
-"""
 
 
 def setup_parser(parser):
-    parser.epilog = epilog
     parser.add_argument(
         "spec",
         metavar="SPEC",
-        nargs=argparse.REMAINDER,
+        nargs="+",
         help="Spack package to build (must be a develop spec)",
+    )
+    build_args = parser.add_mutually_exclusive_group()
+    build_args.add_argument(
+        "--args",
+        "-a",
+        nargs="+",
+        default=[],
+        required=False,
+        help="Additional arguments to pass to make i.e. `-j16`"
+    )
+    build_args.add_argument(
+        "-j",
+        type=int,
+        required=False,
+        help="number of ranks to build with (specialized implementation of --args)"
     )
 
 
 def make(parser, args):
     env = spack.cmd.require_active_env(cmd_name="make")
-    try:
-        sep_index = args.spec.index("--")
-        extra_make_args = args.spec[sep_index + 1 :]
-        specs = args.spec[:sep_index]
-    except ValueError:
-        extra_make_args = []
-        specs = args.spec
-    specs = spack.cmd.parse_specs(specs)
+    specs = spack.cmd.parse_specs(args.spec)
+    if args.j:
+        extra_make_args=[f"-j{args.j}"]
+    else:
+        extra_make_args = args.args
     if not specs:
         tty.die("You must supply a spec.")
     if len(specs) != 1:
