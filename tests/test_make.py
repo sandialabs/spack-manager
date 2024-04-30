@@ -5,13 +5,10 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
-
 import pytest
 
 import spack.environment as ev
 import spack.extensions
-import spack.extensions.manager.manager_cmds.develop as m_develop
 import spack.main
 
 env = spack.main.SpackCommand("env")
@@ -24,6 +21,6 @@ def test_spackManagerMakeRequiresDevelopSpec():
     env("create", "test")
     with ev.read("test"):
         add("mpich")
-        with pytest.raises(spack.main.SpackCommandError) as error:
+        with pytest.raises(spack.main.SpackCommandError):
             out = manager("make", "mpich")
             assert "must be a develop spec" in str(out)
