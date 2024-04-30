@@ -55,5 +55,4 @@ Additional details about the philosophy, and general knowledge can be found in t
 .. toctree::
    :maxdepth: 3
 
-   general/FAQ
    general/general
