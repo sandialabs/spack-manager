@@ -1,5 +1,9 @@
 # Snapshot Developer Workflow Example
 
+**WARNING:** This documentation is fairly specific to ExaWind and has not been generalized for an arbitrary `Spack-Manager` project.
+THe information is still useful. However, you may not translate directly or be able to follow along.
+
+
 In this tutorial we will look at how to setup a developer workflow using snapshots if they are provided on your machine.
 
 ## Setup

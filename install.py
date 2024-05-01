@@ -12,20 +12,26 @@ the extension with spack.
 """
 
 import argparse
-import llnl.util.tty as tty
-import os
-import spack.main
 import importlib.util
+import os
 import sys
 
-spec = importlib.util.spec_from_file_location("check", os.path.join(os.path.dirname(sys.argv[0]), "check.py"))
+import llnl.util.tty as tty
+
+import spack.main
+
+spec = importlib.util.spec_from_file_location(
+    "check", os.path.join(os.path.dirname(sys.argv[0]), "check.py")
+)
 check = importlib.util.module_from_spec(spec)
 sys.modules["check"] = check
 spec.loader.exec_module(check)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--scope", required=False, help="Spack scope to register spack-manager")
-parser.add_argument("--test", action='store_true', help="Don't actually install but test installation process")
+parser.add_argument(
+    "--test", action="store_true", help="Don't actually install but test installation process"
+)
 
 if __name__ == "__main__":
     args = parser.parse_args()

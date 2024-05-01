@@ -61,7 +61,6 @@ To see the options for the command we can run it with the `--help` command.
 
 ```console
 quick-create-dev -h
-+ spack-start
 *************************************************************
 HELP MESSAGE:
 quick-create-dev sets up a developer environment
@@ -143,7 +142,6 @@ git clone --recursive --branch main git@github.com:Exawind/exawind-driver.git ex
 git clone --recursive --branch master git@github.com:Exawind/nalu-wind.git
 git clone --recursive --branch main git@github.com:Exawind/amr-wind.git
 quick-create-dev -s exawind@main amr-wind@main nalu-wind@master
-+ spack-start
 + spack manager create-dev-env -s exawind@master amr-wind@main nalu-wind@master
 ==> Configuring spec exawind@master for development at path exawind
 ==> Warning: included configuration files should be updated manually [files=include.yaml]
@@ -181,6 +179,10 @@ If they are newer than the install time then it will trigger an incremental buil
 Any changes you make in a dependency will also trigger a rebuild of the upstream software too.
 In this environment if you make a change in `amr-wind` it will also trigger a rebuild of the `exawind` package as well.
 
+If you wish to just do a quick incremental build you can use the `spack manager make` command:
+```console
+spack manager make amr-wind -j=16
+```
 
 ## Running Tests and Coming Back
 
@@ -188,6 +190,10 @@ To run tests in a one off manner you can use the `spack build-env` command to ru
 This is further documented [here](https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html#running).
 We also have a function `build-env-dive` which is a beta feature that launches this same subshell in your terminal and dives into it.
 It is further documented [here](https://sandialabs.github.io/spack-manager/user_profiles/developers/useful_commands.html#build-env-dive).
+Finally, if a `test` target is implementd for your software you can use `spack manager make`
+```console
+spack manager make --args="test -j16" amr-wind
+```
 
 If you wish to come back to an environment later, or in a new shell you can just run
 ```console
