@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Documentation &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Developers: What you need to know about Spack" href="developer_spack_minimum.html" />
+    <link rel="prev" title="Analysts Documentation" href="../analysts/analysts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_profiles.html">User Profiles</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysts/analysts.html">Analysts Documentation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Developer Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_spack_minimum.html">Developers: What you need to know about Spack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_workflow.html">Quick-Start: Developer Workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html">Useful Commands for Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_topics.html">Advanced Topics for Developers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="snapshot_workflow.html">Snapshot Developer Workflow Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_admins/system_admins.html">System Administrator Documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_profiles.html">User Profiles</a></li>
+      <li class="breadcrumb-item active">Developer Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/user_profiles/developers/developers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developer-documentation">
+<h1>Developer Documentation<a class="headerlink" href="#developer-documentation" title="Link to this heading"></a></h1>
+<p>Developers in this section are softare developers for the projects that are using Spack-Manager.
+This documentation is to help understand the basic requirements and workflow for developing software using Spack-Manager.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="developer_spack_minimum.html">Developers: What you need to know about Spack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer_spack_minimum.html#querying-the-spack-commands">Querying the Spack commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_spack_minimum.html#reading-and-writing-spack-specs">Reading and writing Spack specs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_spack_minimum.html#major-steps-of-the-spack-build-process">Major steps of the Spack build process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_workflow.html">Quick-Start: Developer Workflow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer_workflow.html#setup-spack-manager">Setup Spack-Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_workflow.html#creating-an-environment">Creating an Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_workflow.html#managing-the-source-code">Managing the Source Code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_workflow.html#building-and-making-code-changes">Building and Making Code Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_workflow.html#running-tests-and-coming-back">Running Tests and Coming Back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_workflow.html#quick-start">Quick Start</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="useful_commands.html">Useful Commands for Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="useful_commands.html#environment-setup-process">Environment setup process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="useful_commands.html#environment-loading-process">Environment loading process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="useful_commands.html#environment-setup-commands">Environment setup commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html#quick-create">quick-create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html#quick-create-dev">quick-create-dev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html#quick-develop">quick-develop</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="useful_commands.html#environment-re-use-commands">Environment re-use commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html#quick-activate">quick-activate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html#build-env-dive">build-env-dive</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="useful_commands.html#other-commands">Other Commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html#remove-spack-prompt">remove-spack-prompt</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_topics.html">Advanced Topics for Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#handling-multiple-environments">Handling Multiple Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#cleaning-up-old-environments">Cleaning Up Old Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#modifying-specs-in-an-environment">Modifying Specs in an Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#debugging-spack-errors">Debugging Spack Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#when-and-how-to-use-multiple-instances-of-spack-manager">When and How to Use Multiple Instances of Spack-Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#strategies-for-conserving-disk-space">Strategies for Conserving Disk Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_topics.html#constructing-and-utilizing-multiple-builds">Constructing and Utilizing Multiple builds</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snapshot_workflow.html">Snapshot Developer Workflow Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snapshot_workflow.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot_workflow.html#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot_workflow.html#editing-code">Editing Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot_workflow.html#running">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot_workflow.html#iterating">Iterating</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../analysts/analysts.html" class="btn btn-neutral float-left" title="Analysts Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="developer_spack_minimum.html" class="btn btn-neutral float-right" title="Developers: What you need to know about Spack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

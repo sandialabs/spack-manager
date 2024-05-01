@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developers: What you need to know about Spack &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Quick-Start: Developer Workflow" href="developer_workflow.html" />
+    <link rel="prev" title="Developer Documentation" href="developers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_profiles.html">User Profiles</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysts/analysts.html">Analysts Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="developers.html">Developer Documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Developers: What you need to know about Spack</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#querying-the-spack-commands">Querying the Spack commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reading-and-writing-spack-specs">Reading and writing Spack specs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#major-steps-of-the-spack-build-process">Major steps of the Spack build process</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="developer_workflow.html">Quick-Start: Developer Workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html">Useful Commands for Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_topics.html">Advanced Topics for Developers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="snapshot_workflow.html">Snapshot Developer Workflow Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_admins/system_admins.html">System Administrator Documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_profiles.html">User Profiles</a></li>
+          <li class="breadcrumb-item"><a href="developers.html">Developer Documentation</a></li>
+      <li class="breadcrumb-item active">Developers: What you need to know about Spack</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/user_profiles/developers/developer_spack_minimum.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developers-what-you-need-to-know-about-spack">
+<h1>Developers: What you need to know about Spack<a class="headerlink" href="#developers-what-you-need-to-know-about-spack" title="Link to this heading"></a></h1>
+<p>Developers who are using Spack-Manager as their build system need to know some basic things about Spack
+to effectively utilize the tool.
+We’ve tried to minimize the required knowledge you need to retain for commands, but it is important to
+understand the fundamental concepts of Spack to obtain autonomy in your basic workflow and communicate
+effectively when looking for help.</p>
+<p>The most critical concepts to learn for development are:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#querying-the-spack-commands">Querying the Spack commands</a>: <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span></code> and <code class="docutils literal notranslate"><span class="pre">--help</span></code></p></li>
+<li><p><a class="reference internal" href="#reading-and-writing-spack-specs">Reading and writing Spack specs</a></p></li>
+<li><p><a class="reference internal" href="#major-steps-of-the-spack-build-process">The major steps of the Spack build process</a></p></li>
+</ol>
+<section id="querying-the-spack-commands">
+<h2>Querying the Spack commands<a class="headerlink" href="#querying-the-spack-commands" title="Link to this heading"></a></h2>
+<p>The first item in this list is also arguably the most important.
+A large array of questions about Spack can be answered by simply using the <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> flags
+for the commands.  Every Spack command has this feature and this will print a short
+description of the what the command does along with all the options the command takes.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spack</span> <span class="n">cd</span> <span class="o">-</span><span class="n">h</span>
+<span class="n">usage</span><span class="p">:</span> <span class="n">spack</span> <span class="n">cd</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="o">|</span> <span class="o">-</span><span class="n">r</span> <span class="o">|</span> <span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">-</span><span class="n">p</span> <span class="o">|</span> <span class="o">-</span><span class="n">P</span> <span class="o">|</span> <span class="o">-</span><span class="n">s</span> <span class="o">|</span> <span class="o">-</span><span class="n">S</span> <span class="o">|</span> <span class="o">--</span><span class="n">source</span><span class="o">-</span><span class="nb">dir</span> <span class="o">|</span> <span class="o">-</span><span class="n">b</span> <span class="o">|</span> <span class="o">-</span><span class="n">e</span> <span class="p">[</span><span class="n">name</span><span class="p">]]</span> <span class="o">...</span>
+
+<span class="n">cd</span> <span class="n">to</span> <span class="n">spack</span> <span class="n">directories</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">shell</span>
+
+<span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="n">spec</span>                  <span class="n">package</span> <span class="n">spec</span>
+
+<span class="n">optional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">source</span><span class="o">-</span><span class="nb">dir</span>          <span class="n">source</span> <span class="n">directory</span> <span class="k">for</span> <span class="n">a</span> <span class="n">spec</span> <span class="p">(</span><span class="n">requires</span> <span class="n">it</span> <span class="n">to</span> <span class="n">be</span> <span class="n">staged</span> <span class="n">first</span><span class="p">)</span>
+  <span class="o">-</span><span class="n">P</span><span class="p">,</span> <span class="o">--</span><span class="n">packages</span>        <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">packages</span> <span class="n">directory</span> <span class="k">for</span> <span class="n">Spack</span>
+  <span class="o">-</span><span class="n">S</span><span class="p">,</span> <span class="o">--</span><span class="n">stages</span>          <span class="n">top</span> <span class="n">level</span> <span class="n">stage</span> <span class="n">directory</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">build</span><span class="o">-</span><span class="nb">dir</span>       <span class="n">build</span> <span class="n">directory</span> <span class="k">for</span> <span class="n">a</span> <span class="n">spec</span> <span class="p">(</span><span class="n">requires</span> <span class="n">it</span> <span class="n">to</span> <span class="n">be</span> <span class="n">staged</span> <span class="n">first</span><span class="p">)</span>
+  <span class="o">-</span><span class="n">e</span> <span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="o">--</span><span class="n">env</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                        <span class="n">location</span> <span class="n">of</span> <span class="n">the</span> <span class="n">named</span> <span class="ow">or</span> <span class="n">current</span> <span class="n">environment</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">install</span><span class="o">-</span><span class="nb">dir</span>     <span class="n">install</span> <span class="n">prefix</span> <span class="k">for</span> <span class="n">spec</span> <span class="p">(</span><span class="n">spec</span> <span class="n">need</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">installed</span><span class="p">)</span>
+  <span class="o">-</span><span class="n">m</span><span class="p">,</span> <span class="o">--</span><span class="n">module</span><span class="o">-</span><span class="nb">dir</span>      <span class="n">spack</span> <span class="n">python</span> <span class="n">module</span> <span class="n">directory</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">package</span><span class="o">-</span><span class="nb">dir</span>     <span class="n">directory</span> <span class="n">enclosing</span> <span class="n">a</span> <span class="n">spec</span><span class="s1">&#39;s package.py file</span>
+  <span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="o">--</span><span class="n">spack</span><span class="o">-</span><span class="n">root</span>      <span class="n">spack</span> <span class="n">installation</span> <span class="n">root</span>
+  <span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="o">--</span><span class="n">stage</span><span class="o">-</span><span class="nb">dir</span>       <span class="n">stage</span> <span class="n">directory</span> <span class="k">for</span> <span class="n">a</span> <span class="n">spec</span>
+</pre></div>
+</div>
+<p>Prints all the information you need to know about how to use the command <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">cd</span></code>.</p>
+<p>Spack-Manager has emulated this behavior by adding the <code class="docutils literal notranslate"><span class="pre">-h</span></code>/<code class="docutils literal notranslate"><span class="pre">--help</span></code> flags to all of the commands including shell commands.
+So if you see a command you don’t understand, or if you ever forget the syntax for a command, the first starting point is the <code class="docutils literal notranslate"><span class="pre">-h</span></code> flag.</p>
+<p>Along with the <code class="docutils literal notranslate"><span class="pre">-h</span></code> command, the other querying command that every developer should know is <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span></code>.
+<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">[package</span> <span class="pre">name]</span></code> gives you all the information for a spec.  Specifically for developers, this will tell you the versions and variants in the queried package.</p>
+<p>For example <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">amr-wind</span></code> gives:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spack</span> <span class="n">info</span> <span class="n">amr</span><span class="o">-</span><span class="n">wind</span>
+<span class="n">CMakePackage</span><span class="p">:</span>   <span class="n">amr</span><span class="o">-</span><span class="n">wind</span>
+
+<span class="n">Description</span><span class="p">:</span>
+    <span class="kc">None</span>
+<span class="n">Homepage</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Exawind</span><span class="o">/</span><span class="n">amr</span><span class="o">-</span><span class="n">wind</span>
+
+<span class="n">Maintainers</span><span class="p">:</span> <span class="nd">@jrood</span><span class="o">-</span><span class="n">nrel</span> <span class="nd">@michaeljbrazell</span>
+
+<span class="n">Externally</span> <span class="n">Detectable</span><span class="p">:</span> 
+    <span class="kc">False</span>
+
+<span class="n">Tags</span><span class="p">:</span> 
+    <span class="n">ecp</span>  <span class="n">ecp</span><span class="o">-</span><span class="n">apps</span>
+
+<span class="n">Preferred</span> <span class="n">version</span><span class="p">:</span>  
+    <span class="n">main</span>    <span class="p">[</span><span class="n">git</span><span class="p">]</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Exawind</span><span class="o">/</span><span class="n">amr</span><span class="o">-</span><span class="n">wind</span><span class="o">.</span><span class="n">git</span> <span class="n">on</span> <span class="n">branch</span> <span class="n">main</span>
+
+<span class="n">Safe</span> <span class="n">versions</span><span class="p">:</span>  
+    <span class="n">main</span>    <span class="p">[</span><span class="n">git</span><span class="p">]</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Exawind</span><span class="o">/</span><span class="n">amr</span><span class="o">-</span><span class="n">wind</span><span class="o">.</span><span class="n">git</span> <span class="n">on</span> <span class="n">branch</span> <span class="n">main</span>
+
+<span class="n">Deprecated</span> <span class="n">versions</span><span class="p">:</span>  
+    <span class="kc">None</span>
+
+<span class="n">Variants</span><span class="p">:</span>
+    <span class="n">Name</span> <span class="p">[</span><span class="n">Default</span><span class="p">]</span>                 <span class="n">When</span>       <span class="n">Allowed</span> <span class="n">values</span>          <span class="n">Description</span>
+    <span class="o">===========================</span>    <span class="o">=======</span>    <span class="o">====================</span>    <span class="o">==================================</span>
+
+    <span class="n">amdgpu_target</span> <span class="p">[</span><span class="n">none</span><span class="p">]</span>           <span class="o">+</span><span class="n">rocm</span>      <span class="n">none</span><span class="p">,</span> <span class="n">gfx1011</span><span class="p">,</span>          <span class="n">AMD</span> <span class="n">GPU</span> <span class="n">architecture</span>
+                                              <span class="n">gfx906</span><span class="p">,</span> <span class="n">gfx802</span><span class="p">,</span>         
+                                              <span class="n">gfx701</span><span class="p">,</span> <span class="n">gfx803</span><span class="p">,</span>         
+                                              <span class="n">gfx1010</span><span class="p">,</span> <span class="n">gfx900</span><span class="p">,</span>        
+                                              <span class="n">gfx801</span><span class="p">,</span> <span class="n">gfx1012</span><span class="p">,</span>        
+                                              <span class="n">gfx908</span><span class="p">,</span> <span class="n">gfx90a</span>          
+    <span class="n">asan</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                     <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Turn</span> <span class="n">on</span> <span class="n">address</span> <span class="n">sanitizer</span>
+    <span class="n">build_type</span> <span class="p">[</span><span class="n">RelWithDebInfo</span><span class="p">]</span>    <span class="o">--</span>         <span class="n">Debug</span><span class="p">,</span> <span class="n">Release</span><span class="p">,</span>         <span class="n">CMake</span> <span class="n">build</span> <span class="nb">type</span>
+                                              <span class="n">RelWithDebInfo</span><span class="p">,</span>         
+                                              <span class="n">MinSizeRel</span>              
+    <span class="n">clangtidy</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Turn</span> <span class="n">on</span> <span class="n">clang</span><span class="o">-</span><span class="n">tidy</span>
+    <span class="n">cppcheck</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                 <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Turn</span> <span class="n">on</span> <span class="n">cppcheck</span>
+    <span class="n">cuda</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                     <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Build</span> <span class="k">with</span> <span class="n">CUDA</span>
+    <span class="n">cuda_arch</span> <span class="p">[</span><span class="n">none</span><span class="p">]</span>               <span class="o">+</span><span class="n">cuda</span>      <span class="n">none</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>       <span class="n">CUDA</span> <span class="n">architecture</span>
+                                              <span class="mi">86</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span>     
+                                              <span class="mi">21</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span>     
+                                              <span class="mi">52</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span>     
+                                              <span class="mi">20</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">80</span>              
+    <span class="n">hypre</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>                     <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">Hypre</span> <span class="n">integration</span>
+    <span class="n">internal</span><span class="o">-</span><span class="n">amrex</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>            <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Use</span> <span class="n">AMRex</span> <span class="n">submodule</span> <span class="n">to</span> <span class="n">build</span>
+    <span class="n">ipo</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                      <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">CMake</span> <span class="n">interprocedural</span> <span class="n">optimization</span>
+    <span class="n">masa</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                     <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">MASA</span> <span class="n">integration</span>
+    <span class="n">mpi</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>                       <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">MPI</span> <span class="n">support</span>
+    <span class="n">netcdf</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>                    <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">NetCDF</span> <span class="n">support</span>
+    <span class="n">openfast</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                 <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">OpenFAST</span> <span class="n">integration</span>
+    <span class="n">openmp</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                   <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">OpenMP</span> <span class="k">for</span> <span class="n">CPU</span> <span class="n">builds</span>
+    <span class="n">rocm</span> <span class="p">[</span><span class="n">off</span><span class="p">]</span>                     <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Enable</span> <span class="n">ROCm</span> <span class="n">support</span>
+    <span class="n">shared</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>                    <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Build</span> <span class="n">shared</span> <span class="n">libraries</span>
+    <span class="n">tests</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>                     <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Activate</span> <span class="n">regression</span> <span class="n">tests</span>
+    <span class="n">unit</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>                      <span class="o">--</span>         <span class="n">on</span><span class="p">,</span> <span class="n">off</span>                 <span class="n">Build</span> <span class="n">unit</span> <span class="n">tests</span>
+
+<span class="n">Installation</span> <span class="n">Phases</span><span class="p">:</span>
+    <span class="n">cmake</span>    <span class="n">build</span>    <span class="n">install</span>
+
+<span class="n">Build</span> <span class="n">Dependencies</span><span class="p">:</span>
+    <span class="n">amrex</span>  <span class="n">cmake</span>  <span class="n">cuda</span>  <span class="n">hip</span>  <span class="n">hsa</span><span class="o">-</span><span class="n">rocr</span><span class="o">-</span><span class="n">dev</span>  <span class="n">hypre</span>  <span class="n">llvm</span><span class="o">-</span><span class="n">amdgpu</span>  <span class="n">masa</span>  <span class="n">mpi</span>  <span class="n">netcdf</span><span class="o">-</span><span class="n">c</span>  <span class="n">openfast</span>  <span class="n">py</span><span class="o">-</span><span class="n">matplotlib</span>  <span class="n">py</span><span class="o">-</span><span class="n">pandas</span>
+
+<span class="n">Link</span> <span class="n">Dependencies</span><span class="p">:</span>
+    <span class="n">amrex</span>  <span class="n">cuda</span>  <span class="n">hip</span>  <span class="n">hsa</span><span class="o">-</span><span class="n">rocr</span><span class="o">-</span><span class="n">dev</span>  <span class="n">hypre</span>  <span class="n">llvm</span><span class="o">-</span><span class="n">amdgpu</span>  <span class="n">masa</span>  <span class="n">mpi</span>  <span class="n">netcdf</span><span class="o">-</span><span class="n">c</span>  <span class="n">openfast</span>  <span class="n">py</span><span class="o">-</span><span class="n">matplotlib</span>  <span class="n">py</span><span class="o">-</span><span class="n">pandas</span>
+
+<span class="n">Run</span> <span class="n">Dependencies</span><span class="p">:</span>
+    <span class="kc">None</span>
+
+<span class="n">Virtual</span> <span class="n">Packages</span><span class="p">:</span> 
+    <span class="kc">None</span>
+</pre></div>
+</div>
+<p>So if you want to know how to create a debug build, you can look at this information and see:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">build_type</span> <span class="p">[</span><span class="n">RelWithDebInfo</span><span class="p">]</span>    <span class="o">--</span>         <span class="n">Debug</span><span class="p">,</span> <span class="n">Release</span><span class="p">,</span>         <span class="n">CMake</span> <span class="n">build</span> <span class="nb">type</span>
+                                          <span class="n">RelWithDebInfo</span><span class="p">,</span>         
+                                          <span class="n">MinSizeRel</span>                
+</pre></div>
+</div>
+<p>This is an list spec and the available options are listed.
+So adding <code class="docutils literal notranslate"><span class="pre">build_type=Debug</span></code> to the spec i.e. <code class="docutils literal notranslate"><span class="pre">amr-wind</span> <span class="pre">build_type=Debug</span></code> will create a debug build.
+If you want to turn on <code class="docutils literal notranslate"><span class="pre">masa</span></code>, you can add <code class="docutils literal notranslate"><span class="pre">+masa</span></code>.
+This will be covered in more detail in the <a class="reference internal" href="#reading-and-writing-spack-specs">next section</a> when specs are discussed.
+For this section it is sufficient to know that <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span></code> is the key to knowing what you need to write to customize your builds.</p>
+</section>
+<section id="reading-and-writing-spack-specs">
+<h2>Reading and writing Spack specs<a class="headerlink" href="#reading-and-writing-spack-specs" title="Link to this heading"></a></h2>
+<p>Spack specs are critical to using Spack-Manager because they are the language used to communicate the options and configurations of
+the software that is getting built.<br />
+We provide an overview of what a spec is, and the parts that go into making a Spack spec in our
+<a class="reference external" href="https://sandialabs.github.io/spack-manager/general/spack_features.html#spack-specs">general documentation</a>,
+and an even more thorough description can be found in the
+<a class="reference external" href="https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies">spack documentation</a></p>
+<p>A simple description of a spec for this section can be understood by looking at delimiters in a spec: <code class="docutils literal notranslate"><span class="pre">{name}&#64;{version}%{compiler}{variants}</span> <span class="pre">^{dependent</span> <span class="pre">specs}</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> is the package name.  This is what you query with the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span></code> and is typically the name of the software.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code> is what immediately follows the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol.  This can be aligned to a github branch, tag, or a url (i.e. download a tar file). The details for the versions can be found via the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">command</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compiler</span></code> specification is what immediately follows the <code class="docutils literal notranslate"><span class="pre">%</span></code> symbol, and typically also has a name and version i.e. <code class="docutils literal notranslate"><span class="pre">gcc&#64;9.3.0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">variants</span></code> are the flags for the software. They can be booleans (where <code class="docutils literal notranslate"><span class="pre">+</span></code> is on and <code class="docutils literal notranslate"><span class="pre">~</span></code> is off) and lists i.e <code class="docutils literal notranslate"><span class="pre">build_type=Release</span></code> or <code class="docutils literal notranslate"><span class="pre">cuda_arch=70</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dependent</span> <span class="pre">specs</span></code> are the ways to specify flags for the dependencies.  Whenever a <code class="docutils literal notranslate"><span class="pre">^</span></code> is added it is delimiting to a new spec with the restriction that must be in the dependency graph of the first spec or <em>root spec</em>.</p></li>
+</ul>
+<p>We don’t recommend developers use the <code class="docutils literal notranslate"><span class="pre">^</span></code> command at all since it makes things more confusing, and is unnecessary for normal development cycles.
+It is addressed here for clarity and completeness, but you won’t need them unless you intend to build multiple version of the same software in the same environment.
+An example of this would be an environment that builds the same software with multiple compilers, but this is typically a feature for system administrators, not standard development cycles.</p>
+</section>
+<section id="major-steps-of-the-spack-build-process">
+<h2>Major steps of the Spack build process<a class="headerlink" href="#major-steps-of-the-spack-build-process" title="Link to this heading"></a></h2>
+<p>Spack-Manager uses <a class="reference external" href="https://spack.readthedocs.io/en/latest/environments.html">Spack environments</a> to manage your development builds.
+These environments are similar to Conda environments in concept, but they benefit from re-using software that you’ve built in previous environments.
+As such it is recommended that you maintain a single instance of Spack-Manager to organize and curate your builds, and create new environments when you want to start a new development project.  For example if you are working on multiple features at the same time it is convenient to maintain multiple environments.</p>
+<p>Understanding the steps that go into creating an environment is helpful for debugging and thinking about how to organize your workflow.
+Spack and Spack-Manager are also relatively easy to script in either bash or python,
+but it is important to understand the build process to write effective scripts.</p>
+<p>The major steps and associated commands for building software with Spack environments are (don’t forget to <a class="reference internal" href="#querying-the-spack-commands">query the commands</a> to learn more about them):</p>
+<ol class="arabic simple">
+<li><p><strong>Create the environment:</strong> (<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">create-env</span></code>)<br />
+This generates a <code class="docutils literal notranslate"><span class="pre">spack.yaml</span></code> file which is how the environment is defined. Most of the following commands will be manipulating this file.</p></li>
+<li><p><strong>Activate the environment:</strong> (<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">env</span> <span class="pre">activate</span></code>)<br />
+This sets the environment as active in your shell.</p></li>
+<li><p><strong>Add root specs:</strong> (<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">add</span></code>)<br />
+Define the software that you want in the environment.  Spack will solve for the dependencies of all these root specs, and ensure that your environment meshes together. They just need the <code class="docutils literal notranslate"><span class="pre">name</span></code> as a minimum.</p></li>
+<li><p><strong>Add develop specs</strong> (<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">develop</span></code>)<br />
+Determine what software you want to modify i.e. which specs you want to develop.
+These specs must have the <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">version</span></code> as a minimum.
+They are not going to be added to your environment by themselves, but rather serve as keys for the concretizer to determine if a spec should be treated as a develop spec or not.
+Essentially, if the concretizer can determine that a spec in the graph can be equivalenced with the develop spec, then it will use your source code and not spack’s usual process for cloning/building/installing.
+Think of this as a sort of dictionary.
+For instance <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">add</span> <span class="pre">trilinos</span></code> and <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">develop</span> <span class="pre">trilinos&#64;develop</span></code> will mean that trilinos will use the source code,
+but if you had done <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">add</span> <span class="pre">trilinos&#64;master</span></code> then it would not because <code class="docutils literal notranslate"><span class="pre">trilinos&#64;develop</span></code> and <code class="docutils literal notranslate"><span class="pre">trilinos&#64;master</span></code> can’t be equivalenced.
+It is recommended that you always just do <code class="docutils literal notranslate"><span class="pre">name&#64;version</span></code> for your develop specs to get the broadest match possible.
+More documentation on this can be found in the <a class="reference external" href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html">spack documentation</a>.</p></li>
+<li><p><strong>Concretize:</strong> (<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">concretize</span></code>)<br />
+This is how the Spack determines what the dependency graph needs to look like for your environment.  It is a non-trivial problem to solve since you can use any combination of variants in each package in the <a class="reference external" href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a>.  Each software package can enforce built in conflicts that are set by the maintainers, but anything that is not constrained by your spec or the software itself will fall to the default (once again look to <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span></code> to see the defaults).</p></li>
+<li><p><strong>Build/install:</strong> (<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code>)<br />
+Now that you’ve decided what combination of software you want to build, what elements you want to develop, and what the dependency graph is all that is left is to build and install. Easy right?</p></li>
+</ol>
+<p>This may seem like a lot to go over, and this was not a very thorough description of each step.
+These steps are covered with a workflow example in the <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html">developer tutorial</a>
+where we walk through each step one at a time.
+The intention of this page is to serve as an introduction and a reference going forward.
+If you forget a step or command you can always come back to this page to see what it is and see a brief description of the whole process.
+It is also important to know that in your practical workflow you won’t need to type out each command every time you want to use Spack-Manager.
+Spack-Manager contains convenience scripts that wrap the steps together, and print them as they execute to help you remember them.</p>
+<p>The two most hands off commands are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code>: this will do steps 1-5 for you automatically if you provide specs with versions in the input arguments (stops at step 4 if you don’t)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">quick-activate</span></code>: this will activate a previously created environment for you. You just pass the directory location to it.</p></li>
+</ul>
+<p>For example, fastest way to start developing <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">openfast</span></code> together is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">quick</span><span class="o">-</span><span class="n">create</span><span class="o">-</span><span class="n">dev</span> <span class="o">--</span><span class="n">name</span> <span class="n">my</span><span class="o">-</span><span class="n">dev</span><span class="o">-</span><span class="n">project</span> <span class="o">--</span><span class="n">spec</span> <span class="n">amr</span><span class="o">-</span><span class="n">wind</span><span class="nd">@main</span><span class="o">+</span><span class="n">openfast</span> <span class="n">openfast</span><span class="nd">@master</span>
+<span class="c1"># go to amr-wind source code</span>
+<span class="n">spack</span> <span class="n">cd</span> <span class="n">amr</span><span class="o">-</span><span class="n">wind</span> <span class="c1"># modify the code in here as you wish</span>
+<span class="c1"># go to openfast source code</span>
+<span class="n">spack</span> <span class="n">cd</span> <span class="n">openfast</span> <span class="c1"># modify the code in here as you wish</span>
+<span class="c1"># install code</span>
+<span class="n">spack</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>As a reminder, to learn more about the commnands used above <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span> <span class="pre">--help</span></code>, <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">cd</span> <span class="pre">--help</span></code>, <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span> <span class="pre">--help</span></code>.
+To learn what other build options you have for <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> … <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">amr-wind</span></code>, <code class="docutils literal notranslate"><span class="pre">openfast</span></code> … <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">info</span> <span class="pre">openfast</span></code>, etc.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="developers.html" class="btn btn-neutral float-left" title="Developer Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="developer_workflow.html" class="btn btn-neutral float-right" title="Quick-Start: Developer Workflow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

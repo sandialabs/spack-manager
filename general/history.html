@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History and inspirations for Spack-Manager &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Important Spack Features" href="spack_features.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_profiles/user_profiles.html">User Profiles</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="general.html">General Information</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="spack_manager_structure.html">Spack-Manager Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spack_features.html">Important Spack Features</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">History and inspirations for Spack-Manager</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="general.html">General Information</a></li>
+      <li class="breadcrumb-item active">History and inspirations for Spack-Manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/general/history.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="history-and-inspirations-for-spack-manager">
+<h1>History and inspirations for Spack-Manager<a class="headerlink" href="#history-and-inspirations-for-spack-manager" title="Link to this heading"></a></h1>
+<p>Spack-Manager was created due to the challenges of building the complicated <a class="reference external" href="https://github.com/Exawind">Exawind</a> software stack.
+The Exawind codes have a relatively large number of TPL’s and are designed to run on modern HPC architecture, which is currently a moving target.
+These factors naturally lead toward using <a class="reference external" href="https://github.com/spack/spack">Spack</a> to manage the build dependencies.</p>
+<p>Arguably the most common use case for Spack is software deployment.
+This was the original use for Exawind developers, and a few different extra scripts were maintained for managing the build process for Exawind software.
+However, during the Exawind project Spack also released features geared toward development.
+This sparked the idea for the central question behind Spack-Manager: <strong>how much of our process can we reasonably extend into the Spack ecosystem?</strong></p>
+<p>Initial evaluations of Spack’s develop features were that there was potential, but also room to grow.
+These features have since improved, but the other tenant of Spack-Manager was determined from this trial period:  <strong>end products need to live as independent from Spack as possible</strong>.
+This really comes down to the fact that Exawind stack was constantly changing and growing, along with Spack itself.
+In reality the entire HPC and computing landscape is changing dramatically, and so our development frameworks need to be moving together, but still have room to independently flex as thing evolve.
+In this sense Spack-Manager acts as a buffer in between the larger Spack project, and the invidual software projects that are using Spack-Manager to curate their development process.</p>
+<p>Spack-Manager’s development obtained a lot of inspiration from the <a class="reference external" href="https://github.com/Exawind/exawind-builder">Exawind-Builder</a> project.
+Spack-Manager has sought to emulate some of the key features of Exawind-Builder such as the ability to use pre-configured binaries, and to allow users to quickly switch between caches.
+Exawind-Builder was a tool principly designed for developers, and Spack-Manager strives to extend that user scope to the entire range of software users.</p>
+<p>Exawind-Builder is also another example of a tool built on-top of Spack.
+However, the strategies of Spack-Manager and Exawind-Builder differ slightly in that Exawind-Builder sought to go around Spack’s missing features through additional bash scripting and environment configurations, while Spack-Manager seeks to predominately extend Spack using the Spack ecosystem for these scenarios.
+Both sides have pro’s and con’s.
+Choosing to go around Spack makes it easier to customize things with fewer limitations, but it also requires additional code, interfaces and maintenance.
+Choosing to conform to Spack infrastructure means accepting some of the limitations and growing pains of the Spack API, but also reducing the amount of infrastructure that needs to be maintained.
+This is constantly becoming less of a sacrifice due to the quality of work done by the Spack development team.</p>
+<p>Spack-Manager is intended to be agile, and adapt to changes in Spack by embracing new features in Spack, and contributing back everything it can to the Spack project.
+In this sense we are able to harness the pro’s of Spack, while still customizing our workflow and influencing the growth of Spack in the future.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="spack_features.html" class="btn btn-neutral float-left" title="Important Spack Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

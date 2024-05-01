@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick-Start: Developer Workflow &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Useful Commands for Development" href="useful_commands.html" />
+    <link rel="prev" title="Developers: What you need to know about Spack" href="developer_spack_minimum.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_profiles.html">User Profiles</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysts/analysts.html">Analysts Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="developers.html">Developer Documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="developer_spack_minimum.html">Developers: What you need to know about Spack</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Quick-Start: Developer Workflow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup-spack-manager">Setup Spack-Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-an-environment">Creating an Environment</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#managing-the-source-code">Managing the Source Code</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#building-and-making-code-changes">Building and Making Code Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-tests-and-coming-back">Running Tests and Coming Back</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quick-start">Quick Start</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html">Useful Commands for Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_topics.html">Advanced Topics for Developers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="snapshot_workflow.html">Snapshot Developer Workflow Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_admins/system_admins.html">System Administrator Documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_profiles.html">User Profiles</a></li>
+          <li class="breadcrumb-item"><a href="developers.html">Developer Documentation</a></li>
+      <li class="breadcrumb-item active">Quick-Start: Developer Workflow</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/user_profiles/developers/developer_workflow.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start-developer-workflow">
+<h1>Quick-Start: Developer Workflow<a class="headerlink" href="#quick-start-developer-workflow" title="Link to this heading"></a></h1>
+<p>In this section we will go over the developer work flow in Spack-Manager using the <a class="reference external" href="https://psakievich.github.io/spack-manager/user_profiles/developers/useful_commands.html">quick-functions</a>.</p>
+<p>This tutorial assumes you are familiar with the <a class="reference external" href="https://psakievich.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html">3 things developers need to know</a>.
+If you are unfamiliar with these 3 things then please review the documentation before proceeding.</p>
+<p>The developer workflow will be covered in 4 stages:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#setup-spack-manager">Setting up Spack-Manager</a></p></li>
+<li><p><a class="reference internal" href="#creating-an-environment">Create an environment for development</a></p></li>
+<li><p><a class="reference internal" href="#building-and-making-code-changes">Building and making code changes</a></p></li>
+<li><p><a class="reference internal" href="#running-tests-and-coming-back">Running tests and coming back</a></p></li>
+</ol>
+<p>There is also the <a class="reference internal" href="#quick-start">quick start</a> below that just lists all the commands for you in a row.</p>
+<section id="setup-spack-manager">
+<h2>Setup Spack-Manager<a class="headerlink" href="#setup-spack-manager" title="Link to this heading"></a></h2>
+<p>Setting up Spack-Manager should be a 1 time thing on a given machine.
+First pick directory you want to store Spack-Manager.
+The ideal location for this directory is one that has adequate storage for multiple build environments,
+and it should also be on a filesytem that is accesible where you plan to run the software.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone --recursive git@github.com:sandialabs/spack-manager.git</span>
+</pre></div>
+</div>
+<p>For the purpose of this documentaiton we will define a <code class="docutils literal notranslate"><span class="pre">SPACK_MANAGER</span></code> environment variable,
+and it should provide the absolute path to your Spack-Manager directory.
+Spack-Manager also provides a <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">location</span></code> command which will provide an absolute path
+to the Spack-Manager source directory.
+To have access to the
+commands we will use in this tutorial you need to source <code class="docutils literal notranslate"><span class="pre">$SPACK_MANAGER/scripts/quick_commands.sh</span></code>.
+This script enables all the shell functions in Spack-Manager but it does not activate Spack.
+We do this to allow you to add these lines to your <code class="docutils literal notranslate"><span class="pre">bash_profile</span></code> without any penalty
+since sourcing Spack adds an unacceptable level of overhead for standard shell spawning,</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>These<span class="w"> </span>lines<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>added<span class="w"> </span>to<span class="w"> </span>your<span class="w"> </span>bash_profile
+<span class="go">export SPACK_MANAGER=$(pwd)/spack-manager</span>
+<span class="go">source $SPACK_MANAGER/scripts/quick_commands.sh</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-an-environment">
+<h2>Creating an Environment<a class="headerlink" href="#creating-an-environment" title="Link to this heading"></a></h2>
+<p>With the Spack development workflow we are going to create an environment similar to a Conda environment.
+Setting up the environments is a multistep process that is outlined in greater detail <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html">here</a> and <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/useful_commands.html#environment-setup-process">here</a>.
+There are three <code class="docutils literal notranslate"><span class="pre">quick-commands</span></code> for creating environments: <code class="docutils literal notranslate"><span class="pre">quick-create</span></code>, <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> and <code class="docutils literal notranslate"><span class="pre">quick-develop</span></code>.
+They all exit the process of setting up an environment at different points in the process as outlined below:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Step</p></th>
+<th class="head text-center"><p>quick-create</p></th>
+<th class="head text-center"><p>quick-create-dev</p></th>
+<th class="head text-center"><p>quick-develop</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Create an environment</p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Activate an environment</p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Add root specs</p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Add develop specs</p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p>x</p></td>
+<td class="text-center"><p>x</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Add externals</p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p>x</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Concretize and install</p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>For developers we recommend using <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> and <code class="docutils literal notranslate"><span class="pre">quick-develop</span></code> depending on if you want to use externals or not.</p>
+<p>The interface for both of these commands is exactly the same.  Moving forward we will use <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> in this example.
+To see the options for the command we can run it with the <code class="docutils literal notranslate"><span class="pre">--help</span></code> command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">quick-create-dev -h</span>
+<span class="go">*************************************************************</span>
+<span class="go">HELP MESSAGE:</span>
+<span class="go">quick-create-dev sets up a developer environment</span>
+<span class="go">where all specs are develop specs that will be automatically cloned</span>
+<span class="go">from the default repos</span>
+<span class="go">    </span>
+<span class="go">The next typical steps after running this command are to add externals if</span>
+<span class="go">you want them, or run spack install.</span>
+<span class="go">    </span>
+<span class="go">The base command and it&#39;s help are echoed below:</span>
+<span class="go">    </span>
+
+<span class="go">+ spack manager create-dev-env -h</span>
+<span class="go">usage: spack manager create-dev-env [-h] [-m MACHINE] [-d DIRECTORY | -n NAME] [-y YAML] [-s SPEC [SPEC ...]]</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -d DIRECTORY, --directory DIRECTORY</span>
+<span class="go">                        Directory to copy files</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  -m MACHINE, --machine MACHINE</span>
+<span class="go">                        Machine to match configs</span>
+<span class="go">  -n NAME, --name NAME  Name of directory for environment (managed environment)</span>
+<span class="go">  -s SPEC [SPEC ...], --spec SPEC [SPEC ...]</span>
+<span class="go">                        Specs to populate the environment with</span>
+<span class="go">  -y YAML, --yaml YAML  Reference spack.yaml to copy to directory</span>
+<span class="go">*************************************************************</span>
+</pre></div>
+</div>
+<p>The main flags to use for standard developer workflow are the <code class="docutils literal notranslate"><span class="pre">--name</span></code> or <code class="docutils literal notranslate"><span class="pre">--directory</span></code> flags and the <code class="docutils literal notranslate"><span class="pre">--spec</span></code> flags.</p>
+<p>To set up a build of the exawind driver where we are developing <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> too we would run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">quick-create-dev -n example-env -s exawind@master nalu-wind@master amr-wind@main</span>
+</pre></div>
+</div>
+<p>If you don’t want to develop one of these packages (say you’re only focused on <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code>) then just ommit the software you don’t
+plan to develop in from the spec list in the command above. Please note that these specs need to be concrete specs, meaning they have the name
+(<code class="docutils literal notranslate"><span class="pre">amr-wind</span></code>) and the version from spack (<code class="docutils literal notranslate"><span class="pre">main</span></code>), and that <strong>that the version is not necessarily the same thing as the branch</strong>.
+This is covered in the <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html">things developers need to know about Spack</a> for those needing a refresher.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-n</span></code> flag can be replaced with <code class="docutils literal notranslate"><span class="pre">-d</span></code> if we want to setup an environment in a different location than <code class="docutils literal notranslate"><span class="pre">spack:config:environments_root</span></code> (see the <a class="reference external" href="https://spack.readthedocs.io/en/latest/config_yaml.html#spack-settings-config-yaml">spack documentation</a> for help on configuring custom managed spack environment locaitons).
+The <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> command will execute all the stages in the table above including cloning the repos from github for the software.
+These clones of the source code default to the environment directory you specified with the <code class="docutils literal notranslate"><span class="pre">-d</span></code> or <code class="docutils literal notranslate"><span class="pre">-n</span></code> flags.
+If we wish to work off specific branches then we can use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">remote</span></code>, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code> to get the branches we want
+inside each of the clones before building.</p>
+<section id="managing-the-source-code">
+<h3>Managing the Source Code<a class="headerlink" href="#managing-the-source-code" title="Link to this heading"></a></h3>
+<p>There are 4 options for setting up the source code you will use in your development process</p>
+<ol class="arabic simple">
+<li><p>Allow spack to clone the default git repo and branch when you use the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">develop</span></code> or <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span></code> commands.</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span></code> command with the <code class="docutils literal notranslate"><span class="pre">--repo-branch</span></code> argument to clone from a specific fork and branch.</p></li>
+<li><p>Pre-clone the source code into the environment directory.</p></li>
+<li><p>Use additional <code class="docutils literal notranslate"><span class="pre">develop</span></code> arguments to point spack to exisiting source code outside the environment directory.</p></li>
+</ol>
+<p>Option 1 happens automatically if you run <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code>.  Option 2 can be used with an active environment.
+See below for an example of how to use option2.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>create<span class="w"> </span>an<span class="w"> </span>environment<span class="w"> </span>and<span class="w"> </span>acticate<span class="w"> </span>it<span class="w"> </span>with<span class="w"> </span><span class="s2">&quot;quick-create&quot;</span>
+<span class="gp"># </span><span class="k">then</span><span class="w"> </span>clone<span class="w"> </span>the<span class="w"> </span><span class="s2">&quot;amr-feature&quot;</span><span class="w"> </span>branch<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>user<span class="w"> </span>specific<span class="w"> </span>fork<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>amr-wind<span class="w"> </span>git<span class="w"> </span>repo
+<span class="gp"># </span><span class="k">then</span><span class="w"> </span>clone<span class="w"> </span>the<span class="w"> </span><span class="s2">&quot;openfast-feature&quot;</span><span class="w"> </span>branch<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>user<span class="w"> </span>specific<span class="w"> </span>fork<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>openfast<span class="w"> </span>git<span class="w"> </span>repo
+<span class="gp"># </span>finally<span class="w"> </span>build<span class="w"> </span>the<span class="w"> </span>software<span class="w"> </span>using<span class="w"> </span>the<span class="w"> </span><span class="nb">source</span><span class="w"> </span>code<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>just<span class="w"> </span>cloned
+<span class="go">quick-create -n build-from-my-fork -s amr-wind+openfast</span>
+<span class="go">spack manager develop --repo-branch git@github.com:psakievich/amr-wind.git amr-feature amr-wind@main</span>
+<span class="go">spack manager develop --repo-branch git@github.com:psakievich/openfast.git openfast-feature openfast@master</span>
+<span class="go">spack install</span>
+</pre></div>
+</div>
+<p>If you wish to pre-clone your repos using option 3 you can simply create a directory,
+pre-clone the software you want to develop with names that match the package names and run your <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> inside the directory you created without either of the <code class="docutils literal notranslate"><span class="pre">-d</span></code> or <code class="docutils literal notranslate"><span class="pre">-n</span></code> flags.
+This is because the default behavior of the command is to create the environment files, and clone repos in the current
+working directory.</p>
+<p>For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir test &amp;&amp; cd test</span>
+<span class="gp"># </span>note<span class="w"> </span>that<span class="w"> </span>we<span class="w"> </span>name<span class="w"> </span>the<span class="w"> </span>clone<span class="w"> </span>of<span class="w"> </span>exawind-driver<span class="w"> </span><span class="s1">&#39;exawind&#39;</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>clone<span class="w"> </span>process<span class="w"> </span>to<span class="w"> </span>match<span class="w"> </span>the<span class="w"> </span>spack<span class="w"> </span>package<span class="w"> </span>name
+<span class="go">git clone --recursive --branch main git@github.com:Exawind/exawind-driver.git exawind</span>
+<span class="go">git clone --recursive --branch master git@github.com:Exawind/nalu-wind.git</span>
+<span class="go">git clone --recursive --branch main git@github.com:Exawind/amr-wind.git</span>
+<span class="go">quick-create-dev -s exawind@main amr-wind@main nalu-wind@master</span>
+<span class="go">+ spack manager create-dev-env -s exawind@master amr-wind@main nalu-wind@master</span>
+<span class="go">==&gt; Configuring spec exawind@master for development at path exawind</span>
+<span class="go">==&gt; Warning: included configuration files should be updated manually [files=include.yaml]</span>
+<span class="go">==&gt; Configuring spec amr-wind@main for development at path amr-wind</span>
+<span class="go">==&gt; Configuring spec nalu-wind@master for development at path nalu-wind</span>
+<span class="go">+ spack env activate --dir /current/working/directory --prompt</span>
+</pre></div>
+</div>
+<p>does the same thing as</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">quick-create-dev -d test -s exawind@master nalu-wind@master amr-wind@main</span>
+</pre></div>
+</div>
+<p>However, adding in the extra pre-clone steps gives you a little more control over your environment.</p>
+<p>Options 1 and 2 are the recommended ways of proceeding since they are the most concise and support the most common use cases.
+Option 3 is available if you need additional flexibility, are on an air gaped system
+or have issues with spack cloning from git (this may be due to an old version of git on the system).
+Option 4 is not really recommended but the curious can learn more by diving into spack’s documentation and/or using <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span> <span class="pre">--help</span></code>
+to learn the features and combinations available.</p>
+<p>At this point in the process your environment is active and all setup.
+You can confirm that it is active with <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">env</span> <span class="pre">status</span></code> which displays the active environment.</p>
+</section>
+</section>
+<section id="building-and-making-code-changes">
+<h2>Building and Making Code Changes<a class="headerlink" href="#building-and-making-code-changes" title="Link to this heading"></a></h2>
+<p>Once the environment is setup and active you can simply run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">spack install</span>
+</pre></div>
+</div>
+<p>to build the software.</p>
+<p>In this case we are building without externals so you will see <code class="docutils literal notranslate"><span class="pre">clingo</span></code> get bootstrapped, concretization happen, and then the install occur for the entire software stack.</p>
+<p>You are free to make code changes in any of the code directories.
+Re-running <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> will cause Spack to check for changes by inspecting the time-date stamp on the files in the source code directories.
+If they are newer than the install time then it will trigger an incremental build to capture any changes that might exist.
+Any changes you make in a dependency will also trigger a rebuild of the upstream software too.
+In this environment if you make a change in <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> it will also trigger a rebuild of the <code class="docutils literal notranslate"><span class="pre">exawind</span></code> package as well.</p>
+<p>If you wish to just do a quick incremental build you can use the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">make</span></code> command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">spack manager make amr-wind -j=16</span>
+</pre></div>
+</div>
+</section>
+<section id="running-tests-and-coming-back">
+<h2>Running Tests and Coming Back<a class="headerlink" href="#running-tests-and-coming-back" title="Link to this heading"></a></h2>
+<p>To run tests in a one off manner you can use the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">build-env</span></code> command to run commands in a sub-shell with the build environment.
+This is further documented <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html#running">here</a>.
+We also have a function <code class="docutils literal notranslate"><span class="pre">build-env-dive</span></code> which is a beta feature that launches this same subshell in your terminal and dives into it.
+It is further documented <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/useful_commands.html#build-env-dive">here</a>.
+Finally, if a <code class="docutils literal notranslate"><span class="pre">test</span></code> target is implementd for your software you can use <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">make</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">spack manager make --args=&quot;test -j16&quot; amr-wind</span>
+</pre></div>
+</div>
+<p>If you wish to come back to an environment later, or in a new shell you can just run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">quick-activate /path/to/the/environment/you/wish/to/activate</span>
+</pre></div>
+</div>
+<p>and this will do all the activation for the environment for you.
+You will be able to come back at anytime and pick up where you left off.</p>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<p>These are the commands needed to set up Spack-Manager and a development build for the exawind-driver with the intention of editing <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> at the same time.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>setup<span class="w"> </span>Spack-Manager
+<span class="go">git clone --recursive git@github.com:sandialabs/spack-manager.git</span>
+<span class="go">export SPACK_MANAGER=$(pwd)/spack-manager</span>
+<span class="go">source $SPACK_MANAGER/start.sh</span>
+<span class="gp"># </span>setup<span class="w"> </span>environment
+<span class="go">quick-create-dev -n demo -s exawind@master amr-wind@main nalu-wind@master</span>
+<span class="gp"># </span>build<span class="w"> </span>code
+<span class="go">spack install</span>
+<span class="gp"># </span>code<span class="w"> </span>changes<span class="w"> </span><span class="k">in</span><span class="w"> </span>amr-wind
+<span class="go">spack cd amr-wind</span>
+<span class="gp"># </span>....<span class="w"> </span>make<span class="w"> </span>code<span class="w"> </span>changes
+<span class="gp"># </span>code<span class="w"> </span>changes<span class="w"> </span><span class="k">in</span><span class="w"> </span>nalu-wind
+<span class="go">spack cd nalu-wind</span>
+<span class="gp"># </span>...<span class="w"> </span>make<span class="w"> </span>code<span class="w"> </span>changes
+<span class="gp"># </span>re-build
+<span class="go">spack install</span>
+<span class="gp"># </span>go<span class="w"> </span>to<span class="w"> </span>build<span class="w"> </span>directory
+<span class="go">spack cd -b nalu-wind</span>
+<span class="gp"># </span>run<span class="w"> </span>all<span class="w"> </span>the<span class="w"> </span>overset<span class="w"> </span>regression<span class="w"> </span>tests<span class="w"> </span><span class="k">in</span><span class="w"> </span>nalu-wind
+<span class="go">spack build-env nalu-wind ctest -R overset</span>
+<span class="gp"># </span>run<span class="w"> </span>regression<span class="w"> </span>tests<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>exawind-driver
+<span class="go">build-env-dive exawind</span>
+<span class="go">ctest -VV</span>
+<span class="gp"># </span>don<span class="s1">&#39;t forget you need to exit this build env subshell when you&#39;</span>re<span class="w"> </span><span class="k">done</span><span class="w"> </span>by<span class="w"> </span>calling<span class="w"> </span><span class="sb">`</span><span class="nb">exit</span><span class="sb">`</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="developer_spack_minimum.html" class="btn btn-neutral float-left" title="Developers: What you need to know about Spack" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="useful_commands.html" class="btn btn-neutral float-right" title="Useful Commands for Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

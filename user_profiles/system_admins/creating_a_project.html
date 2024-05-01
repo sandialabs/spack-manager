@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating and configuring a Spack-Manager Project &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="General Information" href="../../general/general.html" />
+    <link rel="prev" title="System Administrator Documentation" href="system_admins.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_profiles.html">User Profiles</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysts/analysts.html">Analysts Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developers/developers.html">Developer Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="system_admins.html">System Administrator Documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Creating and configuring a Spack-Manager Project</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-project-from-scratch">Creating a Project from Scratch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#populating-machine-specific-configurations">Populating Machine Specific Configurations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#anonymous-machines">Anonymous Machines</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuring-machine-auto-detection">Configuring Machine Auto-detection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-spack-package-repositories">Setting up Spack Package Repositories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-version-control">Adding Version Control</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_profiles.html">User Profiles</a></li>
+          <li class="breadcrumb-item"><a href="system_admins.html">System Administrator Documentation</a></li>
+      <li class="breadcrumb-item active">Creating and configuring a Spack-Manager Project</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/user_profiles/system_admins/creating_a_project.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-and-configuring-a-spack-manager-project">
+<h1>Creating and configuring a Spack-Manager Project<a class="headerlink" href="#creating-and-configuring-a-spack-manager-project" title="Link to this heading"></a></h1>
+<p>Spack-Manager projects are the method for organizing configuration files and package repositories
+associated with a given software application.</p>
+<p>If a pre-configred project exists then it simply has to be add to the Spack-Manager configuration file.
+This section will demonstrate the process of setting up a Spack-Manager project from scratch using the
+<a class="reference external" href="https://github.com/Exawind/">ExaWind application</a>.<br />
+This is just an example that is not going to be kept up-to-date for Exawind since it is a living, independent project.
+The actual ExaWind configuration can be found <a class="reference external" href="https://github.com/Exawind/exawind-manager/">here</a>.</p>
+<section id="creating-a-project-from-scratch">
+<h2>Creating a Project from Scratch<a class="headerlink" href="#creating-a-project-from-scratch" title="Link to this heading"></a></h2>
+<p>A Project is really just a collection of directories and couple of optional python files.
+In the <code class="docutils literal notranslate"><span class="pre">spack-manager.yaml</span></code> configuration file paths are provided to the projects that this instance of
+Spack-Manager is supporting.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cat<span class="w"> </span>spack-manager/spack-manager.yaml
+
+<span class="go">spack-manager:</span>
+<span class="go">    projects:</span>
+<span class="go">    - $SCRATCH/exawind-demo</span>
+
+<span class="gp">$ </span>ls<span class="w"> </span>-lh<span class="w"> </span><span class="nv">$SCRATCH</span>/exawind-demo
+<span class="go">ls: /Users/psakiev/scratch/exawind-demo: No such file or directory</span>
+</pre></div>
+</div>
+<p>If a non-existent path is added to the <code class="docutils literal notranslate"><span class="pre">Projects</span></code> list in the <code class="docutils literal notranslate"><span class="pre">spack-manager/spack-manager.yaml</span></code> file
+then these initial directories will automatically be created the first time a <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span></code> command is run.
+It should also be noted that the autocompletion of variables inside these paths (such as the <code class="docutils literal notranslate"><span class="pre">$SCRATCH</span></code> environment
+variable in this example, follow the same <a class="reference external" href="https://spack.readthedocs.io/en/latest/configuration.html#config-file-variables">variable conventions</a> utilized by Spack.
+This is because Spack-Manager is importing and using the Spack code for these operations.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>spack<span class="w"> </span>manager<span class="w"> </span>find-machine<span class="w"> </span>--list
+<span class="go">Project:         Machine:        Detected: (+/-)</span>
+<span class="go">------------------------------------------------------------</span>
+
+<span class="gp">$ </span>tree<span class="w"> </span><span class="nv">$SCRATCH</span>/exawind-demo
+<span class="go">/Users/psakiev/scratch/exawind-demo</span>
+<span class="go">├── configs</span>
+<span class="go">└── repos</span>
+
+<span class="go">3 directories, 0 files</span>
+</pre></div>
+</div>
+<p>Once the first <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span></code> command is run the project <code class="docutils literal notranslate"><span class="pre">configs</span></code> and <code class="docutils literal notranslate"><span class="pre">repos</span></code> directories get populated.
+The <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory is where machine specific spack configuration files are stored.
+Since this directory is currently empty no machines show up when <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">find-machine</span> <span class="pre">--list</span></code> is run.
+The next step is to add some machines and configuration files.
+Note that <strong>machines</strong> is a loose term, and it is really a bifurcation of configurations.
+The term <strong>machine</strong> was selected since application projects typically have to tweak their spack configurations
+on each new machine/platform.</p>
+</section>
+<section id="populating-machine-specific-configurations">
+<h2>Populating Machine Specific Configurations<a class="headerlink" href="#populating-machine-specific-configurations" title="Link to this heading"></a></h2>
+<p>Directories within the project’s <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory will be delineated by their names.
+Let’s add a directory named <code class="docutils literal notranslate"><span class="pre">darwin</span></code> inside the <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory and re-run <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">find-machine</span> <span class="pre">--list</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span><span class="nv">$SCRATCH</span>/exawind-demo/configs/darwin
+<span class="gp">$ </span>spack<span class="w"> </span>manager<span class="w"> </span>find-machine<span class="w"> </span>--list
+<span class="go">Project:         Machine:        Detected: (+/-)</span>
+<span class="go">------------------------------------------------------------</span>
+<span class="go">exawind-demo     darwin          -</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">darwin</span></code> is automatically picked up as an available machine by the <code class="docutils literal notranslate"><span class="pre">find-machine</span></code> command, and any configuration files that
+are added inside this directory will be added to an environment created with a <code class="docutils literal notranslate"><span class="pre">darwin</span></code> machine specified.
+It should also be noted that the project name <code class="docutils literal notranslate"><span class="pre">exawind-demo</span></code> comes from the name of the parent directory.
+Now configurations can be added.
+The following two configurations are used by ExaWind.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># config.yaml</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mirrors</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">e4s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://cache.e4s.io</span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># packages.yaml</span>
+<span class="nt">packages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hypre</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">variants</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+shared~fortran</span>
+<span class="w">  </span><span class="nt">all</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">compiler</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">apple-clang</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">gcc</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">clang</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">providers</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">mpi</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">mpich</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">openmpi</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<section id="anonymous-machines">
+<h3>Anonymous Machines<a class="headerlink" href="#anonymous-machines" title="Link to this heading"></a></h3>
+<p>There are two anonymous machines that are reserved for project and users to utilize: <code class="docutils literal notranslate"><span class="pre">base</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">configs/base</span></code> directory is designed to hold project wide configurations that are the defaults utilized by every environment.
+For example, the software project has non-default package variants they wish to use uniformly across all platforms these could
+be set in the <code class="docutils literal notranslate"><span class="pre">configs/base/packages.yaml</span></code> file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">configs/users</span></code> directory is one that allows users to set their own personal preferences or make tweaks before pushing them
+to the whole team.  An example here is if one user really prefers a specific flavor of MPI and the software project is not constrained
+then they could configure that in the <code class="docutils literal notranslate"><span class="pre">configs/user/packages.yaml</span></code> file.</p>
+<p>The hierarchy of precedent for these configs are:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">machine</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code>
+where the smaller number means higher precedent.</p></li>
+</ol>
+<p>So any configurations in <code class="docutils literal notranslate"><span class="pre">base</span></code> are not the law and can be overridden on each machine as necessary.
+An example of this would be if the project prefers to build with <code class="docutils literal notranslate"><span class="pre">+shared</span></code> but on specific platform can only support <code class="docutils literal notranslate"><span class="pre">~shared</span></code>.
+As a reminder, this hierarchy is only for creating the default environment configuration on each platform when it is created.
+These are added to the <code class="docutils literal notranslate"><span class="pre">spack.yaml</span></code> via entries in the <code class="docutils literal notranslate"><span class="pre">includes</span></code> <a class="reference external" href="https://spack.readthedocs.io/en/latest/environments.html#included-configurations">list</a>.
+Each environment can still be customized by modifying the <code class="docutils literal notranslate"><span class="pre">spack.yaml</span></code> file and using <a class="reference external" href="https://spack.readthedocs.io/en/latest/environments.html#configuring-environments">additional configuration techniques</a>.</p>
+<p>For completeness, the optional <code class="docutils literal notranslate"><span class="pre">base</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code> directories will now be added to the <code class="docutils literal notranslate"><span class="pre">exawind-demo</span></code> project.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span><span class="nv">$SCRATCH</span>/exawind-demo/configs/base
+<span class="gp">$ </span>mkdir<span class="w"> </span><span class="nv">$SCRATCH</span>/exawind-demo/configs/user
+<span class="gp">$ </span>spack<span class="w"> </span>manager<span class="w"> </span>find-machine<span class="w"> </span>--list
+<span class="go">Project:         Machine:        Detected: (+/-)</span>
+<span class="go">------------------------------------------------------------</span>
+<span class="go">exawind-demo     darwin          -</span>
+</pre></div>
+</div>
+<p>The output above shows how these config directories are ignored by the <code class="docutils literal notranslate"><span class="pre">find-maachine</span></code> command.
+Next we’ll add some of the <code class="docutils literal notranslate"><span class="pre">base</span></code> configs used by ExaWind to the <code class="docutils literal notranslate"><span class="pre">base</span></code> directory.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># config.yaml</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.spack_downloads</span>
+<span class="w">  </span><span class="nt">misc_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$spack/../.cache</span>
+<span class="w">  </span><span class="nt">build_stage</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$spack/../stage</span>
+<span class="w">  </span><span class="nt">concretizer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clingo</span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># concretizer.yaml</span>
+<span class="nt">concretizer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">unify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">reuse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<p>Now if we create an environment using <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">create-env</span> <span class="pre">--machine</span> <span class="pre">darwin</span></code> we will see all the configs that have been added in the <code class="docutils literal notranslate"><span class="pre">include.yaml</span></code> file.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>spack<span class="w"> </span>manager<span class="w"> </span>create-env<span class="w"> </span>--machine<span class="w"> </span>darwin<span class="w"> </span>-d<span class="w"> </span><span class="nv">$SCRATCH</span>/example-env
+<span class="go">making /Users/psakiev/scratch/example-env</span>
+
+<span class="gp">$ </span>cat<span class="w"> </span><span class="nv">$SCRATCH</span>/example-env/spack.yaml
+<span class="gp"># </span>This<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>Spack<span class="w"> </span>Environment<span class="w"> </span>file.
+<span class="gp">#</span>
+<span class="gp"># </span>It<span class="w"> </span>describes<span class="w"> </span>a<span class="w"> </span><span class="nb">set</span><span class="w"> </span>of<span class="w"> </span>packages<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>installed,<span class="w"> </span>along<span class="w"> </span>with
+<span class="gp"># </span>configuration<span class="w"> </span>settings.
+<span class="go">spack:</span>
+<span class="gp">  # </span>add<span class="w"> </span>package<span class="w"> </span>specs<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span><span class="sb">`</span>specs<span class="sb">`</span><span class="w"> </span>list
+<span class="go">  specs: []</span>
+<span class="go">  view: false</span>
+<span class="go">  concretizer:</span>
+<span class="go">    unify: true</span>
+<span class="go">  include:</span>
+<span class="go">  - include.yaml</span>
+
+<span class="gp">$ </span>cat<span class="w"> </span><span class="nv">$SCRATCH</span>/example-env/include.yaml
+<span class="go">concretizer:</span>
+<span class="go">  unify: false</span>
+<span class="go">  reuse: false</span>
+<span class="go">packages:</span>
+<span class="go">  hypre:</span>
+<span class="go">    variants: +shared~fortran</span>
+<span class="go">  all:</span>
+<span class="go">    compiler: [apple-clang, gcc, clang]</span>
+<span class="go">    providers:</span>
+<span class="go">      mpi: [mpich, openmpi]</span>
+<span class="go">config:</span>
+<span class="go">  mirrors:</span>
+<span class="go">    e4s: https://cache.e4s.io</span>
+<span class="go">  source_cache: ~/.spack_downloads</span>
+<span class="go">  misc_cache: $spack/../.cache</span>
+<span class="go">  build_stage:</span>
+<span class="go">  - $spack/../stage</span>
+<span class="go">  concretizer: clingo</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuring-machine-auto-detection">
+<h2>Configuring Machine Auto-detection<a class="headerlink" href="#configuring-machine-auto-detection" title="Link to this heading"></a></h2>
+<p>The last column from the output of <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">find-machine</span> <span class="pre">--list</span></code> indicates if the configuration
+was detected for the current machine.
+The default behavior is to detect nothing and require users to specify the machine they want to use.
+However, setting up automatic detection is simple and highly configurable for each project and each machine.</p>
+<p>To add detection a project must have a python file named <code class="docutils literal notranslate"><span class="pre">find-[project].py</span></code> in the top-level directory of the project (<code class="docutils literal notranslate"><span class="pre">exawind-demo</span></code> in this example).
+<code class="docutils literal notranslate"><span class="pre">find-[project].py</span></code> needs to have a method named <code class="docutils literal notranslate"><span class="pre">detector</span></code> that takes a string with the machine name and returns
+<code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on if the current machine meets the criteria for that name.</p>
+<p>Here is an example <code class="docutils literal notranslate"><span class="pre">find-exawind-demo.py</span></code> script</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">detector</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A function that will check if the supplied name/machine</span>
+<span class="sd">    matches a known machine configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># dictionary that is easily extensible where key is the name we want to match</span>
+    <span class="c1"># and the value is function that can be evaluated to test the actual system we</span>
+    <span class="c1"># are one</span>
+    <span class="n">known_machines</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;darwin&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">known_machines</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">known_machines</span><span class="p">[</span><span class="n">name</span><span class="p">]()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+        
+</pre></div>
+</div>
+<p>Now when the <code class="docutils literal notranslate"><span class="pre">find-machine</span></code> command is run the <code class="docutils literal notranslate"><span class="pre">darwin</span></code> machine will be detected.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>spack<span class="w"> </span>manager<span class="w"> </span>find-machine<span class="w"> </span>--list
+<span class="go">Project:         Machine:        Detected: (+/-)</span>
+<span class="go">------------------------------------------------------------</span>
+<span class="go">exawind-demo     darwin          +</span>
+</pre></div>
+</div>
+<p>Users are free to implement and sort of detection script they want.<br />
+The only requirements are that the method <code class="docutils literal notranslate"><span class="pre">detector</span></code> have a positional
+argument for the name of the machine to check for, and returns a boolean to indicate if that supplied name
+was detected.</p>
+</section>
+<section id="setting-up-spack-package-repositories">
+<h2>Setting up Spack Package Repositories<a class="headerlink" href="#setting-up-spack-package-repositories" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">[Project]/repos</span></code> directory is a place holder for package repositories that are paired with the softwware applications development/deployment.
+The simplest way to ensure the appropriate repos are included is to add a reference to them in
+<code class="docutils literal notranslate"><span class="pre">[Project]/configs/base/repos.yaml</span></code> file.
+This is a way to ensure that any environment created with Spack-Manager for the desired project will include the repos.</p>
+<p>An example for ExaWind is as follows:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># repos.yaml</span>
+<span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$spack/../repos/exawind</span>
+</pre></div>
+</div>
+<p>Where the <code class="docutils literal notranslate"><span class="pre">$spack</span></code> is a supported
+<a class="reference external" href="https://spack.readthedocs.io/en/latest/configuration.html#config-file-variables">configuration variable</a>
+that will be expanded by spack.
+This works for ExaWind because ExaWind creates a fixed mirror of spack that is submoduled
+into their Project repository.</p>
+<p>Utilizing a configuration variable, environment variable, or manually updating  the repo paths are currently
+the only way to point to repos in arbitrary locations on the filesystem.
+Users may also add the <code class="docutils literal notranslate"><span class="pre">copy_repos:</span> <span class="pre">true</span></code> flag to their projects inside the <code class="docutils literal notranslate"><span class="pre">spack-manager.yaml</span></code> configuration
+file if they wish to just automatically copy the repo files locally to an environment when it is created.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">spack-manager</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">projects</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$SCRATCH/exawind-demo</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">copy_repos</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>In this case the repo specification would be properly resolved with the following <code class="docutils literal notranslate"><span class="pre">repo.yaml</span></code> file in the <code class="docutils literal notranslate"><span class="pre">base</span></code> configs.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># repos.yaml</span>
+<span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$env/repos/exawind</span>
+</pre></div>
+</div>
+<p>Now when an environment is created the <code class="docutils literal notranslate"><span class="pre">[Projects]/repos</span></code> directory will be copied completely to the environment, and
+the environment will look for the copy relative to its own location.</p>
+<p>Please note, that these are mainly small tricks to utilize spack’s builtin path resolution strategies.
+Additional work in the future is anticipated to make this a more seamless setup and transition.</p>
+</section>
+<section id="adding-version-control">
+<h2>Adding Version Control<a class="headerlink" href="#adding-version-control" title="Link to this heading"></a></h2>
+<p>At this point the <code class="docutils literal notranslate"><span class="pre">exawind-demo</span></code> project is populated with an initial set of configurations.
+It is highly suggested that it be placed under some form of version control.
+<code class="docutils literal notranslate"><span class="pre">git</span></code> is by far the most popular tool for version control at the moment.
+A suggested <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> file would look something like the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># basic python files</span>
+__pycache__
+*pyc
+<span class="c1"># some operations in spack-manager can currently create this directory</span>
+.tmp
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="system_admins.html" class="btn btn-neutral float-left" title="System Administrator Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../general/general.html" class="btn btn-neutral float-right" title="General Information" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

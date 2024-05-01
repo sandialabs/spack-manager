@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Useful Commands for Development &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Advanced Topics for Developers" href="advanced_topics.html" />
+    <link rel="prev" title="Quick-Start: Developer Workflow" href="developer_workflow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_profiles.html">User Profiles</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysts/analysts.html">Analysts Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="developers.html">Developer Documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="developer_spack_minimum.html">Developers: What you need to know about Spack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_workflow.html">Quick-Start: Developer Workflow</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Useful Commands for Development</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#environment-setup-process">Environment setup process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-loading-process">Environment loading process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-setup-commands">Environment setup commands</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#quick-create">quick-create</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#quick-create-dev">quick-create-dev</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#quick-develop">quick-develop</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-re-use-commands">Environment re-use commands</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#quick-activate">quick-activate</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-env-dive">build-env-dive</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#other-commands">Other Commands</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#remove-spack-prompt">remove-spack-prompt</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_topics.html">Advanced Topics for Developers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="snapshot_workflow.html">Snapshot Developer Workflow Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_admins/system_admins.html">System Administrator Documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_profiles.html">User Profiles</a></li>
+          <li class="breadcrumb-item"><a href="developers.html">Developer Documentation</a></li>
+      <li class="breadcrumb-item active">Useful Commands for Development</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/user_profiles/developers/useful_commands.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="useful-commands-for-development">
+<h1>Useful Commands for Development<a class="headerlink" href="#useful-commands-for-development" title="Link to this heading"></a></h1>
+<p>In the <a class="reference external" href="https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_tutorial.html">developer tutorial</a> the granular Spack commands are shown to help youe become familiar with the process of building with Spack.
+Using these commands (along with familiarization with the <a class="reference external" href="https://spack.readthedocs.io/en/latest/environments.html#spack-yaml">spack.yaml</a>) will allow you to create a fully customized build environments.</p>
+<p>In practice many of these commands are redundant and unneccesary for standard development workflows.
+To assist with your workflow we’ve pre-scripted these commands in a set of <em>quick-commands</em>.
+These commands are available in your shell once you’ve sourced <code class="docutils literal notranslate"><span class="pre">$SPACK_MANAGER/scripts/quick_commands.sh</span></code>, and provide a drop off point in the workflows based on your needs.
+All of the <em>quick-commands</em> will echo all the calls to spack (pre-pended with a <code class="docutils literal notranslate"><span class="pre">+</span> </code> ) so you can see what is being called and can reproduce them execution outside these scripts as needed.</p>
+<p>Information on these commands are provided below.</p>
+<p>For a quick reference: the commands that are anticipated to be the most commonly used are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">quick-develop</span></code></a></p></li>
+<li><p><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">quick-activate</span></code></a></p></li>
+<li><p><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">build-env-dive</span></code></a></p></li>
+</ul>
+<section id="environment-setup-process">
+<h2>Environment setup process<a class="headerlink" href="#environment-setup-process" title="Link to this heading"></a></h2>
+<p>As a reminder, the complete, granular list of steps to setup an environment after sourcing <code class="docutils literal notranslate"><span class="pre">$SPACK_MANAGER/start.sh</span></code> are:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">create-env</span></code>: create an environment</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">env</span> <span class="pre">activate</span></code>: activate the environment you created</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">add</span></code>: add root specs to the environment</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span></code>: setup the source code you want to edit and configure the environment to use that code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">external</span></code>: optional step to link your environment against pre-built binaries</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">concretize</span></code>: solve the dependency graph for your environment</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code>: build the software</p></li>
+</ol>
+</section>
+<section id="environment-loading-process">
+<h2>Environment loading process<a class="headerlink" href="#environment-loading-process" title="Link to this heading"></a></h2>
+<p>The complete, granular list of steps to re-use an environment after sourcing <code class="docutils literal notranslate"><span class="pre">$SPACK_MANAGER/start.sh</span></code> are:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">env</span> <span class="pre">activate</span></code>: activate an environment</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">build</span> <span class="pre">env</span> <span class="pre">[package]</span> <span class="pre">[commands]</span></code> or <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">cd</span> <span class="pre">-b</span> <span class="pre">[spec]</span> <span class="pre">&amp;&amp;</span> <span class="pre">bash</span> <span class="pre">-rcfile</span> <span class="pre">../spack-build-env.txt</span></code>: run a command in the build environment or dive into the build environment in a subshell</p></li>
+</ol>
+</section>
+<section id="environment-setup-commands">
+<h2>Environment setup commands<a class="headerlink" href="#environment-setup-commands" title="Link to this heading"></a></h2>
+<p>The following commands are the convenience functions for setting up a development environment.
+All of these commands will exit the shell with an active Spack environment whose name will be added
+to your shell prompt.
+Please note that these commands are principally constructing a valid <code class="docutils literal notranslate"><span class="pre">spack.yaml</span></code> file for you in your environment,
+and that file can be manipulated as needed after the commands are executed.</p>
+<section id="quick-create">
+<span id="id1"></span><h3>quick-create<a class="headerlink" href="#quick-create" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">quick-create</span></code> executes the <a class="reference internal" href="#environment-setup-process">environment setup process</a> and exits at step 4.
+If you supply specs with the <code class="docutils literal notranslate"><span class="pre">--spec</span></code> or <code class="docutils literal notranslate"><span class="pre">-s</span></code> flag then those will be added as root specs and you can effectively be at step 5
+<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span></code>.</p>
+<p><em><strong>When should I use <code class="docutils literal notranslate"><span class="pre">quick-create</span></code>?</strong></em><br />
+This command should be used by individuals who want to have control over the git clone process and/or locations of the source code
+they are intending to develop.
+<code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span></code> gives you the abiilty to point to pre-cloned code, or to select the fork and branch you want to clone from.
+If these are desirable features then you will need to run the remaining steps of the <a class="reference internal" href="#environment-setup-process">environment setup process</a>
+manually.</p>
+</section>
+<section id="quick-create-dev">
+<span id="id2"></span><h3>quick-create-dev<a class="headerlink" href="#quick-create-dev" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> executes the <a class="reference internal" href="#environment-setup-process">environment setup process</a> and exits at step 5.
+If you supply concrete specs, which means they have the name and version (i.e. <code class="docutils literal notranslate"><span class="pre">amr-wind&#64;main</span></code>), then <code class="docutils literal notranslate"><span class="pre">spack-manager</span> <span class="pre">develop</span></code> will be called for you
+and the default repos/branches will be cloned to the environment directory for you.
+If you fail to supply a concrete spec then this command will give a warning letting you know the spec wasn’t concrete, and the behavior will stop at step 4.
+In other words it will behave exactly like <a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">quick-create</span></code></a>.</p>
+<p><em><strong>When should I use <code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code>?</strong></em><br />
+<code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code> should be used if you don’t mind accepting the default repo cloning, but need to specifiy the externals you will link against
+with <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">external</span></code> or if you don’t want to use externals at all.
+A common scenario for this is if you are building with the non-standard view that you can see from <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">external</span> <span class="pre">--list</span></code>.
+The first view listed in the parenthesis for the latest timestamped snapshot is the default.
+If this one doesn’t match your build needs then you will need to specifiy the correct one manually.</p>
+</section>
+<section id="quick-develop">
+<span id="id3"></span><h3>quick-develop<a class="headerlink" href="#quick-develop" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">quick-develop</span></code> executes the <a class="reference internal" href="#environment-setup-process">environment setup process</a> and exits at step 7.
+This command is intended to execute the entire setup process for the default development environment on a given machine.
+Upon successful execution all that is required after this command is to run <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> since <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> will also perform
+concretization.
+The same requirement for valid concrete specs that was in <a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">quick-create-dev</span></code></a> applies here along with all the same constraints.</p>
+<p><em><strong>When should I use <code class="docutils literal notranslate"><span class="pre">quick-develop</span></code>?</strong></em><br />
+<code class="docutils literal notranslate"><span class="pre">quick-develop</span></code> should be used if you want a rapid development environment without any need for customization.
+This is the fastest and least number of commands to get you started and should work for standard development needs.</p>
+</section>
+</section>
+<section id="environment-re-use-commands">
+<h2>Environment re-use commands<a class="headerlink" href="#environment-re-use-commands" title="Link to this heading"></a></h2>
+<p>These commands are designed to help you efficiently re-use an environment that has already been setup.</p>
+<section id="quick-activate">
+<span id="id4"></span><h3>quick-activate<a class="headerlink" href="#quick-activate" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">quick-activate</span></code> executes the first two steps of the <a class="reference internal" href="#environment-loading-process">environment loading process</a>
+i.e. <code class="docutils literal notranslate"><span class="pre">spack-start</span> <span class="pre">&amp;&amp;</span> <span class="pre">spack</span> <span class="pre">env</span> <span class="pre">activate</span></code>.
+To use it you simply pass the directory path to the environment you wish to activate i.e. <code class="docutils literal notranslate"><span class="pre">quick-activate</span> <span class="pre">$SPACK_MANAGER/environments/exawind</span></code>
+and it will activate the environment and add the name of the environment to your shell prompt.</p>
+<p><em><strong>When should I use <code class="docutils literal notranslate"><span class="pre">quick-activate</span></code>?</strong></em><br />
+Whenever you want to come back to an environment in a new shell.
+There are really no down-sides to this command unless you don’t like the environment name being added to your prompt.</p>
+</section>
+<section id="build-env-dive">
+<span id="id5"></span><h3>build-env-dive<a class="headerlink" href="#build-env-dive" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">build-env-dive</span></code> takes a spec as an argument and will move you to the location of the build directory for that spec and launch a sub-shell using the spec’s build environment.
+This command allows developers to work as if they had built the software manually outside of spack.
+You can call <code class="docutils literal notranslate"><span class="pre">make</span></code>, <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code>, <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code>, <code class="docutils literal notranslate"><span class="pre">ctest</span></code> etc.
+Simply type <code class="docutils literal notranslate"><span class="pre">exit</span></code> to return to your original shell where you called <code class="docutils literal notranslate"><span class="pre">build-env-dive</span></code>.
+It should be cautioned that diving into this environment can do things like change the version of git/python in your shell.
+Also if you are doing a multi-compnent simply calling <code class="docutils literal notranslate"><span class="pre">make</span></code> will not update the entire stack like <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> will.</p>
+<p><em><strong>When should I use <code class="docutils literal notranslate"><span class="pre">build-env-dive</span></code>?</strong></em>
+This command is most effective when you are just iterating on one software component and need to keep executing commands in that environment.
+For a one off like checking a test <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">build-env</span> <span class="pre">[spec]</span> <span class="pre">[command]</span></code> is probably more efficient, but it is also clunkier to use.
+In general <code class="docutils literal notranslate"><span class="pre">build-env-dive</span></code> command should be used freely as long as you are okay with it moving you to directories and are aware of the
+potential issues related to opening a sub-shell with potentially different configurations.
+In practice this has not been much of an issue.</p>
+</section>
+</section>
+<section id="other-commands">
+<h2>Other Commands<a class="headerlink" href="#other-commands" title="Link to this heading"></a></h2>
+<section id="remove-spack-prompt">
+<span id="id6"></span><h3>remove-spack-prompt<a class="headerlink" href="#remove-spack-prompt" title="Link to this heading"></a></h3>
+<p>This command takes no arguments unless you pass <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code>.
+It simply removes the prompt with the environment name that the <em>quick-commands</em> add.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="developer_workflow.html" class="btn btn-neutral float-left" title="Quick-Start: Developer Workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advanced_topics.html" class="btn btn-neutral float-right" title="Advanced Topics for Developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Important Spack Features &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="History and inspirations for Spack-Manager" href="history.html" />
+    <link rel="prev" title="Spack-Manager Structure" href="spack_manager_structure.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_profiles/user_profiles.html">User Profiles</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="general.html">General Information</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="spack_manager_structure.html">Spack-Manager Structure</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Important Spack Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#spack-specs">Spack Specs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spack-commands">Spack Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spack-knowledgebase">Spack Knowledgebase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">History and inspirations for Spack-Manager</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="general.html">General Information</a></li>
+      <li class="breadcrumb-item active">Important Spack Features</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/general/spack_features.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="important-spack-features">
+<h1>Important Spack Features<a class="headerlink" href="#important-spack-features" title="Link to this heading"></a></h1>
+<section id="spack-specs">
+<h2>Spack Specs<a class="headerlink" href="#spack-specs" title="Link to this heading"></a></h2>
+<p>In Spack the idea of a <em>spec</em> is very important. Specs are descriptors of particular aspects or configurations of a package or packages.
+Specs can completely general, merely denoted the name of a package, or they can very specific such as specifying the name of the package with a particular version, with a particular compiler and compiler version, with specific options called <em>variants</em>, as well as constraints on dependencies of the package.
+Spack’s documentation has much more information on specs <a class="reference external" href="https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies">here</a>, but we summarize them here as it is important to utilizing Spack.
+Specs are a loose or general form of a configuration for a package. However, Spack is very exact it how it will build and satisfy your requested spec.
+It does this through the process of <em>concretization</em>. Concretization maps a spec, no matter how general or specific, into an <em>exact</em> graph of
+how Spack will build and fulfill the spec. A command for understanding this process is the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">spec</span></code> command. Using <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">spec</span></code>
+will report to the user how Spack will create a concrete graph or DAG of the package on its dependencies. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">spack</span> <span class="n">spec</span> <span class="n">zlib</span>                                                  
+<span class="n">Input</span> <span class="n">spec</span>
+<span class="o">--------------------------------</span>
+<span class="n">zlib</span>
+
+<span class="n">Concretized</span>
+<span class="o">--------------------------------</span>
+<span class="n">zlib</span><span class="o">@</span><span class="mf">1.2.11</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">optimize</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+</pre></div>
+</div>
+<p>Here we intend to install the zlib package which has no dependencies. If we specify nothing but <code class="docutils literal notranslate"><span class="pre">zlib</span></code>, this is the configuration Spack has solved
+in which it will fulfill the installation of zlib. We can be more specific about our request. Looking at what compilers are available for us in Spack
+we can use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">spack</span> <span class="n">compilers</span>
+<span class="o">==&gt;</span> <span class="n">Available</span> <span class="n">compilers</span>
+<span class="o">--</span> <span class="n">apple</span><span class="o">-</span><span class="n">clang</span> <span class="n">catalina</span><span class="o">-</span><span class="n">x86_64</span> <span class="o">----------------------------------</span>
+<span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span>
+
+<span class="o">--</span> <span class="n">gcc</span> <span class="n">catalina</span><span class="o">-</span><span class="n">x86_64</span> <span class="o">------------------------------------------</span>
+<span class="n">gcc</span><span class="o">@</span><span class="mf">11.2.0</span>
+</pre></div>
+</div>
+<p>Here we are on a MacOS computer and we have two compilers available. If I prefer <code class="docutils literal notranslate"><span class="pre">zlib</span></code> be installed using gcc, one can use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">spack</span> <span class="n">spec</span> <span class="n">zlib</span><span class="o">%</span><span class="n">gcc</span>
+<span class="n">Input</span> <span class="n">spec</span>
+<span class="o">--------------------------------</span>
+<span class="n">zlib</span><span class="o">%</span><span class="n">gcc</span>
+
+<span class="n">Concretized</span>
+<span class="o">--------------------------------</span>
+<span class="n">zlib</span><span class="o">@</span><span class="mf">1.2.11</span><span class="o">%</span><span class="n">gcc</span><span class="o">@</span><span class="mf">11.2.0</span><span class="o">+</span><span class="n">optimize</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+</pre></div>
+</div>
+<p>Notice Spack honored our compiler constraint request. Spack reports the concretized spec in a manner that continues to itself be a spec:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">spack</span> <span class="n">spec</span> <span class="n">zlib</span><span class="o">@</span><span class="mf">1.2.11</span><span class="o">%</span><span class="n">gcc</span><span class="o">@</span><span class="mf">11.2.0</span><span class="o">+</span><span class="n">optimize</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+<span class="n">Input</span> <span class="n">spec</span>
+<span class="o">--------------------------------</span>
+<span class="n">zlib</span><span class="o">@</span><span class="mf">1.2.11</span><span class="o">%</span><span class="n">gcc</span><span class="o">@</span><span class="mf">11.2.0</span><span class="o">+</span><span class="n">optimize</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+
+<span class="n">Concretized</span>
+<span class="o">--------------------------------</span>
+<span class="n">zlib</span><span class="o">@</span><span class="mf">1.2.11</span><span class="o">%</span><span class="n">gcc</span><span class="o">@</span><span class="mf">11.2.0</span><span class="o">+</span><span class="n">optimize</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+</pre></div>
+</div>
+<p>Therefore using the <code class="docutils literal notranslate"><span class="pre">spec</span></code> command helps us to understand specs and what Spack will do with a spec before we use them in other commands.
+Here is an example of a more complicated package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">spack</span> <span class="n">spec</span> <span class="n">amr</span><span class="o">-</span><span class="n">wind</span>
+<span class="n">Input</span> <span class="n">spec</span>
+<span class="o">--------------------------------</span>
+<span class="n">amr</span><span class="o">-</span><span class="n">wind</span>
+
+<span class="n">Concretized</span>
+<span class="o">--------------------------------</span>
+<span class="n">amr</span><span class="o">-</span><span class="n">wind</span><span class="nd">@main</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">cuda</span><span class="o">~</span><span class="n">fortran</span><span class="o">+</span><span class="n">hypre</span><span class="o">+</span><span class="n">internal</span><span class="o">-</span><span class="n">amrex</span><span class="o">~</span><span class="n">ipo</span><span class="o">~</span><span class="n">masa</span><span class="o">+</span><span class="n">mpi</span><span class="o">+</span><span class="n">netcdf</span><span class="o">~</span><span class="n">openfast</span><span class="o">~</span><span class="n">openmp</span><span class="o">~</span><span class="n">rocm</span><span class="o">+</span><span class="n">shared</span><span class="o">+</span><span class="n">tests</span><span class="o">+</span><span class="n">unit</span> <span class="n">build_type</span><span class="o">=</span><span class="n">Release</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+    <span class="o">^</span><span class="n">cmake</span><span class="o">@</span><span class="mf">3.22.2</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">doc</span><span class="o">+</span><span class="n">ncurses</span><span class="o">+</span><span class="n">openssl</span><span class="o">+</span><span class="n">ownlibs</span><span class="o">~</span><span class="n">qt</span> <span class="n">build_type</span><span class="o">=</span><span class="n">Release</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">ncurses</span><span class="o">@</span><span class="mf">6.2</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">symlinks</span><span class="o">+</span><span class="n">termlib</span> <span class="n">abi</span><span class="o">=</span><span class="n">none</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+            <span class="o">^</span><span class="n">pkgconf</span><span class="o">@</span><span class="mf">1.8.0</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">openssl</span><span class="o">@</span><span class="mf">1.1.1</span><span class="n">m</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">docs</span> <span class="n">certs</span><span class="o">=</span><span class="n">system</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+            <span class="o">^</span><span class="n">perl</span><span class="o">@</span><span class="mf">5.34.0</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">cpanm</span><span class="o">+</span><span class="n">shared</span><span class="o">+</span><span class="n">threads</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                <span class="o">^</span><span class="n">berkeley</span><span class="o">-</span><span class="n">db</span><span class="o">@</span><span class="mf">18.1.40</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">cxx</span><span class="o">~</span><span class="n">docs</span><span class="o">+</span><span class="n">stl</span> <span class="n">patches</span><span class="o">=</span><span class="n">b231fcc4d5cff05e5c3a4814f6a5af0e9a966428dc2176540d2c05aff41de522</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                <span class="o">^</span><span class="n">bzip2</span><span class="o">@</span><span class="mf">1.0.8</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">debug</span><span class="o">~</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                    <span class="o">^</span><span class="n">diffutils</span><span class="o">@</span><span class="mf">3.8</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                        <span class="o">^</span><span class="n">libiconv</span><span class="o">@</span><span class="mf">1.16</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">libs</span><span class="o">=</span><span class="n">shared</span><span class="p">,</span><span class="n">static</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                <span class="o">^</span><span class="n">gdbm</span><span class="o">@</span><span class="mf">1.19</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                    <span class="o">^</span><span class="n">readline</span><span class="o">@</span><span class="mf">8.1</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                <span class="o">^</span><span class="n">zlib</span><span class="o">@</span><span class="mf">1.2.11</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">optimize</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+    <span class="o">^</span><span class="n">hypre</span><span class="o">@</span><span class="mf">2.23.0</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="nb">complex</span><span class="o">~</span><span class="n">cuda</span><span class="o">~</span><span class="n">debug</span><span class="o">+</span><span class="n">int64</span><span class="o">~</span><span class="n">internal</span><span class="o">-</span><span class="n">superlu</span><span class="o">~</span><span class="n">mixedint</span><span class="o">+</span><span class="n">mpi</span><span class="o">~</span><span class="n">openmp</span><span class="o">+</span><span class="n">shared</span><span class="o">~</span><span class="n">superlu</span><span class="o">-</span><span class="n">dist</span><span class="o">~</span><span class="n">unified</span><span class="o">-</span><span class="n">memory</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">netlib</span><span class="o">-</span><span class="n">lapack</span><span class="o">@</span><span class="mf">3.9.1</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">external</span><span class="o">-</span><span class="n">blas</span><span class="o">~</span><span class="n">ipo</span><span class="o">+</span><span class="n">lapacke</span><span class="o">+</span><span class="n">shared</span><span class="o">~</span><span class="n">xblas</span> <span class="n">build_type</span><span class="o">=</span><span class="n">Release</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">openmpi</span><span class="o">@</span><span class="mf">4.1.2</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">atomics</span><span class="o">~</span><span class="n">cuda</span><span class="o">~</span><span class="n">cxx</span><span class="o">~</span><span class="n">cxx_exceptions</span><span class="o">+</span><span class="n">gpfs</span><span class="o">~</span><span class="n">internal</span><span class="o">-</span><span class="n">hwloc</span><span class="o">~</span><span class="n">java</span><span class="o">~</span><span class="n">legacylaunchers</span><span class="o">~</span><span class="n">lustre</span><span class="o">~</span><span class="n">memchecker</span><span class="o">~</span><span class="n">pmi</span><span class="o">~</span><span class="n">pmix</span><span class="o">+</span><span class="n">romio</span><span class="o">~</span><span class="n">singularity</span><span class="o">~</span><span class="n">sqlite3</span><span class="o">+</span><span class="n">static</span><span class="o">~</span><span class="n">thread_multiple</span><span class="o">+</span><span class="n">vt</span><span class="o">+</span><span class="n">wrapper</span><span class="o">-</span><span class="n">rpath</span> <span class="n">fabrics</span><span class="o">=</span><span class="n">none</span> <span class="n">schedulers</span><span class="o">=</span><span class="n">none</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+            <span class="o">^</span><span class="n">hwloc</span><span class="o">@</span><span class="mf">2.7.0</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">cairo</span><span class="o">~</span><span class="n">cuda</span><span class="o">~</span><span class="n">gl</span><span class="o">~</span><span class="n">libudev</span><span class="o">+</span><span class="n">libxml2</span><span class="o">~</span><span class="n">netloc</span><span class="o">~</span><span class="n">nvml</span><span class="o">~</span><span class="n">opencl</span><span class="o">~</span><span class="n">pci</span><span class="o">~</span><span class="n">rocm</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                <span class="o">^</span><span class="n">libxml2</span><span class="o">@</span><span class="mf">2.9.12</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">python</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                    <span class="o">^</span><span class="n">xz</span><span class="o">@</span><span class="mf">5.2.5</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">pic</span> <span class="n">libs</span><span class="o">=</span><span class="n">shared</span><span class="p">,</span><span class="n">static</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+            <span class="o">^</span><span class="n">libevent</span><span class="o">@</span><span class="mf">2.1.12</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">openssl</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+            <span class="o">^</span><span class="n">openssh</span><span class="o">@</span><span class="mf">8.8</span><span class="n">p1</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+                <span class="o">^</span><span class="n">libedit</span><span class="o">@</span><span class="mf">3.1</span><span class="o">-</span><span class="mi">20210216</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+    <span class="o">^</span><span class="n">netcdf</span><span class="o">-</span><span class="n">c</span><span class="o">@</span><span class="mf">4.7.4</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">dap</span><span class="o">~</span><span class="n">fsync</span><span class="o">~</span><span class="n">hdf4</span><span class="o">~</span><span class="n">jna</span><span class="o">+</span><span class="n">mpi</span><span class="o">+</span><span class="n">parallel</span><span class="o">-</span><span class="n">netcdf</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">patches</span><span class="o">=</span><span class="mi">2</span><span class="n">c88dfbd6d339a0336a43b14a65a1d1df995b853b645e4af612617612a642a53</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">hdf5</span><span class="o">@</span><span class="mf">1.10.7</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">cxx</span><span class="o">~</span><span class="n">fortran</span><span class="o">+</span><span class="n">hl</span><span class="o">~</span><span class="n">ipo</span><span class="o">~</span><span class="n">java</span><span class="o">+</span><span class="n">mpi</span><span class="o">+</span><span class="n">shared</span><span class="o">~</span><span class="n">szip</span><span class="o">~</span><span class="n">threadsafe</span><span class="o">+</span><span class="n">tools</span> <span class="n">api</span><span class="o">=</span><span class="n">default</span> <span class="n">build_type</span><span class="o">=</span><span class="n">RelWithDebInfo</span> <span class="n">patches</span><span class="o">=</span><span class="mi">2</span><span class="n">a1e3118d7d3d7411820e567b03530de96a46385304017f8e548408aa1cfbfc0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">m4</span><span class="o">@</span><span class="mf">1.4.19</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">+</span><span class="n">sigsegv</span> <span class="n">patches</span><span class="o">=</span><span class="mi">9</span><span class="n">dc5fbd0d5cb1037ab1e6d0ecc74a30df218d0a94bdd5a02759a97f62daca573</span><span class="p">,</span><span class="n">bfdffa7c2eb01021d5849b36972c069693654ad826c1a20b53534009a4ec7a89</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+            <span class="o">^</span><span class="n">libsigsegv</span><span class="o">@</span><span class="mf">2.13</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">parallel</span><span class="o">-</span><span class="n">netcdf</span><span class="o">@</span><span class="mf">1.12.2</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">burstbuffer</span><span class="o">+</span><span class="n">cxx</span><span class="o">+</span><span class="n">fortran</span><span class="o">+</span><span class="n">pic</span><span class="o">+</span><span class="n">shared</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+</pre></div>
+</div>
+<p>It is obvious concretized specs can get large quite quickly. However, Spack is very good at standing on it’s own without requirements
+from the existing system. Therefore it can be quite straightforward to build complicated packages on many machines. However, it can also be argued
+that this situation involves many packages with Spack will build that may already exist on the machine. While this is fair, we typically solve
+this by specifying <code class="docutils literal notranslate"><span class="pre">externals</span></code> which make Spack aware of packages already existing on the system and utilizing them in its DAG. Spack-manager
+has machine-specific configurations provided by its contributors for this purpose. Obtaining a configuration for Spack for the specific machine
+and specific project will save the user of Spack a lot of time.</p>
+<p>In our previous concretized DAG, <code class="docutils literal notranslate"><span class="pre">amr-wind</span></code> has dependencies on packages. Dependencies in specs are denoted with <code class="docutils literal notranslate"><span class="pre">^</span></code>. We can use this to constrain dependencies we would like to request.
+For example here we put a constraint on the cmake version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">spack</span> <span class="n">spec</span> <span class="n">amr</span><span class="o">-</span><span class="n">wind</span> <span class="o">^</span><span class="n">cmake</span><span class="o">@</span><span class="mf">3.17.0</span>
+<span class="n">Input</span> <span class="n">spec</span>
+<span class="o">--------------------------------</span>
+<span class="n">amr</span><span class="o">-</span><span class="n">wind</span>
+    <span class="o">^</span><span class="n">cmake</span><span class="o">@</span><span class="mf">3.17.0</span>
+
+<span class="n">Concretized</span>
+<span class="o">--------------------------------</span>
+<span class="n">amr</span><span class="o">-</span><span class="n">wind</span><span class="nd">@main</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">cuda</span><span class="o">~</span><span class="n">fortran</span><span class="o">+</span><span class="n">hypre</span><span class="o">+</span><span class="n">internal</span><span class="o">-</span><span class="n">amrex</span><span class="o">~</span><span class="n">ipo</span><span class="o">~</span><span class="n">masa</span><span class="o">+</span><span class="n">mpi</span><span class="o">+</span><span class="n">netcdf</span><span class="o">~</span><span class="n">openfast</span><span class="o">~</span><span class="n">openmp</span><span class="o">~</span><span class="n">rocm</span><span class="o">+</span><span class="n">shared</span><span class="o">+</span><span class="n">tests</span><span class="o">+</span><span class="n">unit</span> <span class="n">build_type</span><span class="o">=</span><span class="n">Release</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+    <span class="o">^</span><span class="n">cmake</span><span class="o">@</span><span class="mf">3.17.0</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">doc</span><span class="o">+</span><span class="n">ncurses</span><span class="o">+</span><span class="n">openssl</span><span class="o">+</span><span class="n">ownlibs</span><span class="o">~</span><span class="n">qt</span> <span class="n">build_type</span><span class="o">=</span><span class="n">Release</span> <span class="n">patches</span><span class="o">=</span><span class="mi">1</span><span class="n">c540040c7e203dd8e27aa20345ecb07fe06570d56410a24a266ae570b1c4c39</span><span class="p">,</span><span class="n">bf695e3febb222da2ed94b3beea600650e4318975da90e4a71d6f31a6d5d8c3d</span><span class="p">,</span><span class="n">e51119dd387aa3eb2f21fee730d3aa8b5480301c5e2e3a33bd86f4f7d8903861</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+        <span class="o">^</span><span class="n">ncurses</span><span class="o">@</span><span class="mf">6.2</span><span class="o">%</span><span class="n">apple</span><span class="o">-</span><span class="n">clang</span><span class="o">@</span><span class="mf">12.0.0</span><span class="o">~</span><span class="n">symlinks</span><span class="o">+</span><span class="n">termlib</span> <span class="n">abi</span><span class="o">=</span><span class="n">none</span> <span class="n">arch</span><span class="o">=</span><span class="n">darwin</span><span class="o">-</span><span class="n">catalina</span><span class="o">-</span><span class="n">skylake</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Concretization is an NP-hard problem, so solving the DAG is not instantaneous, and it is very much an active area of research. Spack has
+gone through one iteration thus far of updating its concretization strategy. This is the difference between the “original” concretizer and the newer clingo concretizer.</p>
+<p>Another important idea in Spack is describing the configuration of a particular package involving a complicated DAG into a succint string for the installation directory of the package for example. To do this, Spack collapses several properties of the DAG into a <em>hash</em>. Spack then uses this hash to provide a short form mapping for a particular package and its full description. Spack is a very powerful database of software installations and can be queried to understand the exact state of each package and pinpointing a specific package in which the user is interested. We leave these to the Spack documentation to continue.</p>
+</section>
+<section id="spack-commands">
+<h2>Spack Commands<a class="headerlink" href="#spack-commands" title="Link to this heading"></a></h2>
+<p>Spack has many commands, many of which have great information when adding <code class="docutils literal notranslate"><span class="pre">-h</span></code> to them. Here we list a few of the most important commands for using within Spack-Manager.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">spec</span> <span class="pre">-I</span> <span class="pre">&lt;spec&gt;</span> </code>: solve the DAG for the spec and show packages in the DAG that are already installed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">location</span> <span class="pre">-i</span> <span class="pre">&lt;spec&gt;</span> </code>: used for finding the specific location of an installed package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">concretize</span> <span class="pre">-f</span> </code>: force an activated environment to undergo concretization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span> </code>: install all packages listed in an environment’s <code class="docutils literal notranslate"><span class="pre">spack.yaml</span></code> file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">uninstall</span> <span class="pre">&lt;spec&gt;</span></code>: uninstall specific spec</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">uninstall</span> <span class="pre">--dependencies</span> <span class="pre">-a</span> <span class="pre">-y</span> <span class="pre">&lt;spec&gt;</span></code>: uninstall everything related to a general spec (<code class="docutils literal notranslate"><span class="pre">-a</span></code>) and all its dependencies without confirming</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">cd</span> <span class="pre">-b</span> <span class="pre">&lt;spec&gt;</span> </code>: change to build directory of package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">env</span> <span class="pre">activate</span> <span class="pre">-d</span> <span class="pre">&lt;path&gt;</span> </code> or <code class="docutils literal notranslate"><span class="pre">spacktivate</span> <span class="pre">-d</span> <span class="pre">&lt;path&gt;</span></code>: activate a Spack environment at specified path</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">develop</span> <span class="pre">&lt;spec&gt;</span> </code>: develop source code in a package locally</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">help</span> <span class="pre">--all</span> </code>: list all available Spack commands</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">list</span> <span class="pre">&lt;string&gt;</span></code>: list all available Spack packages matching the string</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">find</span> <span class="pre">&lt;spec&gt;</span></code>: query Spack’s database of installed packages</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">find</span> <span class="pre">-Lvd</span> <span class="pre">&lt;spec&gt;</span></code>: list the hashes, variants, and dependencies of the provided spec</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">stage</span> <span class="pre">&lt;spec&gt;</span> <span class="pre">&amp;&amp;</span> <span class="pre">spack</span> <span class="pre">cd</span> <span class="pre">&lt;spec&gt;</span></code>: download the package’s source code and extract it for browsing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">docs</span></code>: open the online spack documentation in a browser</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">-d</span> <span class="pre">&lt;spack</span> <span class="pre">subcommand&gt;</span></code>: get debug info on exactly what Spack is doing when it fails</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">config</span> <span class="pre">blame</span> <span class="pre">packages</span></code>: show exactly where Spack is obtaining its preferences for things like concretization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">compilers</span></code>: list the compilers in which Spack is aware</p></li>
+</ul>
+</section>
+<section id="spack-knowledgebase">
+<h2>Spack Knowledgebase<a class="headerlink" href="#spack-knowledgebase" title="Link to this heading"></a></h2>
+<p>In each package installation directory in <code class="docutils literal notranslate"><span class="pre">spack/opt</span></code> Spack keeps a <code class="docutils literal notranslate"><span class="pre">.spack</span></code> directory which contains information on exactly how the package was built.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="spack_manager_structure.html" class="btn btn-neutral float-left" title="Spack-Manager Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="history.html" class="btn btn-neutral float-right" title="History and inspirations for Spack-Manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
