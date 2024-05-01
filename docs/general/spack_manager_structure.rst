@@ -1,5 +1,5 @@
 Spack-Manager Structure
-======================
+=======================
 
 Spack-Manager is a Spack extension that provides a way for software applications
 to configure their usage of spack.
@@ -43,3 +43,7 @@ Information on configuring a new `Project` can be found in the system administra
    :width: 100%
 
    The end goal of many code application and DevOps teams is to efficiently span the space of platform permutations and project variations.
+
+.. _spack configuration files: https://spack.readthedocs.io/en/latest/configuration.html
+.. _spack package repositories: https://spack.readthedocs.io/en/latest/repositories.html
+.. _here: https://sandialabs.github.io/spack-manager/user_profiles/system_admins/creating_a_project.html
