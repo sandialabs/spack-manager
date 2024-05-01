@@ -22,9 +22,12 @@ and it should also be on a filesytem that is accesible where you plan to run the
 ```console
 git clone --recursive git@github.com:sandialabs/spack-manager.git
 ```
-In order for Spack-Manager to work you need to define the `SPACK_MANAGER` environment variable,
-and it should provide the absolute path to your Spack-Manager directory. To have access to the
-commands we will use in this tutorial you need to source `$SPACK_MANAGER/start.sh`.
+For the purpose of this documentaiton we will define a `SPACK_MANAGER` environment variable,
+and it should provide the absolute path to your Spack-Manager directory. 
+Spack-Manager also provides a `spack manager location` command which will provide an absolute path 
+to the Spack-Manager source directory.
+To have access to the
+commands we will use in this tutorial you need to source `$SPACK_MANAGER/scripts/quick_commands.sh`.
 This script enables all the shell functions in Spack-Manager but it does not activate Spack.
 We do this to allow you to add these lines to your `bash_profile` without any penalty
 since sourcing Spack adds an unacceptable level of overhead for standard shell spawning,
@@ -32,7 +35,7 @@ since sourcing Spack adds an unacceptable level of overhead for standard shell s
 ```console
 # These lines can be added to your bash_profile
 export SPACK_MANAGER=$(pwd)/spack-manager
-source $SPACK_MANAGER/start.sh
+source $SPACK_MANAGER/scripts/quick_commands.sh
 ```
 
 ## Creating an Environment
@@ -44,7 +47,6 @@ They all exit the process of setting up an environment at different points in th
 
 | Step | quick-create | quick-create-dev | quick-develop |
 |:-----|:------------:|:----------------:|:-------------:|
-| spack-start | x | x | x |
 | Create an environment | x | x | x|
 | Activate an environment | x | x | x |
 | Add root specs | x | x | x|
@@ -80,7 +82,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -m MACHINE, --machine MACHINE
                         Machine to match configs
-  -n NAME, --name NAME  Name of directory to copy files that will be in $SPACK_MANAGER/environments
+  -n NAME, --name NAME  Name of directory for environment (managed environment)
   -s SPEC [SPEC ...], --spec SPEC [SPEC ...]
                         Specs to populate the environment with
   -y YAML, --yaml YAML  Reference spack.yaml to copy to directory
@@ -99,7 +101,7 @@ plan to develop in from the spec list in the command above. Please note that the
 (`amr-wind`) and the version from spack (`main`), and that **that the version is not necessarily the same thing as the branch**.
 This is covered in the [things developers need to know about Spack](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_spack_minimum.html) for those needing a refresher.
 
-The `-n` flag can be replaced with `-d` if we want to setup an environment in a different location than `$SPACK_MANAGER/environments` (see the help message above).
+The `-n` flag can be replaced with `-d` if we want to setup an environment in a different location than `spack:config:environments_root` (see the [spack documentation](https://spack.readthedocs.io/en/latest/config_yaml.html#spack-settings-config-yaml) for help on configuring custom managed spack environment locaitons).
 The `quick-create-dev` command will execute all the stages in the table above including cloning the repos from github for the software.
 These clones of the source code default to the environment directory you specified with the `-d` or `-n` flags.
 If we wish to work off specific branches then we can use `git add remote`, `git fetch` and `git checkout` to get the branches we want

@@ -7,7 +7,7 @@ If a pre-configred project exists then it simply has to be add to the Spack-Mana
 This section will demonstrate the process of setting up a Spack-Manager project from scratch using the 
 [ExaWind application](https://github.com/Exawind/).  
 This is just an example that is not going to be kept up-to-date for Exawind since it is a living, independent project.
-The actual ExaWind configuration can be found at `TODO: Link`.
+The actual ExaWind configuration can be found [here](https://github.com/Exawind/exawind-manager/).
 
 ## Creating a Project from Scratch
 

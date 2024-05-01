@@ -26,5 +26,4 @@ spack-manager:
     - $HOME/project_b
 ```
 
-Additional data about this file can be found at *TBD*.
-Information on configuring a new `Project` can be found in the system administrator profile documentation (add link).
+Information on configuring a new `Project` can be found in the system administrator profile documentation [here](https://sandialabs.github.io/spack-manager/user_profiles/system_admins/creating_a_project.html).
