@@ -10,8 +10,7 @@ A given software project typically has multiple configurations across many machi
 Spack-Manager is quite literal in its name, in that it provides a way to manage and organize these configurations
 across multiple machines, and multiple projets.
 
-.. image:: Spack-To-Applications.png
-   :alt: Spack is central to applications, but applications often want to further customize their interfaces and interactions with Spack
+.. image:: ./Spack-To-Applications.png
    :width: 75%
 
    Spack is serving the package management needs of thousands of software packages.
@@ -32,8 +31,7 @@ decreases as the user becomes further removed from the build process.  The three
 - Code developers (some basics about Spack are required, but much of the workflow can be scripted away)
 - Analysts (zero exposure to Spack)
 
-.. image:: ProfilePyramids.png
-   :alt: Population size of each profile is inverserly proportional to the Spack knowledge required for their roles
+.. image:: ./ProfilePyramids.png
    :width: 70%
 
    Population size of each profile is inverserly proportional to the Spack knowledge required for their roles
