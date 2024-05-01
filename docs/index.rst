@@ -10,6 +10,10 @@ A given software project typically has multiple configurations across many machi
 Spack-Manager is quite literal in its name, in that it provides a way to manage and organize these configurations
 across multiple machines, and multiple projets.
 
+.. image:: images/Spack-To-Applications.png
+   :alt: Spack is serving the package management needs of thousands of software packages. However, individual application teams wish to harness the power of Spack for their individual applications specific needs. This naturally leads to redundant, similar workflows.
+   :width: 75%
+
 The intent of this project is to maintain as thin of a buffer as possible between software packages and Spack, and to be pushing ideas and workflow
 improvements back to Spack on a regular basis to reduce the code that is maintained here.
 As such we do not try to fully mask Spack's workflow or commands from users, but rather expose them at a level appropriate for the user type.
@@ -23,6 +27,10 @@ decreases as the user becomes further removed from the build process.  The three
 - System administrators (Spack is heavily exposed and relied on)
 - Code developers (some basics about Spack are required, but much of the workflow can be scripted away)
 - Analysts (zero exposure to Spack)
+
+.. image:: images/ProfilePyramids.png
+   :alt: Population size of each profile is inverserly proportional to the Spack knowledge required for their roles
+   :width: 70%
 
 Separate documentation exists for each of these user profiles.
 
@@ -39,16 +47,29 @@ Benefits of Spack-Manager
    Spack's `custom extensions <https://spack.readthedocs.io/en/latest/extensions.html>`_ to allow for prototyping at the project level, as well as the option to 
    maintain features that are only intended for the project's development team.
 
+   .. image:: images/Spack-Manager-Org.png
+      :alt: Spack-Manager is designed to provide an abstraction that can support multiple application teams. Each team develops a Project that can be registered with an instance of Spack-Manager.
+      :width: 90%
+
 - Spack-Manager maximizes overlap between the workflows of the three user profiles. 
    The main thought behind Spack-Manager is that the exact same infrastructure that the system administrators use to deploy binaries and modules on various machines
    can be recycled to run nightly tests, generate time stamped snapshots of binaries for developers to link against, and supply end users
    with production executables.
    This framework is stitched together through Spack, but the end products (binaries and modules) are designed to be as independent from Spack as possible.
 
+   .. image:: images/application-workflow.png
+      :alt: An example of generalized infrastruture requirements that are common across HPC and scientific computing applications. Spack-Manager's goal is to empower these types of infrastructures while still allowing application teams to drive the details.
+      :width: 90%
+
 - Spack-Manager provides the benefits of Spack by seeking to maintain as small of a wrapper layer as possible. Some of these benefits include:
    - Build reproducibiilty, and scalability
    - Buy-in and feedback from HPC vendors and software developers over thousands of projects
    - Support options, extended documentation and testing through the much larger Spack project
+
+   .. image:: images/ApplicationSpace.png
+      :alt: The end goal of many code application and DevOps teams is to efficiently span the space of platform permutations and project variations. 
+      :width: 90%
+
 
 Additional details about the philosophy, and general knowledge can be found in the following documentation section.
 
