@@ -4,8 +4,7 @@ Spack-Manager is a Spack extension that provides a way for software applications
 to configure their usage of spack. 
 
 <div>
-  <img src="application-workflow.png" width="100%">
-
+  <img src="./application-workflow.png" width="100%">
   <p><em>An example of generalized infrastructure requirements that are common across HPC and scientific computing applications. Spack-Manager's goal is to empower these types of infrastructures while still allowing application teams to drive the details.</em></p>
 </div>
 
@@ -14,8 +13,7 @@ application code needs to configure a Spack-Manager `Project` to tell Spack-Mana
 with their application.
 
 <div>
-  <img src="Spack-Manager-Org.png" width="50%">
-
+  <img src="./Spack-Manager-Org.png" width="50%">
   <p><em>Spack-Manager is designed to provide an abstraction that can support multiple application teams. Each team develops a Project that can be registered with an instance of Spack-Manager.</em></p>
 </div>
 
@@ -42,7 +40,6 @@ spack-manager:
 Information on configuring a new `Project` can be found in the system administrator profile documentation [here](https://sandialabs.github.io/spack-manager/user_profiles/system_admins/creating_a_project.html).
 
 <div>
-  <img src="ApplicationSpace.png" width="100%">
-
-  <p><em>The end goal of many code application and DevOps teams is to efficiently span the space of platform permutations and project variations.</em>em></p>
+  <img src="./ApplicationSpace.png" width="100%">
+  <p><em>The end goal of many code application and DevOps teams is to efficiently span the space of platform permutations and project variations.</em></p>
 </div>
