@@ -15,8 +15,8 @@ import spack.extensions.manager.manager_cmds.external as external
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 import spack.extensions.manager.manager_cmds.include as include
 import spack.extensions.manager.manager_cmds.location as location
-import spack.extensions.manager.manager_cmds.pin as pin
 import spack.extensions.manager.manager_cmds.make as make
+import spack.extensions.manager.manager_cmds.pin as pin
 
 # import spack.extensions.manager.manager_cmds.snapshot as snapshot
 

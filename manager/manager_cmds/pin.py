@@ -14,12 +14,12 @@ import spack.environment as ev
 import spack.main
 import spack.traverse as traverse
 import spack.util.executable
-from spack.extensions.manager.manager_utils import command, pruned_spec_string
+from spack.extensions.manager.manager_utils import command
 from spack.version import GitVersion
 
 try:
     from spack.version.common import COMMIT_VERSION
-except:
+except ImportError:
     from spack.version import COMMIT_VERSION
 
 git = spack.util.executable.which("git")
@@ -44,9 +44,9 @@ def get_version_paired_git_branch(spec):
             version_dict = spec.package_class.versions[spec.version]
         except KeyError:
             tty.warn(
-                f"Skipping {spec.name}@{spec.version} since this version is no longer valid and is likely from"
-                " --reuse. If this is not desired then please add a version constraint to "
-                "the spec"
+                f"Skipping {spec.name}@{spec.version} since this version is no longer valid "
+                "and is likely from --reuse. If this is not desired then please add a "
+                "version constraint to the spec"
             )
             return None
     if "branch" in version_dict.keys():
@@ -85,7 +85,8 @@ def spec_string_with_git_ref_for_version(spec):
     """
     if not spec.concrete:
         tty.warn(
-            f"Skipping {spec.name} because it is not concrete. Reconcretize to include in pin analysis"
+            f"Skipping {spec.name} because it is not concrete. "
+            "Reconcretize to include in pin analysis"
         )
         return
     # create string representation of the spec and break it into parts
@@ -137,7 +138,6 @@ def pin_env(parser, args):
     env = ev.active_environment()
     if not env:
         tty.die("spack manager pin requires an active environment")
-    manifest = env.manifest
 
     cargs = ["--force"]
 
