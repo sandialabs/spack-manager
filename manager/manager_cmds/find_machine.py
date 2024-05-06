@@ -5,6 +5,8 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import os
+
 import spack.extensions.manager.projects as m_proj
 
 
@@ -45,10 +47,11 @@ def find_machine(verbose=False, projects=m_proj.get_projects()):
 
 
 def find_machine_cmd(parser, args):
+    projects = m_proj.get_projects(args.project)
     if args.list:
         print("Project:\t Machine:\t Detected: (+/-)")
         print("-" * 60)
-        for project in m_proj.get_projects(args.project):
+        for project in projects:
             for machine in project.machines:
                 print(
                     "{proj} \t {machine} \t {detected}".format(
@@ -58,7 +61,16 @@ def find_machine_cmd(parser, args):
                     )
                 )
         return
-    find_machine(verbose=True, projects=m_proj.get_projects(args.project))
+    elif args.config:
+        project, machine = find_machine(verbose=False, projects=projects)
+        if not project or machine == "NOT-FOUND":
+            return
+        else:
+            path = os.path.join(project.config_path, machine)
+            print(path)
+            return path
+    else:
+        find_machine(verbose=True, projects=projects)
 
 
 def setup_parser_args(sub_parser):
@@ -70,6 +82,13 @@ def setup_parser_args(sub_parser):
             "filter results to the project specified. argument can be the name, path or list "
             "index of the project"
         ),
+    )
+    sub_parser.add_argument(
+        "-c",
+        "--config",
+        action="store_true",
+        required=False,
+        help="location of the machine specific configs",
     )
 
     sub_parser.add_argument(

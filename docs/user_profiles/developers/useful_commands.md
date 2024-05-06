@@ -5,7 +5,7 @@ Using these commands (along with familiarization with the [spack.yaml](https://s
 
 In practice many of these commands are redundant and unneccesary for standard development workflows.
 To assist with your workflow we've pre-scripted these commands in a set of _quick-commands_.
-These commands are available in your shell once you've sourced `$SPACK_MANAGER/start.sh`, and provide a drop off point in the workflows based on your needs.
+These commands are available in your shell once you've sourced `$SPACK_MANAGER/scripts/quick_commands.sh`, and provide a drop off point in the workflows based on your needs.
 All of the _quick-commands_ will echo all the calls to spack (pre-pended with a `+ ` ) so you can see what is being called and can reproduce them execution outside these scripts as needed.
 
 Information on these commands are provided below. 
@@ -17,20 +17,18 @@ For a quick reference: the commands that are anticipated to be the most commonly
 
 ## Environment setup process
 As a reminder, the complete, granular list of steps to setup an environment after sourcing `$SPACK_MANAGER/start.sh` are:
-1. `spack-start`: activate Spack in your current shell
-2. `spack manager create-env`: create an environment
-3. `spack env activate`: activate the environment you created
-4. `spack add`: add root specs to the environment
-5. `spack manager develop`: setup the source code you want to edit and configure the environment to use that code
-6. `spack manager external`: optional step to link your environment against pre-built binaries
-7. `spack concretize`: solve the dependency graph for your environment
-8. `spack install`: build the software
+1. `spack manager create-env`: create an environment
+2. `spack env activate`: activate the environment you created
+3. `spack add`: add root specs to the environment
+4. `spack manager develop`: setup the source code you want to edit and configure the environment to use that code
+5. `spack manager external`: optional step to link your environment against pre-built binaries
+6. `spack concretize`: solve the dependency graph for your environment
+7. `spack install`: build the software
 
 ## Environment loading process
 The complete, granular list of steps to re-use an environment after sourcing `$SPACK_MANAGER/start.sh` are:
-1. `spack-start`: load Spack in your current shell
-2. `spack env activate`: activate an environment
-3. `spack build env [package] [commands]` or `spack cd -b [spec] && bash -rcfile ../spack-build-env.txt`: run a command in the build environment or dive into the build environment in a subshell
+1. `spack env activate`: activate an environment
+2. `spack build env [package] [commands]` or `spack cd -b [spec] && bash -rcfile ../spack-build-env.txt`: run a command in the build environment or dive into the build environment in a subshell
 
 ## Environment setup commands
 The following commands are the convenience functions for setting up a development environment.

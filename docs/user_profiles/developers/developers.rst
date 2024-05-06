@@ -13,4 +13,3 @@ This documentation is to help understand the basic requirements and workflow for
   useful_commands
   advanced_topics
   snapshot_workflow
-  external
