@@ -16,6 +16,7 @@ import spack.traverse as traverse
 import spack.util.executable
 from spack.extensions.manager.manager_utils import command, pruned_spec_string
 from spack.version import GitVersion
+
 try:
     from spack.version.common import COMMIT_VERSION
 except:
@@ -65,11 +66,9 @@ def find_latest_git_hash(spec):
         tty.debug(f"{spec.name} has paired to git branch {branch}")
         # get the matching entry and shas for github
         query = (
-            git("ls-remote", "-h", spec.package.git, branch, output=str, error=str)
-            .strip()
-            .split()
+            git("ls-remote", "-h", spec.package.git, branch, output=str, error=str).strip().split()
         )
-        sha = [ hunk for hunk in query if bool(COMMIT_VERSION.match(hunk))]
+        sha = [hunk for hunk in query if bool(COMMIT_VERSION.match(hunk))]
         try:
             assert len(sha) == 1
         except Exception:
@@ -85,7 +84,9 @@ def spec_string_with_git_ref_for_version(spec):
     if a spec is using a git branch for the version replace the version with sha of latest commit
     """
     if not spec.concrete:
-        tty.warn(f"Skipping {spec.name} because it is not concrete. Reconcretize to include in pin analysis")
+        tty.warn(
+            f"Skipping {spec.name} because it is not concrete. Reconcretize to include in pin analysis"
+        )
         return
     # create string representation of the spec and break it into parts
     if isinstance(spec.version, GitVersion):
@@ -96,7 +97,7 @@ def spec_string_with_git_ref_for_version(spec):
     sha = find_latest_git_hash(spec)
     if sha:
         version_str = "git.{h}={v}".format(h=sha, v=version_str)
-        new_spec_str =  f"{spec.name}@{version_str}"
+        new_spec_str = f"{spec.name}@{version_str}"
         tty.debug(f"Pin: Reformatting {spec.name} to {new_spec_str}")
         return new_spec_str
     else:
@@ -104,7 +105,7 @@ def spec_string_with_git_ref_for_version(spec):
 
 
 def pin_graph(root, pinRoot=True, pinDeps=True):
-    updated_spec=""
+    updated_spec = ""
     new_root = ""
     new_deps = ""
     if pinRoot:
