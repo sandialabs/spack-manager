@@ -116,7 +116,6 @@ def pin_graph(root, pinRoot=True, pinDeps=True):
             pinned_dep = spec_string_with_git_ref_for_version(dep)
             if pinned_dep:
                 new_deps += f" ^{pinned_dep}"
-    # case 1: update root
     if new_root:
         updated_spec = new_root
         if new_deps:
