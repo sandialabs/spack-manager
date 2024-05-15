@@ -7,6 +7,7 @@
 
 import sys
 
+import spack.extensions.manager.manager_cmds.cache_query as cache_query
 import spack.extensions.manager.manager_cmds.cli_config as cli_config
 import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.extensions.manager.manager_cmds.create_env as create_env
@@ -38,6 +39,7 @@ def setup_parser(subparser):
     cli_config.cli_commands["remove"](sp, _subcommands)
     cli_config.cli_commands["list"](sp, _subcommands)
 
+    cache_query.add_command(sp, _subcommands)
     create_env.add_command(sp, _subcommands)
     create_dev_env.add_command(sp, _subcommands)
     develop.add_command(sp, _subcommands)
