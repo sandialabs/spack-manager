@@ -5,11 +5,10 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import spack.cmd
-import spack.cmd.find
-
-import spack.cmd.common.arguments as arguments
 import spack.binary_distribution as bindist
+import spack.cmd
+import spack.cmd.common.arguments as arguments
+import spack.cmd.find
 
 
 def setup_parser_args(sub_parser):
@@ -17,7 +16,12 @@ def setup_parser_args(sub_parser):
 
 
 def cache_search(self, **kwargs):
-    qspecs = spack.cmd.parse_specs(self.values)
+    # spack version splits
+    if hasattr(self, "values"):
+        data = getattr(self, "values")
+    else:
+        data = getattr(self, "constraint")
+    qspecs = spack.cmd.parse_specs(data)
     search_engine = bindist.BinaryCacheQuery(True)
     results = {}
     for q in qspecs:
@@ -29,13 +33,12 @@ def cache_search(self, **kwargs):
 
 spack.cmd.common.arguments.ConstraintAction._specs = cache_search
 
+
 def cache_query(parser, args):
     spack.cmd.find.find(parser, args)
 
 
 def add_command(parser, command_dict):
-    sub_parser = parser.add_parser(
-            "cache-query", help="query buildcaches"
-    )
+    sub_parser = parser.add_parser("cache-query", help="query buildcaches")
     setup_parser_args(sub_parser)
     command_dict["cache-query"] = cache_query
