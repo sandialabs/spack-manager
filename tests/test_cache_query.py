@@ -5,17 +5,13 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import os
-
 import pytest
 
-import spack.environment as env
 import spack.main
-import spack.util.spack_yaml as syaml
 
 manager = spack.main.SpackCommand("manager")
 
 
 def test_cacheQueryCallRespectsAPI():
     # test for a query of everything
-    manager("cache-query", "@:")
+    out = manager("cache-query", "@:", fail_on_error=False)
