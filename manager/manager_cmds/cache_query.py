@@ -39,6 +39,12 @@ def cache_query(parser, args):
 
 
 def add_command(parser, command_dict):
-    sub_parser = parser.add_parser("cache-query", help="query buildcaches")
+    sub_parser = parser.add_parser(
+        "cache-query",
+        help=(
+            "forwarding spack find to allow buildcaches quiries."
+            " warning, not all flags are supported"
+        ),
+    )
     setup_parser_args(sub_parser)
     command_dict["cache-query"] = cache_query
