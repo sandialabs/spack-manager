@@ -9,8 +9,6 @@ import pytest
 
 import spack.environment as ev
 import spack.main
-from spack.spec import Spec
-from spack.version import GitVersion
 
 manager = spack.main.SpackCommand("manager")
 
