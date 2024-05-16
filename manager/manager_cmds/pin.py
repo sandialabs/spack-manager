@@ -10,11 +10,10 @@ Functions for snapshot creation that are added here to be testable
 """
 import llnl.util.tty as tty
 
-import spack.environment as ev
 import spack.main
 import spack.traverse as traverse
 import spack.util.executable
-from spack.extensions.manager.manager_utils import command
+from spack.spec import Spec
 from spack.version import GitVersion
 
 try:
@@ -24,7 +23,6 @@ except ImportError:
 
 git = spack.util.executable.which("git")
 concretize = spack.main.SpackCommand("concretize")
-change = spack.main.SpackCommand("change")
 
 
 def get_version_paired_git_branch(spec):
@@ -124,7 +122,7 @@ def pin_graph(root, pinRoot=True, pinDeps=True):
         updated_spec = root.name + new_deps
     if updated_spec:
         tty.debug(f"Pin: Generating new root spec - {updated_spec}")
-        command(change, updated_spec)
+        return Spec(updated_spec)
 
 
 def pin_env(parser, args):
@@ -134,25 +132,23 @@ def pin_env(parser, args):
     the dag, and then once after we replace the versions to make sure the environment
     still concretizes
     """
-    env = ev.active_environment()
-    if not env:
-        tty.die("spack manager pin requires an active environment")
-
+    env = spack.cmd.require_active_env(cmd_name="pin")
     cargs = ["--force"]
 
     if args.fresh:
         cargs.append("--fresh")
 
-    roots = list(env.roots())
-
     tty.debug("Pin: Pinning branches to sha's")
     pinRoot = args.roots or args.all
     pinDeps = args.dependencies or args.all
-    for i, root in enumerate(roots):
-        pin_graph(root, pinRoot, pinDeps)
+    for user, root in env.concretized_specs():
+        new_root = pin_graph(root, pinRoot, pinDeps)
+        if new_root:
+            with env.write_transaction():
+                env.change_existing_spec(change_spec=new_root, match_spec=user)
 
     tty.debug("Pin: Reconcretizing with updated specs")
-    command(concretize, *cargs)
+    concretize(*cargs)
 
 
 def setup_parser_args(sub_parser):
