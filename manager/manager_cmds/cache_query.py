@@ -7,7 +7,6 @@
 
 import spack.binary_distribution as bindist
 import spack.cmd
-import spack.cmd.common.arguments as arguments
 import spack.cmd.find
 
 
