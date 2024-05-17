@@ -13,14 +13,13 @@ import spack.extensions.manager.manager_cmds.cli_config as cli_config
 import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.extensions.manager.manager_cmds.create_env as create_env
 import spack.extensions.manager.manager_cmds.develop as develop
-import spack.extensions.manager.manager_cmds.lock_diff as lock_diff
 import spack.extensions.manager.manager_cmds.external as external
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 import spack.extensions.manager.manager_cmds.include as include
 import spack.extensions.manager.manager_cmds.location as location
+import spack.extensions.manager.manager_cmds.lock_diff as lock_diff
 import spack.extensions.manager.manager_cmds.make as make
 import spack.extensions.manager.manager_cmds.pin as pin
-
 
 if sys.version_info < (3, 8):
     print("spack-manager commands only supported in python 3.8 and higher")

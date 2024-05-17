@@ -6,27 +6,29 @@
 # for more details.
 
 
-import spack.main
-import spack.environment as ev
 import time
+
+import spack.environment as ev
+import spack.main
 
 command_name = "binary-finder"
 
+
 def setup_parser_args(subparser):
     subparser.add_argument(
-            "--source",
-            "-s",
-            choices=["cache", "upstream", "both"],
-            default="both",
-            help="source where hits can come from"
-            )
+        "--source",
+        "-s",
+        choices=["cache", "upstream", "both"],
+        default="both",
+        help="source where hits can come from",
+    )
     subparser.add_argument(
-            "--output",
-            "-o",
-            choices=["miss", "hit", "both"],
-            default="miss",
-            help="what type of cache queries are output",
-            )
+        "--output",
+        "-o",
+        choices=["miss", "hit", "both"],
+        default="miss",
+        help="what type of cache queries are output",
+    )
 
 
 def binary_finder(parser, args):
@@ -40,6 +42,7 @@ def binary_finder(parser, args):
     hits = []
 
     cache_contents = []
+
     def cache_hit(h):
         return h in cache_contents
 
@@ -61,7 +64,7 @@ def binary_finder(parser, args):
         else:
             misses.append((h, spec))
 
-        j=i+1
+        j = i + 1
         time.sleep(0.01)
         if j != n:
             print(f"\r-- {j}/{n}", end="\r")
@@ -78,6 +81,7 @@ def binary_finder(parser, args):
         print("\n----------------------------------------")
         print("The following {} specs missed in the cache:".format(len(misses)))
         print("----------------------------------------")
+
         def miss_reason(spec):
             template = "[{}]"
             if env.is_develop(spec):
@@ -111,8 +115,8 @@ def binary_finder(parser, args):
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
-            command_name,
-            help="check upstreams and binary caches for hits on a concretized environment",
+        command_name,
+        help="check upstreams and binary caches for hits on a concretized environment",
     )
     setup_parser_args(subparser)
     command_dict[command_name] = binary_finder
