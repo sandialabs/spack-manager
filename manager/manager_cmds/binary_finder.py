@@ -6,8 +6,8 @@
 # for more details.
 
 
-import spack.cmd
 import spack.binary_distribution as bindist
+import spack.cmd
 
 command_name = "binary-finder"
 description = "check upstreams and binary caches for hits on a concretized environment"
@@ -43,7 +43,7 @@ def binary_finder(parser, args):
     hits = []
 
     def cache_hit(h):
-        return bool(bindist.BINARY_INDEX.find_by_hash(h)) 
+        return bool(bindist.BINARY_INDEX.find_by_hash(h))
 
     def upstream_hit(spec):
         return spec.installed_upstream
@@ -64,11 +64,11 @@ def binary_finder(parser, args):
             misses.append((h, spec))
 
         # status printer probably not good for spack due to excess output
-        #j = i + 1
-        #time.sleep(0.01)
-        #if j != n:
+        # j = i + 1
+        # time.sleep(0.01)
+        # if j != n:
         #    print(f"\r-- {j}/{n}", end="\r")
-        #else:
+        # else:
         #    print(f"\r-- {j}/{n}", end="\n")
 
     if args.output == "miss" or args.output == "both":
@@ -96,7 +96,6 @@ def binary_finder(parser, args):
         for miss in misses:
             h, s = miss
             mark = miss_reason(s)
-            spec_name = s.name
             print(f"/{h}: {mark} {s.name}")
 
     if args.output == "hit" or args.output == "both":
@@ -105,7 +104,6 @@ def binary_finder(parser, args):
         print("----------------------------------------")
         for hit in hits:
             h, s = hit
-            spec_name = s.name
             print(f"/{h}: [+] {s.name}")
 
     print("\n----------------------------------------")
@@ -115,10 +113,7 @@ def binary_finder(parser, args):
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
-        command_name,
-        description=description,
-        help=description,
-        aliases=aliases
+        command_name, description=description, help=description, aliases=aliases
     )
     setup_parser_args(subparser)
     command_dict[command_name] = binary_finder

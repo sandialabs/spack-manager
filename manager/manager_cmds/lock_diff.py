@@ -11,6 +11,8 @@ import random
 import string
 import sys
 
+import llnl.util.tty as tty
+
 import spack.environment as ev
 from spack.spec import Spec
 
@@ -105,7 +107,8 @@ def lock_diff(parser, args):
                 if new_spec.name not in args.skip_package_diffs:
                     unacceptable_changes = True
             else:
-                # something else must have changed in concretization that should be avoided if we don't have reuse
+                # something else must have changed in concretization that
+                # should be avoided if we don't have reuse
                 # these are the things that we want to avoid
                 # if we get here then there is a more subtle issue
                 unacceptable_changes = True
@@ -113,7 +116,8 @@ def lock_diff(parser, args):
                 diff_msg += "DAG hash change: {} {}".format(
                     old_spec.dag_hash(), new_spec.dag_hash()
                 )
-                # TODO diff versions, compilers, variants, compiler flags in that order and print diagnostics
+                # TODO diff versions, compilers, variants, compiler flags in that order
+                # and print diagnostics
                 if old_spec.compiler != new_spec.compiler:
                     diff_msg += "\n *compiler diff - \n\tOld: {}\n\tNew: {}".format(
                         old_spec.compiler, new_spec.compiler
@@ -150,10 +154,7 @@ def lock_diff(parser, args):
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
-        command_name,
-        description=description,
-        help=description,
-        aliases=aliases
+        command_name, description=description, help=description, aliases=aliases
     )
     setup_parser_args(subparser)
     command_dict[command_name] = lock_diff
