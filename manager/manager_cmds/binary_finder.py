@@ -6,12 +6,11 @@
 # for more details.
 
 
-import time
-
-import spack.environment as ev
-import spack.main
+import spack.cmd
+import spack.binary_distribution as bindist
 
 command_name = "binary-finder"
+description = "check upstreams and binary caches for hits on a concretized environment"
 
 
 def setup_parser_args(subparser):
@@ -38,13 +37,12 @@ def binary_finder(parser, args):
     # TODO clean misc cache
 
     print(f"Querying buildcache for {n} specs")
+    bindist.BINARY_INDEX.regenerate_spec_cache()
     misses = []
     hits = []
 
-    cache_contents = []
-
     def cache_hit(h):
-        return h in cache_contents
+        return bool(bindist.BINARY_INDEX.find_by_hash(h)) 
 
     def upstream_hit(spec):
         return spec.installed_upstream
@@ -64,12 +62,13 @@ def binary_finder(parser, args):
         else:
             misses.append((h, spec))
 
-        j = i + 1
-        time.sleep(0.01)
-        if j != n:
-            print(f"\r-- {j}/{n}", end="\r")
-        else:
-            print(f"\r-- {j}/{n}", end="\n")
+        # status printer probably not good for spack due to excess output
+        #j = i + 1
+        #time.sleep(0.01)
+        #if j != n:
+        #    print(f"\r-- {j}/{n}", end="\r")
+        #else:
+        #    print(f"\r-- {j}/{n}", end="\n")
 
     if args.output == "miss" or args.output == "both":
         print("----------------------------------------")
@@ -116,7 +115,8 @@ def binary_finder(parser, args):
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
         command_name,
-        help="check upstreams and binary caches for hits on a concretized environment",
+        description=description,
+        help=description,
     )
     setup_parser_args(subparser)
     command_dict[command_name] = binary_finder

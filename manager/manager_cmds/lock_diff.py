@@ -6,13 +6,6 @@
 # for more details.
 
 
-"""
-This tool will diff two concrete environments to analyze
-for concretization differences
-
-To use supply the location of two spack.lock files to the script
-"""
-import argparse
 import os
 import random
 import string
@@ -22,6 +15,7 @@ import spack.environment as ev
 from spack.spec import Spec
 
 command_name = "lock-diff"
+description = "compare two lock files to determine differences in the concrete environments"
 
 
 def setup_parser_args(subparser):
@@ -155,7 +149,7 @@ def lock_diff(parser, args):
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
-        command_name, help="diff two lock files to see how the environments differ"
+        command_name, description=description, help=description,
     )
     setup_parser_args(subparser)
     command_dict[command_name] = lock_diff
