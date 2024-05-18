@@ -5,45 +5,28 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-# from manager_cmds.pin import pin_graph
+import pytest
 
-"""
-from spack.spec import Spec
-from spack.version import GitVersion
+import spack.environment as ev
+import spack.main
 
-# =============================================================================
-# These tests  are really slow because we have to concretize
-# it would be good to come up with a quick concretization test suite
-# or figure out how to mock it, we may want to consider disabling at some point
-# =============================================================================
-def test_version_replacement_preserves_all_but_version():
-    spec_str = "nalu-wind@master+hypre%gcc build_type=Release"
-    spec = Spec(spec_str)
-    spec.concretize()
-    new_spec_str = pin_graph(spec)
-    assert "nalu-wind" in new_spec_str
-    assert "git." in new_spec_str
-    assert "=master" in new_spec_str
-    assert "+hypre" in new_spec_str
-    assert "%gcc" in new_spec_str
-    assert " build_type=Release" in new_spec_str
+manager = spack.main.SpackCommand("manager")
 
 
-def test_version_replacement_string_creates_spec_with_git_ref_version():
-    spec_str = "nalu-wind@master+hypre%gcc build_type=Release ^trilinos@develop"
-    spec = Spec(spec_str)
-    spec.concretize()
-    new_spec_str = pin_graph(spec)
-    print(new_spec_str)
-    new_spec = Spec(new_spec_str)
-    assert isinstance(new_spec.version, GitVersion)
-    spec_list = new_spec_str.split(" ^")
-    assert len(spec_list) > 1
-    for specStr in spec_list:
-        spec = Spec(specStr)
-        version = spec.versions.concrete_range_as_version
-        assert isinstance(version, GitVersion)
+@pytest.mark.skip("test is having issues with compiler detection need to fix later")
+def test_version_replacement_preserves_all_but_version(tmpdir, do_not_check_runtimes_on_reuse):
+    with tmpdir.as_cwd():
+        env = ev.create_in_dir(tmpdir.strpath)
+        with env:
+            env.add("cmake@master~ncurses")
+            assert list(env.roots())
+            env.concretize()
+            manager("pin")
 
-
-# =============================================================================
-"""
+            specs = env.all_specs()
+            assert specs
+            new_spec_str = specs[0]
+            assert "cmake" in new_spec_str
+            assert "git." in new_spec_str
+            assert "=master" in new_spec_str
+            assert "~ncurses" in new_spec_str

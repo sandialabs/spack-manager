@@ -20,3 +20,4 @@ __pycache__
 Configuring
 .tmp/
 *.swp
+*.DS_*
