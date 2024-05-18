@@ -51,29 +51,16 @@ Benefits of Spack-Manager
    Spack's `custom extensions <https://spack.readthedocs.io/en/latest/extensions.html>`_ to allow for prototyping at the project level, as well as the option to 
    maintain features that are only intended for the project's development team.
 
-   .. image:: images/Spack-Manager-Org.png
-      :alt: Spack-Manager is designed to provide an abstraction that can support multiple application teams. Each team develops a Project that can be registered with an instance of Spack-Manager.
-      :width: 90%
-
 - Spack-Manager maximizes overlap between the workflows of the three user profiles. 
    The main thought behind Spack-Manager is that the exact same infrastructure that the system administrators use to deploy binaries and modules on various machines
    can be recycled to run nightly tests, generate time stamped snapshots of binaries for developers to link against, and supply end users
    with production executables.
    This framework is stitched together through Spack, but the end products (binaries and modules) are designed to be as independent from Spack as possible.
 
-   .. image:: images/application-workflow.png
-      :alt: An example of generalized infrastruture requirements that are common across HPC and scientific computing applications. Spack-Manager's goal is to empower these types of infrastructures while still allowing application teams to drive the details.
-      :width: 90%
-
 - Spack-Manager provides the benefits of Spack by seeking to maintain as small of a wrapper layer as possible. Some of these benefits include:
    - Build reproducibiilty, and scalability
    - Buy-in and feedback from HPC vendors and software developers over thousands of projects
    - Support options, extended documentation and testing through the much larger Spack project
-
-   .. image:: images/ApplicationSpace.png
-      :alt: The end goal of many code application and DevOps teams is to efficiently span the space of platform permutations and project variations. 
-      :width: 90%
-
 
 Additional details about the philosophy, and general knowledge can be found in the following documentation section.
 
