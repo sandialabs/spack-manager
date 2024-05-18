@@ -11,6 +11,7 @@ import spack.binary_distribution as bindist
 
 command_name = "binary-finder"
 description = "check upstreams and binary caches for hits on a concretized environment"
+aliases = ["bf"]
 
 
 def setup_parser_args(subparser):
@@ -117,6 +118,9 @@ def add_command(parser, command_dict):
         command_name,
         description=description,
         help=description,
+        aliases=aliases
     )
     setup_parser_args(subparser)
     command_dict[command_name] = binary_finder
+    for alias in aliases:
+        command_dict[alias] = binary_finder

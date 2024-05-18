@@ -16,6 +16,7 @@ from spack.spec import Spec
 
 command_name = "lock-diff"
 description = "compare two lock files to determine differences in the concrete environments"
+aliases = ["ld"]
 
 
 def setup_parser_args(subparser):
@@ -149,7 +150,12 @@ def lock_diff(parser, args):
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
-        command_name, description=description, help=description,
+        command_name,
+        description=description,
+        help=description,
+        aliases=aliases
     )
     setup_parser_args(subparser)
     command_dict[command_name] = lock_diff
+    for alias in aliases:
+        command_dict[alias] = lock_diff
