@@ -127,7 +127,7 @@ def test_local_source_tree_can_be_added_to_env(tmpdir):
     with tmpdir.as_cwd():
         manager("create-env", "-s", "nalu-wind", "-l")
         e = env.Environment(tmpdir.strpath)
-        assert (
-            "$env/opt"
-            in e.manifest.pristine_yaml_content["spack"]["config"]["install_tree"]["root"]
-        )
+        with e:
+            install_tree = spack.config.get("config:install_tree")
+
+        assert "$env/opt" in str(install_tree)
