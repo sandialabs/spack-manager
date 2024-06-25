@@ -106,5 +106,5 @@ jobs:
         spack env deactivate
         quick-create --dir unmanaged -s zlib
         spack env deactivate
-        quick-create-dev --name develop -s nalu-wind@master
+        quick-create-dev --name develop -s zlib-ng@2.1.5
         
