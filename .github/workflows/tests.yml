@@ -30,9 +30,9 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: spack/spack
-        ref: ${{ matrix.spack-verions }}
+        ref: ${{ matrix.spack-version }}
         path: spack
-    - name: Setup Spack ${{ matrix.spack-verion }}
+    - name: Setup Spack ${{ matrix.spack-version }}
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
       run: |
@@ -91,7 +91,7 @@ jobs:
         repository: spack/spack
         ref: ${{ matrix.spack-version }}
         path: spack
-    - name: Setup Spack ${{ matrix.spack-verion }}
+    - name: Setup Spack ${{ matrix.spack-version }}
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
       run: |
