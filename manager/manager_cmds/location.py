@@ -4,6 +4,7 @@
 #
 # This software is released under the BSD 3-clause license. See LICENSE file
 
+import spack
 import spack.extensions as ext
 
 
