@@ -4,11 +4,15 @@
 #
 # This software is released under the BSD 3-clause license. See LICENSE file
 
+import spack
 import spack.extensions as ext
 
 
 def location(verbose=False):
-    path = ext.path_for_extension("manager", paths=ext.get_extension_paths())
+    if spack.spack_version_info[0:3] < (0, 22, 0):
+        path = ext.path_for_extension("manager", *ext.get_extension_paths())
+    else:
+        path = ext.path_for_extension("manager", paths=ext.get_extension_paths())
     if verbose:
         print(path)
     return path

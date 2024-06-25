@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9, 3.12]
-        spack-version: [0.21.2, 0.22.0, develop]
+        spack-version: [v0.21.2, v0.22.0, develop]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -30,9 +30,9 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: spack/spack
-        ref: ${{ matrix.spack-verions }}
+        ref: ${{ matrix.spack-version }}
         path: spack
-    - name: Setup Spack ${{ matrix.spack-verion }}
+    - name: Setup Spack ${{ matrix.spack-version }}
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
       run: |
@@ -78,7 +78,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9]
-        spack-version: [0.21.2, 0.22.0, develop]
+        spack-version: [v0.21.2, v0.22.0, develop]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -89,9 +89,9 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: spack/spack
-        ref: ${{ matrix.spack-verions }}
+        ref: ${{ matrix.spack-version }}
         path: spack
-    - name: Setup Spack ${{ matrix.spack-verion }}
+    - name: Setup Spack ${{ matrix.spack-version }}
       run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
     - name: Install extension
       run: |
@@ -101,9 +101,10 @@ jobs:
       run: |
         . spack/share/spack/setup-env.sh
         . scripts/quick_commands.sh
+        spack config add config:debug:True
         quick-create --name managed -s zlib
         spack env deactivate
         quick-create --dir unmanaged -s zlib
         spack env deactivate
-        quick-create-dev --name develop -s nalu-wind@master
+        quick-create-dev --name develop -s zlib-ng@2.1.5
         
