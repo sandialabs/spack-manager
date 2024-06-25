@@ -101,6 +101,7 @@ jobs:
       run: |
         . spack/share/spack/setup-env.sh
         . scripts/quick_commands.sh
+        spack config add config:debug:True
         quick-create --name managed -s zlib
         spack env deactivate
         quick-create --dir unmanaged -s zlib
