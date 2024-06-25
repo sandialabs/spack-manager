@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9, 3.12]
-        spack-version: [0.21.2, 0.22.0, develop]
+        spack-version: [v0.21.2, v0.22.0, develop]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -78,7 +78,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9]
-        spack-version: [0.21.2, 0.22.0, develop]
+        spack-version: [v0.21.2, v0.22.0, develop]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
