@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snapshot Developer Workflow Example &mdash; Spack-Manager 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="System Administrator Documentation" href="../system_admins/system_admins.html" />
+    <link rel="prev" title="Advanced Topics for Developers" href="advanced_topics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Spack-Manager
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_profiles.html">User Profiles</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysts/analysts.html">Analysts Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="developers.html">Developer Documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="developer_spack_minimum.html">Developers: What you need to know about Spack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_workflow.html">Quick-Start: Developer Workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="useful_commands.html">Useful Commands for Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_topics.html">Advanced Topics for Developers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Snapshot Developer Workflow Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building">Building</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#editing-code">Editing Code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running">Running</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#iterating">Iterating</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_admins/system_admins.html">System Administrator Documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/general.html">General Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Spack-Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_profiles.html">User Profiles</a></li>
+          <li class="breadcrumb-item"><a href="developers.html">Developer Documentation</a></li>
+      <li class="breadcrumb-item active">Snapshot Developer Workflow Example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/user_profiles/developers/snapshot_workflow.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snapshot-developer-workflow-example">
+<h1>Snapshot Developer Workflow Example<a class="headerlink" href="#snapshot-developer-workflow-example" title="Link to this heading"></a></h1>
+<p><strong>WARNING:</strong> This documentation is fairly specific to ExaWind and has not been generalized for an arbitrary <code class="docutils literal notranslate"><span class="pre">Spack-Manager</span></code> project.
+THe information is still useful. However, you may not translate directly or be able to follow along.</p>
+<p>In this tutorial we will look at how to setup a developer workflow using snapshots if they are provided on your machine.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>We use the Eagle machine at NREL for the example, and we choose to develop both the <code class="docutils literal notranslate"><span class="pre">hypre</span></code> and <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code>
+projects for running on the GPU using CUDA. Starting from nothing, we first clone Spack-Manager:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 ~]$ export SCRATCH=/scratch/${USER}
+[user@el1 ~]$ cd ${SCRATCH}
+[user@el1 user]$ git clone --recursive https://github.com/sandialabs/spack-manager.git
+Cloning into &#39;spack-manager&#39;...
+remote: Enumerating objects: 2610, done.
+remote: Counting objects: 100% (2610/2610), done.
+remote: Compressing objects: 100% (1001/1001), done.
+remote: Total 2610 (delta 1345), reused 2476 (delta 1256), pack-reused 0
+Receiving objects: 100% (2610/2610), 426.10 KiB | 4.14 MiB/s, done.
+Resolving deltas: 100% (1345/1345), done.
+Submodule &#39;spack&#39; (https://github.com/spack/spack) registered for path &#39;spack&#39;
+Cloning into &#39;/lustre/eaglefs/scratch/user/spack-manager/spack&#39;...
+remote: Enumerating objects: 354065, done.
+remote: Total 354065 (delta 0), reused 0 (delta 0), pack-reused 354065
+Receiving objects: 100% (354065/354065), 155.14 MiB | 22.08 MiB/s, done.
+Resolving deltas: 100% (150589/150589), done.
+Submodule path &#39;spack&#39;: checked out &#39;3576e5f3d6b34d8bc8c8c8f2749127ece1ce89be&#39;
+</pre></div>
+</div>
+<p>We then activate Spack-Manager:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager &amp;&amp; source ${SPACK_MANAGER}/start.sh &amp;&amp; spack-start
+</pre></div>
+</div>
+<p>Once Spack-Manager itself is activated, we create the Spack environment in which we will install and develop.
+To do this we use the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">create-env</span></code> command.
+Our environment will be called <code class="docutils literal notranslate"><span class="pre">exawind</span></code> using the <code class="docutils literal notranslate"><span class="pre">--name</span></code> argument. We will choose to focus on building Nalu-Wind using the spec
+<code class="docutils literal notranslate"><span class="pre">nalu-wind&#64;master+hypre+cuda</span>&#160; <span class="pre">%gcc</span></code>, which means, <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> at the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch, with hypre
+enabled (<code class="docutils literal notranslate"><span class="pre">+hypre</span></code>), and CUDA (<code class="docutils literal notranslate"><span class="pre">+cuda</span> </code>), using the GCC compiler (<code class="docutils literal notranslate"><span class="pre">%gcc</span></code>, which without a version, selects the default compiler version).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack manager create-env --name exawind --spec &#39;nalu-wind@master+hypre+cuda  %gcc&#39;
+making /scratch/user/spack-manager/environments/exawind
+</pre></div>
+</div>
+<p>Once the environment is created, we need to activate it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack env activate -d ${SPACK_MANAGER}/environments/exawind
+</pre></div>
+</div>
+<p>Both of the previous steps can be combined into one with <code class="docutils literal notranslate"><span class="pre">quick-create-env</span> <span class="pre">-n</span> <span class="pre">exawind</span> <span class="pre">-s</span> <span class="pre">'nalu-wind&#64;master+hypre+cuda</span> <span class="pre">%gcc'</span></code>.</p>
+<p>Next, we will turn <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">hypre</span></code> into “develop specs” with a command that tells Spack we want to edit the code for these packages
+locally and always rebuild with our local clones of the packages. We do this with the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">develop</span></code> command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack manager develop nalu-wind@master; spack manager develop hypre@develop
+==&gt; Configuring spec nalu-wind@master for development at path nalu-wind
+==&gt; Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
+==&gt; Configuring spec hypre@develop for development at path hypre
+==&gt; Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">develop</span></code> command clones both of our packages into the <code class="docutils literal notranslate"><span class="pre">${SPACK_MANAGER}/environments/exawind</span></code> directory. It is possible to specify other locations
+of these package repos if they are already cloned by using the <code class="docutils literal notranslate"><span class="pre">-p</span></code> option for specifying a path. If we want to let Spack clone, we
+can always switch our remotes and branches within the repos cloned by Spack by doing something like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ cd ${SPACK_MANAGER}/environments/exawind/nalu-wind
+[user@el1 nalu-wind]$ git remote -v
+origin	git@github.com:Exawind/nalu-wind.git (fetch)
+origin	git@github.com:Exawind/nalu-wind.git (push)
+[user@el1 nalu-wind]$ git remote add mine git@github.com:user-nrel/nalu-wind.git
+[user@el1 nalu-wind]$ git remote rm origin
+[user@el1 nalu-wind]$ git remote rename mine origin
+[user@el1 nalu-wind]$ git pull
+remote: Enumerating objects: 15, done.
+remote: Counting objects: 100% (14/14), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 15 (delta 10), reused 14 (delta 10), pack-reused 1
+Unpacking objects: 100% (15/15), 2.78 KiB | 237.00 KiB/s, done.
+From github.com:user-nrel/nalu-wind
+ * [new branch]        jroverf/NonTemplateNodalGradPOpenBC -&gt; origin/jroverf/NonTemplateNodalGradPOpenBC
+ * [new branch]        master                              -&gt; origin/master
+ * [new branch]        update_golds_10_26_2021             -&gt; origin/update_golds_10_26_2021
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull &lt;remote&gt; &lt;branch&gt;
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=origin/&lt;branch&gt; master
+
+[user@el1 nalu-wind]$ git branch --set-upstream-to=origin/master master
+Branch &#39;master&#39; set up to track remote branch &#39;master&#39; from &#39;origin&#39;.
+[user@el1 nalu-wind]$ git pull
+Already up to date.
+[user@el1 nalu-wind]$ git checkout update_golds_10_26_2021
+
+Branch &#39;update_golds_10_26_2021&#39; set up to track remote branch &#39;update_golds_10_26_2021&#39; from &#39;origin&#39;.
+Switched to a new branch &#39;update_golds_10_26_2021&#39;
+[user@el1 nalu-wind]$ git branch
+  master
+* update_golds_10_26_2021
+</pre></div>
+</div>
+<p>Next, we decide how to take advantage of the prebuilt snapshots on the machine. Here we use the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">manager</span> <span class="pre">external</span></code>
+command to specify a “view” in which we want to pull external packages into our environment. Snapshots are organized by date.
+With the <code class="docutils literal notranslate"><span class="pre">--latest</span></code> flag, Spack-Manager will find the latest snapshot available on your machine automatically. Here we will use the latest snapshot
+and one that is attributed to our GCC with CUDA configuration, called <code class="docutils literal notranslate"><span class="pre">gcc-cuda</span></code>. Views are typically organized by compiler,
+e.g. <code class="docutils literal notranslate"><span class="pre">intel</span></code>, <code class="docutils literal notranslate"><span class="pre">clang</span></code>, <code class="docutils literal notranslate"><span class="pre">gcc</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">gcc-cuda</span></code>, etc. We will need to “blacklist” any packages we plan on developing locally, but this happens automatically for packages
+we have already set as develop specs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack manager external --latest -v gcc-cuda
+==&gt; Warning: included configuration files should be updated manually [files=include.yaml]
+</pre></div>
+</div>
+</section>
+<section id="building">
+<h2>Building<a class="headerlink" href="#building" title="Link to this heading"></a></h2>
+<p>Once our externals and git clones are configured, we have the necessary <code class="docutils literal notranslate"><span class="pre">*.yaml</span></code> files in our <code class="docutils literal notranslate"><span class="pre">${SPACK_MANAGER}/environments/exawind</span></code> environment directory
+to “concretize” and (re)install our entire project. The <code class="docutils literal notranslate"><span class="pre">spack.yaml</span></code> file in this directory is the main yaml file in which the
+other yaml files are included. Concretizing is required to solve or map our loosely defined <code class="docutils literal notranslate"><span class="pre">nalu-wind&#64;master+hypre+cuda</span>&#160; <span class="pre">%gcc</span></code> spec into “concrete” parameters of our dependency graph (or DAG). The concrete DAG is <em>exactly</em> how Spack will fulfill the dependencies for your spec. We
+concretize with the command (we almost always want to use the force with <code class="docutils literal notranslate"><span class="pre">-f</span></code>). It will likely complain about us using the “original” concretizer, but this will be fixed in the future:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack concretize -f
+==&gt; Warning: the original concretizer is currently being used.
+        Upgrade to &quot;clingo&quot; at your earliest convenience. The original concretizer will be removed from Spack starting at v0.18.0
+==&gt; Concretized nalu-wind@master%gcc+cuda+hypre 
+ -   rbzxf3n  nalu-wind@master%gcc@9.3.0~asan~boost~catalyst+cuda~fftw+hypre~ipo~openfast+pic~rocm+tests~tioga~wind-utils abs_tol=1e-15 build_type=Release cuda_arch=70 cxxstd=14 dev_path=/scratch/user/spack-manager/environments/exawind/nalu-wind rel_tol=1e-12 arch=linux-centos7-skylake_avx512
+ -   b5pippu      ^cmake@3.22.1%gcc@9.3.0~doc+ncurses+openssl+ownlibs~qt build_type=Release arch=linux-centos7-skylake_avx512
+ -   cwar5vn      ^cuda@11.2.2%gcc@9.3.0~allow-unsupported-compilers~dev arch=linux-centos7-skylake_avx512
+ -   ukbdvpe      ^hypre@develop%gcc@9.3.0~complex+cuda~debug+fortran~gptune~int64~internal-superlu~mixedint+mpi~openmp+shared~superlu-dist+unified-memory cuda_arch=70 dev_path=/scratch/user/spack-manager/environments/exawind/hypre arch=linux-centos7-skylake_avx512
+ -   ypwgjj2          ^mpt@2.22%gcc@9.3.0 arch=linux-centos7-skylake_avx512
+ -   g4tc7v2          ^netlib-lapack@3.9.1%gcc@9.3.0~external-blas~ipo+lapacke+shared~xblas build_type=Release arch=linux-centos7-skylake_avx512
+ -   sp3klcm      ^kokkos-nvcc-wrapper@3.2.00%gcc@9.3.0+mpi arch=linux-centos7-skylake_avx512
+ -   5agjw2c      ^nccmp@1.9.0.1%gcc@9.3.0~ipo build_type=Release arch=linux-centos7-skylake_avx512
+ -   p2fnhpz      ^netcdf-c@4.7.4%gcc@9.3.0~dap~fsync~hdf4~jna+mpi+parallel-netcdf+pic+shared patches=2c88dfbd6d339a0336a43b14a65a1d1df995b853b645e4af612617612a642a53 arch=linux-centos7-skylake_avx512
+ -   uyq6mxb      ^trilinos@develop%gcc@9.3.0~adios2~amesos+amesos2~anasazi~aztec~basker+belos+boost~chaco~complex+cuda+cuda_rdc~debug~dtk~epetra~epetraext~epetraextbtf~epetraextexperimental~epetraextgraphreorderings+exodus+explicit_template_instantiation~float+fortran+gtest+hdf5~hypre~ifpack+ifpack2~intrepid~intrepid2~ipo~isorropia+kokkos~mesquite~minitensor~ml+mpi+muelu~mumps~nox~openmp~phalanx~piro~python~rocm~rol~rythmos~sacado~scorec+shards~shared~shylu+stk~stk_unit_tests~stokhos~stratimikos~strumpack~suite-sparse~superlu~superlu-dist~teko~tempus+tpetra~trilinoscouplings+wrapper~x11+zoltan+zoltan2 build_type=Release cuda_arch=70 cxxstd=14 dev_path=/projects/exawind/exawind-snapshots/spack-manager/environments/exawind/snapshots/eagle/2022-01-26/trilinos gotype=long patches=ffdad9a639ff490da5bd4f254e3a849b9dbf39cf7d28f8ed4419a05048846cf6 arch=linux-centos7-skylake_avx512
+ -   ci73hai      ^yaml-cpp@0.6.3%gcc@9.3.0~ipo+pic+shared~tests build_type=Release arch=linux-centos7-skylake_avx512
+
+==&gt; Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
+</pre></div>
+</div>
+<p>Once our environment is concretized, we don’t have to concretize again unless we change some configuration in the <code class="docutils literal notranslate"><span class="pre">*.yaml</span></code> files.
+Concretization is also not explicity required for the next <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> command, but if any <code class="docutils literal notranslate"><span class="pre">*.yaml</span></code> files are changed, it is
+recommended to <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">concretize</span> <span class="pre">-f</span></code>.
+So now we are able to install our project with the simple command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack install
+==&gt; Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
+==&gt; Installing environment /scratch/user/spack-manager/environments/exawind
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
+[+] /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu (external cuda-11.2.2-cwar5vnomowwdorf57nay6e7erladdby)
+==&gt; mpt@2.22 : has external module in [&#39;mpt/2.22&#39;, &#39;slurm&#39;]
+[+] /opt/hpe/hpc/mpt/mpt-2.22 (external mpt-2.22-ypwgjj2akokavha4jkpqm4prylh2vmjr)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netlib-lapack-3.9.1-g4tc7v27alixmh2ail3lud3iweclbf52)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external kokkos-nvcc-wrapper-3.2.00-sp3klcmwurgk2hrye2tpgjv5x2pq3tlq)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external nccmp-1.9.0.1-5agjw2cs2kprcw2xm5ffmrojfc7aknnz)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netcdf-c-4.7.4-p2fnhpzbpg7wtriqqsbudgtdwgtcrud3)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external trilinos-develop-uyq6mxbuc2lw3oext626lbmyiiyh7bqf)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external yaml-cpp-0.6.3-ci73hainzvjnag2ynsg7jxvaotnflzal)
+==&gt; Installing hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+==&gt; No binary for hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3 found: installing from source
+==&gt; No patches needed for hypre
+==&gt; hypre: Executing phase: &#39;autoreconf&#39;
+==&gt; hypre: Executing phase: &#39;configure&#39;
+==&gt; hypre: Executing phase: &#39;build&#39;
+==&gt; hypre: Executing phase: &#39;install&#39;
+==&gt; hypre: Successfully installed hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+  Fetch: 0.00s.  Build: 4m 30.38s.  Total: 4m 30.38s.
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+==&gt; Installing nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==&gt; No binary for nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx found: installing from source
+==&gt; No patches needed for nalu-wind
+==&gt; nalu-wind: Executing phase: &#39;cmake&#39;
+==&gt; nalu-wind: Executing phase: &#39;build&#39;
+==&gt; nalu-wind: Executing phase: &#39;install&#39;
+==&gt; nalu-wind: Successfully installed nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+  Fetch: 0.00s.  Build: 32m 27.59s.  Total: 32m 27.59s.
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+</pre></div>
+</div>
+<p>We notice that both <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> and <code class="docutils literal notranslate"><span class="pre">hypre</span></code> are being rebuilt, while the rest of the dependency graph is fullfilled through the externals defined from
+the selected snapshot. Now that we have built and installed our first iteration of the development cycle. We can pursue editing of code
+and iterate easily on a simplified build process.</p>
+</section>
+<section id="editing-code">
+<h2>Editing Code<a class="headerlink" href="#editing-code" title="Link to this heading"></a></h2>
+<p>We start by verifying our currently activated environment in Spack:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ spack find
+==&gt; In environment /scratch/user/spack-manager/environments/exawind
+==&gt; Root specs
+-- no arch / gcc ------------------------------------------------
+nalu-wind@master%gcc +cuda+hypre 
+
+==&gt; 9 installed packages
+-- linux-centos7-skylake_avx512 / gcc@9.3.0 ---------------------
+cuda@11.2.2  hypre@develop  mpt@2.22  nalu-wind@master  nccmp@1.9.0.1  netcdf-c@4.7.4  netlib-lapack@3.9.1  trilinos@develop  yaml-cpp@0.6.3
+</pre></div>
+</div>
+<p>Next we will edit code in <code class="docutils literal notranslate"><span class="pre">hypre</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ cd ${SPACK_MANAGER}/environments/exawind/hypre
+[user@el1 hypre]$ echo &quot;//&quot; &gt;&gt; src/HYPRE_parcsr_mgr.c
+</pre></div>
+</div>
+<p>Then we can simply rebuild and install the entire project by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 hypre]$ spack install
+==&gt; Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
+==&gt; Installing environment /scratch/user/spack-manager/environments/exawind
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
+[+] /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu (external cuda-11.2.2-cwar5vnomowwdorf57nay6e7erladdby)
+==&gt; mpt@2.22 : has external module in [&#39;mpt/2.22&#39;, &#39;slurm&#39;]
+[+] /opt/hpe/hpc/mpt/mpt-2.22 (external mpt-2.22-ypwgjj2akokavha4jkpqm4prylh2vmjr)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netlib-lapack-3.9.1-g4tc7v27alixmh2ail3lud3iweclbf52)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external kokkos-nvcc-wrapper-3.2.00-sp3klcmwurgk2hrye2tpgjv5x2pq3tlq)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external nccmp-1.9.0.1-5agjw2cs2kprcw2xm5ffmrojfc7aknnz)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netcdf-c-4.7.4-p2fnhpzbpg7wtriqqsbudgtdwgtcrud3)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external trilinos-develop-uyq6mxbuc2lw3oext626lbmyiiyh7bqf)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external yaml-cpp-0.6.3-ci73hainzvjnag2ynsg7jxvaotnflzal)
+==&gt; Installing hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+==&gt; No binary for hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3 found: installing from source
+==&gt; No patches needed for hypre
+==&gt; hypre: Executing phase: &#39;autoreconf&#39;
+==&gt; hypre: Executing phase: &#39;configure&#39;
+==&gt; hypre: Executing phase: &#39;clean&#39;
+==&gt; hypre: Executing phase: &#39;build&#39;
+==&gt; hypre: Executing phase: &#39;install&#39;
+==&gt; hypre: Successfully installed hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+  Fetch: 0.00s.  Build: 4m 26.05s.  Total: 4m 26.05s.
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+==&gt; Installing nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==&gt; No binary for nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx found: installing from source
+==&gt; No patches needed for nalu-wind
+==&gt; nalu-wind: Executing phase: &#39;cmake&#39;
+==&gt; nalu-wind: Executing phase: &#39;build&#39;
+==&gt; nalu-wind: Executing phase: &#39;install&#39;
+==&gt; nalu-wind: Successfully installed nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+  Fetch: 0.00s.  Build: 1m 33.13s.  Total: 1m 33.13s.
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==&gt; Warning: Module file /lustre/eaglefs/scratch/user/spack-manager/spack/share/spack/modules/linux-centos7-skylake_avx512/nalu-wind-master-gcc-9.3.0-rbzxf3n exists and will not be overwritten
+</pre></div>
+</div>
+<p>Notice both <code class="docutils literal notranslate"><span class="pre">hypre</span></code> and <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> are rebuilt. Since <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> depends on <code class="docutils literal notranslate"><span class="pre">hypre</span></code>, it is rebuilt in order, and <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> is relinked to <code class="docutils literal notranslate"><span class="pre">hypre</span></code>.
+Spack also performed the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> step and the binaries are installed to regular Spack paths in <code class="docutils literal notranslate"><span class="pre">${SPACK_MANAGER}/spack/opt</span></code>. So the binaries can be referenced from the installed directory or from the build directories in each project in <code class="docutils literal notranslate"><span class="pre">${SPACK_MANAGER}/environments/exawind</span></code>.</p>
+<p>Next we can edit code in <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> as well, and rebuild the project:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 hypre]$ cd ${SPACK_MANAGER}/environments/exawind/nalu-wind
+[user@el1 nalu-wind]$ echo &quot;//&quot; &gt;&gt; unit_tests.C
+[user@el1 nalu-wind]$ spack install
+==&gt; Warning: included configuration files should be updated manually [files=externals.yaml, include.yaml]
+==&gt; Installing environment /scratch/user/spack-manager/environments/exawind
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external cmake-3.22.1-b5pippuk6fzbpysv24phtw4etslotbs6)
+[+] /nopt/nrel/ecom/hpacf/compilers/2020-07/spack/opt/spack/linux-centos7-skylake_avx512/gcc-8.4.0/cuda-11.2.2-5muy3vijyqputqmbdyzhltqot3fvwibu (external cuda-11.2.2-cwar5vnomowwdorf57nay6e7erladdby)
+==&gt; mpt@2.22 : has external module in [&#39;mpt/2.22&#39;, &#39;slurm&#39;]
+[+] /opt/hpe/hpc/mpt/mpt-2.22 (external mpt-2.22-ypwgjj2akokavha4jkpqm4prylh2vmjr)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netlib-lapack-3.9.1-g4tc7v27alixmh2ail3lud3iweclbf52)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external kokkos-nvcc-wrapper-3.2.00-sp3klcmwurgk2hrye2tpgjv5x2pq3tlq)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external nccmp-1.9.0.1-5agjw2cs2kprcw2xm5ffmrojfc7aknnz)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external netcdf-c-4.7.4-p2fnhpzbpg7wtriqqsbudgtdwgtcrud3)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external trilinos-develop-uyq6mxbuc2lw3oext626lbmyiiyh7bqf)
+[+] /projects/exawind/exawind-snapshots/spack-manager/views/exawind/snapshots/eagle/2022-01-26/gcc-cuda (external yaml-cpp-0.6.3-ci73hainzvjnag2ynsg7jxvaotnflzal)
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/hypre-develop-ukbdvpe47x3frgurzhknhbfoq4iskfv3
+==&gt; Installing nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==&gt; No binary for nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx found: installing from source
+==&gt; No patches needed for nalu-wind
+==&gt; nalu-wind: Executing phase: &#39;cmake&#39;
+==&gt; nalu-wind: Executing phase: &#39;build&#39;
+==&gt; nalu-wind: Executing phase: &#39;install&#39;
+==&gt; nalu-wind: Successfully installed nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+  Fetch: 0.00s.  Build: 1m 27.78s.  Total: 1m 27.78s.
+[+] /lustre/eaglefs/scratch/user/spack-manager/spack/opt/spack/linux-centos7-skylake_avx512/gcc-9.3.0/nalu-wind-master-rbzxf3nbmxodxvgvtq72n22glbd7wpdx
+==&gt; Warning: Module file /lustre/eaglefs/scratch/user/spack-manager/spack/share/spack/modules/linux-centos7-skylake_avx512/nalu-wind-master-gcc-9.3.0-rbzxf3n exists and will not be overwritten
+</pre></div>
+</div>
+<p>Notice since nothing has changed in <code class="docutils literal notranslate"><span class="pre">hypre</span></code>, only <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> was necessary to rebuild. We can continue to edit code and iterate simply by using the <code class="docutils literal notranslate"><span class="pre">spack</span> <span class="pre">install</span></code> command to rebuild the entire project concisely.</p>
+</section>
+<section id="running">
+<h2>Running<a class="headerlink" href="#running" title="Link to this heading"></a></h2>
+<p>Lastly, to run the code we typically want to enter the build directory and run an executable using the environment in which it was built.
+We do this by doing the following where we run the <code class="docutils literal notranslate"><span class="pre">nalu-wind</span></code> unit tests as an example. While on a compute node on the Eagle machine:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@r103u23 ~]$ spack cd -b nalu-wind
+[user@r103u23 spack-build-rbzxf3n]$ spack build-env nalu-wind ./unittestX 
+   Nalu-Wind Version: v1.2.0
+   Nalu-Wind GIT Commit SHA: e9142052b09d6a6ddecbe9b83dedd1f7b4588fac-DIRTY
+   Trilinos Version: 13.1-ga66bb9c6fa4
+
+[==========] Running 478 tests from 116 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from Basic
+[ RUN      ] Basic.CheckCoords1Elem
+[       OK ] Basic.CheckCoords1Elem (1 ms)
+[----------] 1 test from Basic (2 ms total)
+
+[----------] 5 tests from BasicKokkos
+[ RUN      ] BasicKokkos.discover_execution_space
+
+Kokkos::Cuda is available.
+Default execution space info: macro  KOKKOS_ENABLE_CUDA      : defined
+macro  CUDA_VERSION          = 11020 = version 11.2
+Kokkos::Cuda[ 0 ] Tesla V100-PCIE-16GB capability 7.0, Total Global Memory: 15.78 G, Shared Memory per Block: 48 K : Selected
+Kokkos::Cuda[ 1 ] Tesla V100-PCIE-16GB capability 7.0, Total Global Memory: 15.78 G, Shared Memory per Block: 48 K
+
+[       OK ] BasicKokkos.discover_execution_space (0 ms)
+[ RUN      ] BasicKokkos.simple_views_1D
+[       OK ] BasicKokkos.simple_views_1D (2 ms)
+[ RUN      ] BasicKokkos.simple_views_2D
+[       OK ] BasicKokkos.simple_views_2D (2 ms)
+[ RUN      ] BasicKokkos.parallel_for
+[       OK ] BasicKokkos.parallel_for (1 ms)
+</pre></div>
+</div>
+<p>One can also obtain a bash shell with the package’s build environment for performing many tasks by doing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spack</span> <span class="n">cd</span> <span class="o">-</span><span class="n">b</span> <span class="n">nalu</span><span class="o">-</span><span class="n">wind</span>
+<span class="n">bash</span> <span class="o">-</span><span class="n">rcfile</span> <span class="o">../</span><span class="n">spack</span><span class="o">-</span><span class="n">build</span><span class="o">-</span><span class="n">env</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</section>
+<section id="iterating">
+<h2>Iterating<a class="headerlink" href="#iterating" title="Link to this heading"></a></h2>
+<p>After the initial setup overhead is in place. The process for iterating in the code development can be summarized as such:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[user@el1 user]$ export SPACK_MANAGER=${SCRATCH}/spack-manager &amp;&amp; source ${SPACK_MANAGER}/start.sh &amp;&amp; spack-start &amp;&amp; spack env activate -d ${SPACK_MANAGER}/environments/exawind
+[user@el1 user]$ #edit code
+[user@el1 user]$ spack install
+[user@el1 user]$ spack cd -b package &amp;&amp; spack build-env package ./exe
+[user@el1 user]$ #edit code
+[user@el1 user]$ spack install
+[user@el1 user]$ spack cd -b package &amp;&amp; spack build-env package ./exe
+[user@el1 user]$ #edit spack.yaml
+[user@el1 user]$ spack concretize -f
+[user@el1 user]$ spack install
+[user@el1 user]$ spack cd -b package &amp;&amp; spack build-env package ./exe
+...
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="advanced_topics.html" class="btn btn-neutral float-left" title="Advanced Topics for Developers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../system_admins/system_admins.html" class="btn btn-neutral float-right" title="System Administrator Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
