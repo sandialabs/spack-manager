@@ -68,13 +68,8 @@ spack:
         e = env.Environment(env_root)
         assert e.manifest.yaml_content["spack"]["specs"][0] == "amr-wind"
         assert e.manifest.yaml_content["spack"]["specs"][1] == "nalu-wind"
-        assert (
-            e.manifest.yaml_content["spack"]["develop"]["amr-wind"]["spec"]
-            == "amr-wind@main"
-        )
-        assert (
-            e.manifest.yaml_content["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
-        )
+        assert e.manifest.yaml_content["spack"]["develop"]["amr-wind"]["spec"] == "amr-wind@main"
+        assert e.manifest.yaml_content["spack"]["develop"]["amr-wind"]["path"] == "/tst/dir"
         assert "view" not in e.manifest.yaml_content["spack"].keys()
 
 

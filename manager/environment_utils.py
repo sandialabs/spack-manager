@@ -7,8 +7,8 @@
 
 import spack.environment.environment as senv
 
-
 __attrs__ = ["configuration", "pristine_configuration"]
+
 
 # TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
