@@ -168,7 +168,7 @@ def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch, on_moon
         external(None, args)
         # check that the include entry was added to the spack.yaml
         assert mock_write.num_calls == 1
-        includes = e.pristine_configuration.get("include", [])
+        includes = e.configuration.get("include", [])
         assert 1 == len(includes)
         assert "externals.yaml" == str(includes[0])
 

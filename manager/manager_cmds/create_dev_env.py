@@ -48,7 +48,7 @@ def create_dev_env(parser, args):
         s.versions = spack.version.VersionList([version])
 
         dev_args = []
-        yaml = env.manifest.pristine_yaml_content
+        yaml = env.manifest.yaml_content
         # kind of hacky, but spack will try to re-clone
         # if we don't give the --path argument even though
         # it is already in the spack.yaml

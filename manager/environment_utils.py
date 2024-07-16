@@ -10,7 +10,7 @@ import spack.environment.environment as senv
 
 # TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
-    """Spack-Manager extensiont to the manifest file for prototyping"""
+    """Spack-Manager extension to the manifest file for prototyping"""
 
     def set_config_value(self, root, key, value=None):
         """Set/overwrite a config value
@@ -21,15 +21,10 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             value: value to set
         """
         if value:
-            if root not in self.pristine_configuration:
-                self.pristine_configuration[root] = {}
             if root not in self.configuration:
                 self.configuration[root] = {}
-
-            self.pristine_configuration.get(root, {})[key] = value
             self.configuration.get(root, {})[key] = value
         else:
-            self.pristine_configuration[root] = key
             self.configuration[root] = key
 
         self.changed = True
@@ -40,10 +35,8 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the end of the list
         """
-        if "include" not in self.pristine_configuration:
-            self.pristine_configuration["include"] = []
+        if "include" not in self.configuration:
             self.configuration["include"] = []
-        self.pristine_configuration.get("include", []).append(value)
         self.configuration.get("include", []).append(value)
         self.changed = True
 
@@ -53,9 +46,7 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the beginning of the list
         """
-        if "include" not in self.pristine_configuration:
-            self.pristine_configuration["include"] = []
+        if "include" not in self.configuration:
             self.configuration["include"] = []
-        self.pristine_configuration.get("include", [])[:0] = [value]
         self.configuration.get("include", [])[:0] = [value]
         self.changed = True

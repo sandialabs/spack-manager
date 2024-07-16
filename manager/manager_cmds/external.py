@@ -22,7 +22,7 @@ from spack.spec import Spec
 
 def include_entry_exists(env, name):
     manifest = SpackManagerEnvironmentManifest(env.manifest.manifest_dir)
-    includes = manifest.pristine_configuration.get("include", [])
+    includes = manifest.configuration.get("include", [])
     for entry in includes:
         if entry == name:
             return True
