@@ -82,12 +82,12 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(tmpdir, on_moonlight, monkeypatc
             )
         )
         e = ev.Environment(tmpdir.strpath)
-        print(e.manifest.pristine_yaml_content)
+        print(e.manifest.yaml_content)
         print(list(e.user_specs))
         assert os.path.isfile(str(tmpdir.join("spack.yaml")))
         assert os.path.isfile(str(tmpdir.join("include.yaml")))
-        assert "path" in e.manifest.pristine_yaml_content["spack"]["develop"]["amr-wind"]
-        assert "path" in e.manifest.pristine_yaml_content["spack"]["develop"]["nalu-wind"]
+        assert "path" in e.manifest.yaml_content["spack"]["develop"]["amr-wind"]
+        assert "path" in e.manifest.yaml_content["spack"]["develop"]["nalu-wind"]
         # mocked out call that would update yaml with trilinos info but
         # assuming it works fine
         arg_capture.assert_any_call(["--path", amr_path.strpath, "amr-wind@main"])
@@ -103,9 +103,9 @@ def test_nonConcreteSpecsDontGetCloned(tmpdir, monkeypatch, arg_capture):
         )
         arg_capture.assert_call_matches(-1, ["exawind@master"])
         e = ev.Environment(tmpdir.strpath)
-        assert "nalu-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
-        assert "exawind@master" in e.manifest.pristine_yaml_content["spack"]["specs"]
-        assert "amr-wind" in e.manifest.pristine_yaml_content["spack"]["specs"]
+        assert "nalu-wind" in e.manifest.yaml_content["spack"]["specs"]
+        assert "exawind@master" in e.manifest.yaml_content["spack"]["specs"]
+        assert "amr-wind" in e.manifest.yaml_content["spack"]["specs"]
 
 
 def test_noSpecsIsNotAnErrorGivesBlankEnv(tmpdir, monkeypatch, arg_capture):
@@ -115,4 +115,4 @@ def test_noSpecsIsNotAnErrorGivesBlankEnv(tmpdir, monkeypatch, arg_capture):
         assert arg_capture.num_calls == 0
         e = ev.Environment(tmpdir.strpath)
         assert len(e.user_specs) == 0
-        assert e.manifest.pristine_yaml_content["spack"]["specs"] == []
+        assert e.manifest.yaml_content["spack"]["specs"] == []

@@ -7,10 +7,12 @@
 
 import spack.environment.environment as senv
 
+__attrs__ = ["configuration", "pristine_configuration"]
+
 
 # TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
-    """Spack-Manager extensiont to the manifest file for prototyping"""
+    """Spack-Manager extension to the manifest file for prototyping"""
 
     def set_config_value(self, root, key, value=None):
         """Set/overwrite a config value
@@ -20,19 +22,18 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             key: next level where we will be updating
             value: value to set
         """
-        if value:
-            if root not in self.pristine_configuration:
-                self.pristine_configuration[root] = {}
-            if root not in self.configuration:
-                self.configuration[root] = {}
-
-            self.pristine_configuration.get(root, {})[key] = value
-            self.configuration.get(root, {})[key] = value
-        else:
-            self.pristine_configuration[root] = key
-            self.configuration[root] = key
-
-        self.changed = True
+        for attr in __attrs__:
+            if hasattr(self, attr):
+                configuration = getattr(self, attr)
+            else:
+                continue
+            if value:
+                if root not in configuration:
+                    configuration[root] = {}
+                configuration.get(root, {})[key] = value
+            else:
+                configuration[root] = key
+            self.changed = True
 
     def append_includes(self, value):
         """Add to the includes in the manifest
@@ -40,12 +41,15 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the end of the list
         """
-        if "include" not in self.pristine_configuration:
-            self.pristine_configuration["include"] = []
-            self.configuration["include"] = []
-        self.pristine_configuration.get("include", []).append(value)
-        self.configuration.get("include", []).append(value)
-        self.changed = True
+        for attr in __attrs__:
+            if hasattr(self, attr):
+                configuration = getattr(self, attr)
+            else:
+                continue
+            if "include" not in configuration:
+                configuration["include"] = []
+            configuration.get("include", []).append(value)
+            self.changed = True
 
     def prepend_includes(self, value):
         """Add to the includes in the manifest
@@ -53,9 +57,12 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the beginning of the list
         """
-        if "include" not in self.pristine_configuration:
-            self.pristine_configuration["include"] = []
-            self.configuration["include"] = []
-        self.pristine_configuration.get("include", [])[:0] = [value]
-        self.configuration.get("include", [])[:0] = [value]
-        self.changed = True
+        for attr in __attrs__:
+            if hasattr(self, attr):
+                configuration = getattr(self, attr)
+            else:
+                continue
+            if "include" not in configuration:
+                configuration["include"] = []
+            configuration.get("include", [])[:0] = [value]
+            self.changed = True

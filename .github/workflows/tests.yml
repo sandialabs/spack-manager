@@ -19,7 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9, 3.12]
-        spack-version: [v0.21.2, v0.22.0, develop]
+
+        spack-version: [v0.21.2, v0.22.0, v0.22.1, develop]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -65,7 +66,8 @@ jobs:
       run: |
         ls -lh "$PWD/spack"
         ls -lh "$PWD/spack/.github/"
-        cp ${GITHUB_WORKSPACE}/spack/.github/workflows/style/requirements.txt "$PWD"
+        if [ -f ${GITHUB_WORKSPACE}/spack/.github/workflows/style/requirements.txt ]; then cp ${GITHUB_WORKSPACE}/spack/.github/workflows/style/requirements.txt "$PWD"; fi
+        if [ -f ${GITHUB_WORKSPACE}/spack/.github/workflows/requirements/style/requirements.txt ]; then cp ${GITHUB_WORKSPACE}/spack/.github/workflows/requirements/style/requirements.txt "$PWD"; fi
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install extension
@@ -78,7 +80,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9]
-        spack-version: [v0.21.2, v0.22.0, develop]
+        spack-version: [v0.21.2, v0.22.0, v0.22.1, develop]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}

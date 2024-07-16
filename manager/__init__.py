@@ -77,7 +77,6 @@ def remove_project_via_index(index):
         config_yaml["spack-manager"]["projects"].pop(index)
         write_config()
     else:
-        breakpoint()
         raise MissingProjectException("No project is registered with the index {0}".format(index))
 
 
