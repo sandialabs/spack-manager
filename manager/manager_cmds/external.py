@@ -53,7 +53,7 @@ def create_external_detected_spec(env, spec):
         return spack.detection.DetectedPackage(Spec(pruned_spec), prefix)
 
 
-def assemble_dict_of_detected_externals(env, black_list, white_list):
+def assemble_dict_of_detected_externals(env, exclude, include):
     external_spec_dict = {}
     active_env = ev.active_environment()
 
@@ -70,11 +70,11 @@ def assemble_dict_of_detected_externals(env, black_list, white_list):
     for spec in env.all_specs():
         if spec.external:
             continue
-        if black_list:
-            if spec.name not in black_list:
+        if exclude:
+            if spec.name not in exclude:
                 update_dictionary(env, spec)
-        elif white_list:
-            if spec.name in white_list:
+        elif include:
+            if spec.name in include:
                 update_dictionary(env, spec)
         else:
             if not active_env.is_develop(spec):

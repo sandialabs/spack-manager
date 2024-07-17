@@ -174,12 +174,12 @@ def evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch, on_moon
 
 
 @pytest.mark.skip()
-def test_firstTimeAddingExternal(tmpdir):
+def test_firstTimeAddingExternal(tmpdir, monkeypatch, arg_capture_patch, on_moonlight):
     with tmpdir.as_cwd():
         yaml_file = """spack:
   view: true
   specs: [mpileaks]"""
-        evaluate_external(tmpdir, yaml_file)
+        evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch, on_moonlight)
         assert os.path.isfile("test/externals.yaml")
         with open("test/externals.yaml", "r") as f:
             yaml = syaml.load(f)
@@ -188,7 +188,7 @@ def test_firstTimeAddingExternal(tmpdir):
 
 
 @pytest.mark.skip()
-def test_addToExistingExternal(tmpdir):
+def test_addToExistingExternal(tmpdir, monkeypatch, arg_capture_patch, on_moonlight):
     with tmpdir.as_cwd():
         yaml_file = """spack:
   view: true
@@ -202,7 +202,7 @@ def test_addToExistingExternal(tmpdir):
             f.write("packages:\n")
             f.write(str(ExtPackage("openmpi", "openmpi@4.0.3", "/path/to/other/view")))
 
-        evaluate_external(tmpdir, yaml_file)
+        evaluate_external(tmpdir, yaml_file, monkeypatch, arg_capture_patch, on_moonlight)
 
         with open("test/externals.yaml", "r") as f:
             yaml = syaml.load(f)
