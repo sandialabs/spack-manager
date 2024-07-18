@@ -8,6 +8,8 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
+import os
+
 import llnl.util.tty as tty
 
 import spack.main
@@ -64,14 +66,16 @@ def find_latest_git_hash(spec):
         tty.debug(f"{spec.name} has paired to git branch {branch}")
         # get the matching entry and shas for github
         query = (
-            git("ls-remote", "-h", spec.package.git, branch, output=str, error=str).strip().split()
+            git("ls-remote", "-h", spec.package.git, branch, output=str, error=os.devnull)
+            .strip()
+            .split()
         )
+        sha1, ref = query[0:2]
         sha = [hunk for hunk in query if bool(COMMIT_VERSION.match(hunk))]
         try:
             assert len(sha) == 1
         except Exception:
             tty.die("Too many hits for the remote branch:", spec.name, query)
-
         return sha[0]
     else:
         return None
@@ -133,22 +137,20 @@ def pin_env(parser, args):
     still concretizes
     """
     env = spack.cmd.require_active_env(cmd_name="pin")
-    cargs = ["--force"]
-
-    if args.fresh:
-        cargs.append("--fresh")
 
     tty.debug("Pin: Pinning branches to sha's")
     pinRoot = args.roots or args.all
     pinDeps = args.dependencies or args.all
+
+    if not env.concrete_roots():
+        tty.die("No concrete root specs detected. Pin requires a pre-concretized environment")
+
     for user, root in env.concretized_specs():
         new_root = pin_graph(root, pinRoot, pinDeps)
         if new_root:
             with env.write_transaction():
                 env.change_existing_spec(change_spec=new_root, match_spec=user)
-
-    tty.debug("Pin: Reconcretizing with updated specs")
-    concretize(*cargs)
+                env.write()
 
 
 def setup_parser_args(sub_parser):
@@ -165,13 +167,6 @@ def setup_parser_args(sub_parser):
     )
     spec_types.add_argument(
         "-a", "--all", action="store_true", default=True, help="pin all specs in the DAG"
-    )
-    sub_parser.add_argument(
-        "--fresh",
-        "-f",
-        action="store_true",
-        default=False,
-        help="use --fresh during the concretization process",
     )
 
 
