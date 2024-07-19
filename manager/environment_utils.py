@@ -6,11 +6,6 @@
 # for more details.
 
 import spack.environment.environment as senv
-try:
-    from spack.environment.environment import config_dict
-except ImportError:
-    pass
-
 
 # TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
@@ -21,7 +16,7 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         for attr in ["yaml_content", "pristine_yaml_content"]:
             if hasattr(self, attr):
                 yaml = getattr(self, attr)
-                yield config_dict(self)
+                yield yaml["spack"]
             else:
                 continue
 
