@@ -19,6 +19,11 @@ try:
 except ImportError:
     from spack.config import ConfigScope as DirScope
 
+try:
+    from spack.config import SECTION_SCHEMAS as sc_section_schemas
+except ImportError:
+    from spack.config import section_schemas as sc_section_schemas
+
 
 class IncludesCreator:
     def __init__(self):
@@ -36,7 +41,7 @@ class IncludesCreator:
             filename = os.path.abspath(os.path.join(path, filename))
         abspath = os.path.abspath(filename)
         # TODO this is spack version dependent
-        sections = list(spack.config.SECTION_SCHEMAS.keys())
+        sections = list(sc_section_schemas.keys())
         data = syaml.syaml_dict()
         try:
             for s in sections:

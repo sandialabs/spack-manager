@@ -15,7 +15,9 @@ def test_smManifestCanSetConfig(tmpdir):
             f.write("spack:\n specs: []")
 
         testManifest = smem(tmpdir.strpath)
+        assert list(testManifest.version_compatible_config_generator())
         testManifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
+        assert "config" in testManifest.yaml_content["spack"]
         testManifest.append_includes("include.yaml")
         testManifest.prepend_includes("first_include.yaml")
         testManifest.flush()

@@ -6,13 +6,24 @@
 # for more details.
 
 import spack.environment.environment as senv
-
-__attrs__ = ["configuration", "pristine_configuration"]
+try:
+    from spack.environment.environment import config_dict
+except ImportError:
+    pass
 
 
 # TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
     """Spack-Manager extension to the manifest file for prototyping"""
+
+    def version_compatible_config_generator(self):
+        """ generator to deal with all the ways to get the in memory configs across versions"""
+        for attr in ["yaml_content", "pristine_yaml_content"]:
+            if hasattr(self, attr):
+                yaml = getattr(self, attr)
+                yield config_dict(self)
+            else:
+                continue
 
     def set_config_value(self, root, key, value=None):
         """Set/overwrite a config value
@@ -22,18 +33,14 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
             key: next level where we will be updating
             value: value to set
         """
-        for attr in __attrs__:
-            if hasattr(self, attr):
-                configuration = getattr(self, attr)
-            else:
-                continue
+        for configuration in self.version_compatible_config_generator():
             if value:
                 if root not in configuration:
                     configuration[root] = {}
                 configuration.get(root, {})[key] = value
             else:
                 configuration[root] = key
-            self.changed = True
+        self.changed = True
 
     def append_includes(self, value):
         """Add to the includes in the manifest
@@ -41,15 +48,11 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the end of the list
         """
-        for attr in __attrs__:
-            if hasattr(self, attr):
-                configuration = getattr(self, attr)
-            else:
-                continue
+        for configuration in self.version_compatible_config_generator():
             if "include" not in configuration:
                 configuration["include"] = []
             configuration.get("include", []).append(value)
-            self.changed = True
+        self.changed = True
 
     def prepend_includes(self, value):
         """Add to the includes in the manifest
@@ -57,12 +60,8 @@ class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
         Args:
             value: value to add at the beginning of the list
         """
-        for attr in __attrs__:
-            if hasattr(self, attr):
-                configuration = getattr(self, attr)
-            else:
-                continue
+        for configuration in self.version_compatible_config_generator():
             if "include" not in configuration:
                 configuration["include"] = []
             configuration.get("include", [])[:0] = [value]
-            self.changed = True
+        self.changed = True
