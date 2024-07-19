@@ -7,12 +7,13 @@
 
 import spack.environment.environment as senv
 
+
 # TODO spack version dependent code
 class SpackManagerEnvironmentManifest(senv.EnvironmentManifestFile):
     """Spack-Manager extension to the manifest file for prototyping"""
 
     def version_compatible_config_generator(self):
-        """ generator to deal with all the ways to get the in memory configs across versions"""
+        """generator to deal with all the ways to get the in memory configs across versions"""
         for attr in ["yaml_content", "pristine_yaml_content"]:
             if hasattr(self, attr):
                 yaml = getattr(self, attr)
