@@ -34,7 +34,7 @@ def canonicalize_path(path, default_wd=None):
 
 
 def pruned_spec_string(spec, variants_to_omit=["ipo", "dev_path=", "patches=", "build_system="]):
-    full_spec = spec.format("{name}{@version}{%compiler}{variants}{arch=architecture}")
+    full_spec = spec.format("{name}{@version}{%compiler}{variants}")
 
     # add spaces between variants so we can filter
     spec_components = full_spec.replace("+", " +").replace("~", " ~").split(" ")
