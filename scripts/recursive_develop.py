@@ -1,7 +1,7 @@
 #! /usr/bin/env spack-python
 import argparse
-import spack.cmd
 
+import spack.cmd
 import spack.main
 
 develop = spack.main.SpackCommand("develop")
