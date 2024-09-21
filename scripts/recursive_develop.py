@@ -30,9 +30,9 @@ def develop_dependents(input, env, develop_args=[]):
     if not concrete_specs:
         return
     for cspec in concrete_specs:
-        parents = cspec.dependents()
-        for p in parents:
-            develop_dependents(p.format("{name}@{version}"), env, develop_args)
+        for p in cspec.traverse_edges(direction="parents"):
+            calling_args=develop_args+[p.spec.format("{name}@{version}")]
+            develop(*calling_args)
     return
 
 
