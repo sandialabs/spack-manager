@@ -8,6 +8,7 @@ import json
 import os
 import statistics
 import sys
+from typing import List, Optional, Set, TextIO, Tuple
 
 import spack.deptypes as dt
 import spack.traverse
@@ -17,10 +18,26 @@ command_name = "analyze"
 description = "tooling for analyzing statistics of the DAG"
 aliases = []
 
+GRAPH_OPTIONS = ["heatmap", "scale_nodes"]
+
 
 def setup_parser_args(subparser):
     subparser.add_argument(
         "--decay-points", nargs="+", help="sources for a subgraph that traces back to the root"
+    )
+    subparser.add_argument(
+        "--stats", action="store_true", help="display stats for graph build/install"
+    )
+    subparser.add_argument(
+        "--graph", action="store_true", help="generate a dot file of the graph requested"
+    )
+    subparser.add_argument(
+        "--scale-nodes",
+        action="store_true",
+        help="scale graph nodes relative to the mean install time",
+    )
+    subparser.add_argument(
+        "--heatmap", action="store_true", help="color graph nodes based on the time to build"
     )
 
 
@@ -31,9 +48,10 @@ def get_timings(spec):
             with open(timing_files, "r") as f:
                 spec_data = json.load(f)
                 # extract phases
-                output = {}
+                output = {"total": 0.0}
                 for phase in spec_data["phases"]:
                     output[phase["name"]] = phase["seconds"]
+                    output["total"] += phase["seconds"]
                 return output
     return None
 
@@ -62,6 +80,72 @@ def compute_dag_stats(specs, direction="children", depflag=dt.ALL):
     return stats
 
 
+class StatsGraphBuilder(DotGraphBuilder):
+    def __init__(self, stats, format="{name}", to_color=False, to_scale=False):
+        super().__init__()
+        self.dag_stats = stats
+        self.to_color = to_color
+        self.to_scale = to_scale
+        self.node_format = format
+
+    def _get_scaling_factor(self, mean, time):
+        return time / mean
+
+    def _get_properties(self, spec):
+        timings = get_timings(spec)
+        if timings:
+            total = timings["total"]
+            scaling = self._get_scaling_factor(self.dag_stats["mean"], total)
+            if total < self.dag_stats["std"]:
+                return "lightblue", scaling
+            elif total <= self.dag_stats["mean"] + self.dag_stats["std"]:
+                return "green", scaling
+            elif total <= self.dag_stats["mean"] + 2.0 * self.dag_stats["std"]:
+                return "yellow", scaling
+            else:
+                return "red", scaling
+        return "dodgerblue", 1.0
+
+    def node_entry(self, node):
+        color_compute, scale_factor = self._get_properties(node)
+        x = 3
+        y = 1
+        if self.to_scale:
+            x *= scale_factor
+            y *= scale_factor
+        scale_str = f"width={x} height={y} fixedsize=true"
+        color_str = f'fillcolor="{color_compute if self.to_color else"lightblue"}"'
+
+        return (node.dag_hash(), f'[label="{node.format("{name}")}", {color_str}, {scale_str}]')
+
+    def edge_entry(self, edge):
+        return (edge.parent.dag_hash(), edge.spec.dag_hash(), None)
+
+
+def graph_dot(specs, builder, depflag=dt.ALL, direction="children", out=None):
+    """DOT graph of the concrete specs passed as input.
+
+    Args:
+        specs: specs to be represented
+        builder: builder to use to render the graph
+        depflag: dependency types to consider
+        out: optional output stream. If None sys.stdout is used
+    """
+    if not specs:
+        raise ValueError("Must provide specs to graph_dot")
+
+    if out is None:
+        out = sys.stdout
+
+    builder = builder or SimpleDAG()
+    for edge in spack.traverse.traverse_edges(
+        specs, cover="edges", direction=direction, order="breadth", deptype=depflag
+    ):
+        builder.visit(edge)
+
+    out.write(builder.render())
+
+
 def analyze(parser, args):
     env = spack.cmd.require_active_env(cmd_name=command_name)
     if args.decay_points:
@@ -71,8 +155,17 @@ def analyze(parser, args):
         specs = env.concrete_roots()
         stats = compute_dag_stats(specs)
 
-    pretty_stats = json.dumps(stats, indent=4)
-    sys.stdout.write(pretty_stats)
+    if args.stats:
+        pretty_stats = json.dumps(stats, indent=4)
+        sys.stdout.write(pretty_stats)
+
+    if args.graph:
+        if args.decay_points:
+            dir = "parents"
+        else:
+            dir = "children"
+        builder = StatsGraphBuilder(stats["total"], args.heatmap, args.scale_nodes)
+        graph_dot(specs, builder=builder, direction=dir)
 
 
 def add_command(parser, command_dict):
