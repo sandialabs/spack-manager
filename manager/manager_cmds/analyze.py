@@ -81,12 +81,11 @@ def compute_dag_stats(specs, direction="children", depflag=dt.ALL):
 
 
 class StatsGraphBuilder(DotGraphBuilder):
-    def __init__(self, stats, format="{name}", to_color=False, to_scale=False):
+    def __init__(self, stats, to_color=False, to_scale=False):
         super().__init__()
         self.dag_stats = stats
         self.to_color = to_color
         self.to_scale = to_scale
-        self.node_format = format
 
     def _get_scaling_factor(self, mean, time):
         return time / mean
@@ -108,12 +107,14 @@ class StatsGraphBuilder(DotGraphBuilder):
 
     def node_entry(self, node):
         color_compute, scale_factor = self._get_properties(node)
-        x = 3
-        y = 1
+        x = 3.0
+        y = 1.0
+        fontsize = 48
         if self.to_scale:
             x *= scale_factor
             y *= scale_factor
-        scale_str = f"width={x} height={y} fixedsize=true"
+            fontsize *= scale_factor
+        scale_str = f"width={x} height={y} fixedsize=true fontsize={fontsize}"
         color_str = f'fillcolor="{color_compute if self.to_color else"lightblue"}"'
 
         return (node.dag_hash(), f'[label="{node.format("{name}")}", {color_str}, {scale_str}]')
