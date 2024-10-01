@@ -10,20 +10,35 @@ import statistics
 import sys
 from typing import List, Optional, Set, TextIO, Tuple
 
+import spack.cmd
 import spack.deptypes as dt
-import spack.traverse
+import spack.traverse as traverse
 from spack.graph import DotGraphBuilder
 
 command_name = "analyze"
 description = "tooling for analyzing statistics of the DAG"
 aliases = []
 
-GRAPH_OPTIONS = ["heatmap", "scale_nodes"]
+
+class OmmitSpecsVisitor(traverse.BaseVisitor):
+    """A visitor that clips the graph upon satisfied specs"""
+
+    def __init__(self, clip_specs):
+        super().__init__()
+        self.clip_specs = clip_specs
+        self.accepted = []
+
+    def accept(self, node):
+        key = node.edge.spec
+        test = not any(key.satisfies(p) for p in self.clip_specs)
+        if test:
+            self.accepted.append(node)
+        return test
 
 
 def setup_parser_args(subparser):
     subparser.add_argument(
-        "--decay-points", nargs="+", help="sources for a subgraph that traces back to the root"
+        "--trim-packages", nargs="+", default=[], help="clip the graph at these packages"
     )
     subparser.add_argument(
         "--stats", action="store_true", help="display stats for graph build/install"
@@ -41,6 +56,12 @@ def setup_parser_args(subparser):
     )
 
 
+def traverse_nodes_with_ommissions(specs, ommissions):
+    visitor = OmmitSpecsVisitor(ommissions)
+    traverse.traverse_breadth_first_with_visitor(specs, traverse.CoverNodesVisitor(visitor))
+    return visitor.accepted
+
+
 def get_timings(spec):
     if spec.installed:
         timing_files = spec.package.times_log_path
@@ -56,12 +77,11 @@ def get_timings(spec):
     return None
 
 
-def compute_dag_stats(specs, direction="children", depflag=dt.ALL):
+def compute_dag_stats(specs, trim_specs=[], depflag=dt.ALL):
     dag_data = {}
-    for edge in spack.traverse.traverse_edges(
-        specs, cover="edges", direction=direction, order="breadth", deptype=depflag
-    ):
-        spec_data = get_timings(edge.spec)
+    nodes = traverse_nodes_with_ommissions(specs, trim_specs)
+    for node in nodes:
+        spec_data = get_timings(node.edge.spec)
         if spec_data:
             for phase, time in spec_data.items():
                 full_data = dag_data.get(phase, [])
@@ -72,10 +92,11 @@ def compute_dag_stats(specs, direction="children", depflag=dt.ALL):
     for key, data in dag_data.items():
         stats[key] = {
             "mean": statistics.mean(data),
-            "std": statistics.stdev(data),
-            "quartiles": statistics.quantiles(data),
+            "stddev": statistics.stdev(data) if len(data) > 1 else 0,
+            "quartiles": statistics.quantiles(data) if len(data) > 1 else [0, 0, 0],
             "min": min(data),
             "max": max(data),
+            "sum": sum(data),
         }
     return stats
 
@@ -123,7 +144,7 @@ class StatsGraphBuilder(DotGraphBuilder):
         return (edge.parent.dag_hash(), edge.spec.dag_hash(), None)
 
 
-def graph_dot(specs, builder, depflag=dt.ALL, direction="children", out=None):
+def graph_dot(specs, builder, trim_packages=[], depflag=dt.ALL, out=None):
     """DOT graph of the concrete specs passed as input.
 
     Args:
@@ -140,7 +161,7 @@ def graph_dot(specs, builder, depflag=dt.ALL, direction="children", out=None):
 
     builder = builder or SimpleDAG()
     for edge in spack.traverse.traverse_edges(
-        specs, cover="edges", direction=direction, order="breadth", deptype=depflag
+        specs, cover="edges", order="breadth", deptype=depflag
     ):
         builder.visit(edge)
 
@@ -149,24 +170,16 @@ def graph_dot(specs, builder, depflag=dt.ALL, direction="children", out=None):
 
 def analyze(parser, args):
     env = spack.cmd.require_active_env(cmd_name=command_name)
-    if args.decay_points:
-        specs = spack.cmd.parse_specs(args.decay_points)
-        stats = compute_dag_stats(specs, direction="parents")
-    else:
-        specs = env.concrete_roots()
-        stats = compute_dag_stats(specs)
+    specs = env.concrete_roots()
+    stats = compute_dag_stats(specs, args.trim_packages)
 
     if args.stats:
         pretty_stats = json.dumps(stats, indent=4)
         sys.stdout.write(pretty_stats)
 
     if args.graph:
-        if args.decay_points:
-            dir = "parents"
-        else:
-            dir = "children"
         builder = StatsGraphBuilder(stats["total"], args.heatmap, args.scale_nodes)
-        graph_dot(specs, builder=builder, direction=dir)
+        graph_dot(specs, args.trim_packages, builder=builder)
 
 
 def add_command(parser, command_dict):
