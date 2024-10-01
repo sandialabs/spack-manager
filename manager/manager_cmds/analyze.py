@@ -38,7 +38,10 @@ class OmitSpecsVisitor(traverse.BaseVisitor):
 
 def setup_parser_args(subparser):
     subparser.add_argument(
-        "--trim-specs", nargs="+", default=[], help="clip the graph at nodes that satisfy these specs"
+        "--trim-specs",
+        nargs="+",
+        default=[],
+        help="clip the graph at nodes that satisfy these specs",
     )
     subparser.add_argument(
         "--stats", action="store_true", help="display stats for graph build/install"
