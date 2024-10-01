@@ -20,7 +20,7 @@ description = "tooling for analyzing statistics of the DAG"
 aliases = []
 
 
-class OmmitSpecsVisitor(traverse.BaseVisitor):
+class OmitSpecsVisitor(traverse.BaseVisitor):
     """A visitor that clips the graph upon satisfied specs"""
 
     def __init__(self, clip_specs):
@@ -38,7 +38,7 @@ class OmmitSpecsVisitor(traverse.BaseVisitor):
 
 def setup_parser_args(subparser):
     subparser.add_argument(
-        "--trim-packages", nargs="+", default=[], help="clip the graph at these packages"
+        "--trim-specs", nargs="+", default=[], help="clip the graph at nodes that satisfy these specs"
     )
     subparser.add_argument(
         "--stats", action="store_true", help="display stats for graph build/install"
@@ -56,8 +56,8 @@ def setup_parser_args(subparser):
     )
 
 
-def traverse_nodes_with_ommissions(specs, ommissions):
-    visitor = OmmitSpecsVisitor(ommissions)
+def traverse_nodes_with_omissions(specs, omissions):
+    visitor = OmitSpecsVisitor(omissions)
     traverse.traverse_breadth_first_with_visitor(specs, traverse.CoverNodesVisitor(visitor))
     return visitor.accepted
 
@@ -79,7 +79,7 @@ def get_timings(spec):
 
 def compute_dag_stats(specs, trim_specs=[], depflag=dt.ALL):
     dag_data = {}
-    nodes = traverse_nodes_with_ommissions(specs, trim_specs)
+    nodes = traverse_nodes_with_omissions(specs, trim_specs)
     for node in nodes:
         spec_data = get_timings(node.edge.spec)
         if spec_data:
@@ -116,11 +116,11 @@ class StatsGraphBuilder(DotGraphBuilder):
         if timings:
             total = timings["total"]
             scaling = self._get_scaling_factor(self.dag_stats["mean"], total)
-            if total < self.dag_stats["std"]:
+            if total < self.dag_stats["stddev"]:
                 return "lightblue", scaling
-            elif total <= self.dag_stats["mean"] + self.dag_stats["std"]:
+            elif total <= self.dag_stats["mean"] + self.dag_stats["stddev"]:
                 return "green", scaling
-            elif total <= self.dag_stats["mean"] + 2.0 * self.dag_stats["std"]:
+            elif total <= self.dag_stats["mean"] + 2.0 * self.dag_stats["stddev"]:
                 return "yellow", scaling
             else:
                 return "red", scaling
@@ -144,7 +144,7 @@ class StatsGraphBuilder(DotGraphBuilder):
         return (edge.parent.dag_hash(), edge.spec.dag_hash(), None)
 
 
-def graph_dot(specs, builder, trim_packages=[], depflag=dt.ALL, out=None):
+def graph_dot(specs, builder, trim_specs=[], depflag=dt.ALL, out=None):
     """DOT graph of the concrete specs passed as input.
 
     Args:
@@ -159,9 +159,11 @@ def graph_dot(specs, builder, trim_packages=[], depflag=dt.ALL, out=None):
     if out is None:
         out = sys.stdout
 
-    builder = builder or SimpleDAG()
-    for edge in spack.traverse.traverse_edges(
-        specs, cover="edges", order="breadth", deptype=depflag
+    root_edges = traverse.with_artificial_edges(specs)
+
+    visitor = OmitSpecsVisitor(trim_specs)
+    for edge in traverse.traverse_breadth_first_edges_generator(
+        root_edges, traverse.CoverEdgesVisitor(visitor), root=True, depth=False
     ):
         builder.visit(edge)
 
@@ -171,7 +173,7 @@ def graph_dot(specs, builder, trim_packages=[], depflag=dt.ALL, out=None):
 def analyze(parser, args):
     env = spack.cmd.require_active_env(cmd_name=command_name)
     specs = env.concrete_roots()
-    stats = compute_dag_stats(specs, args.trim_packages)
+    stats = compute_dag_stats(specs, args.trim_specs)
 
     if args.stats:
         pretty_stats = json.dumps(stats, indent=4)
@@ -179,7 +181,7 @@ def analyze(parser, args):
 
     if args.graph:
         builder = StatsGraphBuilder(stats["total"], args.heatmap, args.scale_nodes)
-        graph_dot(specs, args.trim_packages, builder=builder)
+        graph_dot(specs, builder, args.trim_specs)
 
 
 def add_command(parser, command_dict):
