@@ -7,6 +7,7 @@
 
 import sys
 
+import spack.extensions.manager.manager_cmds.analyze as analyze
 import spack.extensions.manager.manager_cmds.binary_finder as binary_finder
 import spack.extensions.manager.manager_cmds.cache_query as cache_query
 import spack.extensions.manager.manager_cmds.cli_config as cli_config
@@ -39,6 +40,7 @@ def setup_parser(subparser):
     cli_config.cli_commands["remove"](sp, _subcommands)
     cli_config.cli_commands["list"](sp, _subcommands)
 
+    analyze.add_command(sp, _subcommands)
     binary_finder.add_command(sp, _subcommands)
     cache_query.add_command(sp, _subcommands)
     create_env.add_command(sp, _subcommands)
