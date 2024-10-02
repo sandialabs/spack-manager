@@ -20,6 +20,21 @@ description = "tooling for analyzing statistics of the DAG"
 aliases = []
 
 
+class RequirePackageAttributeVisitor(traverse.BaseVisitor):
+    """A visitor that only accepts sparse path"""
+
+    def __init__(self, attribute):
+        super().__init__()
+        self.attribute = attribute
+        self.accepted = []
+
+    def accept(self, node):
+        key = node.edge.spec
+        test = hasattr(key.package, self.attribute)
+        if test:
+            self.accepted.append(node)
+        return test
+
 class OmitSpecsVisitor(traverse.BaseVisitor):
     """A visitor that clips the graph upon satisfied specs"""
 
@@ -37,11 +52,11 @@ class OmitSpecsVisitor(traverse.BaseVisitor):
 
 
 def setup_parser_args(subparser):
-    subparser.add_argument(
-        "--trim-specs",
-        nargs="+",
-        default=[],
-        help="clip the graph at nodes that satisfy these specs",
+    visitor_types = subparser.add_mutually_exclusive_group()
+    visitor_types.add_argument(
+        "--trim-specs", nargs="+", default=[], help="clip the graph at nodes that satisfy these specs"
+    )
+    visitor_types.add_argument("--require-attribute", "-r", help="only include packages that have this package attribute"
     )
     subparser.add_argument(
         "--stats", action="store_true", help="display stats for graph build/install"
@@ -51,16 +66,17 @@ def setup_parser_args(subparser):
     )
     subparser.add_argument(
         "--scale-nodes",
+        "-S",
         action="store_true",
         help="scale graph nodes relative to the mean install time",
     )
     subparser.add_argument(
-        "--heatmap", action="store_true", help="color graph nodes based on the time to build"
+        "--color", "-c"
+        , action="store_true", help="color graph nodes based on the time to build"
     )
 
 
-def traverse_nodes_with_omissions(specs, omissions):
-    visitor = OmitSpecsVisitor(omissions)
+def traverse_nodes_with_visitor(specs, visitor):
     traverse.traverse_breadth_first_with_visitor(specs, traverse.CoverNodesVisitor(visitor))
     return visitor.accepted
 
@@ -80,9 +96,9 @@ def get_timings(spec):
     return None
 
 
-def compute_dag_stats(specs, trim_specs=[], depflag=dt.ALL):
+def compute_dag_stats(specs, visitor, depflag=dt.ALL):
     dag_data = {}
-    nodes = traverse_nodes_with_omissions(specs, trim_specs)
+    nodes = traverse_nodes_with_visitor(specs, visitor)
     for node in nodes:
         spec_data = get_timings(node.edge.spec)
         if spec_data:
@@ -147,7 +163,7 @@ class StatsGraphBuilder(DotGraphBuilder):
         return (edge.parent.dag_hash(), edge.spec.dag_hash(), None)
 
 
-def graph_dot(specs, builder, trim_specs=[], depflag=dt.ALL, out=None):
+def graph_dot(specs, builder, visitor, depflag=dt.ALL, out=None):
     """DOT graph of the concrete specs passed as input.
 
     Args:
@@ -164,7 +180,6 @@ def graph_dot(specs, builder, trim_specs=[], depflag=dt.ALL, out=None):
 
     root_edges = traverse.with_artificial_edges(specs)
 
-    visitor = OmitSpecsVisitor(trim_specs)
     for edge in traverse.traverse_breadth_first_edges_generator(
         root_edges, traverse.CoverEdgesVisitor(visitor), root=True, depth=False
     ):
@@ -176,15 +191,24 @@ def graph_dot(specs, builder, trim_specs=[], depflag=dt.ALL, out=None):
 def analyze(parser, args):
     env = spack.cmd.require_active_env(cmd_name=command_name)
     specs = env.concrete_roots()
-    stats = compute_dag_stats(specs, args.trim_specs)
+
+    visitor = None
+    if args.trim_specs:
+        visitor = OmitSpecsVisitor(omissions)
+    if args.require_attribute:
+        visitor = RequirePackageAttributeVisitor(args.require_attribute)
+
+    stats = compute_dag_stats(specs, visitor)
 
     if args.stats:
         pretty_stats = json.dumps(stats, indent=4)
         sys.stdout.write(pretty_stats)
 
     if args.graph:
-        builder = StatsGraphBuilder(stats["total"], args.heatmap, args.scale_nodes)
-        graph_dot(specs, builder, args.trim_specs)
+        # reset visitor from stats computation
+        visitor.accepted = []
+        builder = StatsGraphBuilder(stats["total"], args.color, args.scale_nodes)
+        graph_dot(specs, builder, visitor)
 
 
 def add_command(parser, command_dict):
