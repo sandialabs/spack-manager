@@ -11,7 +11,6 @@ import llnl.util.tty as tty
 
 import spack
 import spack.config
-import spack.detection
 import spack.environment as ev
 import spack.util.spack_yaml as syaml
 from spack.detection.common import _pkg_config_dict
@@ -46,11 +45,11 @@ def create_external_detected_spec(env, spec):
         return None
     # attempt to return a valid spec using the current spack instance
     try:
-        return spack.detection.DetectedPackage(Spec.from_detection(pruned_spec), prefix)
+        return Spec.from_detection(pruned_spec, external_path=prefix)
     except spack.variant.UnknownVariantError:
         # if it is an old spec then a variant could have changed so we just create a spec from the
         # pruned_spec string
-        return spack.detection.DetectedPackage(Spec(pruned_spec), prefix)
+        return Spec(pruned_spec, external_path=prefix)
 
 
 def assemble_dict_of_detected_externals(env, exclude, include):
