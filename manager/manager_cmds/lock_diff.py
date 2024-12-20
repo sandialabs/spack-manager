@@ -30,6 +30,7 @@ def setup_parser_args(subparser):
         "--skip-package-diffs",
         "-s",
         nargs="+",
+        default=[],
         help="packages to skip package hash diffs",
         required=False,
     )
@@ -104,7 +105,7 @@ def lock_diff(parser, args):
                 diff_msg += "package hash change - Old: {} New: {}".format(
                     old_spec.package_hash(), new_spec.package_hash()
                 )
-                if new_spec.name not in args.skip_package_diffs:
+                if spec.name not in args.skip_package_diffs:
                     unacceptable_changes = True
             else:
                 # something else must have changed in concretization that
