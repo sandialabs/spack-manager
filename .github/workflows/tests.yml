@@ -75,7 +75,7 @@ jobs:
     - name: Install extension
       run: spack config add config:extensions:[${GITHUB_WORKSPACE}]
     - name: Spack Style
-      run: spack style manager tests
+      run: spack style -s import manager tests
   quick-commands:
     runs-on: ubuntu-latest
     strategy:
