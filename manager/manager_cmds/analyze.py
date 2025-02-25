@@ -211,8 +211,11 @@ def analyze(parser, args):
     if args.trim_specs:
         omissions = spack.cmd.parse_specs(args.trim_specs)
         visitor = OmitSpecsVisitor(omissions)
-    if args.require_attribute:
+    elif args.require_attribute:
         visitor = RequirePackageAttributeVisitor(args.require_attribute)
+    else:
+        visitor = OmitSpecsVisitor([])
+
 
     stats = compute_dag_stats(specs, visitor)
 
