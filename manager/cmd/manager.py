@@ -7,11 +7,11 @@
 
 import sys
 
-_analyse_imports = True
+_analyze_imports = True
 try:
     import spack.extensions.manager.manager_cmds.analyze as analyze
 except:
-    _analyse_imports = False
+    _analyze_imports = False
 import spack.extensions.manager.manager_cmds.binary_finder as binary_finder
 import spack.extensions.manager.manager_cmds.cache_query as cache_query
 import spack.extensions.manager.manager_cmds.cli_config as cli_config
