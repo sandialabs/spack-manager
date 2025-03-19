@@ -7,11 +7,6 @@
 
 import sys
 
-_analyze_imports = True
-try:
-    import spack.extensions.manager.manager_cmds.analyze as analyze
-except:
-    _analyze_imports = False
 import spack.extensions.manager.manager_cmds.binary_finder as binary_finder
 import spack.extensions.manager.manager_cmds.cache_query as cache_query
 import spack.extensions.manager.manager_cmds.cli_config as cli_config
@@ -25,6 +20,11 @@ import spack.extensions.manager.manager_cmds.location as location
 import spack.extensions.manager.manager_cmds.lock_diff as lock_diff
 import spack.extensions.manager.manager_cmds.make as make
 import spack.extensions.manager.manager_cmds.pin as pin
+try:
+    import spack.extensions.manager.manager_cmds.analyze as analyze
+    _analyze_imports = True
+except: ImportError
+    _analyze_imports = False
 
 if sys.version_info < (3, 8):
     print("spack-manager commands only supported in python 3.8 and higher")
