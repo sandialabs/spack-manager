@@ -20,10 +20,11 @@ import spack.extensions.manager.manager_cmds.location as location
 import spack.extensions.manager.manager_cmds.lock_diff as lock_diff
 import spack.extensions.manager.manager_cmds.make as make
 import spack.extensions.manager.manager_cmds.pin as pin
+
 try:
     import spack.extensions.manager.manager_cmds.analyze as analyze
     _analyze_imports = True
-except: ImportError
+except ImportError:
     _analyze_imports = False
 
 if sys.version_info < (3, 8):
