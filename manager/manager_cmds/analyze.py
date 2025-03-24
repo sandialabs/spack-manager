@@ -216,7 +216,6 @@ def analyze(parser, args):
     else:
         visitor = OmitSpecsVisitor([])
 
-
     stats = compute_dag_stats(specs, visitor)
 
     if args.stats:
