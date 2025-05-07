@@ -24,7 +24,6 @@ jobs:
           - python-version: 3.12
             spack-version: v0.20.3
     steps:
-    - uses: actions/checkout@v4
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
