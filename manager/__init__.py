@@ -32,7 +32,7 @@ config_yaml = {}
 
 def populate_config():
     """Update the spack-manager config in memory"""
-    global config_yaml
+    global config_yaml # noqa: F824
     if os.path.isfile(config_path):
         with open(config_path, "r") as f:
             config_yaml = syaml.load(f)
@@ -43,7 +43,7 @@ def populate_config():
 
 
 def write_config():
-    global config_yaml
+    global config_yaml # noqa: F824
     with fs.write_tmp_and_move(os.path.realpath(config_path)) as f:
         syaml.dump(config_yaml, f)
     populate_config()
@@ -54,7 +54,7 @@ class MissingProjectException(Exception):
 
 
 def add_project(path):
-    global config_yaml
+    global config_yaml # noqa: F824
     if path not in config_yaml["spack-manager"]["projects"]:
         config_yaml["spack-manager"]["projects"].insert(0, path)
         write_config()
@@ -63,7 +63,7 @@ def add_project(path):
 
 
 def remove_project_via_path(path):
-    global config_yaml
+    global config_yaml # noqa: F824
     if path in config_yaml["spack-manager"]["projects"]:
         config_yaml["spack-manager"]["projects"].remove(path)
         write_config()
@@ -72,7 +72,7 @@ def remove_project_via_path(path):
 
 
 def remove_project_via_index(index):
-    global config_yaml
+    global config_yaml # noqa: F824
     if len(config_yaml["spack-manager"]["projects"]) > abs(index):
         config_yaml["spack-manager"]["projects"].pop(index)
         write_config()
