@@ -30,7 +30,9 @@ jobs:
       uses: mxschmitt/action-tmate@v3
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      # uses: actions/setup-python@v5
+      # mirror spack-core
+      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
       with:
         python-version: ${{ matrix.python-version }}
     - name: Checkout Spack
