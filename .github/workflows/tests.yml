@@ -24,9 +24,6 @@ jobs:
           - python-version: 3.12
             spack-version: v0.20.3
     steps:
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       # uses: actions/setup-python@v5
@@ -34,6 +31,10 @@ jobs:
       uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install Python packages
+      run: |
+          pip install --upgrade pip setuptools pytest pytest-xdist pytest-cov
+          pip install --upgrade flake8 "isort>=4.3.5" "mypy>=0.900" "click" "black"
     - name: Checkout Spack
       uses: actions/checkout@v4
       with:
