@@ -19,16 +19,22 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9, 3.12]
-        spack-version: [v0.20.3, v0.21.2, v0.22.0, v0.22.1, develop]
+        spack-version: [v0.20.3, v0.21.2, v0.22.5, v0.23.1, develop]
         exclude:
           - python-version: 3.12
             spack-version: v0.20.3
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      # uses: actions/setup-python@v5
+      # mirror spack-core
+      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install Python packages
+      run: |
+          pip install --upgrade pip setuptools pytest pytest-xdist pytest-cov
+          pip install --upgrade flake8 "isort>=4.3.5" "mypy>=0.900" "click" "black"
     - name: Checkout Spack
       uses: actions/checkout@v4
       with:
