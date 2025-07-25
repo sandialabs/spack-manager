@@ -11,8 +11,7 @@ import random
 import string
 import sys
 
-import llnl.util.tty as tty
-
+import spack.llnl.util.tty as tty
 import spack.environment as ev
 from spack.spec import Spec
 

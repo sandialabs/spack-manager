@@ -7,8 +7,7 @@
 
 import os
 
-import llnl.util.tty as tty
-
+import spack.llnl.util.tty as tty
 import spack
 import spack.config
 import spack.environment as ev

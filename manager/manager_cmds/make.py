@@ -7,8 +7,8 @@
 
 import os
 
-import llnl.util.tty as tty
-from llnl.util.filesystem import working_dir
+import spack.llnl.util.tty as tty
+from spack.llnl.util.filesystem import working_dir
 
 import spack.build_environment as build_environment
 import spack.builder

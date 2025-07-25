@@ -64,7 +64,7 @@ class Project:
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            mod = llnl.util.lang.load_module_from_file(
+            mod = spack.llnl.util.lang.load_module_from_file(
                 DETECTION_MODULE.format(n=self.name), detection_script
             )
             self.detector = mod.detector
