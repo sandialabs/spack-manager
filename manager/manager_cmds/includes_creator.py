@@ -10,6 +10,7 @@
 import os
 
 import spack.vendor.ruamel.yaml as yaml
+
 import spack.config
 import spack.util.spack_yaml as syaml
 
