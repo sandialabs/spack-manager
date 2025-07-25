@@ -7,10 +7,10 @@
 
 import os
 
-import spack.llnl.util.tty as tty
 import spack
 import spack.config
 import spack.environment as ev
+import spack.llnl.util.tty as tty
 import spack.util.spack_yaml as syaml
 from spack.detection.common import _pkg_config_dict
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest

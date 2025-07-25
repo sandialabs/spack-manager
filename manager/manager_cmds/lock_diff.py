@@ -11,8 +11,8 @@ import random
 import string
 import sys
 
-import spack.llnl.util.tty as tty
 import spack.environment as ev
+import spack.llnl.util.tty as tty
 from spack.spec import Spec
 
 command_name = "lock-diff"

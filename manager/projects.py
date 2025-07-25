@@ -6,8 +6,8 @@
 
 import os
 
-import spack.llnl.util.lang
 import spack.extensions.manager as manager
+import spack.llnl.util.lang
 from spack.extensions.manager.manager_utils import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"
