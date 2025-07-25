@@ -9,8 +9,7 @@
 
 import os
 
-import _vendoring.ruamel.yaml as yaml
-
+import spack.vendor.ruamel.yaml as yaml
 import spack.config
 import spack.util.spack_yaml as syaml
 
