@@ -6,8 +6,7 @@
 
 import os
 
-import llnl.util.lang
-
+import spack.llnl.util.lang
 import spack.extensions.manager as manager
 from spack.extensions.manager.manager_utils import canonicalize_path
 
