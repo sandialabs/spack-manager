@@ -6,9 +6,8 @@
 
 import os
 
-import llnl.util.lang
-
 import spack.extensions.manager as manager
+import spack.llnl.util.lang
 from spack.extensions.manager.manager_utils import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"
@@ -65,7 +64,7 @@ class Project:
         if os.path.isfile(detection_script):
             # dynamically import the find script for the project here
             # so we can just load the detection script
-            mod = llnl.util.lang.load_module_from_file(
+            mod = spack.llnl.util.lang.load_module_from_file(
                 DETECTION_MODULE.format(n=self.name), detection_script
             )
             self.detector = mod.detector

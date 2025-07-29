@@ -16,8 +16,7 @@ import importlib.util
 import os
 import sys
 
-import llnl.util.tty as tty
-
+import spack.llnl.util.tty as tty
 import spack.main
 
 spec = importlib.util.spec_from_file_location(
