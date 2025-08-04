@@ -13,6 +13,7 @@ import spack.extensions.manager.manager_cmds.cli_config as cli_config
 import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
 import spack.extensions.manager.manager_cmds.create_env as create_env
 import spack.extensions.manager.manager_cmds.develop as develop
+import spack.extensions.manager.manager_cmds.distribution as distribution
 import spack.extensions.manager.manager_cmds.external as external
 import spack.extensions.manager.manager_cmds.find_machine as find_machine
 import spack.extensions.manager.manager_cmds.include as include
@@ -51,6 +52,7 @@ def setup_parser(subparser):
     create_env.add_command(sp, _subcommands)
     create_dev_env.add_command(sp, _subcommands)
     develop.add_command(sp, _subcommands)
+    distribution.add_command(sp, _subcommands)
     lock_diff.add_command(sp, _subcommands)
     external.add_command(sp, _subcommands)
     find_machine.add_command(sp, _subcommands)
