@@ -9,7 +9,10 @@
 
 import os
 
-import spack.vendor.ruamel.yaml as yaml
+try:
+    import spack.vendor.ruamel.yaml as yaml
+except ImportError:
+    import _vendoring.ruamel.yaml as yaml
 
 import spack.config
 import spack.util.spack_yaml as syaml
