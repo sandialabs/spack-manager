@@ -1,7 +1,7 @@
 import os
 import shutil
-import sys
 
+import spack
 from spack import environment
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
 from spack.paths import spack_root
@@ -69,10 +69,24 @@ def wipe_n_make(directory):
     os.makedirs(directory)
 
 
+def get_normalized_path(item, cfg, scope, section):
+    if os.path.isabs(item):
+        return item
+    else:
+        return os.path.normpath(
+            os.path.join(
+                os.path.dirname(
+                    cfg.get_config_filename(scope=scope, section=section)
+                ),
+                item,
+            )
+        )
+
+    
 def distribution(parser, args):
     env = spack.cmd.require_active_env(cmd_name="distribution")
-
     distro = os.path.join(os.getcwd(), "distro")
+
     print("Precleaning....")
     wipe_n_make(distro)
     mirror = os.path.join(distro, "mirror")
@@ -87,54 +101,14 @@ def distribution(parser, args):
     m = config.CONFIG
 
     repos = set()
-    for x in m.scopes.keys():
-        if x.startswith("env") or x.startswith("include"):
-            for repo in m.get("repos", scope=x):
-                if os.path.isabs(repo):
-                    repos.add(repo)
-                else:
-                    repos.add(
-                        os.path.normpath(
-                            os.path.join(
-                                os.path.dirname(
-                                    m.get_config_filename(scope=x, section="repos")
-                                ),
-                                repo,
-                            )
-                        )
-                    )
-    print(f"Packing up package repositories to {repos_install}....")
-    os.makedirs(repos_install)
-    for repo in repos:
-        shutil.copytree(repo, os.path.join(repos_install, os.path.basename(repo)))
-
     extensions = set()
-    for x in m.scopes.keys():
-        if x.startswith("env") or x.startswith("include"):
-            for extension in m.get("config:extensions", scope=x, default=[]):
-                if os.path.isabs(extension):
-                    extensions.add(extension)
-                else:
-                    extensions.add(
-                        os.path.normpath(
-                            os.path.join(
-                                os.path.dirname(
-                                    m.get_config_filename(scope=x, section="config")
-                                ),
-                                extension,
-                            )
-                        )
-                    )
-    print(f"Packing up extensions to {extensions_install}....")
-    os.makedirs(extensions_install)
-    for extension in extensions:
-        shutil.copytree(
-            extension, os.path.join(extensions_install, os.path.basename(extension))
-        )
-
     package_settings = {}
     for x in m.scopes.keys():
         if x.startswith("env") or x.startswith("include"):
+            for repo in m.get("repos", scope=x):
+                repos.add(get_normalized_path(repo, m, x, "repos"))
+            for extension in m.get("config:extensions", scope=x, default=[]):
+                extensions.add(get_normalized_path(extension, m, x, "config"))
             packages = m.get("packages", scope=x)
             for package, data in packages.items():
                 if "externals" not in data:
@@ -142,11 +116,24 @@ def distribution(parser, args):
                         package_settings[package].update(data)
                     except KeyError:
                         package_settings[package] = data
+
+    print(f"Packing up package repositories to {repos_install}....")
+    os.makedirs(repos_install)
+    for repo in repos:
+        shutil.copytree(repo, os.path.join(repos_install, os.path.basename(repo)))
+
+    print(f"Packing up extensions to {extensions_install}....")
+    os.makedirs(extensions_install)
+    for extension in extensions:
+        shutil.copytree(
+            extension, os.path.join(extensions_install, os.path.basename(extension))
+        )
+
     # Trim out information about the MPI provider, since we can't know what the user will point at to build
     # TODO: Decide how to handle the same issue for BLAS/LAPACK providers
     remove_entries_with_substrings(package_settings, {"%", "mpi"})
     print(f"Packing up Spack environment settings to {install_env}....")
-    os.makedirs(install_env)
+
     big_config = {
         "config": {
             "extensions": [
