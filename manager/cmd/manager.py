@@ -7,29 +7,27 @@
 
 import sys
 
-import spack.extensions.manager.manager_cmds.binary_finder as binary_finder
-import spack.extensions.manager.manager_cmds.cache_query as cache_query
-import spack.extensions.manager.manager_cmds.cli_config as cli_config
-import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
-import spack.extensions.manager.manager_cmds.create_env as create_env
-import spack.extensions.manager.manager_cmds.develop as develop
-import spack.extensions.manager.manager_cmds.external as external
-import spack.extensions.manager.manager_cmds.find_machine as find_machine
-import spack.extensions.manager.manager_cmds.include as include
-import spack.extensions.manager.manager_cmds.location as location
-import spack.extensions.manager.manager_cmds.lock_diff as lock_diff
-import spack.extensions.manager.manager_cmds.make as make
-import spack.extensions.manager.manager_cmds.pin as pin
+from ..manager_cmds import binary_finder as binary_finder
+from ..manager_cmds import cache_query as cache_query
+from ..manager_cmds import cli_config as cli_config
+from ..manager_cmds import create_dev_env as create_dev_env
+from ..manager_cmds import create_env as create_env
+from ..manager_cmds import develop as develop
+from ..manager_cmds import external as external
+from ..manager_cmds import find_machine as find_machine
+from ..manager_cmds import include as include
+from ..manager_cmds import location as location
+from ..manager_cmds import lock_diff as lock_diff
+from ..manager_cmds import make as make
+from ..manager_cmds import pin as pin
 
 try:
-    import spack.extensions.manager.manager_cmds.analyze as analyze
+    from .manager_cmds import analyze as analyze
+
     _analyze_imports = True
 except ImportError:
     _analyze_imports = False
 
-if sys.version_info < (3, 8):
-    print("spack-manager commands only supported in python 3.8 and higher")
-    exit(1)
 
 description = "commands that are specific to spack-manager"
 section = "spack-manager"

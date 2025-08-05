@@ -6,9 +6,10 @@
 
 import os
 
-import spack.extensions.manager as manager
+# from .. import manager
+from . import config_yaml
 import spack.llnl.util.lang
-from spack.extensions.manager.manager_utils import canonicalize_path
+from .manager_utils import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"
 DETECTION_MODULE = "find_{n}"
@@ -89,7 +90,7 @@ class Project:
 
 def get_projects(selector=None):
     projects = []
-    projects_node = manager.config_yaml["spack-manager"]["projects"]
+    projects_node = config_yaml["spack-manager"]["projects"]
     for i, path in enumerate(projects_node):
         p = Project(path)
         if selector:

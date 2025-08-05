@@ -8,7 +8,7 @@
 import os
 
 import spack.environment as ev
-import spack.extensions.manager.manager_cmds.create_dev_env as create_dev_env
+import manager.manager_cmds.create_dev_env as create_dev_env
 import spack.main
 
 manager = spack.main.SpackCommand("manager")

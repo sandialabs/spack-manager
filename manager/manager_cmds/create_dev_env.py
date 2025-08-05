@@ -9,8 +9,8 @@ import argparse
 
 import spack.cmd
 import spack.environment as ev
-import spack.extensions.manager.manager_cmds.create_env as create_env
-import spack.extensions.manager.manager_cmds.develop as mdevelop
+from . import create_env
+from . import develop as mdevelop
 
 
 def develop(*args):

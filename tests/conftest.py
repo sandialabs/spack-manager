@@ -10,7 +10,7 @@ import os
 
 import pytest
 
-import spack.extensions.manager as manager
+import manager
 from spack.test.conftest import *  # noqa: F401 F403
 
 _test_root = os.path.dirname(__file__)
@@ -25,6 +25,7 @@ class Patcher(object):
     """
 
     def __init__(self, patch_func=None):
+        breakpoint()
         self.args = []
         self.patch_func = patch_func
 

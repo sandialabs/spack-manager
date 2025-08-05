@@ -10,8 +10,7 @@ import os
 import pytest
 
 import spack.environment as ev
-import spack.extensions
-import spack.extensions.manager.manager_cmds.develop as m_develop
+import manager.manager_cmds.develop as m_develop
 import spack.main
 
 env = spack.main.SpackCommand("env")

@@ -117,6 +117,7 @@ def manager_develop(parser, args):
         git_clone(branch, repo, path, args.shallow, args.all_branches)
         args.clone = False
 
+    breakpoint()
     s_develop(None, args)
 
     if args.add_remote:

@@ -7,7 +7,7 @@
 
 import os
 
-import spack.extensions.manager.projects as m_proj
+from .. import projects as m_proj
 
 
 def machine_defined(name):
