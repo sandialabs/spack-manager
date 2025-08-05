@@ -1,4 +1,5 @@
 import os
+import fnmatch
 import shutil
 
 import spack
@@ -81,6 +82,28 @@ def get_normalized_path(item, cfg, scope, section):
                 item,
             )
         )
+
+
+
+def is_match(string, patterns):
+    return any(fnmatch.fnmatch(string, pattern) for pattern in patterns)
+
+
+def copy_files_excluding_pattern(src, dst, patterns):
+    os.makedirs(dst, exist_ok=True)
+
+    for dirpath, _, filenames in os.walk(src):
+        relative_path = os.path.relpath(dirpath, src)
+        dst_dir = os.path.join(dst, relative_path)
+        if not is_match(relative_path, patterns):
+            os.makedirs(dst_dir, exist_ok=True)
+
+            for filename in filenames:
+                src_file = os.path.join(dirpath, filename)
+                dst_file = os.path.join(dst_dir, filename)
+
+                if not is_match(os.path.join(relative_path, filename), patterns):
+                    shutil.copy2(src_file, dst_file)
 
     
 def distribution(parser, args):
@@ -185,15 +208,13 @@ def distribution(parser, args):
         )
 
     print(f"Packing up Spack installation to {spack_install}....")
-    shutil.copytree(
+    ignore = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
+
+    copy_files_excluding_pattern(
         spack_root,
         spack_install,
-        ignore=lambda _, files: [".git"] if ".git" in files else [],
+        ignore,
     )
-    # TODO: Do not copy the site install config files
-    badfile = os.path.join(spack_install, "etc", "spack", "include.yaml")
-    if os.path.isfile(badfile):
-        os.remove(badfile)
 
     # We deactivate the environment and use the special one we created so that the concretization will be the same.
     #  Specifically, we do not want to omit any packages that are externals Just So They Build Faster internally, but are still needed externally.
