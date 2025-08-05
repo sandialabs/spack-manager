@@ -70,14 +70,7 @@ def wipe_n_make(directory):
 
 
 def distribution(parser, args):
-    env = environment.active_environment()
-
-    if not env:
-        print(
-            "ERROR: You must have an active Spack environment to `spack distribution`.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    env = spack.cmd.require_active_env(cmd_name="distribution")
 
     distro = os.path.join(os.getcwd(), "distro")
     print("Precleaning....")
