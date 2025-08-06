@@ -11,8 +11,11 @@ import pytest
 
 import spack.environment as ev
 import spack.extensions
-import spack.extensions.manager.manager_cmds.develop as m_develop
 import spack.main
+
+# monkeypatchable import path for the extension
+spack.extensions.load_extension("manager")
+manager_mod = spack.extensions.get_module("manager")
 
 env = spack.main.SpackCommand("env")
 manager = spack.main.SpackCommand("manager")
@@ -22,7 +25,7 @@ manager = spack.main.SpackCommand("manager")
 def test_spackManagerDevelopCallsSpackDevelop(monkeypatch, arg_capture):
     env("create", "test")
     with ev.read("test"):
-        monkeypatch.setattr(m_develop, "s_develop", arg_capture)
+        monkeypatch.setattr(manager_mod.develop, "s_develop", arg_capture)
         manager("develop", "mpich@=1.0")
         assert arg_capture.num_calls == 1
 
@@ -37,9 +40,9 @@ def test_spackManagerExtensionArgsLeadToGitCalls(
     mock_develop = arg_capture_patch()
     mock_git_clone = arg_capture_patch()
     mock_git_remote = arg_capture_patch()
-    monkeypatch.setattr(m_develop, "s_develop", mock_develop)
-    monkeypatch.setattr(m_develop, "git_clone", mock_git_clone)
-    monkeypatch.setattr(m_develop, "git_remote_add", mock_git_remote)
+    monkeypatch.setattr(manager_mod.develop, "s_develop", mock_develop)
+    monkeypatch.setattr(manager_mod.develop, "git_clone", mock_git_clone)
+    monkeypatch.setattr(manager_mod.develop, "git_remote_add", mock_git_remote)
     env("create", "test")
     with ev.read("test") as e:
         branch = "master"
