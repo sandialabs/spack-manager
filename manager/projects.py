@@ -6,9 +6,10 @@
 
 import os
 
+import spack.llnl.util.lang
+
 # from .. import manager
 from . import config_yaml
-import spack.llnl.util.lang
 from .manager_utils import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"

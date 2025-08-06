@@ -14,6 +14,7 @@ import spack.util.executable
 from spack.cmd.develop import develop as s_develop
 from spack.cmd.develop import setup_parser as s_setup_parser
 from spack.error import SpackError
+
 from ..manager_utils import canonicalize_path
 
 

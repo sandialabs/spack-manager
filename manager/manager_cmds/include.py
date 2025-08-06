@@ -8,8 +8,9 @@
 import os
 import sys
 
-from .. import projects
 import spack.llnl.util.tty as tty
+
+from .. import projects
 from .find_machine import find_machine, machine_defined
 from .includes_creator import IncludesCreator
 

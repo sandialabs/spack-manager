@@ -5,8 +5,6 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-import sys
-
 from ..manager_cmds import binary_finder as binary_finder
 from ..manager_cmds import cache_query as cache_query
 from ..manager_cmds import cli_config as cli_config
