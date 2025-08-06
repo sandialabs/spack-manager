@@ -13,41 +13,6 @@ on:
   - cron: "0 8 * * *"
 
 jobs:
-  legacy-unit-tests:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.6, 3.7]
-        spack-version: [develop]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      # uses: actions/setup-python@v5
-      # mirror spack-core
-      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Python packages
-      run: |
-          pip install --upgrade pip setuptools pytest pytest-xdist pytest-cov
-          pip install --upgrade flake8 "isort>=4.3.5" "mypy>=0.900" "click" "black"
-    - name: Checkout Spack
-      uses: actions/checkout@v4
-      with:
-        repository: spack/spack
-        ref: ${{ matrix.spack-version }}
-        path: spack
-    - name: Setup Spack ${{ matrix.spack-version }}
-      run: echo "$PWD/spack/bin" >> "$GITHUB_PATH"
-    - name: Install extension
-      run: |
-        ./install.py --scope site
-        spack manager --help
-    - name: Run unit tests
-      run: |
-        . spack/share/spack/setup-env.sh
-        spack unit-test --extension manager
   unit-tests:
     runs-on: ubuntu-latest
     strategy:
