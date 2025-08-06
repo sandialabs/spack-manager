@@ -15,8 +15,8 @@ import sys
 
 
 def check_spack_manager_requirements():
-    if sys.version_info < (3, 8):
-        print("Spack-Manager requires Python 3.8 or higher.")
+    if sys.version_info < (3, 6):
+        raise ValueError("Spack-Manager requires Python 3.6 or higher.")
 
 
 if __name__ == "__main__":
