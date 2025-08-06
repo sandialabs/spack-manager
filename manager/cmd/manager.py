@@ -5,22 +5,24 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
-from ..manager_cmds import binary_finder as binary_finder
-from ..manager_cmds import cache_query as cache_query
-from ..manager_cmds import cli_config as cli_config
-from ..manager_cmds import create_dev_env as create_dev_env
-from ..manager_cmds import create_env as create_env
-from ..manager_cmds import develop as develop
-from ..manager_cmds import external as external
-from ..manager_cmds import find_machine as find_machine
-from ..manager_cmds import include as include
-from ..manager_cmds import location as location
-from ..manager_cmds import lock_diff as lock_diff
-from ..manager_cmds import make as make
-from ..manager_cmds import pin as pin
+from ..manager_cmds import (
+    binary_finder,
+    cache_query,
+    cli_config,
+    create_dev_env,
+    create_env,
+    develop,
+    external,
+    find_machine,
+    include,
+    location,
+    lock_diff,
+    make,
+    pin,
+)
 
 try:
-    from .manager_cmds import analyze as analyze
+    from .manager_cmds import analyze
 
     _analyze_imports = True
 except ImportError:
