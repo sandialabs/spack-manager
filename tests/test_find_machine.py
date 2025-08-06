@@ -8,9 +8,14 @@
 import os
 
 import manager
-import manager.manager_cmds.find_machine as find_machine
+
+import spack.extensions
 import spack.main
 
+# monkeypatchable import path for the extension
+spack.extensions.load_extension("manager")
+manager_mod = spack.extensions.get_module("manager")
+find_machine = manager_mod.find_machine
 mgr_cmd = spack.main.SpackCommand("manager")
 
 

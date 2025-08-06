@@ -8,15 +8,19 @@
 import os
 
 import spack.environment as ev
-import manager.manager_cmds.create_dev_env as create_dev_env
+import spack.extensions
 import spack.main
+
+# monkeypatchable import path for the extension
+spack.extensions.load_extension("manager")
+manager_mod = spack.extensions.get_module("manager")
 
 manager = spack.main.SpackCommand("manager")
 
 
 def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
-        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
+        monkeypatch.setattr(manager_mod.create_dev_env, "develop", arg_capture)
         manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
         assert arg_capture.num_calls == 3
 
@@ -26,7 +30,7 @@ def test_allSpecsCallSpackDevelop(tmpdir, on_moonlight, monkeypatch, arg_capture
 
 
 def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, arg_capture_patch):
-    assert hasattr(create_dev_env, "develop")
+    assert hasattr(manager_mod.create_dev_env, "develop")
     with tmpdir.as_cwd():
 
         def dev_patch(*args):
@@ -36,7 +40,7 @@ def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, arg_capture_
             os.mkdir(name)
 
         mock = arg_capture_patch(dev_patch)
-        monkeypatch.setattr(create_dev_env, "develop", mock)
+        monkeypatch.setattr(manager_mod.create_dev_env, "develop", mock)
         manager("create-dev-env", "-s", "amr-wind@main", "nalu-wind@master", "exawind@master")
         assert os.path.isfile(tmpdir.join("spack.yaml"))
         assert os.path.isfile(tmpdir.join("include.yaml"))
@@ -47,7 +51,7 @@ def test_newEnvironmentIsCreated(tmpdir, on_moonlight, monkeypatch, arg_capture_
 
 def test_newEnvironmentKeepingUserSpecifiedYAML(tmpdir, on_moonlight, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
-        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
+        monkeypatch.setattr(manager_mod.create_dev_env, "develop", arg_capture)
         amr_path = tmpdir.join("test_amr-wind")
         nalu_path = tmpdir.join("test_nalu-wind")
         os.makedirs(amr_path.strpath)
@@ -97,7 +101,7 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(tmpdir, on_moonlight, monkeypatc
 
 def test_nonConcreteSpecsDontGetCloned(tmpdir, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
-        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
+        monkeypatch.setattr(manager_mod.create_dev_env, "develop", arg_capture)
         manager(
             "create-dev-env", "-s", "amr-wind", "nalu-wind", "exawind@master", "-d", tmpdir.strpath
         )
@@ -110,7 +114,7 @@ def test_nonConcreteSpecsDontGetCloned(tmpdir, monkeypatch, arg_capture):
 
 def test_noSpecsIsNotAnErrorGivesBlankEnv(tmpdir, monkeypatch, arg_capture):
     with tmpdir.as_cwd():
-        monkeypatch.setattr(create_dev_env, "develop", arg_capture)
+        monkeypatch.setattr(manager_mod.create_dev_env, "develop", arg_capture)
         manager("create-dev-env", "-d", tmpdir.strpath)
         assert arg_capture.num_calls == 0
         e = ev.Environment(tmpdir.strpath)

@@ -14,7 +14,7 @@ import spack.util.executable
 from spack.cmd.develop import develop as s_develop
 from spack.cmd.develop import setup_parser as s_setup_parser
 from spack.error import SpackError
-from spack.extensions.manager.manager_utils import canonicalize_path
+from ..manager_utils import canonicalize_path
 
 
 def git_clone(branch, repo, path, shallow, all_branches):
@@ -117,7 +117,6 @@ def manager_develop(parser, args):
         git_clone(branch, repo, path, args.shallow, args.all_branches)
         args.clone = False
 
-    breakpoint()
     s_develop(None, args)
 
     if args.add_remote:

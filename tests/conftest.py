@@ -8,12 +8,16 @@
 
 import os
 
+import manager
 import pytest
 
-import manager
+import spack.extensions
 from spack.test.conftest import *  # noqa: F401 F403
 
 _test_root = os.path.dirname(__file__)
+
+spack.extensions.load_extension("manager")
+manager_mod = spack.extensions.get_module("manager")
 
 
 class Patcher(object):
@@ -25,7 +29,6 @@ class Patcher(object):
     """
 
     def __init__(self, patch_func=None):
-        breakpoint()
         self.args = []
         self.patch_func = patch_func
 
@@ -73,13 +76,14 @@ def arg_capture_patch():
 
 
 @pytest.fixture
-def mock_manager_config_path():
+def mock_manager_config_path(monkeypatch):
     """
     Setup to use a testing project repo embedded in the tests, then reset to default when finished
     """
     config_path = os.path.join(_test_root, "mock", "mock_config.yaml")
     manager.config_path = config_path
     manager.initialize()
+    monkeypatch.setattr(manager_mod.find_machine.m_proj, "config_yaml", manager.config_yaml)
     yield
     manager.config_path = manager._default_config_path
     manager.initialize()
