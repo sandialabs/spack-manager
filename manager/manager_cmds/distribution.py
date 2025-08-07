@@ -6,7 +6,6 @@ import spack
 from spack import environment
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
 from spack.paths import spack_root
-from spack import config
 from spack.main import SpackCommand
 
 from llnl.util.filesystem import working_dir
@@ -24,13 +23,22 @@ def add_command(parser, command_dict):
         help=description,
     )
     subparser.add_argument(
+        "--distro-dir",
+        default = os.path.join(os.getcwd(), "distro"),
+        help="Directory where the packaged environemnt should be created",
+    )
+    subparser.add_argument(
         "--include",
-        help="Directory containg yaml to be included in the packaged environment",
+        help="Directory containing yaml to be included in the packaged environment",
     )
 
     subparser.add_argument(
         "--exclude",
-        help="Directory containg yaml to be explicitly removed from packaged environment",
+        help="Directory containing yaml to be explicitly removed from packaged environment",
+    )
+    subparser.add_argument(
+        "--extra-data",
+        help="Directory where any aditional data to be copied into the root of the packaged distribution",
     )
     command_dict["distribution"] = distribution
 
@@ -49,7 +57,7 @@ def get_local_config(name, path):
     #FIXME: Would it be better to use some portion of includes_creator here?
     sections = list(spack.config.SECTION_SCHEMAS.keys())
     aconfig = spack.config.Configuration()
-    scope = spack.config.DDirectoryConfigScopeirectoryScope(name, os.path.abspath(path))
+    scope = spack.config.DirectoryConfigScope(name, os.path.abspath(path))
     aconfig.push_scope(scope)
     scope = aconfig.scopes[name]
 
@@ -112,200 +120,23 @@ def remove_subset_from_dict(larger_dict, subset_dict):
     return larger_dict
 
 
-def update_package_data(package, data, package_data):
-    if "externals" not in data:
-        try:
-            package_data[package].update(data)
-        except KeyError:
-            package_data[package] = data
-
-
-def wipe_n_make(directory):
-    print("Precleaning....")
-    if os.path.isdir(directory):
-        shutil.rmtree(directory)
-    os.makedirs(directory)
-
-
 def valid_env_scopes(env):
     scopes = spack.config.CONFIG.matching_scopes(f"^env:{env.name}|^{spack.config.INCLUDE_SCOPE_PREFIX}")
     return [s.name for s in scopes]
 
 
-
-def create_package_env(directory):
-    return environment.create_in_dir(directory, keep_relative=True)
-
-
-def add_specs_to_env(new_env, old_env):
-    with old_env:
-        specs = old_env.user_specs.specs_as_yaml_list
-    
-    adder = SpackCommand("add")
-    print(f"Adding specs to env: {new_env.name}....")
-    with new_env:
-        for spec in specs:
-            with new_env.write_transaction():
-                adder(spec)
-
-
-def add_repositories_to_env(new_env, old_env, repo_location):
-    repos = set()
-    with old_env:
-        for scope in valid_env_scopes(old_env):
-            for repo in spack.config.get("repos", scope=scope):
-                repos.add(spack.util.path.canonicalize_path(repo))
-
-    print(f"Packing up package repositories to {repo_location}....")
-    os.makedirs(repo_location)
-    for repo in repos:
-        shutil.copytree(repo, os.path.join(repo_location, os.path.basename(repo)))
-
-    print(f"Adding up repositories to env: {new_env.name}....")
-    sconfig = SpackCommand("config")
-    with new_env:
-        for repo in repos:
-            repo = os.path.join(
-                os.path.relpath(repo_location, new_env.path), os.path.basename(repo)
-            )
-            with new_env.write_transaction():
-                sconfig("add", f"repos:[{repo}]")
-
-
-def add_extensions_to_env(new_env, old_env, extension_location):
-    with old_env:
-        extensions = [x for x in spack.extensions.get_extension_paths() if "spack-manager" not in x]
-    print(f"Packing up extensions to {extension_location}....")
-    os.makedirs(extension_location)
-    for extension in extensions:
-        shutil.copytree(
-            extension, os.path.join(extension_location, os.path.basename(extension))
-        )
-
-    print(f"Adding up extensions to env: {new_env.name}....")
-    sconfig = SpackCommand("config")
-    with new_env:
-        with new_env:
-            for extension in extensions:
-                extension = os.path.join(
-                    os.path.relpath(extension_location, new_env.path),
-                    os.path.basename(extension),
-                )
-                with new_env.write_transaction():
-                    sconfig("add", f"config:extensions:[{extension}]")
-
-
-
-
-def _write(data, env):
-    with open(os.path.join(env.path, "spack.yaml"), "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
-
-
-def add_package_settings_to_env(new_env, old_env):
-    print(f"Add package settings to env: {new_env.name}....")
-    with old_env:
-        package_settings = {}
-        for scope in valid_env_scopes(old_env):
-            for package, data in spack.config.get("packages", scope=scope).items():
-                update_package_data(package,data, package_settings)
-    #FIXME: It seems cumbersome to spack config add every aspect of the pacakge settings. Is there a better way?
-    env_data = get_env_as_dict(new_env)
-    env_data["spack"]["packages"] = package_settings
-    _write(env_data, new_env)
-
-
-def finalize_env(env, excludes):
-    print(f"Writing manifest file for env: {env.name}....")
-    env_data = get_env_as_dict(env)
-    if excludes:
-        print(f"Processign settings to exclude from env: {env.name}....")
-        cfg = get_local_config("exclude", excludes)
-        remove_subset_from_dict(env_data, cfg)
-    _write(env_data, env)
-    
-    print(f"Concretizing env: {env.name}....")
-    env.concretize(force=True)
-    env.write()
-
-
-def add_package_mirror(new_env, old_env, mirror_location, install_root):
-    # We do not want to omit any packages that are externals 
-    # just So They Build Faster internally, but are still needed externally.
-    # However, this causes issues for packages that are not downloadable, 
-    # so we do a first-shot mirror creation with the original environment active.
-    with old_env:
-        print(f"Creating mirror at {mirror_location}....")
-        create_mirror_for_all_specs(
-            mirror_specs=filter_externals(old_env.all_specs()),
-            path=mirror_location,
-            skip_unstable_versions=False,
-        )
-
-    mirrorer = SpackCommand("mirror")
-    with new_env:
-        print(f"Updating mirror at {mirror_location}....")
-        create_mirror_for_all_specs(
-            mirror_specs=filter_externals(new_env.all_specs()),
-            path=mirror_location,
-            skip_unstable_versions=False,
-        )
-        mirror_path = os.path.join(
-                os.path.relpath(install_root, new_env.path), 
-                os.path.basename(mirror_location),
-            )
-        print(f"Adding mirror to env: {new_env.name}....")
-        with new_env.write_transaction():
-            mirrorer("add", "internal", mirror_path)
-
-
-def add_bootstrap_mirror(new_env, mirror_location):
-        print(f"Creating bootstrap mirror at {mirror_location}....")
-        strapper = SpackCommand("bootstrap")
-        strapper("mirror", "--binary-packages", mirror_location)
-        bootstrap_source = os.path.join(
-            os.path.relpath(mirror_location, new_env.path),
-            "metadata",
-            "sources",
-        )
-        bootstrap_binary = os.path.join(
-            os.path.relpath(mirror_location, new_env.path),
-            "metadata",
-            "binaries",
-        )
-        with new_env:
-            with working_dir(new_env.path):
-                with new_env.write_transaction():
-                    strapper("add", "--trust", "--scope", f"env:{new_env.name}", "internal-sources", bootstrap_source)
-                with new_env.write_transaction():
-                    strapper("add", "--trust", "--scope", f"env:{new_env.name}", "internal-binaries", bootstrap_binary)
-
-
-def package_spack(new_location):
-    print(f"Packing up Spack installation to {new_location}....")
+def bundle_spack(location):
+    print(f"Packing up Spack installation to {location}....")
     ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
     copy_files_excluding_pattern(
         spack_root,
-        new_location,
+        location,
         ignore_these,
     )
 
 
-def clean(env):
-    for item in os.listdir(env.path):
-        fullname = os.path.join(env.path, item)
-        if "spack.yaml" in item:
-            continue
-        elif os.path.isdir(fullname):
-            shutil.rmtree(fullname)
-        else:
-            os.remove(fullname)
-
-
 class DistributionPacakger:
-    def __init__(self, env, root, includes, excludes):
+    def __init__(self, env, root, includes=None, excludes=None):
         self.orig = env
         self.includes = includes
         self.excludes = excludes
@@ -330,7 +161,7 @@ class DistributionPacakger:
         print(f"Writing manifest file for env: {self.env.name}....")
         env_data = get_env_as_dict(self.env)
         if self.excludes:
-            print(f"Processign settings to exclude from env: {self.env.name}....")
+            print(f"Processing settings to exclude from env: {self.env.name}....")
             cfg = get_local_config("exclude", self.excludes)
             remove_subset_from_dict(env_data, cfg)
         self._write(env_data)
@@ -349,6 +180,20 @@ class DistributionPacakger:
             else:
                 os.remove(fullname)
 
+    def configure_includes(self):
+        if self.includes:
+            print(f"Adding include dir to env: {self.env.name}....")
+            includes_install = os.path.join(self.path, os.path.basename(self.includes))
+            shutil.copytree(
+                self.includes,
+                includes_install
+            )
+            includes = os.path.relpath(includes_install, self.env.path)
+            sconfig = SpackCommand("config")
+            with self.env:
+                with self.env.write_transaction():
+                    sconfig("add", f"include:[{includes}]")
+
     def configure_specs(self):
         with self.orig:
             specs = self.orig.user_specs.specs_as_yaml_list
@@ -362,7 +207,7 @@ class DistributionPacakger:
 
     def configure_extensions(self):
         with self.orig:
-            extensions = [x for x in spack.extensions.get_extension_paths() if "spack-manager" not in x]
+            extensions = spack.extensions.get_extension_paths()
             print(f"Packing up extensions to {self.extensions}....")
             os.makedirs(self.extensions)
             for extension in extensions:
@@ -469,16 +314,6 @@ class DistributionPacakger:
                 with self.env.write_transaction():
                     strapper("add", "--trust", "--scope", f"env:{self.env.name}", "internal-binaries", bootstrap_binary)
 
-    def bundle_spack(self):
-        install_here = os.path.join(self.path, "spack")
-        print(f"Packing up Spack installation to {install_here}....")
-        ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
-        copy_files_excluding_pattern(
-            spack_root,
-            install_here,
-            ignore_these,
-        )
-
     def _write(self, data):
         with open(os.path.join(self.env.path, "spack.yaml"), "w") as outf:
             spack.util.spack_yaml.dump(
@@ -499,42 +334,30 @@ class DistributionPacakger:
 
 def distribution(parser, args):
     env = spack.cmd.require_active_env(cmd_name="manager distribution")
-    distro = os.path.join(os.getcwd(), "distro")
-    # wipe_n_make(distro)
+    packager =  DistributionPacakger(
+        env, 
+        args.distro_dir, 
+        includes=args.include,
+        excludes=args.exclude
+    )
+    with packager:
+        packager.configure_specs()
+        packager.configure_includes()
+        packager.configure_extensions()
+        packager.configure_package_repos()
+        packager.configure_package_settings()
+        packager.finalize()
+        packager.configure_package_mirror()
+        packager.configure_bootstrap_mirror()
 
-    with DistributionPacakger(env, distro, args.include, args.exclude) as pkg:
-        pkg.configure_specs()
-        pkg.configure_extensions()
-        pkg.configure_package_repos()
-        pkg.configure_package_settings()
-        pkg.finalize()
-        pkg.configure_package_mirror()
-        pkg.configure_bootstrap_mirror()
-        # pkg.bundle_spack()
-
-    # mirror = os.path.join(distro, "mirror")
-    # bootstrap_mirror = os.path.join(distro, "bootstrap-mirror")
-    # spack_install = os.path.join(distro, "spack")
-    # repos_install = os.path.join(distro, "package-repos")
-    # extensions_install = os.path.join(distro, "extensions")
-
-    # install_env = os.path.join(distro, "environment")
-    # pkg_env = create_package_env(install_env)
-
-    # print("Concretizing....")
-    # env.concretize()
-    # env.write()
-    # env.deactivate()
-
-    # add_specs_to_env(pkg_env, env)
-    # add_extensions_to_env(pkg_env, env, extensions_install)
-    # add_repositories_to_env(pkg_env, env, repos_install)
-    # add_package_settings_to_env(pkg_env, env)
-    # finalize_env(pkg_env, args.exclude)
-    # add_package_mirror(pkg_env, env, mirror, distro)
-    # add_bootstrap_mirror(pkg_env, bootstrap_mirror)
-    # finalize_env(pkg_env, args.exclude)
-    # clean(pkg_env)
-    # package_spack(spack_install)
-    raise SystemExit()
-    
+    spack_install = os.path.join(args.distro_dir, "spack")
+    print(f"Packing up Spack installation to {spack_install}....")
+    ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
+    copy_files_excluding_pattern(
+        spack_root,
+        spack_install,
+        ignore_these,
+    )
+    if args.extra_data:
+        print(f"Packaging up extra data to {args.distro_dir}....")
+        shutil.copytree(args.extra_data, args.distro_dir, dirs_exist_ok=True)
