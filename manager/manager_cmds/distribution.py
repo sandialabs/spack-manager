@@ -9,7 +9,6 @@ from spack.paths import spack_root
 from spack.main import SpackCommand
 
 from llnl.util.filesystem import working_dir
-from spack.config import SECTION_SCHEMAS as sc_section_schemas
 
 
 description = "bundle an environment as a self-contained source distribution"
