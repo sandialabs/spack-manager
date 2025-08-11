@@ -117,7 +117,7 @@ def remove_subset_from_dict(larger_dict, subset_dict):
 
 
 def valid_env_scopes(env):
-    scopes = spack.config.CONFIG.matching_scopes(f"^env:{env.name}|^{spack.config.INCLUDE_SCOPE_PREFIX}")
+    scopes = spack.config.CONFIG.matching_scopes(f"^env:{env.name}|^include:")
     return [s.name for s in scopes]
 
 
@@ -143,9 +143,14 @@ class DistributionPacakger:
         self.mirror = os.path.join(self.path, "mirror")
         self.bootstrap_mirror = os.path.join(self.path, "bootstrap-mirror")
 
-        self.wipe_n_make()
-        self.env = environment.create_in_dir(os.path.join(self.path, "environment"), keep_relative=True)
-
+        self._env = None
+    
+    @property
+    def env(self):
+        if self._env is None:
+            epath = os.path.join(self.path, "environment")
+            self._env = environment.create_in_dir(epath, keep_relative=True)
+        return self._env
     
     def wipe_n_make(self):
         print("Precleaning....")
@@ -321,6 +326,9 @@ class DistributionPacakger:
         self.orig.concretize()
         self.orig.write()
         environment.deactivate()
+        self.wipe_n_make()
+        self.env
+
         return self
     
     def __exit__(self, exc_type, exc_val, exc_tb):
