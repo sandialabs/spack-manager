@@ -55,7 +55,6 @@ def get_env_as_dict(env):
 def get_local_config(name, path):
     #FIXME: Would it be better to use some portion of includes_creator here?
     sections = list(spack.config.SECTION_SCHEMAS.keys())
-    aconfig = spack.config.Configuration()
     scope = spack.config.DirectoryConfigScope(name, os.path.abspath(path))
 
     little_config = {}
