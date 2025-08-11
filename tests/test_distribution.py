@@ -14,6 +14,42 @@ import spack.extensions.manager.manager_cmds.distribution as distribution
 manager = spack.main.SpackCommand("manager")
 
 
+def create_spack_manifest(path, extra_data=None):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    data =  {
+            "specs": [
+                "zlib"
+            ]
+    }
+    if extra_data:
+        data.update(extra_data)
+    data = {"spack": data}
+    
+    with open(path, "w") as outf:
+        spack.util.spack_yaml.dump(
+            data, outf, default_flow_style=False
+        )
+    return data
+
+
+def create_pacakge_manifest(path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    data = {
+        "packages": {
+            "all": {
+                "providers": {
+                    "mpi": ["openmpi"]
+                }
+            }
+        }
+    }
+    with open(path, "w") as outf:
+        spack.util.spack_yaml.dump(
+            data, outf, default_flow_style=False
+        )
+    return data
+
+
 def test_is_match():
     patterns = ["*.yaml", "*.yml", "yaml/*"]
     assert distribution.is_match("file.yaml", patterns)
@@ -21,6 +57,7 @@ def test_is_match():
     assert distribution.is_match("yaml/file.txt", patterns)
     assert not distribution.is_match("file.txt", patterns)
     assert not distribution.is_match("/foo/yaml/file.py", patterns)
+
 
 def test_copy_files_excluding_pattern(tmpdir):
     root = os.path.join(tmpdir.strpath, "foo")
@@ -46,6 +83,7 @@ def test_copy_files_excluding_pattern(tmpdir):
         results.extend(files)
     assert len(results) == 3
 
+
 def test_remove_subset_from_dict_invalid_subset():
     data = {
         "a": 1,
@@ -56,6 +94,7 @@ def test_remove_subset_from_dict_invalid_subset():
     }
     distribution.remove_subset_from_dict(data, subset)
     assert data == orig
+
 
 def test_remove_subset_from_dict_invalid_subset():
     data = {
@@ -86,78 +125,51 @@ def test_remove_subset_from_dict_invalid_subset():
     assert data != orig
     assert data == expected
 
+
 def test_get_env_as_dict(tmpdir):
     manifest = os.path.join(tmpdir.strpath, "env", "spack.yaml")
-    os.makedirs(os.path.dirname(manifest))
-    data = {
-        "spack": {
-            "specs": [
-                "zlib"
-            ]
-        }
-    }
-    with open(manifest, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
+    data = create_spack_manifest(manifest)
+
     env = spack.environment.environment_from_name_or_dir(os.path.dirname(manifest))
     assert distribution.get_env_as_dict(env) == data
 
+
 def test_get_local_config(tmpdir):
     packages = os.path.join(tmpdir.strpath, "dir", "packages.yaml")
-    os.makedirs(os.path.dirname(packages))
-    data = {
-        "packages": {
-            "all": {
-                "providers": {
-                    "mpi": ["openmpi"]
-                }
-            }
-        }
-    }
-    with open(packages, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
-    result = distribution.get_local_config("local", os.path.dirname(packages))
+    data = create_pacakge_manifest(packages)
 
+    result = distribution.get_local_config("local", os.path.dirname(packages))
     assert result == data
+
 
 def test_get_valid_env_scopes(tmpdir):
     manifest = os.path.join(tmpdir.strpath, "env", "spack.yaml")
     packages = os.path.join(tmpdir.strpath, "dir", "packages.yaml")
-    os.makedirs(os.path.dirname(packages))
-    data = {
-        "packages": {
-            "all": {
-                "providers": {
-                    "mpi": ["openmpi"]
-                }
-            }
-        }
-    }
-    with open(packages, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
 
-   
-    os.makedirs(os.path.dirname(manifest))
-    data = {
-        "spack": {
-            "include": [
-                os.path.dirname(packages)
-            ],
-            "specs": [
-                "zlib"
-            ]
-        }
+    extra_data = {
+        "include": [
+            os.path.dirname(packages)
+        ],
     }
-    with open(manifest, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
+    create_spack_manifest(manifest, extra_data=extra_data)
+    create_pacakge_manifest(packages)
+
     env = spack.environment.environment_from_name_or_dir(os.path.dirname(manifest))
     with env:
         scope_names = distribution.valid_env_scopes(env)
-        assert len(scope_names) == 2
+    assert len(scope_names) == 2
+
+
+def test_DistributionPackager_wipe_n_make(tmpdir):
+    root = os.path.join(tmpdir.strpath, "root")
+
+    pkgr = distribution.DistributionPackager(None, root)
+    assert not os.path.isdir(root)
+    pkgr.wipe_n_make()
+    assert os.path.isdir(root)
+    test_file = os.path.join(root, "test")
+    with open(test_file, "w") as outf:
+        outf.write("content")
+    assert os.path.isfile(test_file)
+    pkgr.wipe_n_make()
+    assert not os.path.isfile(test_file)

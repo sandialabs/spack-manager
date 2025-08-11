@@ -131,7 +131,7 @@ def bundle_spack(location):
     )
 
 
-class DistributionPacakger:
+class DistributionPackager:
     def __init__(self, env, root, includes=None, excludes=None):
         self.orig = env
         self.includes = includes
@@ -338,7 +338,7 @@ class DistributionPacakger:
 
 def distribution(parser, args):
     env = spack.cmd.require_active_env(cmd_name="manager distribution")
-    packager =  DistributionPacakger(
+    packager =  DistributionPackager(
         env, 
         args.distro_dir, 
         includes=args.include,
