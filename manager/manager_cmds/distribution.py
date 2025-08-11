@@ -57,8 +57,6 @@ def get_local_config(name, path):
     sections = list(spack.config.SECTION_SCHEMAS.keys())
     aconfig = spack.config.Configuration()
     scope = spack.config.DirectoryConfigScope(name, os.path.abspath(path))
-    aconfig.push_scope(scope)
-    scope = aconfig.scopes[name]
 
     little_config = {}
     for section in sections:
