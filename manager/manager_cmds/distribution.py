@@ -164,7 +164,7 @@ class DistributionPackager:
         if self.excludes:
             print(f"Processing settings to exclude from env: {self.env.name}....")
             cfg = get_local_config("exclude", self.excludes)
-            remove_subset_from_dict(env_data, cfg)
+            remove_subset_from_dict(env_data["spack"], cfg)
         self._write(env_data)
         
         print(f"Concretizing env: {self.env.name}....")
@@ -222,7 +222,7 @@ class DistributionPackager:
             for extension in extensions:
                 extension = os.path.join(
                     os.path.relpath(self.extensions, self.env.path),
-                    os.path.basename(self.extensions),
+                    os.path.basename(extension),
                 )
                 with self.env.write_transaction():
                     sconfig("add", f"config:extensions:[{extension}]")
