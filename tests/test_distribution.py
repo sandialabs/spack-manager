@@ -62,6 +62,29 @@ def {base_name}(parser, args):
         f.write(content)
 
 
+def create_repo(path):
+    os.makedirs(path)
+    data = {
+        "repo": {
+            "namespace": "test"
+        }
+    }
+    with open(os.path.join(path, "repo.yaml"), "w") as f:
+        spack.util.spack_yaml.dump(
+            data, f, default_flow_style=False
+        )
+    package = os.path.join(path, "packages", "test")
+    os.makedirs(package)
+    package_content = """\
+from spack.package import *
+
+class Test(Package):
+    pass
+"""
+    with open(os.path.join(package, "package.py"), "w") as f:
+        f.write(package_content)
+
+
 def get_manifest(env):
     manifest = os.path.join(env.path, "spack.yaml")
     with open(manifest) as f:
@@ -363,33 +386,123 @@ def test_DistributionPackager_configure_extensions(tmpdir):
 
 
 def test_DistributionPackager_configure_repos(tmpdir):
-    root = os.path.join(tmpdir.strpath, "root")
+    package_repo = os.path.join(tmpdir.strpath, "mock-repo")
+    create_repo(package_repo)
+    
+    extra_data = {
+        "repos": [
+            package_repo
+        ]
+    }
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
+    create_spack_manifest(manifest, extra_data=extra_data)
     env = spack.environment.Environment(os.path.dirname(manifest))
+
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    expected_repo = os.path.join(pkgr.package_repos, os.path.basename(package_repo))
+    initial_config = get_manifest(pkgr.env)
+    assert not os.path.isdir(expected_repo)
+    assert "repos" not in initial_config["spack"]
+    pkgr.configure_package_repos()
+    result_config = get_manifest(pkgr.env)
+    assert os.path.isdir(expected_repo)
+    assert "repos" in result_config["spack"]
+    assert os.path.relpath(expected_repo, pkgr.env.path) in result_config["spack"]["repos"]
+
+
+def test_DistributionPackager_configure_package_settings(tmpdir): 
+    good = {
+        "all": {
+                "prefer": ["generator=Ninja"]
+        }
+    }
+    bad = {
+        "cmake": {
+                "externals": [
+                    {
+                        "spec": "cmake@1.2.3",
+                        "path": "/foo/bar"
+                    }
+                ]
+        }
+    }
+    
+    extra_data = {
+        "packages": {}
+    }
+    extra_data["packages"].update(good)
+    extra_data["packages"].update(bad)
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest, extra_data=extra_data)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
 
     pkgr = distribution.DistributionPackager(env, root)
 
-    assert False
+    inital_config = get_manifest(pkgr.env)
+    assert "packages" not in inital_config["spack"]
+    pkgr.configure_package_settings()
+    result_config = get_manifest(pkgr.env)
+    assert "packages" in result_config["spack"]
+    assert good == result_config["spack"]["packages"]
 
-# def test_DistributionPackager_context(tmpdir):
-#     packages = os.path.join(tmpdir.strpath, "base-env", "packages", "packages.yaml")
-#     manifest = os.path.join(tmpdir.strpath, "base-env", "env", "spack.yaml")
-#     rel = os.path.relpath(packages, os.path.dirname(manifest))
-#     extra_data = {
-#         "include": [rel]
-#     }
-#     create_pacakge_manifest(packages)
-#     create_spack_manifest(manifest, extra_data=extra_data)
 
-#     root = os.path.join(tmpdir.strpath, "root")
-#     pkgr = distribution.DistributionPackager(None, root)
-#     assert not os.path.isdir(root)
-#     pkgr.wipe_n_make()
-#     assert os.path.isdir(root)
-#     test_file = os.path.join(root, "test")
-#     with open(test_file, "w") as outf:
-#         outf.write("content")
-#     assert os.path.isfile(test_file)
-#     pkgr.wipe_n_make()
-#     assert not os.path.isfile(test_file)
+def test_DistributionPackager_bundle_extra_data(tmpdir):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    
+    extra_data = os.path.join(tmpdir.strpath, "data")
+    os.makedirs(extra_data)
+    extra_file_a = os.path.join(extra_data, "file_a.txt")
+    extra_file_b = os.path.join(extra_data, "sub_dir", "file_b.txt")
+    os.makedirs(os.path.dirname(extra_file_b))
+    with open(extra_file_b, "w") as f:
+        f.write("content")
+    with open(extra_file_a, "w") as f:
+        f.write("content")
+
+    root = os.path.join(tmpdir.strpath, "root")
+    expect_file_a = extra_file_a.replace(extra_data, root)
+    expect_file_b = extra_file_b.replace(extra_data, root)
+
+    pkgr = distribution.DistributionPackager(env, root, extra_data=extra_data)
+    pkgr.bundle_extra_data()
+    assert os.path.isfile(expect_file_a)
+    assert os.path.isfile(expect_file_b)
+
+
+def test_DistributionPackager_context_erases_working_dir(tmpdir):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    testfile = os.path.join(root, "testfile")
+    os.makedirs(root)
+    with open(testfile, "w") as f:
+        f.write("content")
+    with env:
+        assert spack.environment.active_environment().name == env.name
+        with pkgr:
+            assert spack.environment.active_environment() is None
+            assert not os.path.exists(testfile)
+        assert spack.environment.active_environment().name == env.name
+
+
+def test_DistributionPackager_context_creates_working_dir(tmpdir):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    with env:
+        assert spack.environment.active_environment().name == env.name
+        with pkgr:
+            assert spack.environment.active_environment() is None
+            assert os.path.isdir(root)
+        assert spack.environment.active_environment().name == env.name
