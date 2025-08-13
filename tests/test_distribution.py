@@ -8,45 +8,30 @@
 import os
 
 import spack
-import spack.main
+import spack.environment
 import spack.extensions.manager.manager_cmds.distribution as distribution
-
-manager = spack.main.SpackCommand("manager")
+import spack.util.spack_yaml
 
 
 def create_spack_manifest(path, specs=None, extra_data=None):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     if not specs:
         specs = []
-    data =  {
-            "specs": specs
-    }
+    data = {"specs": specs}
     if extra_data:
         data.update(extra_data)
     data = {"spack": data}
-    
+
     with open(path, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
+        spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
     return data
 
 
 def create_pacakge_manifest(path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    data = {
-        "packages": {
-            "all": {
-                "providers": {
-                    "mpi": ["openmpi"]
-                }
-            }
-        }
-    }
+    data = {"packages": {"all": {"providers": {"mpi": ["openmpi"]}}}}
     with open(path, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
+        spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
     return data
 
 
@@ -64,15 +49,9 @@ def {base_name}(parser, args):
 
 def create_repo(path):
     os.makedirs(path)
-    data = {
-        "repo": {
-            "namespace": "test"
-        }
-    }
+    data = {"repo": {"namespace": "test"}}
     with open(os.path.join(path, "repo.yaml"), "w") as f:
-        spack.util.spack_yaml.dump(
-            data, f, default_flow_style=False
-        )
+        spack.util.spack_yaml.dump(data, f, default_flow_style=False)
     package = os.path.join(path, "packages", "test")
     os.makedirs(package)
     package_content = """\
@@ -126,42 +105,18 @@ def test_copy_files_excluding_pattern(tmpdir):
 
 
 def test_remove_subset_from_dict_invalid_subset():
-    data = {
-        "a": 1,
-    }
+    data = {"a": 1}
     orig = data.copy()
-    subset = {
-        "b": None,
-    }
+    subset = {"b": None}
     distribution.remove_subset_from_dict(data, subset)
     assert data == orig
 
 
 def test_remove_subset_from_dict():
-    data = {
-        "a": 1,
-        "b": {
-            "c": 2,
-            "d": 3,
-        },
-        "e": [1, 2, 3],
-        "f": [1, 2]
-    }
+    data = {"a": 1, "b": {"c": 2, "d": 3}, "e": [1, 2, 3], "f": [1, 2]}
     orig = data.copy()
-    subset = {
-        "a": None,
-        "b": {
-            "c": None
-        },
-        "e": [1],
-        "f": [1, 2]
-    }
-    expected = {
-        "b": {
-            "d": 3,
-        },
-        "e": [2, 3]
-    }
+    subset = {"a": None, "b": {"c": None}, "e": [1], "f": [1, 2]}
+    expected = {"b": {"d": 3}, "e": [2, 3]}
     distribution.remove_subset_from_dict(data, subset)
     assert data != orig
     assert data == expected
@@ -187,11 +142,7 @@ def test_get_valid_env_scopes(tmpdir):
     manifest = os.path.join(tmpdir.strpath, "env", "spack.yaml")
     packages = os.path.join(tmpdir.strpath, "dir", "packages.yaml")
 
-    extra_data = {
-        "include": [
-            os.path.dirname(packages)
-        ],
-    }
+    extra_data = {"include": [os.path.dirname(packages)]}
     create_spack_manifest(manifest, extra_data=extra_data)
     create_pacakge_manifest(packages)
 
@@ -232,13 +183,7 @@ def get_fake_concretize_env(path):
 def test_DistributionPackager_finalize(tmpdir):
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(root, "environment", "spack.yaml")
-    extra_data = {
-        "packages": {
-            "gcc" : {
-                "require": ["@1.2.3"]
-            }
-        }
-    }
+    extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
     create_spack_manifest(manifest, extra_data=extra_data)
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
@@ -246,7 +191,7 @@ def test_DistributionPackager_finalize(tmpdir):
     pkgr = distribution.DistributionPackager(None, root)
     pkgr._env = env
     pkgr.finalize()
-    
+
     lockfile = os.path.join(env_dir, "spack.lock")
     content = get_manifest(pkgr.env)
 
@@ -260,23 +205,11 @@ def test_DistributionPackager_finalize_with_excludes(tmpdir):
     exclude_dir = os.path.join(tmpdir.strpath, "excludes")
     exclude_file = os.path.join(exclude_dir, "packages.yaml")
     os.makedirs(exclude_dir)
-    data = {
-        "packages": {
-            "gcc": {}
-        }
-    }
+    data = {"packages": {"gcc": {}}}
     with open(exclude_file, "w") as outf:
-        spack.util.spack_yaml.dump(
-            data, outf, default_flow_style=False
-        )
+        spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
     manifest = os.path.join(root, "environment", "spack.yaml")
-    extra_data = {
-        "packages": {
-            "gcc" : {
-                "require": ["@1.2.3"]
-            }
-        }
-    }
+    extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
     create_spack_manifest(manifest, extra_data=extra_data)
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
@@ -284,7 +217,7 @@ def test_DistributionPackager_finalize_with_excludes(tmpdir):
     pkgr = distribution.DistributionPackager(None, root, excludes=exclude_dir)
     pkgr._env = env
     pkgr.finalize()
-    
+
     lockfile = os.path.join(env_dir, "spack.lock")
     content = get_manifest(pkgr.env)
 
@@ -302,11 +235,11 @@ def test_DistributionPackager_clean(tmpdir):
 
     pkgr = distribution.DistributionPackager(None, root)
     pkgr._env = env
-    
+
     pkgr.finalize()
     assert len(os.listdir(env_dir)) == 3
     pkgr.clean()
-    env_assets =  os.listdir(env_dir)
+    env_assets = os.listdir(env_dir)
     assert len(env_assets) == 1
     assert "spack.yaml" in env_assets
 
@@ -346,26 +279,21 @@ def test_DistributionPackager_configure_specs(tmpdir):
     assert pkgr.env.user_specs.specs_as_yaml_list == []
     pkgr.configure_specs()
     assert pkgr.env.user_specs.specs_as_yaml_list == specs
-    
-    
+
+
 def test_DistributionPackager_configure_extensions(tmpdir):
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     extensions = [
         os.path.join(tmpdir.strpath, "extensions", "spack-extensiona"),
-        os.path.join(tmpdir.strpath, "extensions", "spack-extensionb")
-
+        os.path.join(tmpdir.strpath, "extensions", "spack-extensionb"),
     ]
-    expected_extensions = [os.path.join('..', "extensions", "spack-manager")]
+    expected_extensions = [os.path.join("..", "extensions", "spack-manager")]
     for ext in extensions:
-        expected_extensions.append(os.path.join('..', "extensions", os.path.basename(ext)))
+        expected_extensions.append(os.path.join("..", "extensions", os.path.basename(ext)))
         create_extension(ext)
 
-    extra_data = {
-        "config": {
-            "extensions": extensions
-        }
-    }
+    extra_data = {"config": {"extensions": extensions}}
     create_spack_manifest(manifest, extra_data=extra_data)
     env = spack.environment.Environment(os.path.dirname(manifest))
 
@@ -388,12 +316,8 @@ def test_DistributionPackager_configure_extensions(tmpdir):
 def test_DistributionPackager_configure_repos(tmpdir):
     package_repo = os.path.join(tmpdir.strpath, "mock-repo")
     create_repo(package_repo)
-    
-    extra_data = {
-        "repos": [
-            package_repo
-        ]
-    }
+
+    extra_data = {"repos": [package_repo]}
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest, extra_data=extra_data)
     env = spack.environment.Environment(os.path.dirname(manifest))
@@ -412,26 +336,11 @@ def test_DistributionPackager_configure_repos(tmpdir):
     assert os.path.relpath(expected_repo, pkgr.env.path) in result_config["spack"]["repos"]
 
 
-def test_DistributionPackager_configure_package_settings(tmpdir): 
-    good = {
-        "all": {
-                "prefer": ["generator=Ninja"]
-        }
-    }
-    bad = {
-        "cmake": {
-                "externals": [
-                    {
-                        "spec": "cmake@1.2.3",
-                        "path": "/foo/bar"
-                    }
-                ]
-        }
-    }
-    
-    extra_data = {
-        "packages": {}
-    }
+def test_DistributionPackager_configure_package_settings(tmpdir):
+    good = {"all": {"prefer": ["generator=Ninja"]}}
+    bad = {"cmake": {"externals": [{"spec": "cmake@1.2.3", "path": "/foo/bar"}]}}
+
+    extra_data = {"packages": {}}
     extra_data["packages"].update(good)
     extra_data["packages"].update(bad)
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
@@ -453,7 +362,7 @@ def test_DistributionPackager_bundle_extra_data(tmpdir):
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
     env = spack.environment.Environment(os.path.dirname(manifest))
-    
+
     extra_data = os.path.join(tmpdir.strpath, "data")
     os.makedirs(extra_data)
     extra_file_a = os.path.join(extra_data, "file_a.txt")
