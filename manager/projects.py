@@ -7,10 +7,7 @@
 import os
 
 import spack.extensions.manager as manager
-try:
-    import spack.llnl.util.lang
-except ImportError:
-    import llnl.util.lang
+import spack.llnl.util.lang
 from spack.extensions.manager.manager_utils import canonicalize_path
 
 DETECTION_SCRIPT = "find-{n}.py"

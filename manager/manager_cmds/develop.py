@@ -9,10 +9,7 @@ import os
 import shutil
 
 import spack.cmd
-try:
-    import spack.llnl.util.tty as tty
-except ImportError:
-    import llnl.util.tty as tty
+import spack.llnl.util.tty as tty
 import spack.util.executable
 from spack.cmd.develop import develop as s_develop
 from spack.cmd.develop import setup_parser as s_setup_parser

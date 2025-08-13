@@ -9,10 +9,7 @@ import os
 import sys
 
 import spack.extensions.manager.projects as projects
-try:
-    import spack.llnl.util.tty as tty
-except ImportError:
-    import llnl.util.tty as tty
+import spack.llnl.util.tty as tty
 from spack.extensions.manager.manager_cmds.find_machine import find_machine, machine_defined
 from spack.extensions.manager.manager_cmds.includes_creator import IncludesCreator
 
