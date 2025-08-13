@@ -8,7 +8,8 @@ from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
 from spack.paths import spack_root
 from spack.main import SpackCommand
 
-from llnl.util.filesystem import working_dir
+import spack.llnl.util.tty as tty
+from spack.llnl.util.filesystem import working_dir
 
 
 description = "bundle an environment as a self-contained source distribution"
@@ -122,7 +123,7 @@ def valid_env_scopes(env):
 
 
 def bundle_spack(location):
-    print(f"Packing up Spack installation to {location}....")
+    tty.msg(f"Packing up Spack installation to {location}....")
     ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
     copy_files_excluding_pattern(
         spack_root,
@@ -156,21 +157,21 @@ class DistributionPackager:
         return self._env
     
     def wipe_n_make(self):
-        print("Precleaning....")
+        tty.msg("Precleaning....")
         if os.path.isdir(self.path):
             shutil.rmtree(self.path)
         os.makedirs(self.path)
     
     def finalize(self):
-        print(f"Writing manifest file for env: {self.env.name}....")
+        tty.msg(f"Writing manifest file for env: {self.env.name}....")
         env_data = get_env_as_dict(self.env)
         if self.excludes:
-            print(f"Processing settings to exclude from env: {self.env.name}....")
+            tty.msg(f"Processing settings to exclude from env: {self.env.name}....")
             cfg = get_local_config("exclude", self.excludes)
             remove_subset_from_dict(env_data["spack"], cfg)
         self._write(env_data)
         
-        print(f"Concretizing env: {self.env.name}....")
+        tty.msg(f"Concretizing env: {self.env.name}....")
         self.env.concretize(force=True)
         self.env.write()
 
@@ -186,7 +187,7 @@ class DistributionPackager:
 
     def configure_includes(self):
         if self.includes:
-            print(f"Adding include dir to env: {self.env.name}....")
+            tty.msg(f"Adding include dir to env: {self.env.name}....")
             includes_install = os.path.join(self.path, os.path.basename(self.includes))
             shutil.copytree(
                 self.includes,
@@ -203,7 +204,7 @@ class DistributionPackager:
             specs = self.orig.user_specs.specs_as_yaml_list
     
         adder = SpackCommand("add")
-        print(f"Adding specs to env: {self.env.name}....")
+        tty.msg(f"Adding specs to env: {self.env.name}....")
         with self.env:
             for spec in specs:
                 with self.env.write_transaction():
@@ -212,14 +213,14 @@ class DistributionPackager:
     def configure_extensions(self):
         with self.orig:
             extensions = spack.extensions.get_extension_paths()
-            print(f"Packing up extensions to {self.extensions}....")
+            tty.msg(f"Packing up extensions to {self.extensions}....")
             os.makedirs(self.extensions)
             for extension in extensions:
                 shutil.copytree(
                     extension, os.path.join(self.extensions, os.path.basename(extension))
                 )
 
-        print(f"Adding up extensions to env: {self.env.name}....")
+        tty.msg(f"Adding up extensions to env: {self.env.name}....")
         sconfig = SpackCommand("config")
         with self.env:
             for extension in extensions:
@@ -237,12 +238,12 @@ class DistributionPackager:
                 for repo in spack.config.get("repos", scope=scope).values():
                     repos.add(spack.util.path.canonicalize_path(repo))
 
-        print(f"Packing up package repositories to {self.package_repos}....")
+        tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
         for repo in repos:
             shutil.copytree(repo, os.path.join(self.package_repos, os.path.basename(repo)))
 
-        print(f"Adding up repositories to env: {self.env.name}....")
+        tty.msg(f"Adding up repositories to env: {self.env.name}....")
         sconfig = SpackCommand("config")
         with self.env:
             for repo in repos:
@@ -253,7 +254,7 @@ class DistributionPackager:
                     sconfig("add", f"repos:[{repo}]")
 
     def configure_package_settings(self):
-        print(f"Add package settings to env: {self.env.name}....")
+        tty.msg(f"Add package settings to env: {self.env.name}....")
         with self.orig:
             package_settings = {}
             for scope in valid_env_scopes(self.orig):
@@ -274,7 +275,7 @@ class DistributionPackager:
         # However, this causes issues for packages that are not downloadable, 
         # so we do a first-shot mirror creation with the original environment active.
         with self.orig:
-            print(f"Creating mirror at {self.mirror}....")
+            tty.msg(f"Creating mirror at {self.mirror}....")
             create_mirror_for_all_specs(
                 mirror_specs=filter_externals(self.orig.all_specs()),
                 path=self.mirror,
@@ -283,7 +284,7 @@ class DistributionPackager:
 
         mirrorer = SpackCommand("mirror")
         with self.env:
-            print(f"Updating mirror at {self.mirror}....")
+            tty.msg(f"Updating mirror at {self.mirror}....")
             create_mirror_for_all_specs(
                 mirror_specs=filter_externals(self.env.all_specs()),
                 path=self.mirror,
@@ -293,12 +294,12 @@ class DistributionPackager:
                     os.path.relpath(self.path, self.env.path), 
                     os.path.basename(self.mirror),
                 )
-            print(f"Adding mirror to env: {self.env.name}....")
+            tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
                 mirrorer("add", "internal", mirror_path)
 
     def configure_bootstrap_mirror(self):
-        print(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
+        tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
         strapper = SpackCommand("bootstrap")
         strapper("mirror", "--binary-packages", self.bootstrap_mirror)
         bootstrap_source = os.path.join(
@@ -321,7 +322,7 @@ class DistributionPackager:
     def bundle_spack(self):
         os.makedirs(self.path, exist_ok=True)
         spack_install = os.path.join(self.path, "spack")
-        print(f"Packing up Spack installation to {spack_install}....")
+        tty.msg(f"Packing up Spack installation to {spack_install}....")
         ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
         copy_files_excluding_pattern(
             spack_root,
@@ -332,7 +333,7 @@ class DistributionPackager:
     def bundle_extra_data(self):
         if self.extra_data:
             os.makedirs(self.path, exist_ok=True)
-            print(f"Packaging up extra data to {self.path}....")
+            tty.msg(f"Packaging up extra data to {self.path}....")
             shutil.copytree(self.extra_data, self.path, dirs_exist_ok=True)
 
     def _write(self, data):
@@ -343,7 +344,7 @@ class DistributionPackager:
 
     def __enter__(self):
         self._cached_env = environment.active_environment()
-        print(f"Concretizing env: {self.orig.name}....")
+        tty.msg(f"Concretizing env: {self.orig.name}....")
         self.orig.concretize()
         self.orig.write()
         environment.deactivate()
