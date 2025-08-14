@@ -13,7 +13,7 @@ from ..manager_cmds import (
     create_dev_env,
     create_env,
     develop,
-    distribution
+    distribution,
     external,
     find_machine,
     include,
