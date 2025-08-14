@@ -8,7 +8,6 @@
 import pytest
 
 import spack.environment as ev
-import spack.extensions
 import spack.main
 
 env = spack.main.SpackCommand("env")

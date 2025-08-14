@@ -9,6 +9,7 @@ import os
 
 import pytest
 
+import spack.config
 import spack.environment as env
 import spack.main
 import spack.util.spack_yaml as syaml

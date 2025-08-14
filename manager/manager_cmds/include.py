@@ -8,10 +8,11 @@
 import os
 import sys
 
-import spack.extensions.manager.projects as projects
 import spack.llnl.util.tty as tty
-from spack.extensions.manager.manager_cmds.find_machine import find_machine, machine_defined
-from spack.extensions.manager.manager_cmds.includes_creator import IncludesCreator
+
+from .. import projects
+from .find_machine import find_machine, machine_defined
+from .includes_creator import IncludesCreator
 
 
 def include_creator(parser, args):

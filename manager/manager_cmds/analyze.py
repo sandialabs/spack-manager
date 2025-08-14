@@ -60,17 +60,13 @@ def setup_parser_args(subparser):
         help="clip the graph at nodes that satisfy these specs",
     )
     visitor_types.add_argument(
-        "--require-attribute",
-        "-r",
-        help="only include packages that have this package attribute",
+        "--require-attribute", "-r", help="only include packages that have this package attribute"
     )
     subparser.add_argument(
         "--stats", action="store_true", help="display stats for graph build/install"
     )
     subparser.add_argument(
-        "--graph",
-        action="store_true",
-        help="generate a dot file of the graph requested",
+        "--graph", action="store_true", help="generate a dot file of the graph requested"
     )
     subparser.add_argument(
         "--scale-nodes",
@@ -79,17 +75,12 @@ def setup_parser_args(subparser):
         help="scale graph nodes relative to the mean install time",
     )
     subparser.add_argument(
-        "--color",
-        "-c",
-        action="store_true",
-        help="color graph nodes based on the time to build",
+        "--color", "-c", action="store_true", help="color graph nodes based on the time to build"
     )
 
 
 def traverse_nodes_with_visitor(specs, visitor):
-    traverse.traverse_breadth_first_with_visitor(
-        specs, traverse.CoverNodesVisitor(visitor)
-    )
+    traverse.traverse_breadth_first_with_visitor(specs, traverse.CoverNodesVisitor(visitor))
     return visitor.accepted
 
 
@@ -169,10 +160,7 @@ class StatsGraphBuilder(DotGraphBuilder):
         scale_str = f"width={x} height={y} fixedsize=true fontsize={fontsize}"
         color_str = f'fillcolor="{color_compute if self.to_color else"lightblue"}"'
 
-        return (
-            node.dag_hash(),
-            f'[label="{node.format("{name}")}", {color_str}, {scale_str}]',
-        )
+        return (node.dag_hash(), f'[label="{node.format("{name}")}", {color_str}, {scale_str}]')
 
     def edge_entry(self, edge):
         return (edge.parent.dag_hash(), edge.spec.dag_hash(), None)

@@ -9,8 +9,8 @@
 Implementations for interacting and editing the spack-manager YAML config from the
 command line interface
 """
-import spack.extensions.manager as manager
-import spack.extensions.manager.projects as projects
+from ... import manager
+from .. import projects
 
 
 def _impl_add(parser, args):

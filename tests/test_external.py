@@ -7,14 +7,14 @@
 
 import os
 
+import manager.manager_cmds.external as m_external
 import pytest
+from manager.manager_cmds.external import external
+from manager.manager_utils import pruned_spec_string
 
 import spack.environment as ev
-import spack.extensions.manager.manager_cmds.external as m_external
 import spack.main
 import spack.util.spack_yaml as syaml
-from spack.extensions.manager.manager_cmds.external import external
-from spack.extensions.manager.manager_utils import pruned_spec_string
 from spack.spec import Spec
 
 env = spack.main.SpackCommand("env")
