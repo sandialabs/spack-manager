@@ -302,7 +302,7 @@ def test_DistributionPackager_configure_extensions(tmpdir):
     assert "extensions" not in content["spack"].get("config", {})
     for extension in expected_extensions:
         assert not os.path.isdir(extension)
-    
+
     with tmpdir.as_cwd():
         pkgr.configure_extensions()
     mod_content = get_manifest(pkgr.env)
