@@ -211,7 +211,9 @@ class DistributionPackager:
             os.makedirs(self.extensions)
             for extension in extensions:
                 shutil.copytree(
-                    extension, os.path.join(self.extensions, os.path.basename(extension))
+                    extension, 
+                    os.path.join(self.extensions, os.path.basename(extension)),
+                    ignore=shutil.ignore_patterns(".git*", "spack")
                 )
 
         tty.msg(f"Adding up extensions to env: {self.env.name}....")
