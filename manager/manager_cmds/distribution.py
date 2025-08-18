@@ -159,7 +159,7 @@ class DistributionPackager:
             shutil.rmtree(self.path)
         os.makedirs(self.path)
 
-    def finalize(self):
+    def filter_excludes_and_concretize(self):
         tty.msg(f"Writing manifest file for env: {self.env.name}....")
         env_data = get_env_as_dict(self.env)
         if self.excludes:
@@ -263,7 +263,7 @@ class DistributionPackager:
         env_data["spack"]["packages"] = package_settings
         self._write(env_data)
 
-    def configure_package_mirror(self):
+    def configure_source_mirror(self):
         # We do not want to omit any packages that are externals
         # just So They Build Faster internally, but are still needed externally.
         # However, this causes issues for packages that are not downloadable,
@@ -350,7 +350,7 @@ class DistributionPackager:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.finalize()
+        self.filter_excludes_and_concretize()
         self.clean()
         if self._cached_env:
             environment.activate(self._cached_env)
@@ -371,8 +371,8 @@ def distribution(parser, args):
         packager.configure_extensions()
         packager.configure_package_repos()
         packager.configure_package_settings()
-        packager.finalize()
-        packager.configure_package_mirror()
+        packager.filter_excludes_and_concretize()
+        packager.configure_source_mirror()
         packager.configure_bootstrap_mirror()
         packager.bundle_spack()
         packager.bundle_extra_data()

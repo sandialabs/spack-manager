@@ -180,7 +180,7 @@ def get_fake_concretize_env(path):
     return MockEnv(path)
 
 
-def test_DistributionPackager_finalize(tmpdir):
+def test_DistributionPackager_filter_excludes_and_concretize(tmpdir):
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(root, "environment", "spack.yaml")
     extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
@@ -190,7 +190,7 @@ def test_DistributionPackager_finalize(tmpdir):
 
     pkgr = distribution.DistributionPackager(None, root)
     pkgr._env = env
-    pkgr.finalize()
+    pkgr.filter_excludes_and_concretize()
 
     lockfile = os.path.join(env_dir, "spack.lock")
     content = get_manifest(pkgr.env)
@@ -200,7 +200,7 @@ def test_DistributionPackager_finalize(tmpdir):
     assert "specs" in content["spack"]
 
 
-def test_DistributionPackager_finalize_with_excludes(tmpdir):
+def test_DistributionPackager_filter_excludes_and_concretize_with_excludes(tmpdir):
     root = os.path.join(tmpdir.strpath, "root")
     exclude_dir = os.path.join(tmpdir.strpath, "excludes")
     exclude_file = os.path.join(exclude_dir, "packages.yaml")
@@ -216,7 +216,7 @@ def test_DistributionPackager_finalize_with_excludes(tmpdir):
 
     pkgr = distribution.DistributionPackager(None, root, excludes=exclude_dir)
     pkgr._env = env
-    pkgr.finalize()
+    pkgr.filter_excludes_and_concretize()
 
     lockfile = os.path.join(env_dir, "spack.lock")
     content = get_manifest(pkgr.env)
@@ -236,7 +236,7 @@ def test_DistributionPackager_clean(tmpdir):
     pkgr = distribution.DistributionPackager(None, root)
     pkgr._env = env
 
-    pkgr.finalize()
+    pkgr.filter_excludes_and_concretize()
     assert len(os.listdir(env_dir)) == 3
     pkgr.clean()
     env_assets = os.listdir(env_dir)
