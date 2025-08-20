@@ -216,7 +216,7 @@ class DistributionPackager:
                     ignore=shutil.ignore_patterns(".git*", "spack"),
                 )
 
-        tty.msg(f"Adding up extensions to env: {self.env.name}....")
+        tty.msg(f"Packaging up extensions to env: {self.env.name}....")
         sconfig = SpackCommand("config")
         with self.env:
             for extension in extensions:
@@ -238,7 +238,7 @@ class DistributionPackager:
         for repo in repos:
             shutil.copytree(repo, os.path.join(self.package_repos, os.path.basename(repo)))
 
-        tty.msg(f"Adding up repositories to env: {self.env.name}....")
+        tty.msg(f"Packaging up repositories to env: {self.env.name}....")
         sconfig = SpackCommand("config")
         with self.env:
             for repo in repos:
@@ -278,7 +278,6 @@ class DistributionPackager:
                 skip_unstable_versions=False,
             )
 
-        mirrorer = SpackCommand("mirror")
         with self.env:
             tty.msg(f"Updating mirror at {self.mirror}....")
             create_mirror_for_all_specs(
@@ -289,6 +288,8 @@ class DistributionPackager:
             mirror_path = os.path.join(
                 os.path.relpath(self.path, self.env.path), os.path.basename(self.mirror)
             )
+
+            mirrorer = SpackCommand("mirror")
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
                 mirrorer("add", "internal", mirror_path)

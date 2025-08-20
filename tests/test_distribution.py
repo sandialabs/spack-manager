@@ -5,9 +5,12 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import inspect
 import os
+from argparse import ArgumentParser
 
 import spack
+import spack.cmd.bootstrap as test_bootstrap_parse
 import spack.environment
 import spack.extensions.manager.manager_cmds.distribution as distribution
 import spack.util.spack_yaml
@@ -416,3 +419,103 @@ def test_DistributionPackager_context_creates_working_dir(tmpdir):
             assert spack.environment.active_environment() is None
             assert os.path.isdir(root)
         assert spack.environment.active_environment().name == env.name
+
+
+def test_DistributionPackager_configure_source_mirror_create_mirror_called_correctly(
+    tmpdir, monkeypatch
+):
+    valid_params = inspect.signature(distribution.create_mirror_for_all_specs).parameters.keys()
+
+    def mirror_for_specs(*args, **kwargs):
+        assert len(args) == 0
+        assert len(kwargs) == len(valid_params)
+        for kwarg in kwargs:
+            assert kwarg in valid_params
+
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = get_fake_concretize_env(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    monkeypatch.setattr(distribution, "create_mirror_for_all_specs", mirror_for_specs)
+    pkgr.configure_source_mirror()
+
+    content = get_manifest(pkgr.env)
+    expected = {"internal": "../mirror"}
+    assert "mirrors" in content["spack"]
+    assert content["spack"]["mirrors"] == expected
+
+
+def test_DistributionPackager_configure_source_mirror_created_in_correct_sequence(
+    tmpdir, monkeypatch
+):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    class Mock:
+        envs = [pkgr.env.path, env.path]
+
+        @classmethod
+        def mirror_for_specs(cls, *args, **kwargs):
+            assert spack.environment.active_environment().path == cls.envs.pop()
+
+    monkeypatch.setattr(distribution, "create_mirror_for_all_specs", Mock.mirror_for_specs)
+    pkgr.configure_source_mirror()
+
+    assert Mock.envs == []
+
+
+def test_DistributionPackager_configure_source_mirror_mirror_added_to_env(tmpdir, monkeypatch):
+    def mirror_for_specs(*args, **kwargs):
+        pass
+
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    monkeypatch.setattr(distribution, "create_mirror_for_all_specs", mirror_for_specs)
+    pkgr.configure_source_mirror()
+
+    content = get_manifest(pkgr.env)
+    assert "mirrors" in content["spack"]
+    assert content["spack"]["mirrors"] == {"internal": "../mirror"}
+
+
+def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    class MockCommand:
+        args = []
+        kwargs = {}
+        call_args = []
+
+        def __init__(self, *args, **kwargs):
+            self.args += list(args)
+            self.kwargs.update(kwargs)
+
+        def __call__(self, *args, **kwargs):
+            self.call_args.append(list(args))
+            self.kwargs.update(kwargs)
+
+    monkeypatch.setattr(distribution, "SpackCommand", MockCommand)
+    pkgr.configure_bootstrap_mirror()
+
+    assert MockCommand.args == ["bootstrap"]
+    assert MockCommand.kwargs == {}
+    assert len(MockCommand.call_args) == 3
+
+    parser = ArgumentParser()
+    test_bootstrap_parse.setup_parser(parser)
+    with pkgr.env:
+        for call in MockCommand.call_args:
+            parser.parse_args(call)
