@@ -329,14 +329,16 @@ def test_DistributionPackager_configure_repos(tmpdir):
     root = os.path.join(tmpdir.strpath, "root")
     pkgr = distribution.DistributionPackager(env, root)
 
-    expected_repo = {"mock-repo": os.path.join(pkgr.package_repos, os.path.basename(package_repo))}
+    expected_repo_dir = os.path.join(pkgr.package_repos, os.path.basename(package_repo))
     initial_config = get_manifest(pkgr.env)
-    assert not os.path.isdir(expected_repo["mock-repo"])
+    assert not os.path.isdir(expected_repo_dir)
     assert "repos" not in initial_config["spack"]
     pkgr.configure_package_repos()
     result_config = get_manifest(pkgr.env)
-    assert os.path.isdir(expected_repo["mock-repo"])
+    assert os.path.isdir(expected_repo_dir)
     assert "repos" in result_config["spack"]
+
+    expected_repo = {"mock-repo": f"../{os.path.basename(pkgr.package_repos)}/mock-repo"}
     assert expected_repo == result_config["spack"]["repos"]
 
 

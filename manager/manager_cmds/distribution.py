@@ -6,6 +6,7 @@ import spack.cmd
 import spack.config
 import spack.extensions
 import spack.llnl.util.tty as tty
+import spack.util.path
 import spack.util.spack_yaml
 from spack import environment
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
@@ -143,7 +144,7 @@ class DistributionPackager:
         self.extra_data = extra_data
 
         self.path = root
-        self.package_repos = os.path.join(self.path, "package-repos")
+        self.package_repos = os.path.join(self.path, "spack_repo")
         self.extensions = os.path.join(self.path, "extensions")
         self.mirror = os.path.join(self.path, "mirror")
         self.bootstrap_mirror = os.path.join(self.path, "bootstrap-mirror")
@@ -235,26 +236,25 @@ class DistributionPackager:
                     sconfig("add", f"config:extensions:[{extension}]")
 
     def configure_package_repos(self):
-        repos = {}
+        repos = set()
         with self.orig:
             for scope in valid_env_scopes(self.orig):
-                for name, repo in spack.config.get("repos", scope=scope).items():
-                    repos[name] = repo
+                for repo in spack.config.get("repos", scope=scope).values():
+                    repos.add(spack.util.path.canonicalize_path(repo))
 
         tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
-        for repo in repos.values():
-            shutil.copytree(repo, os.path.join(self.package_repos, os.path.basename(repo)))
-            print("Copied", repo, os.path.join(self.package_repos, os.path.basename(repo)))
+
+        to_write = {}
+        for repo in repos:
+            name = os.path.basename(repo)
+            to_write[name] = os.path.join(os.path.relpath(self.package_repos, self.env.path), name)
+            shutil.copytree(repo, os.path.join(self.package_repos, name))
 
         tty.msg(f"Adding repositories to env: {self.env.name}....")
-        repo_cmd = SpackCommand("repo")
-        with self.env:
-            with working_dir(self.env.path):
-                for name, repo in repos.items():
-                    repo = os.path.join(os.path.relpath(self.package_repos, self.env.path), name)
-                    with self.env.write_transaction():
-                        repo_cmd("add", "--scope", f"env:{self.env.name}", "--name", name, repo)
+        env = get_env_as_dict(self.env)
+        env["spack"]["repos"] = to_write
+        self._write(env)
 
     def configure_package_settings(self, filter_externals=False):
         tty.msg(f"Add package settings to env: {self.env.name}....")
