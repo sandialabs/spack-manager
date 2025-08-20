@@ -37,7 +37,10 @@ def add_command(parser, command_dict):
     subparser.add_argument(
         "--filter-externals",
         action="store_true",
-        help="Remove any package settings that declare a path to an external installation of the package's binaries",
+        help=(
+            "Remove any package settings that declare a path to an external "
+            "installation of the package's binaries"
+        ),
     )
     subparser.add_argument(
         "--extra-data",
