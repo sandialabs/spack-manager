@@ -35,6 +35,11 @@ def add_command(parser, command_dict):
         help="Directory containing yaml to be explicitly removed from packaged environment",
     )
     subparser.add_argument(
+        "--filter-externals",
+        action="store_true",
+        help="Remove any package settings that declare a path to an external installation of the package's binaries",
+    )
+    subparser.add_argument(
         "--extra-data",
         help=(
             "Directory where any aditional data to be copied "
@@ -248,13 +253,13 @@ class DistributionPackager:
                 with self.env.write_transaction():
                     sconfig("add", f"repos:[{repo}]")
 
-    def configure_package_settings(self):
+    def configure_package_settings(self, filter_externals=False):
         tty.msg(f"Add package settings to env: {self.env.name}....")
         with self.orig:
             package_settings = {}
             for scope in valid_env_scopes(self.orig):
                 for package, data in spack.config.get("packages", scope=scope).items():
-                    if "externals" not in data:
+                    if "externals" not in data or not filter_externals:
                         try:
                             package_settings[package].update(data)
                         except KeyError:
@@ -373,7 +378,7 @@ def distribution(parser, args):
         packager.configure_includes()
         packager.configure_extensions()
         packager.configure_package_repos()
-        packager.configure_package_settings()
+        packager.configure_package_settings(filter_externals=args.filter_externals)
         packager.filter_excludes_and_concretize()
         packager.configure_source_mirror()
         packager.configure_bootstrap_mirror()

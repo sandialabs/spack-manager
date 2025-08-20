@@ -356,10 +356,16 @@ def test_DistributionPackager_configure_package_settings(tmpdir):
 
     inital_config = get_manifest(pkgr.env)
     assert "packages" not in inital_config["spack"]
-    pkgr.configure_package_settings()
+    pkgr.configure_package_settings(filter_externals=True)
     result_config = get_manifest(pkgr.env)
     assert "packages" in result_config["spack"]
     assert good == result_config["spack"]["packages"]
+
+    pkgr.configure_package_settings(filter_externals=False)
+    new_result_config = get_manifest(pkgr.env)
+    new_expected = good.copy()
+    new_expected.update(bad)
+    assert new_expected == new_result_config["spack"]["packages"]
 
 
 def test_DistributionPackager_bundle_extra_data(tmpdir):
