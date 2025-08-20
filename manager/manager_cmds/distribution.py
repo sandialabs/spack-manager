@@ -6,7 +6,6 @@ import spack.cmd
 import spack.config
 import spack.extensions
 import spack.llnl.util.tty as tty
-import spack.util.path
 import spack.util.spack_yaml
 from spack import environment
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
@@ -63,7 +62,6 @@ def get_env_as_dict(env):
 
 
 def get_local_config(name, path):
-    # FIXME: Would it be better to use some portion of includes_creator here?
     sections = list(spack.config.SECTION_SCHEMAS.keys())
     scope = spack.config.DirectoryConfigScope(name, os.path.abspath(path))
 
@@ -167,7 +165,7 @@ class DistributionPackager:
             shutil.rmtree(self.path)
         os.makedirs(self.path)
 
-    def filter_excludes_and_concretize(self):
+    def filter_excludes(self):
         tty.msg(f"Writing manifest file for env: {self.env.name}....")
         env_data = get_env_as_dict(self.env)
         if self.excludes:
@@ -176,6 +174,8 @@ class DistributionPackager:
             remove_subset_from_dict(env_data["spack"], cfg)
         self._write(env_data)
 
+    def filter_excludes_and_concretize(self):
+        self.filter_excludes()
         tty.msg(f"Concretizing env: {self.env.name}....")
         self.env.concretize(force=True)
         self.env.write()
@@ -235,26 +235,26 @@ class DistributionPackager:
                     sconfig("add", f"config:extensions:[{extension}]")
 
     def configure_package_repos(self):
-        repos = set()
+        repos = {}
         with self.orig:
             for scope in valid_env_scopes(self.orig):
-                for repo in spack.config.get("repos", scope=scope).values():
-                    repos.add(spack.util.path.canonicalize_path(repo))
+                for name, repo in spack.config.get("repos", scope=scope).items():
+                    repos[name] = repo
 
         tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
-        for repo in repos:
+        for repo in repos.values():
             shutil.copytree(repo, os.path.join(self.package_repos, os.path.basename(repo)))
+            print("Copied", repo, os.path.join(self.package_repos, os.path.basename(repo)))
 
-        tty.msg(f"Packaging up repositories to env: {self.env.name}....")
-        sconfig = SpackCommand("config")
+        tty.msg(f"Adding repositories to env: {self.env.name}....")
+        repo_cmd = SpackCommand("repo")
         with self.env:
-            for repo in repos:
-                repo = os.path.join(
-                    os.path.relpath(self.package_repos, self.env.path), os.path.basename(repo)
-                )
-                with self.env.write_transaction():
-                    sconfig("add", f"repos:[{repo}]")
+            with working_dir(self.env.path):
+                for name, repo in repos.items():
+                    repo = os.path.join(os.path.relpath(self.package_repos, self.env.path), name)
+                    with self.env.write_transaction():
+                        repo_cmd("add", "--scope", f"env:{self.env.name}", "--name", name, repo)
 
     def configure_package_settings(self, filter_externals=False):
         tty.msg(f"Add package settings to env: {self.env.name}....")
@@ -267,8 +267,7 @@ class DistributionPackager:
                             package_settings[package].update(data)
                         except KeyError:
                             package_settings[package] = data
-        # FIXME: It seems cumbersome to spack config add every aspect of the pacakge settings.
-        # FIXME: Is there a better way?
+
         env_data = get_env_as_dict(self.env)
         env_data["spack"]["packages"] = package_settings
         self._write(env_data)
@@ -361,7 +360,7 @@ class DistributionPackager:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.filter_excludes_and_concretize()
+        self.filter_excludes()
         self.clean()
         if self._cached_env:
             environment.activate(self._cached_env)

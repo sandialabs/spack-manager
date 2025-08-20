@@ -321,7 +321,7 @@ def test_DistributionPackager_configure_repos(tmpdir):
     package_repo = os.path.join(tmpdir.strpath, "mock-repo")
     create_repo(package_repo)
 
-    extra_data = {"repos": [package_repo]}
+    extra_data = {"repos": {"mock-repo": package_repo}}
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest, extra_data=extra_data)
     env = spack.environment.Environment(os.path.dirname(manifest))
@@ -329,15 +329,15 @@ def test_DistributionPackager_configure_repos(tmpdir):
     root = os.path.join(tmpdir.strpath, "root")
     pkgr = distribution.DistributionPackager(env, root)
 
-    expected_repo = os.path.join(pkgr.package_repos, os.path.basename(package_repo))
+    expected_repo = {"mock-repo": os.path.join(pkgr.package_repos, os.path.basename(package_repo))}
     initial_config = get_manifest(pkgr.env)
-    assert not os.path.isdir(expected_repo)
+    assert not os.path.isdir(expected_repo["mock-repo"])
     assert "repos" not in initial_config["spack"]
     pkgr.configure_package_repos()
     result_config = get_manifest(pkgr.env)
-    assert os.path.isdir(expected_repo)
+    assert os.path.isdir(expected_repo["mock-repo"])
     assert "repos" in result_config["spack"]
-    assert os.path.relpath(expected_repo, pkgr.env.path) in result_config["spack"]["repos"]
+    assert expected_repo == result_config["spack"]["repos"]
 
 
 def test_DistributionPackager_configure_package_settings(tmpdir):
