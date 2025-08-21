@@ -68,3 +68,13 @@ Additional details about the philosophy, and general knowledge can be found in t
    :maxdepth: 3
 
    general/general
+
+Additional Commands
+===================
+
+In addition to Spack-Manager's core capabilities, Spack-Manager also provides a set of additional capabilities. Those capabilities are documented in the following section.
+
+.. toctree::
+   :maxdepth: 4
+
+   additional_commands/additional_commands
