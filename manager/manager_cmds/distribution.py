@@ -53,13 +53,7 @@ def add_command(parser, command_dict):
 
 
 def get_env_as_dict(env):
-    with env:
-        data = spack.config.CONFIG.scopes[f"env:{env.name}"].sections
-    env_data = {"spack": {}}
-    for item in data.values():
-        for k, v in item.items():
-            env_data["spack"][k] = v
-    return env_data
+    return spack.config.read_config_file(os.path.join(env.path, "spack.yaml"))
 
 
 def get_local_config(name, path):
@@ -91,7 +85,7 @@ def copy_files_excluding_pattern(src, dst, patterns):
                 dst_file = os.path.join(dst_dir, filename)
 
                 if not is_match(os.path.join(relative_path, filename), patterns):
-                    shutil.copy2(src_file, dst_file)
+                    shutil.copy2(src_file, dst_file, follow_symlinks=False)
 
 
 def remove_subset_from_dict(larger_dict, subset_dict):
