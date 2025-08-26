@@ -75,9 +75,9 @@ def get_manifest(env):
 
 def test_is_match():
     """
-    This test verifies that the `is_match` function correctly identifies whether a given file path
-    matches any of the specified glob patterns. The patterns used in this test file extensions and a
-    directory pattern. 
+    This test verifies that the `is_match` function correctly identifies whether a given file
+    path matches any of the specified glob patterns. The patterns used in this test file
+    extensions and a directory pattern.
     """
     patterns = ["*.yaml", "*.yml", "yaml/*"]
     assert distribution.is_match("file.yaml", patterns)
@@ -93,7 +93,7 @@ def test_copy_files_excluding_pattern(tmpdir):
     excluding files and directories that match specified patterns.
 
     This test creates a temporary directory structure with several files, and multiple levels
-    then invokes the `copy_files_excluding_pattern` function to copy files from the source 
+    then invokes the `copy_files_excluding_pattern` function to copy files from the source
     directory to the destination directory while ignoring files and directories that match the
     provided exclusion patterns.
     """
@@ -123,12 +123,12 @@ def test_copy_files_excluding_pattern(tmpdir):
 
 def test_remove_subset_from_dict():
     """
-    This test verifies that the `remove_subset_from_dict` function correctly removes specified keys 
-    and their associated values from a dictionary, including nested dictionaries and lists. 
-    
-    Keys should be recursively removed from the dictionary when their values become empty. In instances
-    where the value of the subset dictionary is a list, remove the entry in the list from the primary
-    dictionary if it exists.
+    This test verifies that the `remove_subset_from_dict` function correctly removes specified keys
+    and their associated values from a dictionary, including nested dictionaries and lists.
+
+    Keys should be recursively removed from the dictionary when their values become empty. In
+    instances where the value of the subset dictionary is a list, remove the entry in the list
+    from the primary dictionary if it exists.
     """
     data = {"a": 1, "b": {"c": 2, "d": 3}, "e": [1, 2, 3], "f": [1, 2]}
     subset = {"a": None, "b": {"c": None}, "e": [1], "f": [1, 2]}
@@ -139,8 +139,8 @@ def test_remove_subset_from_dict():
 
 def test_remove_subset_from_dict_invalid_subset():
     """
-    This test verifies that the `remove_subset_from_dict` function does not modify the primary dictionary 
-    if the subset dictionary is not a valid subset of the primary dictionary. 
+    This test verifies that the `remove_subset_from_dict` function does not modify the primary
+    dictionary if the subset dictionary is not a valid subset of the primary dictionary.
     """
     data = {"a": 1}
     orig = data.copy()
@@ -151,8 +151,8 @@ def test_remove_subset_from_dict_invalid_subset():
 
 def test_get_env_as_dict(tmpdir):
     """
-    This test verifies that the `get_env_as_dict` returns the contents of a valid spack manifest file in
-    dictionary form.
+    This test verifies that the `get_env_as_dict` returns the contents of a
+    valid spack manifest file in dictionary form.
     """
     manifest = os.path.join(tmpdir.strpath, "env", "spack.yaml")
     data = create_spack_manifest(manifest)
@@ -163,8 +163,9 @@ def test_get_env_as_dict(tmpdir):
 
 def test_get_local_config(tmpdir):
     """
-    This test verifies that the `get_local_config` returns the contents of a valid set spack YAML files in
-    dictionary form when given a directory containing those files.
+    This test verifies that the `get_local_config` returns the contents
+    of a valid set spack YAML files in dictionary form when given a
+    directory containing those files.
     """
     exclude_dir = os.path.join(tmpdir.strpath, "dir")
     packages = os.path.join(exclude_dir, "packages.yaml")
@@ -183,9 +184,10 @@ def test_get_local_config(tmpdir):
 
 def test_get_valid_env_scopes(tmpdir):
     """
-    This test verifies that `valid_env_scopes` returns a resonable set of spack config scopes.
-    `valid_env_scopes` defines the possible set of scopes from which the distribution module expects
-    to grab data (the environemnt and any included scope)
+    This test verifies that `valid_env_scopes` returns a resonable set of
+    spack config scopes. `valid_env_scopes` defines the possible set of scopes
+    from which the distribution module expects to grab data
+    (the environemnt and any included scope)
     """
     manifest = os.path.join(tmpdir.strpath, "env", "spack.yaml")
     packages = os.path.join(tmpdir.strpath, "dir", "packages.yaml")
@@ -202,8 +204,9 @@ def test_get_valid_env_scopes(tmpdir):
 
 def test_DistributionPackager_init_distro_dir(tmpdir):
     """
-    This test verifies that `init_distro_dir` correctly creates a directory for the distribution to be packaged.
-    If the directory already exists, the test asserts that the contents are wiped and the directory is re-created.
+    This test verifies that `init_distro_dir` correctly creates a directory
+    for the distribution to be packaged. If the directory already exists,
+    the test asserts that the contents are wiped and the directory is re-created.
     """
     root = os.path.join(tmpdir.strpath, "root")
 
@@ -234,7 +237,8 @@ def get_fake_concretize_env(path):
 
 def test_DistributionPackager_filter_excludes_no_excludes(tmpdir):
     """
-    This test verifies that `filter_excludes` does not modify the existing environment when no excludes are passed.
+    This test verifies that `filter_excludes` does not modify the existing
+    environment when no excludes are passed.
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(root, "environment", "spack.yaml")
@@ -254,7 +258,8 @@ def test_DistributionPackager_filter_excludes_no_excludes(tmpdir):
 
 def test_DistributionPackager_filter_excludes_with_excludes(tmpdir):
     """
-    This test verifies that `filter_excludes` correctly modifies the environment when an exclude dir is passed.
+    This test verifies that `filter_excludes` correctly modifies the environment
+    when an exclude dir is passed.
     """
     root = os.path.join(tmpdir.strpath, "root")
     exclude_dir = os.path.join(tmpdir.strpath, "excludes")
@@ -280,7 +285,8 @@ def test_DistributionPackager_filter_excludes_with_excludes(tmpdir):
 
 def test_concretzie(tmpdir):
     """
-    This test verifies that `concretize` method calls env.concretize() on the environment being created.
+    This test verifies that `concretize` method calls env.concretize() on the
+    environment being created.
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(root, "environment", "spack.yaml")
@@ -298,7 +304,8 @@ def test_concretzie(tmpdir):
 
 def test_DistributionPackager_remove_unwanted_artifacts(tmpdir):
     """
-    This test verifies that `remove_unwanted_artifacts` removes files created by concretizing the environment.
+    This test verifies that `remove_unwanted_artifacts` removes files
+    created by concretizing the environment.
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(root, "environment", "spack.yaml")
@@ -319,9 +326,10 @@ def test_DistributionPackager_remove_unwanted_artifacts(tmpdir):
 
 def test_DistributionPackager_configure_includes(tmpdir):
     """
-    This test verifies that `configure_includes` copies a directory of yaml files to be included in the environment
-    into the environment being created and adds a relative path to the copied directory to the spack.yaml that is being
-    constructed.
+    This test verifies that `configure_includes` copies a directory of
+    yaml files to be included in the environment into the environment
+    being created and adds a relative path to the copied directory to
+    the spack.yaml that is being constructed.
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
@@ -347,8 +355,8 @@ def test_DistributionPackager_configure_includes(tmpdir):
 
 def test_DistributionPackager_configure_specs(tmpdir):
     """
-    This test verifies that `configure_specs` adds all specs in the current environment to the environment
-    being created
+    This test verifies that `configure_specs` adds all specs in the current
+    environment to the environment being created
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
@@ -365,8 +373,9 @@ def test_DistributionPackager_configure_specs(tmpdir):
 
 def test_DistributionPackager_configure_extensions(tmpdir):
     """
-    This test verifies that `configure_extensions` copies any extensions defined in the current environment
-    into the environment being created and adds a relative path to the copied extension to the spack.yaml that
+    This test verifies that `configure_extensions` copies any extensions
+    defined in the current environment into the environment being created
+    and adds a relative path to the copied extension to the spack.yaml that
     is being constructed.
     """
     root = os.path.join(tmpdir.strpath, "root")
@@ -403,9 +412,9 @@ def test_DistributionPackager_configure_extensions(tmpdir):
 
 def test_DistributionPackager_configure_repos(tmpdir):
     """
-    This test verifies that `configure_repos` copies all package repositories defined in the environment into the
-    environment being created and adds a relative path to the copyied repositories to the spack.yaml that is being
-    constructed.
+    This test verifies that `configure_repos` copies all package repositories defined in
+    the environment into the environment being created and adds a relative path to the
+    copied repositories to the spack.yaml that is being constructed.
     """
     package_repo = os.path.join(tmpdir.strpath, "mock-repo")
     create_repo(package_repo)
@@ -433,9 +442,10 @@ def test_DistributionPackager_configure_repos(tmpdir):
 
 def test_DistributionPackager_configure_package_settings(tmpdir):
     """
-    This test verifies that `configure_package_settings` copies the contents of the `packages` scope from
-    the current environment to the environment being copied.  This test asserts that all packages are copied
-    if `filter_externals` is `False` and that any packages defined as `external` are excluded from the new environment
+    This test verifies that `configure_package_settings` copies the contents of
+    the `packages` scope from the current environment to the environment being copied.
+    This test asserts that all packages are copied if `filter_externals` is `False`
+    and that any packages defined as `external` are excluded from the new environment
     when `filter_externals` is `True`.
     """
     good = {"all": {"prefer": ["generator=Ninja"]}}
@@ -467,8 +477,8 @@ def test_DistributionPackager_configure_package_settings(tmpdir):
 
 def test_DistributionPackager_bundle_extra_data(tmpdir):
     """
-    This test verifies that `bundle_extra_data` recursively copies the contents of the the `extra_data` path into
-    the root of the distro dir being created.
+    This test verifies that `bundle_extra_data` recursively copies the contents of the the
+    `extra_data` path into the root of the distro dir being created.
     """
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
@@ -538,8 +548,8 @@ def test_DistributionPackager_configure_source_mirror_create_mirror_called_corre
     tmpdir, monkeypatch
 ):
     """
-    This test verifies that `configure_source_mirror` does not construct a call to `create_mirror_for_all_specs` that
-    violates its API.
+    This test verifies that `configure_source_mirror` does not construct a call to
+    `create_mirror_for_all_specs` that violates its API.
     """
     valid_params = inspect.signature(distribution.create_mirror_for_all_specs).parameters.keys()
 
@@ -568,9 +578,10 @@ def test_DistributionPackager_configure_source_mirror_created_in_correct_sequenc
     tmpdir, monkeypatch
 ):
     """
-    This test verifies that `configure_source_mirror` correctly constructs the source mirror. Because of nuances of 
-    when access is available to source code that is access-controlled, the source mirror must be created using two
-    calls under specific conditions.  This test validates the call sequence is correct.
+    This test verifies that `configure_source_mirror` correctly constructs the source mirror.
+    Because of nuances of when access is available to source code that is access-controlled,
+    the source mirror must be created using two calls under specific conditions.  This test
+    validates the call sequence is correct.
     """
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
@@ -593,8 +604,10 @@ def test_DistributionPackager_configure_source_mirror_created_in_correct_sequenc
 
 def test_DistributionPackager_configure_source_mirror_mirror_added_to_env(tmpdir, monkeypatch):
     """
-    This test verifies that `configure_source_mirror` adds a relative path to the created mirror to the new environment.
+    This test verifies that `configure_source_mirror` adds a relative path to the created
+    mirror to the new environment.
     """
+
     def mirror_for_specs(*args, **kwargs):
         pass
 
@@ -614,8 +627,8 @@ def test_DistributionPackager_configure_source_mirror_mirror_added_to_env(tmpdir
 
 def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
     """
-    This test verifies that `configure_bootstrap_mirror` does not construct a call to `spack bootstrap` that
-    violates its API.
+    This test verifies that `configure_bootstrap_mirror` does not construct a call to
+    `spack bootstrap` that violates its API.
     """
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
