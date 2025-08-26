@@ -52,18 +52,18 @@ def add_command(parser, command_dict):
     command_dict["distribution"] = distribution
 
 
+def _read_config(filename):
+    return spack.config.read_config_file(filename)
+
+
 def get_env_as_dict(env):
-    return spack.config.read_config_file(os.path.join(env.path, "spack.yaml"))
+    return _read_config(os.path.join(env.path, "spack.yaml"))
 
 
-def get_local_config(name, path):
-    sections = list(spack.config.SECTION_SCHEMAS.keys())
-    scope = spack.config.DirectoryConfigScope(name, os.path.abspath(path))
-
+def get_local_config(path):
     little_config = {}
-    for section in sections:
-        if scope.get_section(section):
-            little_config.update(scope.get_section(section))
+    for f in os.listdir(path):
+        little_config.update(_read_config(os.path.join(path, f)))
     return little_config
 
 
@@ -102,19 +102,14 @@ def remove_subset_from_dict(larger_dict, subset_dict):
             if not value:
                 del larger_dict[key]
             elif isinstance(value, dict) and isinstance(larger_dict[key], dict):
-                # Recursively remove nested dictionaries
                 remove_subset_from_dict(larger_dict[key], value)
-                # If the nested dictionary becomes empty, remove the key
                 if not larger_dict[key]:
                     del larger_dict[key]
             elif isinstance(value, list) and isinstance(larger_dict[key], list):
-                # Remove matching items from the list
                 larger_dict[key] = [item for item in larger_dict[key] if item not in value]
-                # If the list becomes empty, remove the key
                 if not larger_dict[key]:
                     del larger_dict[key]
             elif larger_dict[key] == value:
-                # Remove the key if the value matches
                 del larger_dict[key]
     return larger_dict
 
@@ -132,7 +127,7 @@ def bundle_spack(location):
 
 class DistributionPackager:
     def __init__(self, env, root, includes=None, excludes=None, extra_data=None):
-        self.orig = env
+        self.environment_to_package = env
         self.includes = includes
         self.excludes = excludes
         self.extra_data = extra_data
@@ -147,6 +142,22 @@ class DistributionPackager:
         self._env = None
         self._cached_env = None
 
+    def __enter__(self):
+        self._cached_env = environment.active_environment()
+        tty.msg(f"Concretizing env: {self.environment_to_package.name}....")
+        self.environment_to_package.concretize()
+        self.environment_to_package.write()
+        environment.deactivate()
+        self.init_distro_dir()
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.filter_excludes()
+        self.remove_unwanted_artifacts()
+        if self._cached_env:
+            environment.activate(self._cached_env)
+
     @property
     def env(self):
         if self._env is None:
@@ -154,7 +165,7 @@ class DistributionPackager:
             self._env = environment.create_in_dir(epath, keep_relative=True)
         return self._env
 
-    def wipe_n_make(self):
+    def init_distro_dir(self):
         tty.msg("Precleaning....")
         if os.path.isdir(self.path):
             shutil.rmtree(self.path)
@@ -165,17 +176,16 @@ class DistributionPackager:
         env_data = get_env_as_dict(self.env)
         if self.excludes:
             tty.msg(f"Processing settings to exclude from env: {self.env.name}....")
-            cfg = get_local_config("exclude", self.excludes)
+            cfg = get_local_config(self.excludes)
             remove_subset_from_dict(env_data["spack"], cfg)
         self._write(env_data)
 
-    def filter_excludes_and_concretize(self):
-        self.filter_excludes()
+    def concretize(self):
         tty.msg(f"Concretizing env: {self.env.name}....")
         self.env.concretize(force=True)
         self.env.write()
 
-    def clean(self):
+    def remove_unwanted_artifacts(self):
         for item in os.listdir(self.env.path):
             fullname = os.path.join(self.env.path, item)
             if "spack.yaml" in item:
@@ -197,8 +207,8 @@ class DistributionPackager:
                     sconfig("add", f"include:[{includes}]")
 
     def configure_specs(self):
-        with self.orig:
-            specs = self.orig.user_specs.specs_as_yaml_list
+        with self.environment_to_package:
+            specs = self.environment_to_package.user_specs.specs_as_yaml_list
 
         adder = SpackCommand("add")
         tty.msg(f"Adding specs to env: {self.env.name}....")
@@ -208,7 +218,7 @@ class DistributionPackager:
                     adder(spec)
 
     def configure_extensions(self):
-        with self.orig:
+        with self.environment_to_package:
             extensions = spack.extensions.get_extension_paths()
             tty.msg(f"Packing up extensions to {self.extensions}....")
             os.makedirs(self.extensions)
@@ -231,8 +241,8 @@ class DistributionPackager:
 
     def configure_package_repos(self):
         repos = set()
-        with self.orig:
-            for scope in valid_env_scopes(self.orig):
+        with self.environment_to_package:
+            for scope in valid_env_scopes(self.environment_to_package):
                 for repo in spack.config.get("repos", scope=scope).values():
                     repos.add(spack.util.path.canonicalize_path(repo))
 
@@ -252,9 +262,9 @@ class DistributionPackager:
 
     def configure_package_settings(self, filter_externals=False):
         tty.msg(f"Add package settings to env: {self.env.name}....")
-        with self.orig:
+        with self.environment_to_package:
             package_settings = {}
-            for scope in valid_env_scopes(self.orig):
+            for scope in valid_env_scopes(self.environment_to_package):
                 for package, data in spack.config.get("packages", scope=scope).items():
                     if "externals" not in data or not filter_externals:
                         try:
@@ -271,10 +281,10 @@ class DistributionPackager:
         # just So They Build Faster internally, but are still needed externally.
         # However, this causes issues for packages that are not downloadable,
         # so we do a first-shot mirror creation with the original environment active.
-        with self.orig:
+        with self.environment_to_package:
             tty.msg(f"Creating mirror at {self.mirror}....")
             create_mirror_for_all_specs(
-                mirror_specs=filter_externals(self.orig.all_specs()),
+                mirror_specs=filter_externals(self.environment_to_package.all_specs()),
                 path=self.mirror,
                 skip_unstable_versions=False,
             )
@@ -343,22 +353,6 @@ class DistributionPackager:
         with open(os.path.join(self.env.path, "spack.yaml"), "w") as outf:
             spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
 
-    def __enter__(self):
-        self._cached_env = environment.active_environment()
-        tty.msg(f"Concretizing env: {self.orig.name}....")
-        self.orig.concretize()
-        self.orig.write()
-        environment.deactivate()
-        self.wipe_n_make()
-
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.filter_excludes()
-        self.clean()
-        if self._cached_env:
-            environment.activate(self._cached_env)
-
 
 def distribution(parser, args):
     env = spack.cmd.require_active_env(cmd_name="manager distribution")
@@ -375,7 +369,8 @@ def distribution(parser, args):
         packager.configure_extensions()
         packager.configure_package_repos()
         packager.configure_package_settings(filter_externals=args.filter_externals)
-        packager.filter_excludes_and_concretize()
+        packager.filter_excludes()
+        packager.concretize()
         packager.configure_source_mirror()
         packager.configure_bootstrap_mirror()
         packager.bundle_spack()
