@@ -3,8 +3,7 @@
 # Government retains certain rights in this software.
 #
 # This software is released under the BSD 3-clause license. See LICENSE file
-# for more details.
-
+# for more details
 from ..manager_cmds import (
     binary_finder,
     cache_query,
@@ -12,6 +11,7 @@ from ..manager_cmds import (
     create_dev_env,
     create_env,
     develop,
+    distribution,
     external,
     find_machine,
     include,
@@ -49,6 +49,7 @@ def setup_parser(subparser):
     create_env.add_command(sp, _subcommands)
     create_dev_env.add_command(sp, _subcommands)
     develop.add_command(sp, _subcommands)
+    distribution.add_command(sp, _subcommands)
     lock_diff.add_command(sp, _subcommands)
     external.add_command(sp, _subcommands)
     find_machine.add_command(sp, _subcommands)
