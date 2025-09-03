@@ -406,11 +406,10 @@ def correct_mirror_args(env, args):
             args.source_only = True
             break
     if args.source_only and args.binary_only:
-        tty.error(
+        tty.die(
             "Binary distribution requested, but the environment does not "
             "include the necessary installed binary packages"
         )
-        raise SystemExit(1)
 
 
 def distribution(parser, args):
