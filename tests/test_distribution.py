@@ -403,7 +403,6 @@ def test_DistributionPackager_configure_extensions(tmpdir):
     with tmpdir.as_cwd():
         pkgr.configure_extensions()
     mod_content = get_manifest(pkgr.env)
-    print("content", mod_content)
 
     for extension in expected_extensions:
         assert os.path.isdir(os.path.join(pkgr.env.path, extension))
@@ -423,7 +422,7 @@ def test_DistributionPackager_configure_repos(tmpdir):
     package_repo2 = os.path.join(tmpdir.strpath, "mock_repo2")
     create_repo(package_repo2)
 
-    data = OrderedDict()
+    data = spack.util.spack_yaml.syaml_dict()
     data["mock_repo"] = package_repo
     data["mock_repo2"] = package_repo2
 
@@ -444,7 +443,7 @@ def test_DistributionPackager_configure_repos(tmpdir):
     assert os.path.isdir(expected_repo_dir)
     assert "repos" in result_config["spack"]
 
-    expected = OrderedDict()
+    expected = spack.util.spack_yaml.syaml_dict()
     for key, val in data.items():
         expected[key] = f"../{os.path.basename(pkgr.package_repos)}/{os.path.basename(val)}"
 
@@ -460,7 +459,7 @@ def test_DistributionPackager_configure_package_settings(tmpdir):
     when `filter_externals` is `True`.
     """
     good = {"all": {"prefer": ["generator=Ninja"]}}
-    bad = {"cmake": {"externals": [{"spec": "cmake@1.2.3", "path": "/foo/bar"}]}}
+    bad = {"cmake": {"externals": [{"spec": "cmake@1.2.3", "prefix": "/foo/bar"}]}}
 
     extra_data = {"packages": {}}
     extra_data["packages"].update(good)
