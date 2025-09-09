@@ -8,7 +8,6 @@
 import inspect
 import os
 from argparse import ArgumentParser
-from collections import OrderedDict
 
 import spack
 import spack.cmd.bootstrap as test_bootstrap_parse
