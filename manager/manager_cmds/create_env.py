@@ -46,10 +46,7 @@ def create_env(parser, args):
             manifest.add_user_spec(str(s))
 
     if args.local_source:
-        if spack.spack_version_info[0:3] < (0, 23, 0):
-            manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
-        else:
-            manifest.set_config_value("config", "install_tree", "$env/opt")
+        manifest.set_config_value("config", "install_tree", {"root": "$env/opt"})
 
     # handle includes, if it is not set up right then nothing gets created
     include_dict = {"machine": args.machine, "dir": theDir, "file": "include.yaml"}
