@@ -52,7 +52,7 @@ def {base_name}(parser, args):
 
 def create_repo(path):
     os.makedirs(path)
-    data = {"repo": {"namespace": "test"}}
+    data = {"repo": {"namespace": os.path.basename(path)}}
     with open(os.path.join(path, "repo.yaml"), "w") as f:
         spack.util.spack_yaml.dump(data, f, default_flow_style=False)
     package = os.path.join(path, "packages", "test")
@@ -402,7 +402,6 @@ def test_DistributionPackager_configure_extensions(tmpdir):
     with tmpdir.as_cwd():
         pkgr.configure_extensions()
     mod_content = get_manifest(pkgr.env)
-    print("content", mod_content)
 
     for extension in expected_extensions:
         assert os.path.isdir(os.path.join(pkgr.env.path, extension))
@@ -416,10 +415,17 @@ def test_DistributionPackager_configure_repos(tmpdir):
     the environment into the environment being created and adds a relative path to the
     copied repositories to the spack.yaml that is being constructed.
     """
-    package_repo = os.path.join(tmpdir.strpath, "mock-repo")
+    package_repo = os.path.join(tmpdir.strpath, "mock_repo")
     create_repo(package_repo)
 
-    extra_data = {"repos": {"mock-repo": package_repo}}
+    package_repo2 = os.path.join(tmpdir.strpath, "mock_repo2")
+    create_repo(package_repo2)
+
+    data = spack.util.spack_yaml.syaml_dict()
+    data["mock_repo"] = package_repo
+    data["mock_repo2"] = package_repo2
+
+    extra_data = {"repos": data}
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest, extra_data=extra_data)
     env = spack.environment.Environment(os.path.dirname(manifest))
@@ -436,8 +442,11 @@ def test_DistributionPackager_configure_repos(tmpdir):
     assert os.path.isdir(expected_repo_dir)
     assert "repos" in result_config["spack"]
 
-    expected_repo = {"mock-repo": f"../{os.path.basename(pkgr.package_repos)}/mock-repo"}
-    assert expected_repo == result_config["spack"]["repos"]
+    expected = spack.util.spack_yaml.syaml_dict()
+    for key, val in data.items():
+        expected[key] = f"../{os.path.basename(pkgr.package_repos)}/{os.path.basename(val)}"
+
+    assert expected == result_config["spack"]["repos"]
 
 
 def test_DistributionPackager_configure_package_settings(tmpdir):
@@ -449,7 +458,7 @@ def test_DistributionPackager_configure_package_settings(tmpdir):
     when `filter_externals` is `True`.
     """
     good = {"all": {"prefer": ["generator=Ninja"]}}
-    bad = {"cmake": {"externals": [{"spec": "cmake@1.2.3", "path": "/foo/bar"}]}}
+    bad = {"cmake": {"externals": [{"spec": "cmake@1.2.3", "prefix": "/foo/bar"}]}}
 
     extra_data = {"packages": {}}
     extra_data["packages"].update(good)

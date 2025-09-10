@@ -4,11 +4,11 @@ import shutil
 
 import spack.cmd
 import spack.config
+import spack.environment
 import spack.extensions
 import spack.llnl.util.tty as tty
 import spack.util.path
 import spack.util.spack_yaml
-from spack import environment
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
 from spack.llnl.util.filesystem import working_dir
 from spack.main import SpackCommand
@@ -143,11 +143,11 @@ class DistributionPackager:
         self._cached_env = None
 
     def __enter__(self):
-        self._cached_env = environment.active_environment()
+        self._cached_env = spack.environment.active_environment()
         tty.msg(f"Concretizing env: {self.environment_to_package.name}....")
         self.environment_to_package.concretize()
         self.environment_to_package.write()
-        environment.deactivate()
+        spack.environment.deactivate()
         self.init_distro_dir()
 
         return self
@@ -156,13 +156,13 @@ class DistributionPackager:
         self.filter_excludes()
         self.remove_unwanted_artifacts()
         if self._cached_env:
-            environment.activate(self._cached_env)
+            spack.environment.activate(self._cached_env)
 
     @property
     def env(self):
         if self._env is None:
             epath = os.path.join(self.path, "environment")
-            self._env = environment.create_in_dir(epath, keep_relative=True)
+            self._env = spack.environment.create_in_dir(epath, keep_relative=True)
         return self._env
 
     def init_distro_dir(self):
@@ -240,24 +240,25 @@ class DistributionPackager:
                     sconfig("add", f"config:extensions:[{extension}]")
 
     def configure_package_repos(self):
-        repos = set()
         with self.environment_to_package:
+            repos = spack.util.spack_yaml.syaml_dict()
             for scope in valid_env_scopes(self.environment_to_package):
-                for repo in spack.config.get("repos", scope=scope).values():
-                    repos.add(spack.util.path.canonicalize_path(repo))
+                repos.update(spack.config.get("repos", scope=scope))
 
         tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
 
-        to_write = {}
-        for repo in repos:
-            name = os.path.basename(repo)
-            to_write[name] = os.path.join(os.path.relpath(self.package_repos, self.env.path), name)
-            shutil.copytree(repo, os.path.join(self.package_repos, name))
+        for name, repo in repos.items():
+            repo = spack.util.path.canonicalize_path(repo)
+            basename = os.path.basename(repo)
+            repos[name] = os.path.join(
+                os.path.relpath(self.package_repos, self.env.path), basename
+            )
+            shutil.copytree(repo, os.path.join(self.package_repos, basename))
 
         tty.msg(f"Adding repositories to env: {self.env.name}....")
         env = get_env_as_dict(self.env)
-        env["spack"]["repos"] = to_write
+        env["spack"]["repos"] = repos
         self._write(env)
 
     def configure_package_settings(self, filter_externals=False):
