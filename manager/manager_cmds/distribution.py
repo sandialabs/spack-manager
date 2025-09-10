@@ -3,15 +3,15 @@ import os
 import shutil
 
 import spack.cmd
+import spack.cmd.mirror
 import spack.config
+import spack.environment
 import spack.extensions
 import spack.llnl.util.tty as tty
+import spack.llnl.util.filesystem as fs
 import spack.util.path
 import spack.util.spack_yaml
-import spack.verify
-from spack import environment
-from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
-from spack.llnl.util.filesystem import working_dir
+import spack.spec
 from spack.main import SpackCommand
 from spack.paths import spack_root
 
@@ -162,11 +162,11 @@ class DistributionPackager:
         self._cached_env = None
 
     def __enter__(self):
-        self._cached_env = environment.active_environment()
+        self._cached_env = spack.environment.active_environment()
         tty.msg(f"Concretizing env: {self.environment_to_package.name}....")
         self.environment_to_package.concretize()
         self.environment_to_package.write()
-        environment.deactivate()
+        spack.environment.deactivate()
         self.init_distro_dir()
 
         return self
@@ -175,13 +175,13 @@ class DistributionPackager:
         self.filter_excludes()
         self.remove_unwanted_artifacts()
         if self._cached_env:
-            environment.activate(self._cached_env)
+            spack.environment.activate(self._cached_env)
 
     @property
     def env(self):
         if self._env is None:
             epath = os.path.join(self.path, "environment")
-            self._env = environment.create_in_dir(epath, keep_relative=True)
+            self._env = spack.environment.create_in_dir(epath, keep_relative=True)
         return self._env
 
     def init_distro_dir(self):
@@ -259,24 +259,25 @@ class DistributionPackager:
                     sconfig("add", f"config:extensions:[{extension}]")
 
     def configure_package_repos(self):
-        repos = set()
         with self.environment_to_package:
+            repos = spack.util.spack_yaml.syaml_dict()
             for scope in valid_env_scopes(self.environment_to_package):
-                for repo in spack.config.get("repos", scope=scope).values():
-                    repos.add(spack.util.path.canonicalize_path(repo))
+                repos.update(spack.config.get("repos", scope=scope))
 
         tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
 
-        to_write = {}
-        for repo in repos:
-            name = os.path.basename(repo)
-            to_write[name] = os.path.join(os.path.relpath(self.package_repos, self.env.path), name)
-            shutil.copytree(repo, os.path.join(self.package_repos, name))
+        for name, repo in repos.items():
+            repo = spack.util.path.canonicalize_path(repo)
+            basename = os.path.basename(repo)
+            repos[name] = os.path.join(
+                os.path.relpath(self.package_repos, self.env.path), basename
+            )
+            shutil.copytree(repo, os.path.join(self.package_repos, basename))
 
         tty.msg(f"Adding repositories to env: {self.env.name}....")
         env = get_env_as_dict(self.env)
-        env["spack"]["repos"] = to_write
+        env["spack"]["repos"] = repos
         self._write(env)
 
     def configure_package_settings(self, filter_externals=False):
@@ -302,16 +303,16 @@ class DistributionPackager:
         # so we do a first-shot mirror creation with the original environment active.
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
-            create_mirror_for_all_specs(
-                mirror_specs=filter_externals(self.environment_to_package.all_specs()),
+            spack.cmd.mirror.create_mirror_for_all_specs(
+                mirror_specs=spack.cmd.mirror.filter_externals(self.environment_to_package.all_specs()),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
             )
 
         with self.env:
             tty.msg(f"Updating mirror at {self.source_mirror}....")
-            create_mirror_for_all_specs(
-                mirror_specs=filter_externals(self.env.all_specs()),
+            spack.cmd.mirror.create_mirror_for_all_specs(
+                mirror_specs=spack.cmd.mirror.filter_externals(self.env.all_specs()),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
             )
@@ -324,21 +325,24 @@ class DistributionPackager:
             with self.env.write_transaction():
                 mirrorer("add", "internal-source", mirror_path)
 
-    def configure_binary_mirror(self):
+    def configure_binary_mirror(self): 
         cacher = SpackCommand("buildcache")
         with self.environment_to_package:
             tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
             cacher("push", "--unsigned", self.binary_mirror)
+            cacher("keys", "--install", "--trust")
 
         mirrorer = SpackCommand("mirror")
         mirror_path = os.path.join(
             os.path.relpath(self.path, self.env.path), os.path.basename(self.binary_mirror)
         )
+        mirror_name = "internal-binary"
 
-        with self.env:
+        with self.env:  
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
-                mirrorer("add", "--type", "binary", "internal-binary", mirror_path)
+                mirrorer("add", "--type", "binary", "--unsigned", mirror_name, mirror_path)
+
 
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
@@ -351,7 +355,7 @@ class DistributionPackager:
             os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
         )
         with self.env:
-            with working_dir(self.env.path):
+            with fs.working_dir(self.env.path):
                 with self.env.write_transaction():
                     strapper(
                         "add",
@@ -389,27 +393,25 @@ class DistributionPackager:
             spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
 
 
+def is_installed(spec):
+    status = True
+    for dependency in spec.dependencies(deptype="run"):
+        status = is_installed(dependency)
+    bad_statuses = [spack.spec.InstallStatus.absent, spack.spec.InstallStatus.missing]
+    return status and spec.install_status() not in bad_statuses
+
+
 def correct_mirror_args(env, args):
-    if args.source_only:
-        return
-    if not env.concretized_specs():
-        tty.warn("No installed specs detected, defaulting to source-only package")
-        args.source_only = True
-    for _, concretized in env.concretized_specs():
-        verification = spack.verify.check_spec_manifest(concretized)
-        if verification.has_errors():
-            tty.warn(
-                "The following installation errors were detected, "
-                "defaulting to source-only package"
+    specs_to_check = env.concretized_specs()
+    has_installed_specs = all([len(specs_to_check)] + [is_installed(x) for _, x in specs_to_check])
+    if not args.source_only and not has_installed_specs:
+        tty.warn("Environment contains uninstalled specs, defaulting to source-only package")
+        if args.binary_only:
+            tty.die(
+                "Binary distribution requested, but the environment does not "
+                "include the necessary installed binary packages"
             )
-            tty.warn(verification)
-            args.source_only = True
-            break
-    if args.source_only and args.binary_only:
-        tty.die(
-            "Binary distribution requested, but the environment does not "
-            "include the necessary installed binary packages"
-        )
+        args.source_only = True
 
 
 def distribution(parser, args):
