@@ -3,7 +3,6 @@ import os
 import shutil
 
 import spack.cmd
-import spack.cmd.mirror
 import spack.config
 import spack.environment
 import spack.extensions
@@ -13,6 +12,7 @@ import spack.llnl.util.filesystem as fs
 import spack.util.path
 import spack.util.spack_yaml
 import spack.spec
+from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
 from spack.main import SpackCommand
 from spack.paths import spack_root
 
@@ -304,8 +304,8 @@ class DistributionPackager:
         # so we do a first-shot mirror creation with the original environment active.
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
-            spack.cmd.mirror.create_mirror_for_all_specs(
-                mirror_specs=spack.cmd.mirror.filter_externals(
+            create_mirror_for_all_specs(
+                mirror_specs=filter_externals(
                     self.environment_to_package.all_specs()
                 ),
                 path=self.source_mirror,
@@ -314,8 +314,8 @@ class DistributionPackager:
 
         with self.env:
             tty.msg(f"Updating mirror at {self.source_mirror}....")
-            spack.cmd.mirror.create_mirror_for_all_specs(
-                mirror_specs=spack.cmd.mirror.filter_externals(self.env.all_specs()),
+            create_mirror_for_all_specs(
+                mirror_specs=filter_externals(self.env.all_specs()),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
             )
