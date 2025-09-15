@@ -7,6 +7,7 @@ import spack.cmd.mirror
 import spack.config
 import spack.environment
 import spack.extensions
+import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
 import spack.llnl.util.filesystem as fs
 import spack.util.path
@@ -304,7 +305,9 @@ class DistributionPackager:
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
             spack.cmd.mirror.create_mirror_for_all_specs(
-                mirror_specs=spack.cmd.mirror.filter_externals(self.environment_to_package.all_specs()),
+                mirror_specs=spack.cmd.mirror.filter_externals(
+                    self.environment_to_package.all_specs()
+                ),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
             )
@@ -342,7 +345,6 @@ class DistributionPackager:
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
                 mirrorer("add", "--type", "binary", "--unsigned", mirror_name, mirror_path)
-
 
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")

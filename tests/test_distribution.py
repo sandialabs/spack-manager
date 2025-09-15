@@ -9,6 +9,7 @@ import inspect
 import os
 from argparse import ArgumentParser
 
+import manager.manager_cmds.distribution as distribution
 import pytest
 
 import spack
@@ -16,9 +17,8 @@ import spack.cmd.bootstrap as test_bootstrap_parse
 import spack.cmd.buildcache as test_buildcache_parse
 import spack.cmd.mirror as test_mirror_parse
 import spack.environment
-import spack.extensions.manager.manager_cmds.distribution as distribution
+import spack.spec
 import spack.util.spack_yaml
-import spack.verify
 
 
 def create_spack_manifest(path, specs=None, extra_data=None):
@@ -213,6 +213,19 @@ class MockArgs:
         self.binary_only = binary
 
 
+class MockSpec:
+    def __init__(self, name, status, dependencies=None):
+        self.name = name
+        self.status = status
+        self._dependencies = dependencies or []
+
+    def install_status(self):
+        return self.status
+
+    def dependencies(self, *args, **kwargs):
+        return self._dependencies
+
+
 class MockEnv:
     def __init__(self, specs):
         self.specs = [(x, f"{x}.concrete") for x in specs]
@@ -221,18 +234,51 @@ class MockEnv:
         return self.specs
 
 
-def mock_verification(arg):
-    class MockVerify:
-        def __init__(self, arg):
-            self.errors = "error" in arg
+def test_is_installed_true():
+    """
+    This test verifies that `is_installed` returns False if a package reports its
+    status as something other than missing or absent.
+    """
+    spec = MockSpec("hdf5", "fake_valid_status")
+    result = distribution.is_installed(spec)
+    assert result
 
-        def has_errors(self):
-            return self.errors
 
-    return MockVerify(arg)
+def test_is_installed_missing():
+    """
+    This test verifies that `is_installed` returns False if a package reports
+    its status as missing.
+    """
+    spec = MockSpec("hdf5", spack.spec.InstallStatus.missing)
+    result = distribution.is_installed(spec)
+    assert not result
 
 
-def test_correct_mirror_args_does_not_modify_args_when_source_only():
+def test_is_installed_absent():
+    """
+    This test verifies that `is_installed` returns False if a package reports
+    its status as absent.
+    """
+    spec = MockSpec("hdf5", spack.spec.InstallStatus.absent)
+    result = distribution.is_installed(spec)
+    assert not result
+
+
+def test_is_installed_missing_dependency():
+    """
+    This test verifies that `is_installed` returns False if a package is installed but its
+    depenency is missing.
+    """
+    deps = [
+        MockSpec("a", spack.spec.InstallStatus.installed),
+        MockSpec("b", spack.spec.InstallStatus.missing),
+    ]
+    spec = MockSpec("hdf5", spack.spec.InstallStatus.installed, dependencies=deps)
+    result = distribution.is_installed(spec)
+    assert not result
+
+
+def test_correct_mirror_args_does_not_modify_args_when_source_only(monkeypatch):
     """
     This test verifies that `correct_mirror_args` does nothing if source_only was requested.
     """
@@ -241,18 +287,18 @@ def test_correct_mirror_args_does_not_modify_args_when_source_only():
 
     assert args.source_only
     assert not args.binary_only
+    monkeypatch.setattr(distribution, "is_installed", lambda x: False)
     distribution.correct_mirror_args(env, args)
     assert args.source_only
     assert not args.binary_only
 
 
-def test_correct_mirror_args_does_sets_source_only_if_no_concretized_specs_in_env():
+def test_correct_mirror_args_sets_source_only_if_no_concretized_specs_in_env():
     """
     This test verifies that `correct_mirror_args` reverts to source_only if binaries aren't in env.
     """
     args = MockArgs()
     env = MockEnv([])
-
     assert not args.source_only
     assert not args.binary_only
     distribution.correct_mirror_args(env, args)
@@ -260,7 +306,7 @@ def test_correct_mirror_args_does_sets_source_only_if_no_concretized_specs_in_en
     assert not args.binary_only
 
 
-def test_correct_mirror_args_does_sets_source_only_if_install_not_verified(monkeypatch):
+def test_correct_mirror_args_sets_source_only_if_install_not_verified(monkeypatch):
     """
     This test verifies that `correct_mirror_args` reverts to source_only if binaries aren't
     verified as correct.
@@ -268,9 +314,9 @@ def test_correct_mirror_args_does_sets_source_only_if_install_not_verified(monke
     args = MockArgs()
     env = MockEnv(["hdf5.error"])
 
-    monkeypatch.setattr(spack.verify, "check_spec_manifest", mock_verification)
     assert not args.source_only
     assert not args.binary_only
+    monkeypatch.setattr(distribution, "is_installed", lambda x: False)
     distribution.correct_mirror_args(env, args)
     assert args.source_only
     assert not args.binary_only
@@ -283,9 +329,9 @@ def test_correct_mirror_args_does_no_modification_if_install_verified(monkeypatc
     args = MockArgs()
     env = MockEnv(["hdf5.valid"])
 
-    monkeypatch.setattr(spack.verify, "check_spec_manifest", mock_verification)
     assert not args.source_only
     assert not args.binary_only
+    monkeypatch.setattr(distribution, "is_installed", lambda x: True)
     distribution.correct_mirror_args(env, args)
     assert not args.source_only
     assert not args.binary_only
@@ -299,10 +345,10 @@ def test_correct_mirror_args_does_errors_if_binary_only_but_no_binaries_exist(mo
     args = MockArgs(binary=True)
     env = MockEnv(["hdf5.error"])
 
-    monkeypatch.setattr(spack.verify, "check_spec_manifest", mock_verification)
     assert not args.source_only
     assert args.binary_only
 
+    monkeypatch.setattr(distribution, "is_installed", lambda x: False)
     with pytest.raises(SystemExit):
         distribution.correct_mirror_args(env, args)
 
@@ -806,7 +852,7 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
 
     assert MockCommand.args == ["buildcache", "mirror"]
     assert MockCommand.kwargs == {}
-    assert len(MockCommand.call_args) == 2
+    assert len(MockCommand.call_args) == 3
 
     buildcache_parser = ArgumentParser()
     test_buildcache_parse.setup_parser(buildcache_parser)
@@ -814,4 +860,5 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
     test_mirror_parse.setup_parser(mirror_parser)
     with pkgr.env:
         buildcache_parser.parse_args(MockCommand.call_args[0])
-        mirror_parser.parse_args(MockCommand.call_args[1])
+        buildcache_parser.parse_args(MockCommand.call_args[1])
+        mirror_parser.parse_args(MockCommand.call_args[2])
