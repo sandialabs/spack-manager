@@ -8,9 +8,9 @@ import spack.environment
 import spack.extensions
 import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
+import spack.spec
 import spack.util.path
 import spack.util.spack_yaml
-import spack.spec
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
 from spack.main import SpackCommand
 from spack.paths import spack_root
@@ -304,9 +304,7 @@ class DistributionPackager:
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
             create_mirror_for_all_specs(
-                mirror_specs=filter_externals(
-                    self.environment_to_package.all_specs()
-                ),
+                mirror_specs=filter_externals(self.environment_to_package.all_specs()),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
             )
@@ -327,7 +325,7 @@ class DistributionPackager:
             with self.env.write_transaction():
                 mirrorer("add", "internal-source", mirror_path)
 
-    def configure_binary_mirror(self): 
+    def configure_binary_mirror(self):
         cacher = SpackCommand("buildcache")
         with self.environment_to_package:
             tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
@@ -340,7 +338,7 @@ class DistributionPackager:
         )
         mirror_name = "internal-binary"
 
-        with self.env:  
+        with self.env:
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
                 mirrorer("add", "--type", "binary", "--unsigned", mirror_name, mirror_path)
