@@ -397,15 +397,16 @@ class DistributionPackager:
 
 def is_installed(spec):
     status = True
-    for dependency in spec.dependencies(deptype="run"):
+    for dependency in spec.dependencies(deptype=("link", "run")):
         status = is_installed(dependency)
     bad_statuses = [spack.spec.InstallStatus.absent, spack.spec.InstallStatus.missing]
     return status and spec.install_status() not in bad_statuses
 
 
 def correct_mirror_args(env, args):
-    specs_to_check = env.concretized_specs()
-    has_installed_specs = all([len(specs_to_check)] + [is_installed(x) for _, x in specs_to_check])
+    specs_to_check = list(env.concretized_specs())
+    install_status = [len(specs_to_check)] + [is_installed(x) for _, x in specs_to_check]
+    has_installed_specs = all(install_status)
     if not args.source_only and not has_installed_specs:
         tty.warn("Environment contains uninstalled specs, defaulting to source-only package")
         if args.binary_only:
