@@ -8,7 +8,6 @@ import spack.environment
 import spack.extensions
 import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
-import spack.llnl.util.filesystem as fs
 import spack.util.path
 import spack.util.spack_yaml
 import spack.spec
