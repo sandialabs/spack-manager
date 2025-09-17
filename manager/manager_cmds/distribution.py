@@ -6,11 +6,12 @@ import spack.cmd
 import spack.config
 import spack.environment
 import spack.extensions
+import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
+import spack.spec
 import spack.util.path
 import spack.util.spack_yaml
 from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
-from spack.llnl.util.filesystem import working_dir
 from spack.main import SpackCommand
 from spack.paths import spack_root
 
@@ -47,6 +48,23 @@ def add_command(parser, command_dict):
         help=(
             "Directory where any aditional data to be copied "
             "into the root of the packaged distribution"
+        ),
+    )
+    group = subparser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--source-only",
+        action="store_true",
+        help=(
+            "Only create a source mirror for packages in the environment. "
+            "Default is to create a source and binary mirror"
+        ),
+    )
+    group.add_argument(
+        "--binary-only",
+        action="store_true",
+        help=(
+            "Only create a binary mirror for packages in the environment. "
+            "Default is to create a source and binary mirror"
         ),
     )
     command_dict["distribution"] = distribution
@@ -135,7 +153,8 @@ class DistributionPackager:
         self.path = root
         self.package_repos = os.path.join(self.path, "spack_repo")
         self.extensions = os.path.join(self.path, "extensions")
-        self.mirror = os.path.join(self.path, "mirror")
+        self.source_mirror = os.path.join(self.path, "source-mirror")
+        self.binary_mirror = os.path.join(self.path, "binary-mirror")
         self.bootstrap_mirror = os.path.join(self.path, "bootstrap-mirror")
         self.spack_dir = os.path.join(self.path, "spack")
 
@@ -283,28 +302,46 @@ class DistributionPackager:
         # However, this causes issues for packages that are not downloadable,
         # so we do a first-shot mirror creation with the original environment active.
         with self.environment_to_package:
-            tty.msg(f"Creating mirror at {self.mirror}....")
+            tty.msg(f"Creating source mirror at {self.source_mirror}....")
             create_mirror_for_all_specs(
                 mirror_specs=filter_externals(self.environment_to_package.all_specs()),
-                path=self.mirror,
+                path=self.source_mirror,
                 skip_unstable_versions=False,
             )
 
         with self.env:
-            tty.msg(f"Updating mirror at {self.mirror}....")
+            tty.msg(f"Updating mirror at {self.source_mirror}....")
             create_mirror_for_all_specs(
                 mirror_specs=filter_externals(self.env.all_specs()),
-                path=self.mirror,
+                path=self.source_mirror,
                 skip_unstable_versions=False,
             )
             mirror_path = os.path.join(
-                os.path.relpath(self.path, self.env.path), os.path.basename(self.mirror)
+                os.path.relpath(self.path, self.env.path), os.path.basename(self.source_mirror)
             )
 
             mirrorer = SpackCommand("mirror")
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
-                mirrorer("add", "internal", mirror_path)
+                mirrorer("add", "internal-source", mirror_path)
+
+    def configure_binary_mirror(self):
+        cacher = SpackCommand("buildcache")
+        with self.environment_to_package:
+            tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
+            cacher("push", "--unsigned", self.binary_mirror)
+            cacher("keys", "--install", "--trust")
+
+        mirrorer = SpackCommand("mirror")
+        mirror_path = os.path.join(
+            os.path.relpath(self.path, self.env.path), os.path.basename(self.binary_mirror)
+        )
+        mirror_name = "internal-binary"
+
+        with self.env:
+            tty.msg(f"Adding mirror to env: {self.env.name}....")
+            with self.env.write_transaction():
+                mirrorer("add", "--type", "binary", "--unsigned", mirror_name, mirror_path)
 
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
@@ -317,7 +354,7 @@ class DistributionPackager:
             os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
         )
         with self.env:
-            with working_dir(self.env.path):
+            with fs.working_dir(self.env.path):
                 with self.env.write_transaction():
                     strapper(
                         "add",
@@ -355,8 +392,32 @@ class DistributionPackager:
             spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
 
 
+def is_installed(spec):
+    status = True
+    for dependency in spec.dependencies(deptype=("link", "run")):
+        status = is_installed(dependency)
+    bad_statuses = [spack.spec.InstallStatus.absent, spack.spec.InstallStatus.missing]
+    return status and spec.install_status() not in bad_statuses
+
+
+def correct_mirror_args(env, args):
+    specs_to_check = list(env.concretized_specs())
+    install_status = [len(specs_to_check)] + [is_installed(x) for _, x in specs_to_check]
+    has_installed_specs = all(install_status)
+    if not args.source_only and not has_installed_specs:
+        tty.warn("Environment contains uninstalled specs, defaulting to source-only package")
+        if args.binary_only:
+            tty.die(
+                "Binary distribution requested, but the environment does not "
+                "include the necessary installed binary packages"
+            )
+        args.source_only = True
+
+
 def distribution(parser, args):
     env = spack.cmd.require_active_env(cmd_name="manager distribution")
+    correct_mirror_args(env, args)
+
     packager = DistributionPackager(
         env,
         args.distro_dir,
@@ -364,6 +425,7 @@ def distribution(parser, args):
         excludes=args.exclude,
         extra_data=args.extra_data,
     )
+
     with packager:
         packager.configure_specs()
         packager.configure_includes()
@@ -372,7 +434,10 @@ def distribution(parser, args):
         packager.configure_package_settings(filter_externals=args.filter_externals)
         packager.filter_excludes()
         packager.concretize()
-        packager.configure_source_mirror()
+        if not args.binary_only:
+            packager.configure_source_mirror()
+        if not args.source_only:
+            packager.configure_binary_mirror()
         packager.configure_bootstrap_mirror()
         packager.bundle_spack()
         packager.bundle_extra_data()
