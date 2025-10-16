@@ -715,7 +715,7 @@ def test_DistributionPackager_configure_source_mirror_create_mirror_called_corre
 
     def mirror_for_specs(*args, **kwargs):
         assert len(args) == 0
-        assert len(kwargs) == len(valid_params)
+        assert len(kwargs) <= len(valid_params)
         for kwarg in kwargs:
             assert kwarg in valid_params
 

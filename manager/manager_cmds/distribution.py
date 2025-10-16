@@ -393,11 +393,10 @@ class DistributionPackager:
 
 
 def is_installed(spec):
-    status = True
-    for dependency in spec.dependencies(deptype=("link", "run")):
-        status = is_installed(dependency)
+    deps = list(spec.dependencies(deptype=("link", "run")))
     bad_statuses = [spack.spec.InstallStatus.absent, spack.spec.InstallStatus.missing]
-    return status and spec.install_status() not in bad_statuses
+    dep_status = [x.install_status() not in bad_statuses for x in deps]
+    return all(dep_status) and spec.install_status() not in bad_statuses
 
 
 def correct_mirror_args(env, args):
