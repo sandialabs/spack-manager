@@ -126,6 +126,34 @@ def test_copy_files_excluding_pattern(tmpdir):
     assert len(results) == 3
 
 
+def test_remove_by_pattern(tmpdir):
+    """
+    Test the removal of all files/dirs from a higherarchy that match a passed glob pattern.
+    """
+    root = os.path.join(tmpdir.strpath, "foo")
+    good = [
+        os.path.join(root, "bar", "file.txt"),
+        os.path.join(root, "bar", "bong", "bad.txt"),
+        os.path.join(root, "baz", "file.txt"),
+    ]
+
+    bad_root = os.path.join(root, "bing")
+    bad = [os.path.join(bad_root, "bang", "bad.txt"), os.path.join(bad_root, "bing", "file.txt")]
+
+    for p in good + bad:
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, "w") as f:
+            f.write("content")
+
+    distribution.remove_by_pattern(f"{bad_root}/*")
+
+    for bad_p in bad:
+        assert not os.path.isfile(bad_p)
+    for good_p in good:
+        assert os.path.isfile(good_p)
+    assert os.path.isdir(bad_root)
+
+
 def test_remove_subset_from_dict():
     """
     This test verifies that the `remove_subset_from_dict` function correctly removes specified keys
@@ -453,7 +481,7 @@ def test_concretzie(tmpdir):
     assert os.path.isfile(lockfile)
 
 
-def test_DistributionPackager_remove_unwanted_artifacts(tmpdir):
+def test_DistributionPackager_remove_unwanted_artifacts(tmpdir, monkeypatch):
     """
     This test verifies that `remove_unwanted_artifacts` removes files
     created by concretizing the environment.
@@ -466,13 +494,19 @@ def test_DistributionPackager_remove_unwanted_artifacts(tmpdir):
 
     pkgr = distribution.DistributionPackager(None, root)
     pkgr._env = env
-
     pkgr.concretize()
     assert len(os.listdir(env_dir)) == 3
+    bad_file = os.path.join(pkgr.spack_dir, "foo", "aFile")
+    os.makedirs(os.path.dirname(bad_file))
+    with open(bad_file, "w") as out:
+        out.write("content")
+    monkeypatch.setattr(distribution, "SPACK_USER_PATTERNS", ["foo/*"])
+
     pkgr.remove_unwanted_artifacts()
     env_assets = os.listdir(env_dir)
     assert len(env_assets) == 1
     assert "spack.yaml" in env_assets
+    assert not os.path.isfile(bad_file)
 
 
 def test_DistributionPackager_configure_includes(tmpdir):

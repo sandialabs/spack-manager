@@ -1,4 +1,5 @@
 import fnmatch
+import glob
 import os
 import shutil
 
@@ -18,6 +19,9 @@ from spack.paths import spack_root
 description = "bundle an environment as a self-contained source distribution"
 section = "manager"
 level = "long"
+
+
+SPACK_USER_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
 
 
 def add_command(parser, command_dict):
@@ -139,8 +143,7 @@ def valid_env_scopes(env):
 
 def bundle_spack(location):
     tty.msg(f"Packing up Spack installation to {location}....")
-    ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
-    copy_files_excluding_pattern(spack_root, location, ignore_these)
+    copy_files_excluding_pattern(spack_root, location, SPACK_USER_PATTERNS)
 
 
 class DistributionPackager:
@@ -205,6 +208,8 @@ class DistributionPackager:
         self.env.write()
 
     def remove_unwanted_artifacts(self):
+        for pattern in SPACK_USER_PATTERNS:
+            remove_by_pattern(os.path.join(self.spack_dir, pattern))
         for item in os.listdir(self.env.path):
             fullname = os.path.join(self.env.path, item)
             if "spack.yaml" in item:
@@ -411,6 +416,15 @@ def correct_mirror_args(env, args):
                 "include the necessary installed binary packages"
             )
         args.source_only = True
+
+
+def remove_by_pattern(pattern):
+    for item in glob.glob(pattern, recursive=True):
+        tty.msg(item)
+        if os.path.isfile(item):
+            os.remove(item)
+        elif os.path.isdir(item):
+            shutil.rmtree(item)
 
 
 def distribution(parser, args):
