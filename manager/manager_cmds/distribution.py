@@ -312,6 +312,7 @@ class DistributionPackager:
                 mirror_specs=filter_externals(self.environment_to_package.all_specs()),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
+                workers=spack.config.determine_number_of_jobs(parallel=True),
             )
 
         with self.env:
@@ -320,6 +321,7 @@ class DistributionPackager:
                 mirror_specs=filter_externals(self.env.all_specs()),
                 path=self.source_mirror,
                 skip_unstable_versions=False,
+                workers=spack.config.determine_number_of_jobs(parallel=True),
             )
             mirror_path = os.path.join(
                 os.path.relpath(self.path, self.env.path), os.path.basename(self.source_mirror)
