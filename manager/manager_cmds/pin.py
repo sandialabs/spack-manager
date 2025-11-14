@@ -10,12 +10,14 @@ Functions for snapshot creation that are added here to be testable
 """
 import os
 
+import spack.cmd
 import spack.llnl.util.tty as tty
 import spack.main
 import spack.traverse as traverse
 import spack.util.executable
 from spack.spec import Spec
 from spack.version import GitVersion
+
 try:
     from spack.util.git import COMMIT_VERSION
 except ImportError:
