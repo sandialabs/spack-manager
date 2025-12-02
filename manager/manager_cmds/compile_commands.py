@@ -1,15 +1,14 @@
-import sys
-import re
-import os
-import shutil
-import json
-import shlex
-import time
 import concurrent.futures
-from functools import partial
+import json
+import os
+import re
+import sys
+import time
 from contextlib import contextmanager
+from functools import partial
 
 import spack
+import spack.builder
 from spack import environment
 
 """
@@ -18,16 +17,18 @@ This extension was contributed by vbrunini
 
 
 command_name = "compile-commands"
-description = "Copy compile_commands.json for all develop packages in the active environment, then remove cross-package -isystem flags and substitute source/build -I flags."
+description = (
+    "Copy compile_commands.json for all develop packages in the active environment,"
+    " then remove cross-package -isystem flags and substitute source/build -I flags."
+)
 section = "sierra"
 level = "long"
 aliases = []
 
+
 def setup_parser(subparser):
     subparser.add_argument(
-        "--serial",
-        action="store_true",
-        help="Process compile_commands.json files in serial.",
+        "--serial", action="store_true", help="Process compile_commands.json files in serial."
     )
 
 
@@ -145,9 +146,7 @@ def compile_commands(parser, args):
     include_path_replacements = []
     with timer("Determine include path replacements", args):
         with _get_executor(args) as exe:
-            futures = [
-                exe.submit(_process_spec, spec, args) for spec in env.all_specs()
-            ]
+            futures = [exe.submit(_process_spec, spec, args) for spec in env.all_specs()]
             for fut in concurrent.futures.as_completed(futures):
                 result = fut.result()
                 if result is None:
@@ -156,14 +155,14 @@ def compile_commands(parser, args):
                 infos.append(info)
                 include_path_replacements.append(repl)
 
-    # Second pass: Apply isystem removal regexes and insert corresponding source include flags if they were applied
+    # Second pass: Apply isystem removal regexes and insert corresponding source include flags if
+    # they were applied
     with timer("Apply include path replacements", args):
         with _get_executor(args) as exe:
             list(
                 exe.map(
                     partial(
-                        _apply_replacements,
-                        include_path_replacements=include_path_replacements,
+                        _apply_replacements, include_path_replacements=include_path_replacements
                     ),
                     infos,
                 )

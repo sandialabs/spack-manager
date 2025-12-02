@@ -1,12 +1,12 @@
-import os
 import json
+import os
 import shlex
-import pytest
-import concurrent.futures
 from unittest import mock
 
-import spack.environment
+import pytest
+
 import spack.builder
+import spack.environment
 import spack.main
 
 manager = spack.main.SpackCommand("manager")
@@ -163,7 +163,10 @@ def two_pkg_env(tmp_path, monkeypatch):
     foo_inc_inst = inst_foo / "foo_inc_dir"
     foo_inc_inst.mkdir()
 
-    bar_cmd = f"clang -I{src_bar} -isystem {foo_inc_inst} -isystem {foo_inc_inst}/subdir_1 -isystem {foo_inc_inst}/subdir_2 -c bar.c"
+    bar_cmd = (
+        f"clang -I{src_bar} -isystem {foo_inc_inst} -isystem {foo_inc_inst}/subdir_1 "
+        "-isystem {foo_inc_inst}/subdir_2 -c bar.c"
+    )
     bar_entries = [{"directory": str(build_bar), "command": bar_cmd, "file": "bar.c"}]
     bar_cc = build_bar / "build_dir" / "compile_commands.json"
     with open(bar_cc, "w") as f:
@@ -216,16 +219,7 @@ def test_no_cross_inject_when_no_isystem(tmp_path, monkeypatch):
     inc1.mkdir()
     cc1 = build1 / "build_dir" / "compile_commands.json"
     with open(cc1, "w") as f:
-        json.dump(
-            [
-                {
-                    "directory": str(build1),
-                    "command": f"cc -I{inc1} -c a.c",
-                    "file": "a.c",
-                }
-            ],
-            f,
-        )
+        json.dump([{"directory": str(build1), "command": f"cc -I{inc1} -c a.c", "file": "a.c"}], f)
 
     build2 = tmp_path / "b2"
     (build2 / "build_dir").mkdir(parents=True)
@@ -237,16 +231,7 @@ def test_no_cross_inject_when_no_isystem(tmp_path, monkeypatch):
     inc2.mkdir()
     cc2 = build2 / "build_dir" / "compile_commands.json"
     with open(cc2, "w") as f:
-        json.dump(
-            [
-                {
-                    "directory": str(build2),
-                    "command": f"cc -I{inc2} -c b.c",
-                    "file": "b.c",
-                }
-            ],
-            f,
-        )
+        json.dump([{"directory": str(build2), "command": f"cc -I{inc2} -c b.c", "file": "b.c"}], f)
 
     pkg1 = DummyPkg("one", build1, src1, inst1)
     pkg2 = DummyPkg("two", build2, src2, inst2)
