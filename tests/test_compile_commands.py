@@ -9,8 +9,7 @@ import spack.environment
 import spack.builder
 import spack.main
 
-# the command we’re testing
-compile_commands = spack.main.SpackCommand("compile-commands")
+manager = spack.main.SpackCommand("manager")
 
 
 class DummyPkg:
@@ -63,7 +62,7 @@ def mock_environment_and_package(tmp_path, monkeypatch):
 
 def test_compile_commands_copies_file(mock_environment_and_package):
     pkg, cc_in = mock_environment_and_package
-    compile_commands("--serial")
+    manager("compile-commands", "--serial")
     dest = os.path.join(pkg.stage.source_path, "bar", "compile_commands.json")
     assert os.path.exists(dest)
 
@@ -79,7 +78,7 @@ def test_compile_commands_symlink_replacement(mock_environment_and_package):
 
     # create a symlink at the destination
     os.symlink("/some/other/path", dest)
-    compile_commands("--serial")
+    manager("compile-commands", "--serial")
 
     assert os.path.exists(dest)
     assert not os.path.islink(dest)
@@ -106,7 +105,7 @@ def test_compile_commands_no_source_file(tmp_path, monkeypatch):
     monkeypatch.setattr(spack.environment, "active_environment", lambda: fake_env)
     monkeypatch.setattr(spack.builder, "create", lambda pkg: DummyBuilder("build_dir"))
 
-    compile_commands("--serial")
+    manager("compile-commands", "--serial")
     dest = os.path.join(pkg.stage.source_path, "bar", "compile_commands.json")
     assert not os.path.exists(dest)
 
@@ -117,7 +116,7 @@ def test_compile_commands_no_root_cmakelists_dir(mock_environment_and_package):
     if hasattr(pkg, "root_cmakelists_dir"):
         del pkg.root_cmakelists_dir
 
-    compile_commands("--serial")
+    manager("compile-commands", "--serial")
     dest = os.path.join(pkg.stage.source_path, "compile_commands.json")
     assert os.path.exists(dest)
 
@@ -185,7 +184,7 @@ def two_pkg_env(tmp_path, monkeypatch):
 
 def test_strip_isystem_and_inject_I(two_pkg_env):
     pkg_foo, pkg_bar = two_pkg_env
-    compile_commands("--serial")
+    manager("compile-commands", "--serial")
 
     # foo’s file unchanged (except no -isystem):
     foo_dst = os.path.join(pkg_foo.stage.source_path, "compile_commands.json")
@@ -258,7 +257,7 @@ def test_no_cross_inject_when_no_isystem(tmp_path, monkeypatch):
     monkeypatch.setattr(spack.environment, "active_environment", lambda: fake_env)
     monkeypatch.setattr(spack.builder, "create", lambda pkg: DummyBuilder("build_dir"))
 
-    compile_commands("--serial")
+    manager("compile-commands", "--serial")
 
     for pkg in (pkg1, pkg2):
         dst = os.path.join(pkg.stage.source_path, "compile_commands.json")
