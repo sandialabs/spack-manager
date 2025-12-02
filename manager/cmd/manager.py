@@ -7,8 +7,8 @@
 from ..manager_cmds import (
     binary_finder,
     cache_query,
-    compile_commands,
     cli_config,
+    compile_commands,
     create_dev_env,
     create_env,
     develop,
