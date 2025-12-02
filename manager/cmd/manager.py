@@ -7,6 +7,7 @@
 from ..manager_cmds import (
     binary_finder,
     cache_query,
+    compile_commands,
     cli_config,
     create_dev_env,
     create_env,
@@ -46,6 +47,7 @@ def setup_parser(subparser):
         analyze.add_command(sp, _subcommands)
     binary_finder.add_command(sp, _subcommands)
     cache_query.add_command(sp, _subcommands)
+    compile_commands.add_command(sp, _subcommands)
     create_env.add_command(sp, _subcommands)
     create_dev_env.add_command(sp, _subcommands)
     develop.add_command(sp, _subcommands)
