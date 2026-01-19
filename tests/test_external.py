@@ -96,7 +96,7 @@ def setupExternalEnv(tmpdir, has_view=True):
     return env_path
 
 
-def test_failsWithNoProject(tmpdir, capsys):
+def test_failsWithNoProject(tmpdir):
     yaml_file = """spack:
   view: true
   specs: [mpileaks]"""
@@ -110,7 +110,6 @@ def test_failsWithNoProject(tmpdir, capsys):
         with pytest.raises(SystemExit):
             with ev.Environment("test"):
                 external(None, args)
-                assert "No project detected." in capsys.readouterr()
 
 
 def test_errorsIfThereIsNoView(tmpdir, on_moonlight):
