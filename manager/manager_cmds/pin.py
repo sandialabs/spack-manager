@@ -10,6 +10,7 @@ Functions for snapshot creation that are added here to be testable
 """
 import os
 
+import spack.cmd
 import spack.llnl.util.tty as tty
 import spack.main
 import spack.traverse as traverse
@@ -18,9 +19,12 @@ from spack.spec import Spec
 from spack.version import GitVersion
 
 try:
-    from spack.version.common import COMMIT_VERSION
+    from spack.util.git import COMMIT_VERSION
 except ImportError:
-    from spack.version import COMMIT_VERSION
+    try:
+        from spack.version.common import COMMIT_VERSION
+    except ImportError:
+        from spack.version import COMMIT_VERSION
 
 git = spack.util.executable.which("git")
 concretize = spack.main.SpackCommand("concretize")
