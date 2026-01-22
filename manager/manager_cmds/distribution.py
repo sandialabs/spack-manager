@@ -22,6 +22,7 @@ level = "long"
 
 
 SPACK_USER_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
+CONFIG_SECTION_EXCLUDES = ["mirrors", "repos", "include"]
 
 
 def add_command(parser, command_dict):
@@ -29,7 +30,7 @@ def add_command(parser, command_dict):
     subparser.add_argument(
         "--distro-dir",
         default=os.path.join(os.getcwd(), "distro"),
-        help="Directory where the packaged environemnt should be created",
+        help="Directory where the packaged environment should be created",
     )
     subparser.add_argument(
         "--include", help="Directory containing yaml to be included in the packaged environment"
@@ -50,8 +51,15 @@ def add_command(parser, command_dict):
     subparser.add_argument(
         "--extra-data",
         help=(
-            "Directory where any aditional data to be copied "
+            "Directory where any additional data to be copied "
             "into the root of the packaged distribution"
+        ),
+    )
+    subparser.add_argument(
+        "--exclude-config-section",
+        default="",
+        help=(
+            "Explicitly exclude this section in the new config file (i.e. 'aliases', 'env_vars')"
         ),
     )
     group = subparser.add_mutually_exclusive_group()
@@ -163,6 +171,7 @@ class DistributionPackager:
 
         self._env = None
         self._cached_env = None
+        self._flattened_config  = {}
 
     def __enter__(self):
         self._cached_env = spack.environment.active_environment()
@@ -218,6 +227,25 @@ class DistributionPackager:
                 shutil.rmtree(fullname)
             else:
                 os.remove(fullname)
+
+    def get_flattened_config(self, config_excludes):
+        with self.environment_to_package:
+            for section in spack.config.SECTION_SCHEMAS:
+                # Exclude sections of the config file we do not want
+                if section in CONFIG_SECTION_EXCLUDES or section in config_excludes:
+                    continue
+                # We will set the extensions in the config later in the process
+                elif section == "config":
+                    self._flattened_config[section] = spack.config.CONFIG.get(section)
+                    del self._flattened_config[section]['extensions']
+                else:
+                    self._flattened_config[section] = spack.config.CONFIG.get(section)
+
+    def create_config(self):
+        with self.env:
+            for section in self._flattened_config:
+                if self._flattened_config[section]:
+                    spack.config.CONFIG.set(section, self._flattened_config[section], scope=self.env.scope_name)
 
     def configure_includes(self):
         if self.includes:
@@ -392,7 +420,7 @@ class DistributionPackager:
         if self.extra_data:
             os.makedirs(self.path, exist_ok=True)
             tty.msg(f"Packaging up extra data to {self.path}....")
-            shutil.copytree(self.extra_data, self.path, dirs_exist_ok=True)
+            shutil.copytree(self.extra_data, self.path)
 
     def _write(self, data):
         with open(os.path.join(self.env.path, "spack.yaml"), "w") as outf:
@@ -442,8 +470,10 @@ def distribution(parser, args):
     )
 
     with packager:
-        packager.configure_specs()
+        packager.get_flattened_config(config_excludes=args.exclude_config_section)
+        packager.create_config()
         packager.configure_includes()
+        packager.configure_specs()
         packager.configure_extensions()
         packager.configure_package_repos()
         packager.configure_package_settings(filter_externals=args.filter_externals)
