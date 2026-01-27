@@ -22,7 +22,7 @@ level = "long"
 
 
 SPACK_USER_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
-CONFIG_SECTION_EXCLUDES = ["mirrors", "repos", "include"]
+SKIP_CONFIG_SECTION = ["mirrors", "repos", "include"]
 
 
 def add_command(parser, command_dict):
@@ -35,10 +35,10 @@ def add_command(parser, command_dict):
     subparser.add_argument(
         "--include", help="Directory containing yaml to be included in the packaged environment"
     )
-
     subparser.add_argument(
-        "--exclude",
-        help="Directory containing yaml to be explicitly removed from packaged environment",
+        "--exclude-configs",
+        nargs="+",
+        help="Sections in the enviroment's configuration file to exclude",
     )
     subparser.add_argument(
         "--filter-externals",
@@ -53,13 +53,6 @@ def add_command(parser, command_dict):
         help=(
             "Directory where any additional data to be copied "
             "into the root of the packaged distribution"
-        ),
-    )
-    subparser.add_argument(
-        "--exclude-config-section",
-        default="",
-        help=(
-            "Explicitly exclude this section in the new config file (i.e. 'aliases', 'env_vars')"
         ),
     )
     group = subparser.add_mutually_exclusive_group()
@@ -118,32 +111,6 @@ def copy_files_excluding_pattern(src, dst, patterns):
                     shutil.copy2(src_file, dst_file, follow_symlinks=False)
 
 
-def remove_subset_from_dict(larger_dict, subset_dict):
-    """
-    Removes the subset dictionary from the larger dictionary, including items in lists,
-    and deletes keys if the subset value is an empty dictionary.
-
-    :param larger_dict: The larger dictionary from which the subset will be removed.
-    :param subset_dict: The subset dictionary to remove.
-    :return: The modified larger dictionary.
-    """
-    for key, value in subset_dict.items():
-        if key in larger_dict:
-            if not value:
-                del larger_dict[key]
-            elif isinstance(value, dict) and isinstance(larger_dict[key], dict):
-                remove_subset_from_dict(larger_dict[key], value)
-                if not larger_dict[key]:
-                    del larger_dict[key]
-            elif isinstance(value, list) and isinstance(larger_dict[key], list):
-                larger_dict[key] = [item for item in larger_dict[key] if item not in value]
-                if not larger_dict[key]:
-                    del larger_dict[key]
-            elif larger_dict[key] == value:
-                del larger_dict[key]
-    return larger_dict
-
-
 def valid_env_scopes(env):
     scopes = spack.config.CONFIG.matching_scopes(f"^env:{env.name}|^include:")
     return [s.name for s in scopes]
@@ -155,10 +122,10 @@ def bundle_spack(location):
 
 
 class DistributionPackager:
-    def __init__(self, env, root, includes=None, excludes=None, extra_data=None):
+    def __init__(self, env, root, includes=None, exclude_configs=None, extra_data=None):
         self.environment_to_package = env
         self.includes = includes
-        self.excludes = excludes
+        self.exclude_configs = exclude_configs
         self.extra_data = extra_data
 
         self.path = root
@@ -184,7 +151,6 @@ class DistributionPackager:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.filter_excludes()
         self.remove_unwanted_artifacts()
         if self._cached_env:
             spack.environment.activate(self._cached_env)
@@ -201,15 +167,6 @@ class DistributionPackager:
         if os.path.isdir(self.path):
             shutil.rmtree(self.path)
         os.makedirs(self.path)
-
-    def filter_excludes(self):
-        tty.msg(f"Writing manifest file for env: {self.env.name}....")
-        env_data = get_env_as_dict(self.env)
-        if self.excludes:
-            tty.msg(f"Processing settings to exclude from env: {self.env.name}....")
-            cfg = get_local_config(self.excludes)
-            remove_subset_from_dict(env_data["spack"], cfg)
-        self._write(env_data)
 
     def concretize(self):
         tty.msg(f"Concretizing env: {self.env.name}....")
@@ -228,24 +185,36 @@ class DistributionPackager:
             else:
                 os.remove(fullname)
 
-    def get_flattened_config(self, config_excludes):
-        with self.environment_to_package:
+    def get_flattened_config(self):
+        with self.environment_to_package:            
             for section in spack.config.SECTION_SCHEMAS:
-                # Exclude sections of the config file we do not want
-                if section in CONFIG_SECTION_EXCLUDES or section in config_excludes:
+                if section in SKIP_CONFIG_SECTION:
                     continue
-                # We will set the extensions in the config later in the process
-                elif section == "config":
-                    self._flattened_config[section] = spack.config.CONFIG.get(section)
-                    del self._flattened_config[section]['extensions']
-                else:
-                    self._flattened_config[section] = spack.config.CONFIG.get(section)
+                self._flattened_config[section] = spack.config.CONFIG.get(section)
+        # Set up correct relative path for Spack extensions
+            extensions = spack.extensions.get_extension_paths()
+            new_extensions = []
+            for extension in extensions:
+                extension = os.path.join(
+                        os.path.relpath(self.extensions, self.env.path), os.path.basename(extension)
+                    )
+                new_extensions.append(extension)
+            self._flattened_config["config"]["extensions"] = new_extensions
 
     def create_config(self):
         with self.env:
             for section in self._flattened_config:
                 if self._flattened_config[section]:
                     spack.config.CONFIG.set(section, self._flattened_config[section], scope=self.env.scope_name)
+
+    def filter_exclude_configs(self):
+        if self.exclude_configs:
+            sconfig = SpackCommand("config")
+            with self.env:
+                tty.msg(f"Excluding configurations: {self.exclude_configs}....")
+                for exclude in self.exclude_configs:
+                    with self.env.write_transaction():
+                        sconfig("remove", f"{exclude}")
 
     def configure_includes(self):
         if self.includes:
@@ -280,16 +249,6 @@ class DistributionPackager:
                     os.path.join(self.extensions, os.path.basename(extension)),
                     ignore=shutil.ignore_patterns(".git*", "spack"),
                 )
-
-        tty.msg(f"Packaging up extensions to env: {self.env.name}....")
-        sconfig = SpackCommand("config")
-        with self.env:
-            for extension in extensions:
-                extension = os.path.join(
-                    os.path.relpath(self.extensions, self.env.path), os.path.basename(extension)
-                )
-                with self.env.write_transaction():
-                    sconfig("add", f"config:extensions:[{extension}]")
 
     def configure_package_repos(self):
         with self.environment_to_package:
@@ -465,19 +424,19 @@ def distribution(parser, args):
         env,
         args.distro_dir,
         includes=args.include,
-        excludes=args.exclude,
+        exclude_configs=args.exclude_configs,
         extra_data=args.extra_data,
     )
 
     with packager:
-        packager.get_flattened_config(config_excludes=args.exclude_config_section)
+        packager.get_flattened_config()
         packager.create_config()
+        packager.filter_exclude_configs()
         packager.configure_includes()
         packager.configure_specs()
         packager.configure_extensions()
         packager.configure_package_repos()
         packager.configure_package_settings(filter_externals=args.filter_externals)
-        packager.filter_excludes()
         packager.concretize()
         if not args.binary_only:
             packager.configure_source_mirror()
