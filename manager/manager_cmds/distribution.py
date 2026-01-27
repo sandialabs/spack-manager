@@ -138,7 +138,7 @@ class DistributionPackager:
 
         self._env = None
         self._cached_env = None
-        self._flattened_config  = {}
+        self._flattened_config = {}
 
     def __enter__(self):
         self._cached_env = spack.environment.active_environment()
@@ -186,18 +186,18 @@ class DistributionPackager:
                 os.remove(fullname)
 
     def get_flattened_config(self):
-        with self.environment_to_package:            
+        with self.environment_to_package:
             for section in spack.config.SECTION_SCHEMAS:
                 if section in SKIP_CONFIG_SECTION:
                     continue
                 self._flattened_config[section] = spack.config.CONFIG.get(section)
-        # Set up correct relative path for Spack extensions
+            # Set up correct relative path for Spack extensions
             extensions = spack.extensions.get_extension_paths()
             new_extensions = []
             for extension in extensions:
                 extension = os.path.join(
-                        os.path.relpath(self.extensions, self.env.path), os.path.basename(extension)
-                    )
+                    os.path.relpath(self.extensions, self.env.path), os.path.basename(extension)
+                )
                 new_extensions.append(extension)
             self._flattened_config["config"]["extensions"] = new_extensions
 
@@ -205,7 +205,9 @@ class DistributionPackager:
         with self.env:
             for section in self._flattened_config:
                 if self._flattened_config[section]:
-                    spack.config.CONFIG.set(section, self._flattened_config[section], scope=self.env.scope_name)
+                    spack.config.CONFIG.set(
+                        section, self._flattened_config[section], scope=self.env.scope_name
+                    )
 
     def filter_exclude_configs(self):
         if self.exclude_configs:
