@@ -459,7 +459,9 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config(tmpdir
     manifest = os.path.join(root, "environment", "spack.yaml")
     extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
     extra_data_2 = {"env_vars": {"set": {"TEST_ENV_VARS": "123456"}}}
-    create_spack_manifest(manifest, extra_data=(extra_data | extra_data_2))
+    combined_data = extra_data.copy()
+    combined_data.update(extra_data_2) 
+    create_spack_manifest(manifest, extra_data=combined_data)
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
 
