@@ -21,7 +21,6 @@ import spack.environment
 import spack.extensions
 import spack.spec
 import spack.util.spack_yaml
-from spack.main import SpackCommand
 
 
 def create_spack_manifest(path, specs=None, extra_data=None):
@@ -47,11 +46,11 @@ def create_package_manifest(path):
 
 
 def create_extension(extension_name):
-    content = f"""\
+    content = """\
 def test(parser, args):
     return None
 """
-    extension_file = os.path.join(extension_name, f"test.py")
+    extension_file = os.path.join(extension_name, "test.py")
     os.makedirs(os.path.dirname(extension_file))
     with open(extension_file, "w") as f:
         f.write(content)
@@ -571,7 +570,8 @@ def test_DistributionPackager_configure_specs(tmpdir):
 
 def test_DistributionPackager_copy_extensions_files(tmpdir, monkeypatch):
     """
-    This test verifies that `copy_extensions_files` creates file assocated with the correct extensions path
+    This test verifies that `copy_extensions_files` creates file assocated 
+    with the correct extensions path
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
@@ -959,7 +959,6 @@ def test_get_relative_paths():
 def test_DistributionPackager_create_config(tmpdir, monkeypatch):
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
-    env_dir = os.path.dirname(manifest)
     env = spack.environment.Environment(os.path.dirname(manifest))
     root = os.path.join(tmpdir.strpath, "root")
     pkgr = distribution.DistributionPackager(env, root)

@@ -44,7 +44,6 @@ def add_command(parser, command_dict):
         "--exclude-file",
         help="Sections in the enviroment's configuration file to exclude located a file",
     )
-    create
     subparser.add_argument(
         "--exclude-configs",
         nargs="+",
