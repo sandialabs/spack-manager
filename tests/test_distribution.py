@@ -410,7 +410,8 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_file(tmpdir):
     pkgr.filter_exclude_configs()
 
     content = get_manifest(pkgr.env)
-    assert extra_data["packages"] != content["spack"]["packages"]
+    with pytest.raises(KeyError):
+        assert not content["spack"]["packages"]["gcc"]
     assert "packages" in content["spack"]
     assert "specs" in content["spack"]
 
@@ -448,8 +449,12 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config_and_fi
     pkgr.filter_exclude_configs()
 
     content = get_manifest(pkgr.env)
-    assert extra_data["packages"] != content["spack"]["packages"]
-    assert combined_data["env_vars"]["set"] != content["spack"]["env_vars"]["set"]
+    with pytest.raises(KeyError):
+        assert not content["spack"]["packages"]["gcc"]
+    with pytest.raises(KeyError):
+        assert not content["spack"]["env_vars"]["set"]["TEST_ENV_VARS"]
+    with pytest.raises(KeyError):
+        assert not content["spack"]["env_vars"]["set"]["TEST_ENV_VARS_2"]
     assert "packages" in content["spack"]
     assert "env_vars" in content["spack"]
     assert "specs" in content["spack"]
@@ -478,7 +483,8 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config(tmpdir
 
     content = get_manifest(pkgr.env)
     assert extra_data["packages"] == content["spack"]["packages"]
-    assert extra_data_2["env_vars"] != content["spack"]["env_vars"]
+    with pytest.raises(KeyError):
+        assert not content["spack"]["env_vars"]["set"]["TEST_ENV_VARS"]
     assert "packages" in content["spack"]
     assert "specs" in content["spack"]
 
@@ -945,7 +951,7 @@ def test_DistributionPackager_get_flattened_config(tmpdir, monkeypatch):
         TEST_SECTION_SCHEMAS["config"]["extensions"]
         != pkgr._flattened_config["config"]["extensions"]
     )
-    for section in pkgr.SKIP_CONFIG_SECTION:
+    for section in distribution.SKIP_CONFIG_SECTION:
         assert section not in pkgr._flattened_config
 
 
