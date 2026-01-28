@@ -431,7 +431,7 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config_and_fi
     extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
     extra_data_2 = {"env_vars": {"set": {"TEST_ENV_VARS": "123456"}}}
     combined_data = extra_data.copy()
-    combined_data.update(extra_data_2) 
+    combined_data.update(extra_data_2)
     create_spack_manifest(manifest, extra_data=combined_data)
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
@@ -460,7 +460,7 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config(tmpdir
     extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
     extra_data_2 = {"env_vars": {"set": {"TEST_ENV_VARS": "123456"}}}
     combined_data = extra_data.copy()
-    combined_data.update(extra_data_2) 
+    combined_data.update(extra_data_2)
     create_spack_manifest(manifest, extra_data=combined_data)
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
@@ -574,7 +574,7 @@ def test_DistributionPackager_configure_specs(tmpdir):
 
 def test_DistributionPackager_copy_extensions_files(tmpdir, monkeypatch):
     """
-    This test verifies that `copy_extensions_files` creates file assocated 
+    This test verifies that `copy_extensions_files` creates file assocated
     with the correct extensions path
     """
     root = os.path.join(tmpdir.strpath, "root")
