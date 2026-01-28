@@ -939,14 +939,14 @@ def test_DistributionPackager_get_flattened_config(tmpdir, monkeypatch):
     monkeypatch.setattr(spack.config, "SECTION_SCHEMAS", TEST_SECTION_SCHEMAS)
     pkgr.get_flattened_config()
     assert "compilers" in pkgr._flattened_config
-    assert "packages" in pkgr._flattened_config
+    assert "definitions" in pkgr._flattened_config
     assert "toolchains" in pkgr._flattened_config
     assert (
         TEST_SECTION_SCHEMAS["config"]["extensions"]
         != pkgr._flattened_config["config"]["extensions"]
     )
-    assert "mirrors" not in pkgr._flattened_config
-    assert "include" not in pkgr._flattened_config
+    for section in pkgr.SKIP_CONFIG_SECTION:
+        assert section not in pkgr._flattened_config
 
 
 def test_get_relative_paths():
