@@ -22,7 +22,7 @@ level = "long"
 
 
 SPACK_USER_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
-SKIP_CONFIG_SECTION = ["mirrors", "repos", "include"]
+SKIP_CONFIG_SECTION = ["mirrors", "repos", "include", "packages"]
 
 
 def add_command(parser, command_dict):
