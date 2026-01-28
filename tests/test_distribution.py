@@ -430,21 +430,26 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config_and_fi
     manifest = os.path.join(root, "environment", "spack.yaml")
     extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
     extra_data_2 = {"env_vars": {"set": {"TEST_ENV_VARS": "123456"}}}
+    extra_data_3 = {"env_vars": {"set": {"TEST_ENV_VARS_2": "123456"}}}
     combined_data = extra_data.copy()
     combined_data.update(extra_data_2)
+    combined_data.update(extra_data_3)
     create_spack_manifest(manifest, extra_data=combined_data)
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
 
     pkgr = distribution.DistributionPackager(
-        None, root, exclude_configs="env_vars:set:TEST_ENV_VARS", exclude_file=exclude_file
+        None,
+        root,
+        exclude_configs=["env_vars:set:TEST_ENV_VARS", "env_vars:set:TEST_ENV_VARS_2"],
+        exclude_file=exclude_file,
     )
     pkgr._env = env
     pkgr.filter_exclude_configs()
 
     content = get_manifest(pkgr.env)
     assert extra_data["packages"] != content["spack"]["packages"]
-    assert extra_data_2["env_vars"] != content["spack"]["env_vars"]
+    assert combined_data["env_vars"]["set"] != content["spack"]["env_vars"]["set"]
     assert "packages" in content["spack"]
     assert "env_vars" in content["spack"]
     assert "specs" in content["spack"]
@@ -466,7 +471,7 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config(tmpdir
     env = get_fake_concretize_env(env_dir)
 
     pkgr = distribution.DistributionPackager(
-        None, root, exclude_configs="env_vars:set:TEST_ENV_VARS"
+        None, root, exclude_configs=["env_vars:set:TEST_ENV_VARS"]
     )
     pkgr._env = env
     pkgr.filter_exclude_configs()

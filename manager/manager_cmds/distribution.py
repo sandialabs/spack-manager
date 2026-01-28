@@ -37,8 +37,11 @@ def add_command(parser, command_dict):
     )
     subparser.add_argument(
         "--exclude-configs",
-        nargs="+",
-        help="Sections in the enviroment's configuration file to exclude in a string",
+        type=parse_comma_separated,
+        help=(
+            "Sections in the environment's configuration file to exclude \
+            (comma-separated string without spaces)"
+        ),
     )
     subparser.add_argument(
         "--exclude-file",
@@ -77,6 +80,10 @@ def add_command(parser, command_dict):
         ),
     )
     command_dict["distribution"] = distribution
+
+
+def parse_comma_separated(value):
+    return [item.strip() for item in value.split(",")]
 
 
 def _read_config(filename):
@@ -143,7 +150,7 @@ class DistributionPackager:
         if exclude_file:
             self.exclude_configs.extend(read_yaml_file(exclude_file)["excludes"])
         if exclude_configs:
-            self.exclude_configs.extend((exclude_configs).split())
+            self.exclude_configs.extend(exclude_configs)
         self.extra_data = extra_data
 
         self.path = root
