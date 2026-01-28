@@ -38,6 +38,16 @@ def add_command(parser, command_dict):
     subparser.add_argument(
         "--exclude-configs",
         nargs="+",
+        help="Sections in the enviroment's configuration file to exclude in a string",
+    )
+    subparser.add_argument(
+        "--exclude-file",
+        help="Sections in the enviroment's configuration file to exclude located a file",
+    )
+    create
+    subparser.add_argument(
+        "--exclude-configs",
+        nargs="+",
         help="Sections in the enviroment's configuration file to exclude",
     )
     subparser.add_argument(
@@ -83,15 +93,15 @@ def get_env_as_dict(env):
     return _read_config(os.path.join(env.path, "spack.yaml"))
 
 
-def get_local_config(path):
-    little_config = {}
-    for f in os.listdir(path):
-        little_config.update(_read_config(os.path.join(path, f)))
-    return little_config
-
-
 def is_match(string, patterns):
     return any(fnmatch.fnmatch(string, pattern) for pattern in patterns)
+
+
+def read_yaml_file(filename):
+    data = {}
+    with open(filename, "r", encoding="utf-8") as f:
+        data = spack.util.spack_yaml.load(f)
+    return data
 
 
 def copy_files_excluding_pattern(src, dst, patterns):
@@ -121,11 +131,25 @@ def bundle_spack(location):
     copy_files_excluding_pattern(spack_root, location, SPACK_USER_PATTERNS)
 
 
+def get_relative_paths(original_paths, env_path, dir_name):
+    new_path = []
+    for path in original_paths:
+        path = os.path.join(os.path.relpath(dir_name, env_path), os.path.basename(path))
+        new_path.append(path)
+    return new_path
+
+
 class DistributionPackager:
-    def __init__(self, env, root, includes=None, exclude_configs=None, extra_data=None):
+    def __init__(
+        self, env, root, includes=None, exclude_configs=None, exclude_file=None, extra_data=None
+    ):
         self.environment_to_package = env
         self.includes = includes
-        self.exclude_configs = exclude_configs
+        self.exclude_configs = []
+        if exclude_file:
+            self.exclude_configs.extend(read_yaml_file(exclude_file)["excludes"])
+        if exclude_configs:
+            self.exclude_configs.extend((exclude_configs).split())
         self.extra_data = extra_data
 
         self.path = root
@@ -191,15 +215,9 @@ class DistributionPackager:
                 if section in SKIP_CONFIG_SECTION:
                     continue
                 self._flattened_config[section] = spack.config.CONFIG.get(section)
-            # Set up correct relative path for Spack extensions
-            extensions = spack.extensions.get_extension_paths()
-            new_extensions = []
-            for extension in extensions:
-                extension = os.path.join(
-                    os.path.relpath(self.extensions, self.env.path), os.path.basename(extension)
-                )
-                new_extensions.append(extension)
-            self._flattened_config["config"]["extensions"] = new_extensions
+            self._flattened_config["config"]["extensions"] = get_relative_paths(
+                spack.extensions.get_extension_paths(), self.env.path, self.extensions
+            )
 
     def create_config(self):
         with self.env:
@@ -240,10 +258,10 @@ class DistributionPackager:
                 with self.env.write_transaction():
                     adder(spec)
 
-    def configure_extensions(self):
+    def copy_extensions_files(self):
         with self.environment_to_package:
-            extensions = spack.extensions.get_extension_paths()
             tty.msg(f"Packing up extensions to {self.extensions}....")
+            extensions = spack.extensions.get_extension_paths()
             os.makedirs(self.extensions)
             for extension in extensions:
                 shutil.copytree(
@@ -381,7 +399,7 @@ class DistributionPackager:
         if self.extra_data:
             os.makedirs(self.path, exist_ok=True)
             tty.msg(f"Packaging up extra data to {self.path}....")
-            shutil.copytree(self.extra_data, self.path)
+            shutil.copytree(self.extra_data, self.path, dirs_exist_ok=True)
 
     def _write(self, data):
         with open(os.path.join(self.env.path, "spack.yaml"), "w") as outf:
@@ -427,6 +445,7 @@ def distribution(parser, args):
         args.distro_dir,
         includes=args.include,
         exclude_configs=args.exclude_configs,
+        exclude_file=args.exclude_file,
         extra_data=args.extra_data,
     )
 
@@ -436,7 +455,7 @@ def distribution(parser, args):
         packager.filter_exclude_configs()
         packager.configure_includes()
         packager.configure_specs()
-        packager.configure_extensions()
+        packager.copy_extensions_files()
         packager.configure_package_repos()
         packager.configure_package_settings(filter_externals=args.filter_externals)
         packager.concretize()

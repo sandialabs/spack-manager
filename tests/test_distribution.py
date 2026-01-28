@@ -16,9 +16,12 @@ import spack
 import spack.cmd.bootstrap as test_bootstrap_parse
 import spack.cmd.buildcache as test_buildcache_parse
 import spack.cmd.mirror as test_mirror_parse
+import spack.config
 import spack.environment
+import spack.extensions
 import spack.spec
 import spack.util.spack_yaml
+from spack.main import SpackCommand
 
 
 def create_spack_manifest(path, specs=None, extra_data=None):
@@ -35,7 +38,7 @@ def create_spack_manifest(path, specs=None, extra_data=None):
     return data
 
 
-def create_pacakge_manifest(path):
+def create_package_manifest(path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     data = {"packages": {"all": {"providers": {"mpi": ["openmpi"]}}}}
     with open(path, "w") as outf:
@@ -44,12 +47,11 @@ def create_pacakge_manifest(path):
 
 
 def create_extension(extension_name):
-    base_name = os.path.basename(extension_name).split("spack-")[-1]
-    extension_file = os.path.join(extension_name, base_name, "cmd", f"{base_name}.py")
     content = f"""\
-def {base_name}(parser, args):
+def test(parser, args):
     return None
 """
+    extension_file = os.path.join(extension_name, f"test.py")
     os.makedirs(os.path.dirname(extension_file))
     with open(extension_file, "w") as f:
         f.write(content)
@@ -154,34 +156,6 @@ def test_remove_by_pattern(tmpdir):
     assert os.path.isdir(bad_root)
 
 
-def test_remove_subset_from_dict():
-    """
-    This test verifies that the `remove_subset_from_dict` function correctly removes specified keys
-    and their associated values from a dictionary, including nested dictionaries and lists.
-
-    Keys should be recursively removed from the dictionary when their values become empty. In
-    instances where the value of the subset dictionary is a list, remove the entry in the list
-    from the primary dictionary if it exists.
-    """
-    data = {"a": 1, "b": {"c": 2, "d": 3}, "e": [1, 2, 3], "f": [1, 2]}
-    subset = {"a": None, "b": {"c": None}, "e": [1], "f": [1, 2]}
-    expected = {"b": {"d": 3}, "e": [2, 3]}
-    distribution.remove_subset_from_dict(data, subset)
-    assert data == expected
-
-
-def test_remove_subset_from_dict_invalid_subset():
-    """
-    This test verifies that the `remove_subset_from_dict` function does not modify the primary
-    dictionary if the subset dictionary is not a valid subset of the primary dictionary.
-    """
-    data = {"a": 1}
-    orig = data.copy()
-    subset = {"b": None}
-    distribution.remove_subset_from_dict(data, subset)
-    assert data == orig
-
-
 def test_get_env_as_dict(tmpdir):
     """
     This test verifies that the `get_env_as_dict` returns the contents of a
@@ -192,27 +166,6 @@ def test_get_env_as_dict(tmpdir):
 
     env = spack.environment.environment_from_name_or_dir(os.path.dirname(manifest))
     assert distribution.get_env_as_dict(env) == data
-
-
-def test_get_local_config(tmpdir):
-    """
-    This test verifies that the `get_local_config` returns the contents
-    of a valid set spack YAML files in dictionary form when given a
-    directory containing those files.
-    """
-    exclude_dir = os.path.join(tmpdir.strpath, "dir")
-    packages = os.path.join(exclude_dir, "packages.yaml")
-    data = create_pacakge_manifest(packages)
-
-    repos = os.path.join(exclude_dir, "repos.yaml")
-    repo_data = {"repos": {"name": "/path/to/repo"}}
-    with open(repos, "w") as f:
-        spack.util.spack_yaml.dump(repo_data, f, default_flow_style=False)
-
-    result = distribution.get_local_config(exclude_dir)
-    expected = data.copy()
-    expected.update(repo_data)
-    assert result == expected
 
 
 def test_get_valid_env_scopes(tmpdir):
@@ -227,7 +180,7 @@ def test_get_valid_env_scopes(tmpdir):
 
     extra_data = {"include": [os.path.dirname(packages)]}
     create_spack_manifest(manifest, extra_data=extra_data)
-    create_pacakge_manifest(packages)
+    create_package_manifest(packages)
 
     env = spack.environment.environment_from_name_or_dir(os.path.dirname(manifest))
     with env:
@@ -414,9 +367,9 @@ def get_fake_concretize_env(path):
     return MockEnv(path)
 
 
-def test_DistributionPackager_filter_excludes_no_excludes(tmpdir):
+def test_DistributionPackager_filter_exclude_configs_no_excludes(tmpdir):
     """
-    This test verifies that `filter_excludes` does not modify the existing
+    This test verifies that `filter_exclude_configs` does not modify the existing
     environment when no excludes are passed.
     """
     root = os.path.join(tmpdir.strpath, "root")
@@ -428,23 +381,23 @@ def test_DistributionPackager_filter_excludes_no_excludes(tmpdir):
 
     pkgr = distribution.DistributionPackager(None, root)
     pkgr._env = env
-    pkgr.filter_excludes()
+    pkgr.filter_exclude_configs()
 
     content = get_manifest(pkgr.env)
     assert "packages" in content["spack"]
     assert "specs" in content["spack"]
 
 
-def test_DistributionPackager_filter_excludes_with_excludes(tmpdir):
+def test_DistributionPackager_filter_exclude_configs_with_excludes_file(tmpdir):
     """
-    This test verifies that `filter_excludes` correctly modifies the environment
-    when an exclude dir is passed.
+    This test verifies that `filter_exclude_configs` correctly modifies the environment
+    when an exclude file is passed.
     """
     root = os.path.join(tmpdir.strpath, "root")
     exclude_dir = os.path.join(tmpdir.strpath, "excludes")
     exclude_file = os.path.join(exclude_dir, "packages.yaml")
     os.makedirs(exclude_dir)
-    data = {"packages": {"gcc": {}}}
+    data = {"excludes": ["packages:gcc"]}
     with open(exclude_file, "w") as outf:
         spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
     manifest = os.path.join(root, "environment", "spack.yaml")
@@ -453,16 +406,76 @@ def test_DistributionPackager_filter_excludes_with_excludes(tmpdir):
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
 
-    pkgr = distribution.DistributionPackager(None, root, excludes=exclude_dir)
+    pkgr = distribution.DistributionPackager(None, root, exclude_file=exclude_file)
     pkgr._env = env
-    pkgr.filter_excludes()
+    pkgr.filter_exclude_configs()
 
     content = get_manifest(pkgr.env)
-    assert "packages" not in content["spack"]
+    assert extra_data["packages"] != content["spack"]["packages"]
+    assert "packages" in content["spack"]
     assert "specs" in content["spack"]
 
 
-def test_concretzie(tmpdir):
+def test_DistributionPackager_filter_exclude_configs_with_excludes_config_and_file(tmpdir):
+    """
+    This test verifies that `filter_exclude_configs` correctly modifies the environment
+    when an exclude config section and file is passed.
+    """
+    root = os.path.join(tmpdir.strpath, "root")
+    exclude_dir = os.path.join(tmpdir.strpath, "excludes")
+    exclude_file = os.path.join(exclude_dir, "packages.yaml")
+    os.makedirs(exclude_dir)
+    data = {"excludes": ["packages:gcc"]}
+    with open(exclude_file, "w") as outf:
+        spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
+    manifest = os.path.join(root, "environment", "spack.yaml")
+    extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
+    extra_data_2 = {"env_vars": {"set": {"TEST_ENV_VARS": "123456"}}}
+    create_spack_manifest(manifest, extra_data=(extra_data | extra_data_2))
+    env_dir = os.path.dirname(manifest)
+    env = get_fake_concretize_env(env_dir)
+
+    pkgr = distribution.DistributionPackager(
+        None, root, exclude_configs="env_vars:set:TEST_ENV_VARS", exclude_file=exclude_file
+    )
+    pkgr._env = env
+    pkgr.filter_exclude_configs()
+
+    content = get_manifest(pkgr.env)
+    assert extra_data["packages"] != content["spack"]["packages"]
+    assert extra_data_2["env_vars"] != content["spack"]["env_vars"]
+    assert "packages" in content["spack"]
+    assert "env_vars" in content["spack"]
+    assert "specs" in content["spack"]
+
+
+def test_DistributionPackager_filter_exclude_configs_with_excludes_config(tmpdir):
+    """
+    This test verifies that `filter_exclude_configs` correctly modifies the environment
+    when an exclude config section passed.
+    """
+    root = os.path.join(tmpdir.strpath, "root")
+    manifest = os.path.join(root, "environment", "spack.yaml")
+    extra_data = {"packages": {"gcc": {"require": ["@1.2.3"]}}}
+    extra_data_2 = {"env_vars": {"set": {"TEST_ENV_VARS": "123456"}}}
+    create_spack_manifest(manifest, extra_data=(extra_data | extra_data_2))
+    env_dir = os.path.dirname(manifest)
+    env = get_fake_concretize_env(env_dir)
+
+    pkgr = distribution.DistributionPackager(
+        None, root, exclude_configs="env_vars:set:TEST_ENV_VARS"
+    )
+    pkgr._env = env
+    pkgr.filter_exclude_configs()
+
+    content = get_manifest(pkgr.env)
+    assert extra_data["packages"] == content["spack"]["packages"]
+    assert extra_data_2["env_vars"] != content["spack"]["env_vars"]
+    assert "packages" in content["spack"]
+    assert "specs" in content["spack"]
+
+
+def test_concretize(tmpdir):
     """
     This test verifies that `concretize` method calls env.concretize() on the
     environment being created.
@@ -523,7 +536,7 @@ def test_DistributionPackager_configure_includes(tmpdir):
 
     includes_dir = os.path.join(tmpdir.strpath, "includes")
     includes = os.path.join(includes_dir, "packages.yaml")
-    create_pacakge_manifest(includes)
+    create_package_manifest(includes)
     pkgr = distribution.DistributionPackager(env, root, includes=includes_dir)
 
     content = get_manifest(pkgr.env)
@@ -556,42 +569,32 @@ def test_DistributionPackager_configure_specs(tmpdir):
     assert pkgr.env.user_specs.specs_as_yaml_list == specs
 
 
-def test_DistributionPackager_configure_extensions(tmpdir):
+def test_DistributionPackager_copy_extensions_files(tmpdir, monkeypatch):
     """
-    This test verifies that `configure_extensions` copies any extensions
-    defined in the current environment into the environment being created
-    and adds a relative path to the copied extension to the spack.yaml that
-    is being constructed.
+    This test verifies that `copy_extensions_files` creates file assocated with the correct extensions path
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     extensions = [
-        os.path.join(tmpdir.strpath, "extensions", "spack-extensiona"),
-        os.path.join(tmpdir.strpath, "extensions", "spack-extensionb"),
+        os.path.join(root, "extensions", "spack-extensiona"),
+        os.path.join(root, "extensions", "spack-extensionb"),
     ]
-    expected_extensions = [os.path.join("..", "extensions", "spack-manager")]
+    expected_extension_path = os.path.join(tmpdir.strpath, "extensions")
     for ext in extensions:
-        expected_extensions.append(os.path.join("..", "extensions", os.path.basename(ext)))
         create_extension(ext)
 
-    extra_data = {"config": {"extensions": extensions}}
-    create_spack_manifest(manifest, extra_data=extra_data)
+    monkeypatch.setattr(spack.extensions, "get_extension_paths", lambda: extensions)
+    create_spack_manifest(manifest)
     env = spack.environment.Environment(os.path.dirname(manifest))
-
     pkgr = distribution.DistributionPackager(env, root)
-    content = get_manifest(pkgr.env)
-    assert "extensions" not in content["spack"].get("config", {})
-    for extension in expected_extensions:
-        assert not os.path.isdir(extension)
+    monkeypatch.setattr(pkgr, "extensions", expected_extension_path)
+    pkgr.copy_extensions_files()
 
-    with tmpdir.as_cwd():
-        pkgr.configure_extensions()
-    mod_content = get_manifest(pkgr.env)
-
-    for extension in expected_extensions:
-        assert os.path.isdir(os.path.join(pkgr.env.path, extension))
-    assert "extensions" in mod_content["spack"].get("config", {})
-    assert set(mod_content["spack"]["config"]["extensions"]) == set(expected_extensions)
+    assert os.path.isdir(expected_extension_path)
+    assert os.path.isdir(os.path.join(expected_extension_path, "spack-extensiona"))
+    assert os.path.isdir(os.path.join(expected_extension_path, "spack-extensionb"))
+    assert os.path.isfile(os.path.join(expected_extension_path, "spack-extensiona", "test.py"))
+    assert os.path.isfile(os.path.join(expected_extension_path, "spack-extensionb", "test.py"))
 
 
 def test_DistributionPackager_configure_repos(tmpdir):
@@ -896,3 +899,77 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
         buildcache_parser.parse_args(MockCommand.call_args[0])
         buildcache_parser.parse_args(MockCommand.call_args[1])
         mirror_parser.parse_args(MockCommand.call_args[2])
+
+
+def test_DistributionPackager_get_flattened_config(tmpdir, monkeypatch):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    TEST_SECTION_SCHEMAS = {
+        "compilers": {},
+        "concretizer": {},
+        "definitions": {},
+        "env_vars": {},
+        "include": {},
+        "view": {},
+        "develop": {},
+        "mirrors": {},
+        "repos": {},
+        "packages": {},
+        "modules": {},
+        "config": {"extensions": {"test"}},
+        "upstreams": {},
+        "bootstrap": {},
+        "ci": {},
+        "cdash": {},
+        "toolchains": {},
+    }
+    monkeypatch.setattr(spack.config, "SECTION_SCHEMAS", TEST_SECTION_SCHEMAS)
+    pkgr.get_flattened_config()
+    assert "compilers" in pkgr._flattened_config
+    assert "packages" in pkgr._flattened_config
+    assert "toolchains" in pkgr._flattened_config
+    assert (
+        TEST_SECTION_SCHEMAS["config"]["extensions"]
+        != pkgr._flattened_config["config"]["extensions"]
+    )
+    assert "mirrors" not in pkgr._flattened_config
+    assert "include" not in pkgr._flattened_config
+
+
+def test_get_relative_paths():
+    original_paths = [
+        "/home/user/project/file1.txt",
+        "/home/user/project/file2.txt",
+        "/home/user/project/subdir/file3.txt",
+    ]
+    env_path = "/home/user/project"
+    dir_name = "/home/user/project/subdir"
+
+    expected_output = ["subdir/file1.txt", "subdir/file2.txt", "subdir/file3.txt"]
+
+    result = distribution.get_relative_paths(original_paths, env_path, dir_name)
+
+    assert result == expected_output
+
+
+def test_DistributionPackager_create_config(tmpdir, monkeypatch):
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env_dir = os.path.dirname(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root)
+
+    TEST_SECTION_SCHEMAS = {
+        "env_vars": {"set": {"SOME_ENV_VAR": "test"}},
+        "toolchains": {"toolchain": "gcc"},
+    }
+    monkeypatch.setattr(pkgr, "_flattened_config", TEST_SECTION_SCHEMAS)
+    pkgr.create_config()
+    with pkgr.env:
+        for section in TEST_SECTION_SCHEMAS:
+            assert TEST_SECTION_SCHEMAS[section] == spack.config.CONFIG.get(section)
