@@ -206,6 +206,14 @@ class MockSpec:
         return self._dependencies
 
 
+def init_test_environment(tmp_dir_path):
+    manifest = os.path.join(tmp_dir_path, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmp_dir_path, "root")
+    return distribution.DistributionPackager(env, root), root, env
+
+
 class MockEnv:
     def __init__(self, specs):
         self.specs = [(x, f"{x}.concrete") for x in specs]
@@ -720,11 +728,7 @@ def test_DistributionPackager_context_erases_working_dir(tmpdir):
     """
     This test verifies that `DistributionPackager` correctly configures its final state on exit.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
 
     testfile = os.path.join(root, "testfile")
     os.makedirs(root)
@@ -742,11 +746,7 @@ def test_DistributionPackager_context_creates_working_dir(tmpdir):
     """
     This test verifies that `DistributionPackager` correctly configures inital state on entry.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
 
     with env:
         assert spack.environment.active_environment().name == env.name
@@ -795,11 +795,7 @@ def test_DistributionPackager_configure_source_mirror_created_in_correct_sequenc
     the source mirror must be created using two calls under specific conditions.  This test
     validates the call sequence is correct.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
 
     class Mock:
         envs = [pkgr.env.path, env.path]
@@ -823,11 +819,7 @@ def test_DistributionPackager_configure_source_mirror_mirror_added_to_env(tmpdir
     def mirror_for_specs(*args, **kwargs):
         pass
 
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
 
     monkeypatch.setattr(distribution, "create_mirror_for_all_specs", mirror_for_specs)
     pkgr.configure_source_mirror()
@@ -842,11 +834,7 @@ def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
     This test verifies that `configure_bootstrap_mirror` does not construct a call to
     `spack bootstrap` that violates its API.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
 
     class MockCommand:
         args = []
@@ -880,11 +868,7 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
     This test verifies that `configure_binary_mirror` does not construct a call to
     `spack buildcache` or `spack mirror` that violates its API.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
 
     class MockCommand:
         args = []
@@ -921,11 +905,7 @@ def test_DistributionPackager_get_flattened_config(tmpdir):
     This test shows the parsing of the environment to package's config file
     will be fully translated to the distribution packaged environment.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
     flattened_config = pkgr._get_flattened_config()
     assert "compilers" in flattened_config
     assert "definitions" in flattened_config
@@ -957,11 +937,7 @@ def test_DistributionPackager_init_config(tmpdir, monkeypatch):
     Tests the translation from the flattened config dict to the
     creation of the config file for the packaged environment.
     """
-    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
-    create_spack_manifest(manifest)
-    env = spack.environment.Environment(os.path.dirname(manifest))
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(env, root)
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
     extensions_path = os.path.join(root, "extensions")
     flattened_config = {
         "env_vars": {"set": {"SOME_ENV_VAR": "test"}},
@@ -969,16 +945,17 @@ def test_DistributionPackager_init_config(tmpdir, monkeypatch):
         "toolchains": {"toolchain": "gcc"},
         "compilers": ["incorrect_syntax"],
         "concretizer": {},
-        "config": {"extensions": {"test"}},
     }
-    new_path = distribution.get_relative_paths(
+    flattened_config["config"]["extensions"] = distribution.get_relative_paths(
         extensions_path, pkgr.path, os.path.join(root, "extensions")
     )
     pkgr._create_config_file(flattened_config)
     with pkgr.env:
         for section in flattened_config:
             if section == "config":
-                assert new_path != flattened_config[section]["extensions"]
+                flattened_config[section]["extensions"] != spack.config.CONFIG.get(section)[
+                    "extensions"
+                ]
             elif section == "concretizer":
                 assert flattened_config[section] != spack.config.CONFIG.get(section)
             else:
