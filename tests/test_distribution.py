@@ -971,17 +971,14 @@ def test_DistributionPackager_init_config(tmpdir, monkeypatch):
         "concretizer": {},
         "config": {"extensions": {"test"}},
     }
-    flattened_config["config"]["extensions"] = distribution.get_relative_paths(
+    new_path = distribution.get_relative_paths(
         extensions_path, pkgr.path, os.path.join(root, "extensions")
     )
     pkgr._create_config_file(flattened_config)
     with pkgr.env:
         for section in flattened_config:
             if section == "config":
-                assert (
-                    flattened_config[section]["extensions"]
-                    != spack.config.CONFIG.get(section)["extensions"]
-                )
+                assert new_path != flattened_config[section]["extensions"]
             elif section == "concretizer":
                 assert flattened_config[section] != spack.config.CONFIG.get(section)
             else:
