@@ -22,7 +22,7 @@ level = "long"
 
 
 SPACK_USER_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
-SKIP_CONFIG_SECTION = ["mirrors", "repos", "include", "packages"]
+SKIP_CONFIG_SECTION = ["mirrors", "repos", "include", "packages", "ci", "cdash", "bootstrap"]
 
 
 def add_command(parser, command_dict):
@@ -163,7 +163,6 @@ class DistributionPackager:
 
         self._env = None
         self._cached_env = None
-        self._flattened_config = {}
 
     def __enter__(self):
         self._cached_env = spack.environment.active_environment()
@@ -210,23 +209,40 @@ class DistributionPackager:
             else:
                 os.remove(fullname)
 
-    def get_flattened_config(self):
+    def init_config(self):
+        flattened_config = self._get_flattened_config()
+        with self.environment_to_package:
+            flattened_config["config"]["extensions"] = get_relative_paths(
+                spack.extensions.get_extension_paths(), self.env.path, self.extensions
+            )
+        self._create_config_file(flattened_config)
+
+    def _get_flattened_config(self):
+        flattened_config = {}
         with self.environment_to_package:
             for section in spack.config.SECTION_SCHEMAS:
                 if section in SKIP_CONFIG_SECTION:
                     continue
-                self._flattened_config[section] = spack.config.CONFIG.get(section)
-            self._flattened_config["config"]["extensions"] = get_relative_paths(
-                spack.extensions.get_extension_paths(), self.env.path, self.extensions
-            )
-
-    def create_config(self):
-        with self.env:
-            for section in self._flattened_config:
-                if self._flattened_config[section]:
-                    spack.config.CONFIG.set(
-                        section, self._flattened_config[section], scope=self.env.scope_name
+                try:
+                    flattened_config[section] = spack.config.CONFIG.get(section)
+                except spack.config.ConfigSectionError as e:
+                    tty.error(
+                        f"The configuration section: {section} does not exist in {self.environment_to_package.name}. The error returned is: {e}"
                     )
+        return flattened_config
+
+    def _create_config_file(self, flattened_config):
+        with self.env:
+            for section in flattened_config:
+                if flattened_config[section]:
+                    try:
+                        spack.config.CONFIG.set(
+                            section, flattened_config[section], scope=self.env.scope_name
+                        )
+                    except spack.config.ConfigFormatError as e:
+                        tty.error(
+                            f"The configuration section: {section} has incorrect syntax in the environment. The error returned is: {e}"
+                        )
 
     def filter_exclude_configs(self):
         if self.exclude_configs:
@@ -451,8 +467,7 @@ def distribution(parser, args):
     )
 
     with packager:
-        packager.get_flattened_config()
-        packager.create_config()
+        packager.init_config()
         packager.filter_exclude_configs()
         packager.configure_includes()
         packager.configure_specs()

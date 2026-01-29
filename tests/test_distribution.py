@@ -916,46 +916,29 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
         mirror_parser.parse_args(MockCommand.call_args[2])
 
 
-def test_DistributionPackager_get_flattened_config(tmpdir, monkeypatch):
+def test_DistributionPackager_get_flattened_config(tmpdir):
+    """
+    This test shows the parsing of the environment to package's config file
+    will be fully translated to the distribution packaged environment.
+    """
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
     env = spack.environment.Environment(os.path.dirname(manifest))
     root = os.path.join(tmpdir.strpath, "root")
     pkgr = distribution.DistributionPackager(env, root)
-
-    TEST_SECTION_SCHEMAS = {
-        "compilers": {},
-        "concretizer": {},
-        "definitions": {},
-        "env_vars": {},
-        "include": {},
-        "view": {},
-        "develop": {},
-        "mirrors": {},
-        "repos": {},
-        "packages": {},
-        "modules": {},
-        "config": {"extensions": {"test"}},
-        "upstreams": {},
-        "bootstrap": {},
-        "ci": {},
-        "cdash": {},
-        "toolchains": {},
-    }
-    monkeypatch.setattr(spack.config, "SECTION_SCHEMAS", TEST_SECTION_SCHEMAS)
-    pkgr.get_flattened_config()
-    assert "compilers" in pkgr._flattened_config
-    assert "definitions" in pkgr._flattened_config
-    assert "toolchains" in pkgr._flattened_config
-    assert (
-        TEST_SECTION_SCHEMAS["config"]["extensions"]
-        != pkgr._flattened_config["config"]["extensions"]
-    )
+    flattened_config = pkgr._get_flattened_config()
+    assert "compilers" in flattened_config
+    assert "definitions" in flattened_config
+    assert "toolchains" in flattened_config
     for section in distribution.SKIP_CONFIG_SECTION:
-        assert section not in pkgr._flattened_config
+        assert section not in flattened_config
 
 
 def test_get_relative_paths():
+    """
+    Tests the functionality of creating a relative path structure for the environment's
+    configuration, notably for Spack extensions.
+    """
     original_paths = [
         "/home/user/project/file1.txt",
         "/home/user/project/file2.txt",
@@ -965,25 +948,41 @@ def test_get_relative_paths():
     dir_name = "/home/user/project/subdir"
 
     expected_output = ["subdir/file1.txt", "subdir/file2.txt", "subdir/file3.txt"]
-
     result = distribution.get_relative_paths(original_paths, env_path, dir_name)
-
     assert result == expected_output
 
 
-def test_DistributionPackager_create_config(tmpdir, monkeypatch):
+def test_DistributionPackager_init_config(tmpdir, monkeypatch):
+    """
+    Tests the translation from the flattened config dict to the
+    creation of the config file for the packaged environment.
+    """
     manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
     create_spack_manifest(manifest)
     env = spack.environment.Environment(os.path.dirname(manifest))
     root = os.path.join(tmpdir.strpath, "root")
     pkgr = distribution.DistributionPackager(env, root)
-
-    TEST_SECTION_SCHEMAS = {
+    extensions_path = os.path.join(root, "extensions")
+    flattened_config = {
         "env_vars": {"set": {"SOME_ENV_VAR": "test"}},
+        "config": {"extensions": ["test"]},
         "toolchains": {"toolchain": "gcc"},
+        "compilers": ["incorrect_syntax"],
+        "concretizer": {},
+        "config": {"extensions": {"test"}},
     }
-    monkeypatch.setattr(pkgr, "_flattened_config", TEST_SECTION_SCHEMAS)
-    pkgr.create_config()
+    flattened_config["config"]["extensions"] = distribution.get_relative_paths(
+        extensions_path, pkgr.path, os.path.join(root, "extensions")
+    )
+    pkgr._create_config_file(flattened_config)
     with pkgr.env:
-        for section in TEST_SECTION_SCHEMAS:
-            assert TEST_SECTION_SCHEMAS[section] == spack.config.CONFIG.get(section)
+        for section in flattened_config:
+            if section == "config":
+                assert (
+                    flattened_config[section]["extensions"]
+                    != spack.config.CONFIG.get(section)["extensions"]
+                )
+            elif section == "concretizer":
+                assert flattened_config[section] != spack.config.CONFIG.get(section)
+            else:
+                assert flattened_config[section] == spack.config.CONFIG.get(section)
