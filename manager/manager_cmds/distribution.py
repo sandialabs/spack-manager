@@ -227,7 +227,8 @@ class DistributionPackager:
                     flattened_config[section] = spack.config.CONFIG.get(section)
                 except spack.config.ConfigSectionError as e:
                     tty.error(
-                        f"The configuration section: {section} does not exist in {self.environment_to_package.name}. The error returned is: {e}"
+                        f"The configuration section: {section} does not exist in \
+                            {self.environment_to_package.name}. The error returned is: {e}"
                     )
         return flattened_config
 
@@ -241,7 +242,8 @@ class DistributionPackager:
                         )
                     except spack.config.ConfigFormatError as e:
                         tty.error(
-                            f"The configuration section: {section} has incorrect syntax in the environment. The error returned is: {e}"
+                            f"The configuration section: {section} has incorrect syntax \
+                                in the environment. The error returned is: {e}"
                         )
 
     def filter_exclude_configs(self):
