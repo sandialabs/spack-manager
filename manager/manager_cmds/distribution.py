@@ -150,7 +150,8 @@ def get_relative_paths(original_paths, env_path, dir_name):
 
 
 def call(module, method, args):
-    tty.msg(f"Executing: spack {method} {" ".join(args)}")
+    sargs = " ".join(args)
+    tty.msg(f"Executing: spack {method} {sargs}")
     parser = argparse.ArgumentParser()
     module.setup_parser(parser)
     args = parser.parse_args(args)
