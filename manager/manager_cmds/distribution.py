@@ -348,29 +348,31 @@ class DistributionPackager:
         # However, this causes issues for packages that are not downloadable,
         # so we do a first-shot mirror creation with the original environment active.
         if filter_specs:
-            filter_specs = ["--exclude-specs"] + filter_specs
+            filter_specs = [f"--exclude-specs={x}"for x in filter_specs]
         else:
             filter_specs = []
 
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
+            specs = [x.name for x in self.environment_to_package.all_specs()]
             args = [
                 "create",
                 "--directory",
                 self.source_mirror,
                 *filter_specs,
-                *self.environment_to_package.all_specs(),
+                *specs,
             ]
             call(spack.cmd.mirror, "mirror", args)
 
         with self.env:
             tty.msg(f"Updating mirror at {self.source_mirror}....")
+            specs = [x.name for x in self.env.all_specs()]
             args = [
                 "create",
                 "--directory",
                 self.source_mirror,
                 *filter_specs,
-                *self.env.all_specs(),
+                *specs,
             ]
             call(spack.cmd.mirror, "mirror", args)
 
@@ -382,8 +384,6 @@ class DistributionPackager:
                 call(spack.cmd.mirror, "mirror", ["add", "internal-source", mirror_path])
 
     def configure_binary_mirror(self):
-        parser = argparse.ArgumentParser()
-        spack.cmd.buildcache.setup_parser(parser)
         with self.environment_to_package:
             tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
             call(spack.cmd.buildcache, "buildcache", ["push", "--unsigned", self.binary_mirror])
@@ -520,11 +520,11 @@ def distribution(parser, args):
         packager.copy_extensions_files()
         packager.configure_package_repos()
         packager.configure_package_settings(filter_externals=args.filter_externals)
+        packager.configure_bootstrap_mirror()
         packager.concretize()
         if not args.binary_only:
             packager.configure_source_mirror(filter_specs=args.exclude_specs)
         if not args.source_only:
             packager.configure_binary_mirror()
-        packager.configure_bootstrap_mirror()
         packager.bundle_spack()
         packager.bundle_extra_data()
