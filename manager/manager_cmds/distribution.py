@@ -348,7 +348,7 @@ class DistributionPackager:
         # However, this causes issues for packages that are not downloadable,
         # so we do a first-shot mirror creation with the original environment active.
         if filter_specs:
-            filter_specs = [f"--exclude-specs={x}"for x in filter_specs]
+            filter_specs = [f"--exclude-specs}", " ".join(filter_specs)]
         else:
             filter_specs = []
 
