@@ -1,9 +1,15 @@
+import argparse
 import fnmatch
 import glob
 import os
 import shutil
 
 import spack.cmd
+import spack.cmd.add
+import spack.cmd.bootstrap
+import spack.cmd.buildcache
+import spack.cmd.config
+import spack.cmd.mirror
 import spack.config
 import spack.environment
 import spack.extensions
@@ -12,8 +18,6 @@ import spack.llnl.util.tty as tty
 import spack.spec
 import spack.util.path
 import spack.util.spack_yaml
-from spack.cmd.mirror import create_mirror_for_all_specs, filter_externals
-from spack.main import SpackCommand
 from spack.paths import spack_root
 
 description = "bundle an environment as a self-contained source distribution"
@@ -46,6 +50,11 @@ def add_command(parser, command_dict):
     subparser.add_argument(
         "--exclude-file",
         help="Sections in the enviroment's configuration file to exclude located a file",
+    )
+    subparser.add_argument(
+        "--exclude-specs",
+        type=parse_comma_separated,
+        help="specs which Spack should not try to add to a mirror (specified on command line)",
     )
     subparser.add_argument(
         "--filter-externals",
@@ -138,6 +147,16 @@ def get_relative_paths(original_paths, env_path, dir_name):
         path = os.path.join(os.path.relpath(dir_name, env_path), os.path.basename(path))
         new_path.append(path)
     return new_path
+
+
+def call(module, method, args):
+    sargs = " ".join(args)
+    tty.msg(f"Executing: spack {method} {sargs}")
+    parser = argparse.ArgumentParser()
+    module.setup_parser(parser)
+    args = parser.parse_args(args)
+    callme = getattr(module, method)
+    callme(parser, args)
 
 
 class DistributionPackager:
@@ -248,12 +267,11 @@ class DistributionPackager:
 
     def filter_exclude_configs(self):
         if self.exclude_configs:
-            sconfig = SpackCommand("config")
             with self.env:
                 tty.msg(f"Excluding configurations: {self.exclude_configs}....")
                 for exclude in self.exclude_configs:
                     with self.env.write_transaction():
-                        sconfig("remove", f"{exclude}")
+                        call(spack.cmd.config, "config", ["remove", exclude])
 
     def configure_includes(self):
         if self.includes:
@@ -261,21 +279,18 @@ class DistributionPackager:
             includes_install = os.path.join(self.path, os.path.basename(self.includes))
             shutil.copytree(self.includes, includes_install)
             includes = os.path.relpath(includes_install, self.env.path)
-            sconfig = SpackCommand("config")
             with self.env:
                 with self.env.write_transaction():
-                    sconfig("add", f"include:[{includes}]")
+                    call(spack.cmd.config, "config", ["add", f"include:[{includes}]"])
 
     def configure_specs(self):
         with self.environment_to_package:
             specs = self.environment_to_package.user_specs.specs_as_yaml_list
 
-        adder = SpackCommand("add")
         tty.msg(f"Adding specs to env: {self.env.name}....")
         with self.env:
-            for spec in specs:
-                with self.env.write_transaction():
-                    adder(spec)
+            with self.env.write_transaction():
+                call(spack.cmd.add, "add", specs)
 
     def copy_extensions_files(self):
         with self.environment_to_package:
@@ -327,45 +342,53 @@ class DistributionPackager:
         env_data["spack"]["packages"] = package_settings
         self._write(env_data)
 
-    def configure_source_mirror(self):
+    def configure_source_mirror(self, filter_specs=None):
         # We do not want to omit any packages that are externals
         # just So They Build Faster internally, but are still needed externally.
         # However, this causes issues for packages that are not downloadable,
         # so we do a first-shot mirror creation with the original environment active.
+        if filter_specs:
+            filter_specs = ["--exclude-specs", " ".join(filter_specs)]
+        else:
+            filter_specs = []
+
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
-            create_mirror_for_all_specs(
-                mirror_specs=filter_externals(self.environment_to_package.all_specs()),
-                path=self.source_mirror,
-                skip_unstable_versions=False,
-                workers=spack.config.determine_number_of_jobs(parallel=True),
-            )
+            specs = [x.name for x in self.environment_to_package.all_specs()]
+            args = [
+                "create",
+                "--directory",
+                self.source_mirror,
+                *filter_specs,
+                *specs,
+            ]
+            call(spack.cmd.mirror, "mirror", args)
 
         with self.env:
             tty.msg(f"Updating mirror at {self.source_mirror}....")
-            create_mirror_for_all_specs(
-                mirror_specs=filter_externals(self.env.all_specs()),
-                path=self.source_mirror,
-                skip_unstable_versions=False,
-                workers=spack.config.determine_number_of_jobs(parallel=True),
-            )
+            specs = [x.name for x in self.env.all_specs()]
+            args = [
+                "create",
+                "--directory",
+                self.source_mirror,
+                *filter_specs,
+                *specs,
+            ]
+            call(spack.cmd.mirror, "mirror", args)
+
             mirror_path = os.path.join(
                 os.path.relpath(self.path, self.env.path), os.path.basename(self.source_mirror)
             )
-
-            mirrorer = SpackCommand("mirror")
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
-                mirrorer("add", "internal-source", mirror_path)
+                call(spack.cmd.mirror, "mirror", ["add", "internal-source", mirror_path])
 
     def configure_binary_mirror(self):
-        cacher = SpackCommand("buildcache")
         with self.environment_to_package:
             tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
-            cacher("push", "--unsigned", self.binary_mirror)
-            cacher("keys", "--install", "--trust")
+            call(spack.cmd.buildcache, "buildcache", ["push", "--unsigned", self.binary_mirror])
+            call(spack.cmd.buildcache, "buildcache", ["keys", "--install", "--trust"])
 
-        mirrorer = SpackCommand("mirror")
         mirror_path = os.path.join(
             os.path.relpath(self.path, self.env.path), os.path.basename(self.binary_mirror)
         )
@@ -374,37 +397,56 @@ class DistributionPackager:
         with self.env:
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
-                mirrorer("add", "--type", "binary", "--unsigned", mirror_name, mirror_path)
+                call(
+                    spack.cmd.mirror,
+                    "mirror",
+                    ["add", "--type", "binary", "--unsigned", mirror_name, mirror_path],
+                )
 
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
-        strapper = SpackCommand("bootstrap")
-        strapper("mirror", "--binary-packages", self.bootstrap_mirror)
-        bootstrap_source = os.path.join(
-            os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "sources"
-        )
-        bootstrap_binary = os.path.join(
-            os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
-        )
+
+        with self.environment_to_package:
+            call(
+                spack.cmd.bootstrap,
+                "bootstrap",
+                ["mirror", "--binary-packages", self.bootstrap_mirror],
+            )
+
+            bootstrap_source = os.path.join(
+                os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "sources"
+            )
+            bootstrap_binary = os.path.join(
+                os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
+            )
+
         with self.env:
             with fs.working_dir(self.env.path):
                 with self.env.write_transaction():
-                    strapper(
-                        "add",
-                        "--trust",
-                        "--scope",
-                        f"env:{self.env.name}",
-                        "internal-sources",
-                        bootstrap_source,
+                    call(
+                        spack.cmd.bootstrap,
+                        "bootstrap",
+                        [
+                            "add",
+                            "--trust",
+                            "--scope",
+                            f"env:{self.env.name}",
+                            "internal-sources",
+                            bootstrap_source,
+                        ],
                     )
                 with self.env.write_transaction():
-                    strapper(
-                        "add",
-                        "--trust",
-                        "--scope",
-                        f"env:{self.env.name}",
-                        "internal-binaries",
-                        bootstrap_binary,
+                    call(
+                        spack.cmd.bootstrap,
+                        "bootstrap",
+                        [
+                            "add",
+                            "--trust",
+                            "--scope",
+                            f"env:{self.env.name}",
+                            "internal-binary",
+                            bootstrap_binary,
+                        ],
                     )
 
     def bundle_spack(self):
@@ -476,11 +518,11 @@ def distribution(parser, args):
         packager.copy_extensions_files()
         packager.configure_package_repos()
         packager.configure_package_settings(filter_externals=args.filter_externals)
+        packager.configure_bootstrap_mirror()
         packager.concretize()
         if not args.binary_only:
-            packager.configure_source_mirror()
+            packager.configure_source_mirror(filter_specs=args.exclude_specs)
         if not args.source_only:
             packager.configure_binary_mirror()
-        packager.configure_bootstrap_mirror()
         packager.bundle_spack()
         packager.bundle_extra_data()
