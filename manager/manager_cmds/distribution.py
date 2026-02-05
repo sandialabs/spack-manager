@@ -405,8 +405,6 @@ class DistributionPackager:
 
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
-        parser = argparse.ArgumentParser()
-        spack.cmd.bootstrap.setup_parser(parser)
 
         with self.environment_to_package:
             call(
