@@ -126,6 +126,42 @@ def test_copy_files_excluding_pattern(tmpdir):
     assert len(results) == 3
 
 
+def test_copy_files_excluding_pattern_with_overriding_include_pattern(tmpdir):
+    """
+    Test the recursive copying of files from a source directory to a destination directory,
+    without excluding files that have been explicitly requested.
+
+    This test creates a temporary directory structure with several files, and multiple levels
+    then invokes the `copy_files_excluding_pattern` function to copy files from the source
+    directory to the destination directory while ignoring files and directories that match the
+    provided exclusion patterns.
+    """
+    root = os.path.join(tmpdir.strpath, "foo")
+    paths = [
+        os.path.join(root, "bar", "file.txt"),
+        os.path.join(root, "bar", "bad.txt"),
+        os.path.join(root, "baz", "file.txt"),
+        os.path.join(root, "bing", "bang", "bad.txt"),
+        os.path.join(root, "bing", "bang", "bong", "good.txt"),
+        os.path.join(root, "bing", "file.txt"),
+    ]
+    for p in paths:
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, "w") as f:
+            f.write("content")
+
+    dest = os.path.join(tmpdir.strpath, "dest")
+    ignore = ["bar/bad.txt", "bing/bang/*"]
+    include = ["bing/bang/bong*"]
+    distribution.copy_files_excluding_pattern(root, dest, ignore, include)
+
+    results = []
+    for _, _, files in os.walk(dest):
+        assert "bad.txt" not in files
+        results.extend(files)
+    assert len(results) == 4
+
+
 def test_remove_by_pattern(tmpdir):
     """
     Test the removal of all files/dirs from a higherarchy that match a passed glob pattern.
@@ -145,7 +181,37 @@ def test_remove_by_pattern(tmpdir):
         with open(p, "w") as f:
             f.write("content")
 
-    distribution.remove_by_pattern(f"{bad_root}/*")
+    distribution.remove_by_pattern(f"{bad_root}/*", [])
+
+    for bad_p in bad:
+        assert not os.path.isfile(bad_p)
+    for good_p in good:
+        assert os.path.isfile(good_p)
+    assert os.path.isdir(bad_root)
+
+
+def test_remove_by_pattern_with_overriding_includes(tmpdir):
+    """
+    Test the removal of all files/dirs from a higherarchy that match a passed glob pattern,
+    but assert that any files specifeid in the include pattern do not get removed.
+    """
+    root = os.path.join(tmpdir.strpath, "foo")
+    bad_root = os.path.join(root, "bing")
+    bad = [os.path.join(bad_root, "bang", "bad.txt"), os.path.join(bad_root, "bing", "file.txt")]
+
+    good = [
+        os.path.join(root, "bar", "file.txt"),
+        os.path.join(root, "bar", "bong", "bad.txt"),
+        os.path.join(root, "baz", "file.txt"),
+        os.path.join(bad_root, "good", "file.txt"),
+    ]
+
+    for p in good + bad:
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, "w") as f:
+            f.write("content")
+
+    distribution.remove_by_pattern(f"{bad_root}/*", [f"{bad_root}/good*"])
 
     for bad_p in bad:
         assert not os.path.isfile(bad_p)
@@ -531,16 +597,21 @@ def test_DistributionPackager_remove_unwanted_artifacts(tmpdir, monkeypatch):
     pkgr.concretize()
     assert len(os.listdir(env_dir)) == 3
     bad_file = os.path.join(pkgr.spack_dir, "foo", "aFile")
+    good_file = os.path.join(pkgr.spack_dir, "foo", "bFile")
     os.makedirs(os.path.dirname(bad_file))
     with open(bad_file, "w") as out:
-        out.write("content")
-    monkeypatch.setattr(distribution, "SPACK_USER_PATTERNS", ["foo/*"])
-
+        out.write("acontent")
+    with open(good_file, "w") as out:
+        out.write("bcontent")
+    monkeypatch.setattr(distribution, "SPACK_USER_EXCLUDE_PATTERNS", ["foo/*"])
+    monkeypatch.setattr(distribution, "SPACK_USER_INCLUDE_PATTERNS", ["foo/bFile"])
     pkgr.remove_unwanted_artifacts()
+
     env_assets = os.listdir(env_dir)
     assert len(env_assets) == 1
     assert "spack.yaml" in env_assets
     assert not os.path.isfile(bad_file)
+    assert os.path.isfile(good_file)
 
 
 def test_DistributionPackager_configure_includes(tmpdir):
@@ -682,16 +753,18 @@ def test_DistributionPackager_configure_package_settings(tmpdir):
 
     inital_config = get_manifest(pkgr.env)
     assert "packages" not in inital_config["spack"]
-    pkgr.configure_package_settings(filter_externals=True)
+    pkgr.init_config()
+    result_config = get_manifest(pkgr.env)
+    assert good["all"]["prefer"] == result_config["spack"]["packages"]["all"]["prefer"]
+    assert "cmake" in result_config["spack"]["packages"]
+
+    pkgr.filter_exclude_configs(filter_externals=True)
     result_config = get_manifest(pkgr.env)
     assert "packages" in result_config["spack"]
-    assert good == result_config["spack"]["packages"]
-
-    pkgr.configure_package_settings(filter_externals=False)
-    new_result_config = get_manifest(pkgr.env)
-    new_expected = good.copy()
-    new_expected.update(bad)
-    assert new_expected == new_result_config["spack"]["packages"]
+    assert good["all"]["prefer"] == result_config["spack"]["packages"]["all"]["prefer"]
+    assert "cmake" not in result_config["spack"]["packages"]
+    # Make sure spack defaults are added to the packages dict
+    assert good != result_config["spack"]["packages"]
 
 
 def test_DistributionPackager_bundle_extra_data(tmpdir):

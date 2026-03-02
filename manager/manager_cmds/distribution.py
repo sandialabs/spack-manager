@@ -25,8 +25,9 @@ section = "manager"
 level = "long"
 
 
-SPACK_USER_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
-SKIP_CONFIG_SECTION = ["mirrors", "repos", "include", "packages", "ci", "cdash", "bootstrap"]
+SPACK_USER_EXCLUDE_PATTERNS = ["var/*", "opt/*", ".git*", "etc/spack/*"]
+SPACK_USER_INCLUDE_PATTERNS = ["etc/spack/defaults*"]
+SKIP_CONFIG_SECTION = ["mirrors", "repos", "include", "ci", "cdash", "bootstrap"]
 
 
 def add_command(parser, command_dict):
@@ -114,20 +115,30 @@ def read_yaml_file(filename):
     return data
 
 
-def copy_files_excluding_pattern(src, dst, patterns):
+def copy_files_excluding_pattern(src, dst, exclude_patterns, include_patterns=None):
+    """
+    Include_patterns are used to override subsets of the exclude_patterns (include_patterns are
+    always copied no matter what is defined in the exclude_patterns)
+    """
+    if include_patterns is None:
+        include_patterns = []
     os.makedirs(dst, exist_ok=True)
 
     for dirpath, _, filenames in os.walk(src):
         relative_path = os.path.relpath(dirpath, src)
         dst_dir = os.path.join(dst, relative_path)
-        if not is_match(relative_path, patterns):
+        if not is_match(relative_path, exclude_patterns) or is_match(
+            relative_path, include_patterns
+        ):
             os.makedirs(dst_dir, exist_ok=True)
 
             for filename in filenames:
                 src_file = os.path.join(dirpath, filename)
                 dst_file = os.path.join(dst_dir, filename)
 
-                if not is_match(os.path.join(relative_path, filename), patterns):
+                if not is_match(
+                    os.path.join(relative_path, filename), exclude_patterns
+                ) or is_match(relative_path, include_patterns):
                     shutil.copy2(src_file, dst_file, follow_symlinks=False)
 
 
@@ -138,7 +149,9 @@ def valid_env_scopes(env):
 
 def bundle_spack(location):
     tty.msg(f"Packing up Spack installation to {location}....")
-    copy_files_excluding_pattern(spack_root, location, SPACK_USER_PATTERNS)
+    copy_files_excluding_pattern(
+        spack_root, location, SPACK_USER_EXCLUDE_PATTERNS, SPACK_USER_INCLUDE_PATTERNS
+    )
 
 
 def get_relative_paths(original_paths, env_path, dir_name):
@@ -217,8 +230,12 @@ class DistributionPackager:
         self.env.write()
 
     def remove_unwanted_artifacts(self):
-        for pattern in SPACK_USER_PATTERNS:
-            remove_by_pattern(os.path.join(self.spack_dir, pattern))
+        include_patterns = [
+            os.path.join(self.spack_dir, ipattern) for ipattern in SPACK_USER_INCLUDE_PATTERNS
+        ]
+        for epattern in SPACK_USER_EXCLUDE_PATTERNS:
+            for ipattern in SPACK_USER_INCLUDE_PATTERNS:
+                remove_by_pattern(os.path.join(self.spack_dir, epattern), include_patterns)
         for item in os.listdir(self.env.path):
             fullname = os.path.join(self.env.path, item)
             if "spack.yaml" in item:
@@ -249,6 +266,7 @@ class DistributionPackager:
                         f"The configuration section: {section} does not exist in \
                             {self.environment_to_package.name}. The error returned is: {e}"
                     )
+
         return flattened_config
 
     def _create_config_file(self, flattened_config):
@@ -265,13 +283,21 @@ class DistributionPackager:
                                 in the environment. The error returned is: {e}"
                         )
 
-    def filter_exclude_configs(self):
+    def filter_exclude_configs(self, filter_externals=False):
         if self.exclude_configs:
             with self.env:
                 tty.msg(f"Excluding configurations: {self.exclude_configs}....")
                 for exclude in self.exclude_configs:
                     with self.env.write_transaction():
                         call(spack.cmd.config, "config", ["remove", exclude])
+        if filter_externals:
+            tty.msg("Excluding external packages....")
+            with self.env:
+                packages = spack.config.CONFIG.get("packages")
+                for package in packages:
+                    if "externals" in packages[package]:
+                        with self.env.write_transaction():
+                            call(spack.cmd.config, "config", ["remove", f"packages:{package}"])
 
     def configure_includes(self):
         if self.includes:
@@ -326,22 +352,6 @@ class DistributionPackager:
         env["spack"]["repos"] = repos
         self._write(env)
 
-    def configure_package_settings(self, filter_externals=False):
-        tty.msg(f"Add package settings to env: {self.env.name}....")
-        with self.environment_to_package:
-            package_settings = {}
-            for scope in valid_env_scopes(self.environment_to_package):
-                for package, data in spack.config.get("packages", scope=scope).items():
-                    if "externals" not in data or not filter_externals:
-                        try:
-                            package_settings[package].update(data)
-                        except KeyError:
-                            package_settings[package] = data
-
-        env_data = get_env_as_dict(self.env)
-        env_data["spack"]["packages"] = package_settings
-        self._write(env_data)
-
     def configure_source_mirror(self, filter_specs=None):
         # We do not want to omit any packages that are externals
         # just So They Build Faster internally, but are still needed externally.
@@ -355,25 +365,13 @@ class DistributionPackager:
         with self.environment_to_package:
             tty.msg(f"Creating source mirror at {self.source_mirror}....")
             specs = [x.name for x in self.environment_to_package.all_specs()]
-            args = [
-                "create",
-                "--directory",
-                self.source_mirror,
-                *filter_specs,
-                *specs,
-            ]
+            args = ["create", "--directory", self.source_mirror, *filter_specs, *specs]
             call(spack.cmd.mirror, "mirror", args)
 
         with self.env:
             tty.msg(f"Updating mirror at {self.source_mirror}....")
             specs = [x.name for x in self.env.all_specs()]
-            args = [
-                "create",
-                "--directory",
-                self.source_mirror,
-                *filter_specs,
-                *specs,
-            ]
+            args = ["create", "--directory", self.source_mirror, *filter_specs, *specs]
             call(spack.cmd.mirror, "mirror", args)
 
             mirror_path = os.path.join(
@@ -488,13 +486,18 @@ def correct_mirror_args(env, args):
         args.source_only = True
 
 
-def remove_by_pattern(pattern):
-    for item in glob.glob(pattern, recursive=True):
-        tty.msg(item)
-        if os.path.isfile(item):
-            os.remove(item)
-        elif os.path.isdir(item):
-            shutil.rmtree(item)
+def remove_by_pattern(exclude_pattern, include_patterns):
+    keep_these = []
+    for ipattern in include_patterns:
+        keep_these += list(glob.glob(ipattern, recursive=True))
+
+    for item in glob.glob(exclude_pattern, recursive=True):
+        if item not in keep_these:
+            tty.msg(item)
+            if os.path.isfile(item):
+                os.remove(item)
+            elif os.path.isdir(item):
+                shutil.rmtree(item)
 
 
 def distribution(parser, args):
@@ -512,12 +515,11 @@ def distribution(parser, args):
 
     with packager:
         packager.init_config()
-        packager.filter_exclude_configs()
+        packager.filter_exclude_configs(filter_externals=args.filter_externals)
         packager.configure_includes()
         packager.configure_specs()
         packager.copy_extensions_files()
         packager.configure_package_repos()
-        packager.configure_package_settings(filter_externals=args.filter_externals)
         packager.configure_bootstrap_mirror()
         packager.concretize()
         if not args.binary_only:
