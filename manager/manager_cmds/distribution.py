@@ -116,6 +116,10 @@ def read_yaml_file(filename):
 
 
 def copy_files_excluding_pattern(src, dst, exclude_patterns, include_patterns=None):
+    """
+    Include_patterns are used to override subsets of the exclude_patterns (include_patterns are always
+    copied no matter what is defined in the exclude_patterns)
+    """
     if include_patterns is None:
         include_patterns = []
     os.makedirs(dst, exist_ok=True)

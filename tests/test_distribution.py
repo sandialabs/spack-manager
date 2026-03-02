@@ -190,7 +190,7 @@ def test_remove_by_pattern(tmpdir):
     assert os.path.isdir(bad_root)
 
 
-def test_remove_by_pattern_with_overriding_incldues(tmpdir):
+def test_remove_by_pattern_with_overriding_includes(tmpdir):
     """
     Test the removal of all files/dirs from a higherarchy that match a passed glob pattern,
     but assert that any files specifeid in the include pattern do not get removed.
