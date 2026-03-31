@@ -385,7 +385,6 @@ class DistributionPackager:
         with self.environment_to_package:
             tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
             call(spack.cmd.buildcache, "buildcache", ["push", "--unsigned", self.binary_mirror])
-            call(spack.cmd.buildcache, "buildcache", ["keys", "--install", "--trust"])
 
         mirror_path = os.path.join(
             os.path.relpath(self.path, self.env.path), os.path.basename(self.binary_mirror)
