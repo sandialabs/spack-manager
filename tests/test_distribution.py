@@ -609,7 +609,7 @@ def test_DistributionPackager_remove_unwanted_artifacts(tmpdir, monkeypatch):
     pkgr.remove_unwanted_artifacts()
 
     env_assets = os.listdir(env_dir)
-    assert len(env_assets) == 1
+    assert len(env_assets) == 2
     assert "spack.yaml" in env_assets
     assert not os.path.isfile(bad_file)
     assert os.path.isfile(good_file)

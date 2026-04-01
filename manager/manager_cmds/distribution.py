@@ -240,7 +240,7 @@ class DistributionPackager:
                 remove_by_pattern(os.path.join(self.spack_dir, epattern), include_patterns)
         for item in os.listdir(self.env.path):
             fullname = os.path.join(self.env.path, item)
-            if "spack.yaml" in item:
+            if "spack.yaml" in item or "spack.lock" in item:
                 continue
             elif os.path.isdir(fullname):
                 shutil.rmtree(fullname)
