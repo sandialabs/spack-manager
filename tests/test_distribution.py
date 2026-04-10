@@ -927,8 +927,8 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
     monkeypatch.setattr(distribution, "call", MockCommand)
     pkgr.configure_binary_mirror()
 
-    assert len(MockCommand.call_args) == 3
-    assert MockCommand.args == ["buildcache", "buildcache", "mirror"]
+    assert len(MockCommand.call_args) == 2
+    assert MockCommand.args == ["buildcache", "mirror"]
 
     buildcache_parser = ArgumentParser()
     test_buildcache_parse.setup_parser(buildcache_parser)
@@ -936,8 +936,7 @@ def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):
     test_mirror_parse.setup_parser(mirror_parser)
     with pkgr.env:
         buildcache_parser.parse_args(MockCommand.call_args[0])
-        buildcache_parser.parse_args(MockCommand.call_args[1])
-        mirror_parser.parse_args(MockCommand.call_args[2])
+        mirror_parser.parse_args(MockCommand.call_args[1])
 
 
 def test_DistributionPackager_get_flattened_config(tmpdir):
