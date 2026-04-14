@@ -3,6 +3,7 @@ import fnmatch
 import glob
 import os
 import shutil
+import tempfile
 
 import spack.cmd
 import spack.cmd.add
@@ -16,6 +17,7 @@ import spack.extensions
 import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
 import spack.spec
+import spack.solver.asp
 import spack.util.path
 import spack.util.spack_yaml
 from spack.paths import spack_root
@@ -400,10 +402,8 @@ class DistributionPackager:
                     ["add", "--type", "binary", "--unsigned", mirror_name, mirror_path],
                 )
 
-    def configure_bootstrap_mirror(self):
-        tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
-
-        with self.environment_to_package:
+    def _create_bootstrap(self, env):
+        with env:
             call(
                 spack.cmd.bootstrap,
                 "bootstrap",
@@ -416,6 +416,18 @@ class DistributionPackager:
             bootstrap_binary = os.path.join(
                 os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
             )
+        return bootstrap_source, bootstrap_binary
+
+    def configure_bootstrap_mirror(self):
+        tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
+        try:
+            bootstrap_source, bootstrap_binary = self._create_bootstrap(self.environment_to_package)
+        except spack.solver.asp.UnsatisfiableSpecError:
+            tty.msg("Bootstrap miror creation failed, falling back to creating bootstrap mirror from a clean envionment")
+
+            with tempfile.TemporaryDirectory() as tmpdir:
+                temp_env = spack.environment.create_in_dir(tmpdir)
+                bootstrap_source, bootstrap_binary = self._create_bootstrap(temp_env)
 
         with self.env:
             with fs.working_dir(self.env.path):

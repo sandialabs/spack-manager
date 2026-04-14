@@ -18,6 +18,7 @@ import spack.cmd.mirror as test_mirror_parse
 import spack.config
 import spack.environment
 import spack.extensions
+import spack.solver.asp
 import spack.spec
 import spack.util.spack_yaml
 
@@ -901,6 +902,35 @@ def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
     pkgr.configure_bootstrap_mirror()
 
     assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap"]
+
+    parser = ArgumentParser()
+    test_bootstrap_parse.setup_parser(parser)
+    with pkgr.env:
+        for call in MockCommand.call_args:
+            parser.parse_args(call)
+
+
+def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(tmpdir, monkeypatch):
+    """
+    This test verifies that `configure_bootstrap_mirror` does not construct a call to
+    `spack bootstrap` that violates its API.
+    """
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
+
+    class MockCommand:
+        args = []
+        call_args = []
+
+        def __init__(self, _, cmd, args):
+            self.args.append(cmd)
+            self.call_args.append(args)
+            if len(self.args) == 1:
+                raise spack.solver.asp.UnsatisfiableSpecError("fake error")
+
+    monkeypatch.setattr(distribution, "call", MockCommand)
+    pkgr.configure_bootstrap_mirror()
+
+    assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap", "bootstrap"]
 
     parser = ArgumentParser()
     test_bootstrap_parse.setup_parser(parser)
