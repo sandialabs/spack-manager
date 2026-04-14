@@ -914,8 +914,9 @@ def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(
     tmpdir, monkeypatch
 ):
     """
-    This test verifies that `configure_bootstrap_mirror` does not construct a call to
-    `spack bootstrap` that violates its API.
+    Test that a failure creating the bootstrap mirror falls back to using an empty environment
+    (generally this has been caused by overly-restrictive compiler settings, which don't really apply
+    for the bootstrap mirror).
     """
     pkgr, root, env = init_test_environment(tmpdir.strpath)
 
