@@ -910,7 +910,9 @@ def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
             parser.parse_args(call)
 
 
-def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(tmpdir, monkeypatch):
+def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(
+    tmpdir, monkeypatch
+):
     """
     This test verifies that `configure_bootstrap_mirror` does not construct a call to
     `spack bootstrap` that violates its API.

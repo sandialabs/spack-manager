@@ -16,8 +16,8 @@ import spack.environment
 import spack.extensions
 import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
-import spack.spec
 import spack.solver.asp
+import spack.spec
 import spack.util.path
 import spack.util.spack_yaml
 from spack.paths import spack_root
@@ -421,9 +421,11 @@ class DistributionPackager:
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
         try:
-            bootstrap_source, bootstrap_binary = self._create_bootstrap(self.environment_to_package)
+            bootstrap_source, bootstrap_binary = self._create_bootstrap(
+                self.environment_to_package
+            )
         except spack.solver.asp.UnsatisfiableSpecError:
-            tty.msg("Bootstrap miror creation failed, falling back to creating bootstrap mirror from a clean envionment")
+            tty.msg("Bootstrap miror creation failed, re-attempting from a clean envionment")
 
             with tempfile.TemporaryDirectory() as tmpdir:
                 temp_env = spack.environment.create_in_dir(tmpdir)
