@@ -227,9 +227,15 @@ class DistributionPackager:
         os.makedirs(self.path)
 
     def concretize(self):
-        tty.msg(f"Concretizing env: {self.env.name}....")
-        self.env.concretize(force=True)
-        self.env.write()
+        src_lock = self.environment_to_package.lock_path
+        dst_lock = self.env.lock_path
+        if os.path.isfile(src_lock):
+            tty.msg(f"Copying lockfile from {self.environment_to_package.name} to bundled env....")
+            shutil.copy2(src_lock, dst_lock)
+        else:
+            tty.msg(f"Concretizing env: {self.env.name}....")
+            self.env.concretize(force=True)
+            self.env.write()
 
     def remove_unwanted_artifacts(self):
         include_patterns = [
