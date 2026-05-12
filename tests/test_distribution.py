@@ -566,7 +566,7 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_config(tmpdir
 def test_concretize(tmpdir):
     """
     This test verifies that `concretize` method calls env.concretize() on the
-    environment being created.
+    environment being created when the source env has no lockfile.
     """
     root = os.path.join(tmpdir.strpath, "root")
     manifest = os.path.join(root, "environment", "spack.yaml")
@@ -574,12 +574,43 @@ def test_concretize(tmpdir):
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
 
-    pkgr = distribution.DistributionPackager(None, root)
+    src_dir = os.path.join(tmpdir.strpath, "src")
+    create_spack_manifest(os.path.join(src_dir, "spack.yaml"))
+    src_env = get_fake_concretize_env(src_dir)
+
+    pkgr = distribution.DistributionPackager(src_env, root)
     pkgr._env = env
 
     pkgr.concretize()
     lockfile = os.path.join(env_dir, "spack.lock")
     assert os.path.isfile(lockfile)
+
+
+def test_concretize_copies_source_lockfile(tmpdir):
+    """
+    When the source env has a spack.lock, concretize() copies it into the
+    bundled env instead of re-concretizing.
+    """
+    root = os.path.join(tmpdir.strpath, "root")
+    manifest = os.path.join(root, "environment", "spack.yaml")
+    create_spack_manifest(manifest)
+    env_dir = os.path.dirname(manifest)
+    env = get_fake_concretize_env(env_dir)
+
+    src_dir = os.path.join(tmpdir.strpath, "src")
+    create_spack_manifest(os.path.join(src_dir, "spack.yaml"))
+    src_env = get_fake_concretize_env(src_dir)
+    with open(os.path.join(src_dir, "spack.lock"), "w") as f:
+        f.write("source-lockfile-contents")
+
+    pkgr = distribution.DistributionPackager(src_env, root)
+    pkgr._env = env
+
+    pkgr.concretize()
+    lockfile = os.path.join(env_dir, "spack.lock")
+    assert os.path.isfile(lockfile)
+    with open(lockfile) as f:
+        assert f.read() == "source-lockfile-contents"
 
 
 def test_DistributionPackager_remove_unwanted_artifacts(tmpdir, monkeypatch):
@@ -593,7 +624,11 @@ def test_DistributionPackager_remove_unwanted_artifacts(tmpdir, monkeypatch):
     env_dir = os.path.dirname(manifest)
     env = get_fake_concretize_env(env_dir)
 
-    pkgr = distribution.DistributionPackager(None, root)
+    src_dir = os.path.join(tmpdir.strpath, "src")
+    create_spack_manifest(os.path.join(src_dir, "spack.yaml"))
+    src_env = get_fake_concretize_env(src_dir)
+
+    pkgr = distribution.DistributionPackager(src_env, root)
     pkgr._env = env
     pkgr.concretize()
     assert len(os.listdir(env_dir)) == 3
