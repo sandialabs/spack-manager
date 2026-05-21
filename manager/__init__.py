@@ -10,6 +10,7 @@ This module is the top level and deals specifically with manipulating the config
 file.  The data from the configuration file is then available and immutable to all
 other modules.
 """
+
 import os
 
 import spack.llnl.util.filesystem as fs

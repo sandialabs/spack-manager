@@ -158,7 +158,7 @@ class StatsGraphBuilder(DotGraphBuilder):
             y *= scale_factor
             fontsize *= scale_factor
         scale_str = f"width={x} height={y} fixedsize=true fontsize={fontsize}"
-        color_str = f'fillcolor="{color_compute if self.to_color else"lightblue"}"'
+        color_str = f'fillcolor="{color_compute if self.to_color else "lightblue"}"'
 
         return (node.dag_hash(), f'[label="{node.format("{name}")}", {color_str}, {scale_str}]')
 

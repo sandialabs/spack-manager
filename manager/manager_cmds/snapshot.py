@@ -140,16 +140,13 @@ def add_command(parser, command_dict):
         help="don't replace branch version with latest git hashes as verions",
     )
     sub_parser.add_argument(
-        "--name",
-        "-n",
-        required=False,
-        help="name the environment something other than the " "date",
+        "--name", "-n", required=False, help="name the environment something other than the date"
     )
     sub_parser.add_argument(
         "--use_machine_name",
         "-m",
         action="store_true",
-        help="use machine name in the snapshot path " "instead of computed architecture",
+        help="use machine name in the snapshot path instead of computed architecture",
     )
     sub_parser.add_argument(
         "-s", "--specs", required=True, default=[], nargs="+", help="Specs to create snapshots for"

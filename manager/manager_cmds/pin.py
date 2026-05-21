@@ -8,6 +8,7 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
+
 import os
 
 import spack.cmd

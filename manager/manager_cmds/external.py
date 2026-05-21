@@ -114,7 +114,7 @@ def external(parser, args):
     snap_env.check_views()
 
     if not snap_env.views:
-        tty.die("Environments used to create externals must have at least 1" " associated view")
+        tty.die("Environments used to create externals must have at least 1 associated view")
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
@@ -147,23 +147,21 @@ def external(parser, args):
 
 def add_command(parser, command_dict):
     ext = parser.add_parser(
-        "external",
-        help="tools for configuring precompiled" " binaries",
-        conflict_handler="resolve",
+        "external", help="tools for configuring precompiled binaries", conflict_handler="resolve"
     )
 
     ext.add_argument(
         "-n",
         "--name",
         required=False,
-        help="name the new include file for the " "externals with this name",
+        help="name the new include file for the externals with this name",
     )
     ext.add_argument(
         "-m",
         "--merge",
         required=False,
         action="store_true",
-        help="merge existing yaml files " "together",
+        help="merge existing yaml files together",
     )
 
     select = ext.add_mutually_exclusive_group()
@@ -173,16 +171,16 @@ def add_command(parser, command_dict):
         "--include",
         nargs="*",
         required=False,
-        help="(not implemeted) specs that should " "be added (omit all others)",
+        help="(not implemeted) specs that should be added (omit all others)",
     )
     select.add_argument(
         "-e",
         "--exclude",
         nargs="*",
         required=False,
-        help="(not implemented) specs that should " "be omitted (add all others)",
+        help="(not implemented) specs that should be omitted (add all others)",
     )
-    ext.add_argument("path", nargs="?", help="The location of the external install " "directory")
+    ext.add_argument("path", nargs="?", help="The location of the external install directory")
     ext.set_defaults(merge=False, name="externals.yaml")
 
     command_dict["external"] = external

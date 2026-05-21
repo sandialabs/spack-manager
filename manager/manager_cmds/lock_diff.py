@@ -133,8 +133,9 @@ def lock_diff(parser, args):
                         old_vars, new_vars
                     )
                 if old_spec.compiler_flags != new_spec.compiler_flags:
-                    old_flags, new_flags = str(old_spec.compiler_flags), str(
-                        new_spec.compiler_flags
+                    old_flags, new_flags = (
+                        str(old_spec.compiler_flags),
+                        str(new_spec.compiler_flags),
                     )
                     diff_msg += "\n *compiler_flags diff -\n\tOld {}\n\tNew: {}".format(
                         old_flags, new_flags
