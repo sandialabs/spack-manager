@@ -883,6 +883,144 @@ def test_DistributionPackager_configure_source_mirror_filter_specs(tmpdir, monke
             parser.parse_args(call)
 
 
+def _assert_boostrap_copy_from_env(monkeypatch, tmpdir, mirror_type):
+    if mirror_type == "sources":
+        expect_name = "source"
+    elif mirror_type == "binaries":
+        expect_name = "binary"
+
+    root = os.path.join(tmpdir.strpath, "root")
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+
+    # Create a fake bootstrap mirror structure on disk
+    # Structure: /tmp/fake_mirror/metadata/sources/...
+    fake_mirror_root = os.path.join(tmpdir.strpath, "fake_mirror")
+    metadata_dir = os.path.join(fake_mirror_root, "metadata")
+    sources_dir = os.path.join(metadata_dir, mirror_type)
+    os.makedirs(sources_dir)
+    with open(os.path.join(sources_dir, "some_data.yaml"), "w") as f:
+        f.write("data")
+
+    cache_dir = os.path.join(fake_mirror_root, "bootstrap_cache")
+    os.makedirs(cache_dir)
+    with open(os.path.join(cache_dir, "some_other_data.yaml"), "w") as f:
+        f.write("other data")
+
+    mock_bootstrap_config = {
+        "bootstrap": {"sources": [{"metadata": sources_dir, "name": "bootstrap-mirror-name"}]}
+    }
+
+    create_spack_manifest(manifest, extra_data=mock_bootstrap_config)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+
+    pkgr = distribution.DistributionPackager(env, root)
+
+    mock_data = []
+
+    def mock_call(*args):
+        mock_data.append([*args[1:]])
+
+    monkeypatch.setattr(distribution, "call", mock_call)
+    pkgr.configure_bootstrap_mirror()
+
+    expected_args = [
+        [
+            "bootstrap",
+            [
+                "add",
+                "--trust",
+                "--scope",
+                f"env:{pkgr.env.path}",
+                f"internal-{expect_name}",
+                f"../bootstrap-mirror/metadata/{mirror_type}",
+            ],
+        ],
+        ["buildcache", ["update-index", "../bootstrap-mirror/bootstrap_cache"]],
+    ]
+    assert mock_data == expected_args
+    assert os.path.isfile(
+        os.path.join(pkgr.bootstrap_mirror, "metadata", mirror_type, "some_data.yaml")
+    )
+    assert os.path.isfile(
+        os.path.join(pkgr.bootstrap_mirror, "bootstrap_cache", "some_other_data.yaml")
+    )
+
+
+def test_DistributionPackager_create_bootstrap_with_existing_sources(tmpdir, monkeypatch):
+    """
+    Test that _create_bootstrap identifies existing bootstrap sources in the config,
+    copies the root directory of those sources, and returns the correct relative paths.
+    """
+    _assert_boostrap_copy_from_env(monkeypatch, tmpdir, "sources")
+
+
+def test_DistributionPackager_create_bootstrap_with_existing_binaries(tmpdir, monkeypatch):
+    """
+    Test that _create_bootstrap identifies existing bootstrap binaries in the config,
+    copies the root directory of those sources, and returns the correct relative paths.
+    """
+    _assert_boostrap_copy_from_env(monkeypatch, tmpdir, "binaries")
+
+
+def test_DistributionPackager_configure_bootstrap_mirror_calls_update_index(tmpdir, monkeypatch):
+    """
+    Test that configure_bootstrap_mirror calls 'spack buildcache update-index'
+    after adding the bootstrap sources.
+    """
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
+
+    class MockCommand:
+        args = []
+        call_args = []
+
+        def __init__(self, _, cmd, args):
+            self.args.append(cmd)
+            self.call_args.append(args)
+
+    monkeypatch.setattr(distribution, "call", MockCommand)
+
+    # Mock _create_bootstrap to return a simple list
+    monkeypatch.setattr(pkgr, "_create_bootstrap", lambda e: [("internal-source", "some/path")])
+
+    pkgr.configure_bootstrap_mirror()
+
+    assert "buildcache" in MockCommand.args
+
+    update_index_called = False
+    for cmd, args in zip(MockCommand.args, MockCommand.call_args):
+        if cmd == "buildcache" and "update-index" in args:
+            update_index_called = True
+            assert "bootstrap_cache" in args[-1]
+
+    assert update_index_called
+
+
+def test_DistributionPackager_create_bootstrap_fallback(tmpdir, monkeypatch):
+    """
+    Test that if no bootstrap sources are found in config, it falls back to
+    the 'bootstrap mirror' command and returns default internal-source/binary paths.
+    """
+    root = os.path.join(tmpdir.strpath, "root")
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    create_spack_manifest(manifest)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+
+    def mock_call(*args):
+        pass
+
+    monkeypatch.setattr(distribution, "call", mock_call)
+
+    pkgr = distribution.DistributionPackager(env, root)
+    pkgr.bootstrap_mirror = os.path.join(root, "bootstrap-mirror")
+
+    sources = pkgr._create_bootstrap(env)
+
+    assert len(sources) == 2
+    names = [s[0] for s in sources]
+    assert "internal-source" in names
+    assert "internal-binary" in names
+
+
 def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
     """
     This test verifies that `configure_bootstrap_mirror` does not construct a call to
@@ -901,13 +1039,16 @@ def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
     monkeypatch.setattr(distribution, "call", MockCommand)
     pkgr.configure_bootstrap_mirror()
 
-    assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap"]
+    assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap", "buildcache"]
 
-    parser = ArgumentParser()
-    test_bootstrap_parse.setup_parser(parser)
+    boostrap_parser = ArgumentParser()
+    test_bootstrap_parse.setup_parser(boostrap_parser)
+    buildcache_parser = ArgumentParser()
+    test_buildcache_parse.setup_parser(buildcache_parser)
+    parsers = {"bootstrap": boostrap_parser, "buildcache": buildcache_parser}
     with pkgr.env:
-        for call in MockCommand.call_args:
-            parser.parse_args(call)
+        for i, call in enumerate(MockCommand.call_args):
+            parsers[MockCommand.args[i]].parse_args(call)
 
 
 def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(
@@ -933,13 +1074,16 @@ def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(
     monkeypatch.setattr(distribution, "call", MockCommand)
     pkgr.configure_bootstrap_mirror()
 
-    assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap", "bootstrap"]
+    assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap", "bootstrap", "buildcache"]
 
-    parser = ArgumentParser()
-    test_bootstrap_parse.setup_parser(parser)
+    boostrap_parser = ArgumentParser()
+    test_bootstrap_parse.setup_parser(boostrap_parser)
+    buildcache_parser = ArgumentParser()
+    test_buildcache_parse.setup_parser(buildcache_parser)
+    parsers = {"bootstrap": boostrap_parser, "buildcache": buildcache_parser}
     with pkgr.env:
-        for call in MockCommand.call_args:
-            parser.parse_args(call)
+        for i, call in enumerate(MockCommand.call_args):
+            parsers[MockCommand.args[i]].parse_args(call)
 
 
 def test_DistributionPackager_configure_binary_mirror(tmpdir, monkeypatch):

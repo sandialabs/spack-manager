@@ -1,9 +1,9 @@
-import argparse
 import fnmatch
 import glob
 import os
 import shutil
 import tempfile
+from pathlib import Path
 
 import spack.cmd
 import spack.cmd.add
@@ -404,63 +404,78 @@ class DistributionPackager:
                     ["add", "--type", "binary", "--unsigned", mirror_name, mirror_path],
                 )
 
+    @staticmethod
+    def _get_existing_bootstrap_sources():
+        return spack.config.CONFIG.get("bootstrap", {}).copy()
+
     def _create_bootstrap(self, env):
         with env:
-            call(
-                spack.cmd.bootstrap,
-                "bootstrap",
-                ["mirror", "--binary-packages", self.bootstrap_mirror],
-            )
+            sources = []
+            bootstrap_data = self._get_existing_bootstrap_sources()
+            if bootstrap_data.get("sources"):
+                for source in bootstrap_data["sources"]:
+                    potential_path = Path(source.get("metadata", ""))
+                    if potential_path.is_dir():
+                        idx = potential_path.parts.index("metadata")
+                        root = Path(*potential_path.parts[:idx])
+                        remaining = potential_path.parts[idx:]
+                        tty.msg(f"Copying {root} to {self.bootstrap_mirror}")
+                        shutil.copytree(root, self.bootstrap_mirror, dirs_exist_ok=True)
+                        rel_path = os.path.join(
+                            os.path.relpath(self.bootstrap_mirror, self.env.path), *remaining
+                        )
+                        name = "internal-source" if "sources" in remaining else "internal-binary"
+                        sources.append((name, rel_path))
 
-            bootstrap_source = os.path.join(
-                os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "sources"
-            )
-            bootstrap_binary = os.path.join(
-                os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
-            )
-        return bootstrap_source, bootstrap_binary
+            if not sources:
+                call(
+                    spack.cmd.bootstrap,
+                    "bootstrap",
+                    ["mirror", "--binary-packages", self.bootstrap_mirror],
+                )
+                bootstrap_source = os.path.join(
+                    os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "sources"
+                )
+                bootstrap_binary = os.path.join(
+                    os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
+                )
+                sources.append(("internal-source", bootstrap_source))
+                sources.append(("internal-binary", bootstrap_binary))
+        return sources
 
     def configure_bootstrap_mirror(self):
         tty.msg(f"Creating bootstrap mirror at {self.bootstrap_mirror}....")
         try:
-            bootstrap_source, bootstrap_binary = self._create_bootstrap(
-                self.environment_to_package
-            )
+            bootstrap_sources = self._create_bootstrap(self.environment_to_package)
         except spack.solver.asp.UnsatisfiableSpecError:
             tty.msg("Bootstrap miror creation failed, re-attempting from a clean envionment")
 
             with tempfile.TemporaryDirectory() as tmpdir:
                 temp_env = spack.environment.create_in_dir(tmpdir)
-                bootstrap_source, bootstrap_binary = self._create_bootstrap(temp_env)
+                bootstrap_sources = self._create_bootstrap(temp_env)
 
+        rel_mirror = os.path.relpath(self.bootstrap_mirror, self.env.path)
         with self.env:
             with fs.working_dir(self.env.path):
-                with self.env.write_transaction():
-                    call(
-                        spack.cmd.bootstrap,
-                        "bootstrap",
-                        [
-                            "add",
-                            "--trust",
-                            "--scope",
-                            f"env:{self.env.name}",
-                            "internal-sources",
-                            bootstrap_source,
-                        ],
-                    )
-                with self.env.write_transaction():
-                    call(
-                        spack.cmd.bootstrap,
-                        "bootstrap",
-                        [
-                            "add",
-                            "--trust",
-                            "--scope",
-                            f"env:{self.env.name}",
-                            "internal-binary",
-                            bootstrap_binary,
-                        ],
-                    )
+                for name, bootstrap_path in bootstrap_sources:
+                    with self.env.write_transaction():
+                        call(
+                            spack.cmd.bootstrap,
+                            "bootstrap",
+                            [
+                                "add",
+                                "--trust",
+                                "--scope",
+                                f"env:{self.env.name}",
+                                name,
+                                bootstrap_path,
+                            ],
+                        )
+                call(
+                    spack.cmd.buildcache,
+                    "buildcache",
+                    ["update-index", os.path.join(rel_mirror, "bootstrap_cache")],
+                )
 
     def bundle_spack(self):
         os.makedirs(self.path, exist_ok=True)
