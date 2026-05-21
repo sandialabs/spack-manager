@@ -45,7 +45,7 @@ def _redundant_code_from_spack_develop(args):
     Re-use the path and spec checking from spack.cmd.develop
     https://github.com/spack/spack/blob/b56f464c29c3e316c3afbbde52bf2597ad5351f1/lib/spack/spack/cmd/develop.py#L65-L95
     """
-    env = spack.cmd.require_active_env(cmd_name="develop")
+    env = spack.cmd.require_active_env(args)
 
     if not args.spec:
         if args.clone is False:
@@ -111,6 +111,7 @@ def manager_develop(parser, args):
     gives the option to clone based on specific fork and branch
     """
 
+    args.subparser = parser
     clone, path = _redundant_code_from_spack_develop(args)
 
     if args.repo_branch and clone:

@@ -192,7 +192,8 @@ def graph_dot(specs, builder, visitor, depflag=dt.ALL, out=None):
 
 
 def analyze(parser, args):
-    env = spack.cmd.require_active_env(cmd_name=command_name)
+    env = spack.cmd.require_active_env(args)
+
     specs = env.concrete_roots()
 
     visitor = None

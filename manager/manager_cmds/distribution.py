@@ -16,6 +16,7 @@ import spack.environment
 import spack.extensions
 import spack.llnl.util.filesystem as fs
 import spack.llnl.util.tty as tty
+import spack.main
 import spack.solver.asp
 import spack.spec
 import spack.util.path
@@ -164,13 +165,14 @@ def get_relative_paths(original_paths, env_path, dir_name):
     return new_path
 
 
-def call(module, method, args):
-    sargs = " ".join(args)
-    tty.msg(f"Executing: spack {method} {sargs}")
-    parser = argparse.ArgumentParser()
-    module.setup_parser(parser)
-    args = parser.parse_args(args)
-    callme = getattr(module, method)
+def call(module, cmd, argv):
+    argv = [cmd, *argv]
+    sargs = " ".join(argv)
+    tty.msg(f"Executing: spack {sargs}")
+    parser = spack.main.make_argument_parser()
+    parser.add_command(cmd)
+    args = parser.parse_args(argv)
+    callme = getattr(module, cmd)
     callme(parser, args)
 
 
@@ -514,7 +516,7 @@ def remove_by_pattern(exclude_pattern, include_patterns):
 
 
 def distribution(parser, args):
-    env = spack.cmd.require_active_env(cmd_name="manager distribution")
+    env = spack.cmd.require_active_env(args)
     correct_mirror_args(env, args)
 
     packager = DistributionPackager(

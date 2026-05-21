@@ -32,7 +32,7 @@ def setup_parser_args(subparser):
 
 
 def binary_finder(parser, args):
-    env = spack.cmd.require_active_env(cmd_name=command_name)
+    env = spack.cmd.require_active_env(args)
     hashes = env.all_hashes()
     n = len(hashes)
     # TODO clean misc cache
