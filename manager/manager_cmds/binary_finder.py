@@ -32,7 +32,7 @@ def setup_parser_args(subparser):
 
 
 def binary_finder(parser, args):
-    env = spack.cmd.require_active_env(cmd_name=command_name)
+    env = spack.cmd.require_active_env(args.subparser)
     hashes = env.all_hashes()
     n = len(hashes)
     # TODO clean misc cache
@@ -116,6 +116,7 @@ def add_command(parser, command_dict):
         command_name, description=description, help=description, aliases=aliases
     )
     setup_parser_args(subparser)
+    subparser.set_defaults(subparser=subparser)
     command_dict[command_name] = binary_finder
     for alias in aliases:
         command_dict[alias] = binary_finder

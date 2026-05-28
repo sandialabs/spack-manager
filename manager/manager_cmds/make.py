@@ -46,7 +46,7 @@ def setup_parser(parser):
 
 
 def make(parser, args):
-    env = spack.cmd.require_active_env(cmd_name="make")
+    env = spack.cmd.require_active_env(args.subparser)
     specs = spack.cmd.parse_specs(args.spec)
     if args.j:
         extra_make_args = [f"-j{args.j}"]
@@ -90,4 +90,5 @@ def make(parser, args):
 def add_command(parser, command_dict):
     subparser = parser.add_parser("make", help=description)
     setup_parser(subparser)
+    subparser.set_defaults(subparser=subparser)
     command_dict["make"] = make

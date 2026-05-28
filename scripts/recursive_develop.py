@@ -2,6 +2,8 @@
 import argparse
 
 import spack.cmd
+import spack.environment as ev
+import spack.llnl.util.tty as tty
 import spack.main
 
 develop = spack.main.SpackCommand("develop")
@@ -38,7 +40,13 @@ def develop_dependents(input, env, develop_args=[]):
 
 def main():
     args = parse_args()
-    env = spack.cmd.require_active_env(cmd_name="recursive")
+    env = ev.active_environment()
+    if not env:
+        tty.die(
+            "recursive requires an active environment\n"
+            "  activate an environment first:\n"
+            "      spack env activate ENV"
+        )
     if args.forward:
         develop_args = args.forward.split()
     else:

@@ -34,6 +34,7 @@ SKIP_CONFIG_SECTION = ["mirrors", "repos", "include", "ci", "cdash", "bootstrap"
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser("distribution", help=description)
+    subparser.set_defaults(subparser=subparser)
     subparser.add_argument(
         "--distro-dir",
         default=os.path.join(os.getcwd(), "distro"),
@@ -514,7 +515,7 @@ def remove_by_pattern(exclude_pattern, include_patterns):
 
 
 def distribution(parser, args):
-    env = spack.cmd.require_active_env(cmd_name="manager distribution")
+    env = spack.cmd.require_active_env(args.subparser)
     correct_mirror_args(env, args)
 
     packager = DistributionPackager(

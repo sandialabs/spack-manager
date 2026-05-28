@@ -139,7 +139,7 @@ def pin_env(parser, args):
     the dag, and then once after we replace the versions to make sure the environment
     still concretizes
     """
-    env = spack.cmd.require_active_env(cmd_name="pin")
+    env = spack.cmd.require_active_env(args.subparser)
 
     tty.debug("Pin: Pinning branches to sha's")
     pinRoot = args.roots or args.all
@@ -180,4 +180,5 @@ def add_command(parser, command_dict):
         " the current git commits. This requires concretization twice.",
     )
     setup_parser_args(sub_parser)
+    sub_parser.set_defaults(subparser=sub_parser)
     command_dict["pin"] = pin_env
