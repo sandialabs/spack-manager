@@ -65,9 +65,7 @@ def test_newEnvironmentKeepingUserSpecifiedYAML(tmpdir, on_moonlight, monkeypatc
        path: {amr}
      nalu-wind:
        spec: nalu-wind@master
-       path: {nalu}""".format(
-            amr=amr_path.strpath, nalu=nalu_path.strpath
-        )
+       path: {nalu}""".format(amr=amr_path.strpath, nalu=nalu_path.strpath)
         with open(tmpdir.join("user.yaml"), "w") as yaml:
             yaml.write(user_spec_yaml)
 

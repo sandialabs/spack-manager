@@ -8,6 +8,7 @@
 """
 Functions for snapshot creation that are added here to be testable
 """
+
 import os
 
 import spack.cmd
@@ -139,7 +140,7 @@ def pin_env(parser, args):
     the dag, and then once after we replace the versions to make sure the environment
     still concretizes
     """
-    env = spack.cmd.require_active_env(cmd_name="pin")
+    env = spack.cmd.require_active_env(args)
 
     tty.debug("Pin: Pinning branches to sha's")
     pinRoot = args.roots or args.all

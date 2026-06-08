@@ -25,7 +25,7 @@ manager = spack.main.SpackCommand("manager")
     "spec_str",
     [
         "amr-wind@main dev_path=/amr-wind",
-        "nalu-wind@master+cuda cuda_arch=70 " "dev_path=/nalu-wind",
+        "nalu-wind@master+cuda cuda_arch=70 dev_path=/nalu-wind",
         "exawind@master dev_path=/exawind "
         "^nalu-wind@master dev_path=/nalu-wind"
         " ^amr-wind@main dev_path=/amr-wind",
@@ -42,7 +42,7 @@ def test_stripDevPathFromExternals(spec_str):
     "spec_str",
     [
         "amr-wind@main patches=abscdef",
-        "nalu-wind@master+cuda cuda_arch=70 " "patches=asldfkjas",
+        "nalu-wind@master+cuda cuda_arch=70 patches=asldfkjas",
         "exawind@master patches=fxfdcx "
         "^nalu-wind@master patches=dtafwuf"
         " ^amr-wind@main patches=windenergy",
@@ -85,9 +85,7 @@ class ParserMock:
 def setupExternalEnv(tmpdir, has_view=True):
     yaml_file = """spack:
   view: {v}
-  specs: [cmake@3.20.0]""".format(
-        v=has_view
-    )
+  specs: [cmake@3.20.0]""".format(v=has_view)
     env_path = str(tmpdir.join("external"))
     os.makedirs(env_path, exist_ok=True)
     os.makedirs(str(tmpdir.join("test")), exist_ok=True)
@@ -138,9 +136,7 @@ class ExtPackage:
     - spec: {spec}
       prefix: {prefix}
     buildable: False
-""".format(
-            name=name, spec=spec, prefix=prefix
-        )
+""".format(name=name, spec=spec, prefix=prefix)
 
     def __str__(self):
         return self.package_str

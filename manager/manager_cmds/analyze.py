@@ -158,7 +158,7 @@ class StatsGraphBuilder(DotGraphBuilder):
             y *= scale_factor
             fontsize *= scale_factor
         scale_str = f"width={x} height={y} fixedsize=true fontsize={fontsize}"
-        color_str = f'fillcolor="{color_compute if self.to_color else"lightblue"}"'
+        color_str = f'fillcolor="{color_compute if self.to_color else "lightblue"}"'
 
         return (node.dag_hash(), f'[label="{node.format("{name}")}", {color_str}, {scale_str}]')
 
@@ -192,7 +192,8 @@ def graph_dot(specs, builder, visitor, depflag=dt.ALL, out=None):
 
 
 def analyze(parser, args):
-    env = spack.cmd.require_active_env(cmd_name=command_name)
+    env = spack.cmd.require_active_env(args)
+
     specs = env.concrete_roots()
 
     visitor = None

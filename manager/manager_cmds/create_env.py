@@ -112,7 +112,7 @@ def setup_parser_args(sub_parser):
 
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser(
-        "create-env", help="convenience script" " for setting up a spack environment"
+        "create-env", help="convenience script for setting up a spack environment"
     )
     setup_parser_args(sub_parser)
     command_dict["create-env"] = create_env

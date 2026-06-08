@@ -38,7 +38,7 @@ def develop_dependents(input, env, develop_args=[]):
 
 def main():
     args = parse_args()
-    env = spack.cmd.require_active_env(cmd_name="recursive")
+    env = spack.cmd.require_active_env(args)
     if args.forward:
         develop_args = args.forward.split()
     else:

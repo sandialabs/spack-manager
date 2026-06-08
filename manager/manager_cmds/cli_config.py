@@ -9,6 +9,7 @@
 Implementations for interacting and editing the spack-manager YAML config from the
 command line interface
 """
+
 from ... import manager
 from .. import projects
 
