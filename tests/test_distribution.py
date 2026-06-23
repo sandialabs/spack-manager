@@ -915,7 +915,7 @@ def _assert_boostrap_copy_from_env(monkeypatch, tmpdir, mirror_type):
         "bootstrap": {
             "sources": [
                 {
-                    "metadata": spack.util.path.canonicalize_path(metadata_subdir),
+                    "metadata": distribution.canonicalize_path(metadata_subdir),
                     "name": "bootstrap-mirror-name",
                 }
             ]
