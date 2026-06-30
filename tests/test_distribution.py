@@ -946,10 +946,7 @@ def _assert_boostrap_copy_from_env(monkeypatch, tmpdir, mirror_type):
             f"../bootstrap-mirror/metadata/{mirror_type}",
         ],
     ]
-    expected_update_index = [
-        "buildcache",
-        ["update-index", "../bootstrap-mirror/bootstrap_cache"],
-    ]
+    expected_update_index = ["buildcache", ["update-index", "../bootstrap-mirror/bootstrap_cache"]]
 
     assert expected_bootstrap_add in mock_data
     assert expected_update_index in mock_data
@@ -1096,7 +1093,8 @@ def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(
     assert "buildcache" in MockCommand.args
 
     bootstrap_add_calls = [
-        args for cmd, args in zip(MockCommand.args, MockCommand.call_args)
+        args
+        for cmd, args in zip(MockCommand.args, MockCommand.call_args)
         if cmd == "bootstrap" and args and args[0] == "add"
     ]
     assert len(bootstrap_add_calls) >= 1
