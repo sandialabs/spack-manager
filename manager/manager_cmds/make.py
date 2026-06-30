@@ -11,6 +11,7 @@ import spack.build_environment as build_environment
 import spack.builder
 import spack.cmd
 import spack.paths
+
 try:
     from spack.util.filesystem import working_dir
 except ImportError:

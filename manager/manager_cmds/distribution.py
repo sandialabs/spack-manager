@@ -14,6 +14,7 @@ import spack.cmd.mirror
 import spack.config
 import spack.environment
 import spack.extensions
+
 try:
     import spack.util.filesystem as fs
 except ImportError:

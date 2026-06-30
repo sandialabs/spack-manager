@@ -9,6 +9,7 @@ import re
 
 import spack.main
 from spack.extensions.manager.manager_cmds.location import location
+
 try:
     from spack.util.path import canonicalize_path as spack_path_resolve
 except ImportError:

@@ -12,7 +12,6 @@ import string
 import sys
 
 import spack.environment as ev
-
 import spack.llnl.util.tty as tty
 from spack.spec import Spec
 
