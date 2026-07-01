@@ -436,7 +436,7 @@ class DistributionPackager:
             if bootstrap_data.get("sources"):
                 for source in bootstrap_data["sources"]:
                     potential_path = Path(canonicalize_path(source.get("metadata", "")))
-                    if potential_path.is_dir() and "metadata" in potential_path.parts:
+                    if potential_path.is_dir():
                         idx = potential_path.parts.index("metadata")
                         root = Path(*potential_path.parts[:idx])
                         remaining = potential_path.parts[idx:]
