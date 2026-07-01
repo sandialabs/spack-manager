@@ -943,14 +943,7 @@ def _assert_boostrap_copy_from_env(monkeypatch, tmpdir, mirror_type):
         f.write("other data")
 
     mock_bootstrap_config = {
-        "bootstrap": {
-            "sources": [
-                {
-                    "metadata": distribution.canonicalize_path(sources_dir),
-                    "name": "bootstrap-mirror-name",
-                }
-            ]
-        }
+        "bootstrap": {"sources": [{"metadata": sources_dir, "name": "bootstrap-mirror-name"}]}
     }
 
     create_spack_manifest(manifest, extra_data=mock_bootstrap_config)
