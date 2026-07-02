@@ -9,7 +9,11 @@ import re
 
 import spack.main
 from spack.extensions.manager.manager_cmds.location import location
-from spack.util.path import canonicalize_path as spack_path_resolve
+
+try:
+    from spack.util.path import canonicalize_path as spack_path_resolve
+except ImportError:
+    from spack.config import canonicalize_path as spack_path_resolve
 
 arch = spack.main.SpackCommand("arch")
 

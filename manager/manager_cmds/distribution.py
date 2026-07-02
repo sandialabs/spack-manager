@@ -14,12 +14,12 @@ import spack.cmd.mirror
 import spack.config
 import spack.environment
 import spack.extensions
+
 try:
-    import llnl.util.filesystem as fs
-    import llnl.util.tty as tty
+    import spack.util.filesystem as fs
 except ImportError:
     import spack.llnl.util.filesystem as fs
-    import spack.llnl.util.tty as tty
+import spack.llnl.util.tty as tty
 import spack.main
 import spack.solver.asp
 import spack.spec
@@ -147,6 +147,17 @@ def copy_files_excluding_pattern(src, dst, exclude_patterns, include_patterns=No
                     os.path.join(relative_path, filename), exclude_patterns
                 ) or is_match(relative_path, include_patterns):
                     shutil.copy2(src_file, dst_file, follow_symlinks=False)
+
+
+def canonicalize_path(spath):
+    """
+    Spack is restructuring the location of some of its path operators as of v1.1.1
+    Try the new path first, then fall back to the old one.
+    """
+    try:
+        return spack.config.canonicalize_path(spath)
+    except AttributeError:
+        return spack.util.path.canonicalize_path(spath)
 
 
 def valid_env_scopes(env):
@@ -348,7 +359,7 @@ class DistributionPackager:
         os.makedirs(self.package_repos)
 
         for name, repo in repos.items():
-            repo = spack.util.path.canonicalize_path(repo)
+            repo = canonicalize_path(repo)
             basename = os.path.basename(repo)
             repos[name] = os.path.join(
                 os.path.relpath(self.package_repos, self.env.path), basename

@@ -13,13 +13,14 @@ other modules.
 
 import os
 
+import spack.llnl.util.tty as tty
+import spack.util.spack_yaml as syaml
+
 try:
-    import llnl.util.filesystem as fs
-    import llnl.util.tty as tty
+    import spack.util.filesystem as fs
 except ImportError:
     import spack.llnl.util.filesystem as fs
-    import spack.llnl.util.tty as tty
-import spack.util.spack_yaml as syaml
+
 
 _default_config = """
 spack-manager:
