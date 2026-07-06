@@ -580,6 +580,7 @@ def test_concretize(tmpdir):
     pkgr.concretize()
     lockfile = os.path.join(env_dir, "spack.lock")
     assert os.path.isfile(lockfile)
+    assert spack.config.get("concretizer:concretization_cache:enable") is False
 
 
 def test_DistributionPackager_remove_unwanted_artifacts(tmpdir, monkeypatch):
