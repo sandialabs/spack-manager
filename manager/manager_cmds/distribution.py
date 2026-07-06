@@ -261,7 +261,7 @@ class DistributionPackager:
             if "spack.yaml" in item:
                 continue
             elif os.path.isdir(fullname):
-                shutil.rmtree(fullname)
+                shutil.rmtree(fullname, ignore_errors=True)
             else:
                 os.remove(fullname)
 
