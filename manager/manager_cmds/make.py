@@ -32,7 +32,10 @@ level = "short"
 
 def setup_parser(parser):
     parser.add_argument(
-        "spec", metavar="SPEC", nargs="+", help="Spack package to build (must be a develop spec)"
+        "spec",
+        metavar="SPEC",
+        nargs="+",
+        help="Spack package to build (must be a develop spec)",
     )
     build_args = parser.add_mutually_exclusive_group()
     build_args.add_argument(
@@ -69,7 +72,9 @@ def make(parser, args):
     pkg = spec.package
     builder = spack.builder.create(pkg)
     if hasattr(builder, "build_directory"):
-        build_directory = os.path.normpath(os.path.join(pkg.stage.path, builder.build_directory))
+        build_directory = os.path.normpath(
+            os.path.join(pkg.stage.path, builder.build_directory)
+        )
     else:
         build_directory = pkg.stage.source_path
     try:

@@ -10,6 +10,7 @@ import os
 import spack
 import spack.config
 import spack.environment as ev
+import spack.util.spack_yaml as syaml
 
 try:
     import spack.llnl.util.tty as tty

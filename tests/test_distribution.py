@@ -6,8 +6,6 @@
 # for more details.
 
 import os
-import errno
-import shutil
 from argparse import ArgumentParser
 
 import manager.manager_cmds.distribution as distribution
@@ -177,7 +175,10 @@ def test_remove_by_pattern(tmpdir):
     ]
 
     bad_root = os.path.join(root, "bing")
-    bad = [os.path.join(bad_root, "bang", "bad.txt"), os.path.join(bad_root, "bing", "file.txt")]
+    bad = [
+        os.path.join(bad_root, "bang", "bad.txt"),
+        os.path.join(bad_root, "bing", "file.txt"),
+    ]
 
     for p in good + bad:
         os.makedirs(os.path.dirname(p), exist_ok=True)
@@ -200,7 +201,10 @@ def test_remove_by_pattern_with_overriding_includes(tmpdir):
     """
     root = os.path.join(tmpdir.strpath, "foo")
     bad_root = os.path.join(root, "bing")
-    bad = [os.path.join(bad_root, "bang", "bad.txt"), os.path.join(bad_root, "bing", "file.txt")]
+    bad = [
+        os.path.join(bad_root, "bang", "bad.txt"),
+        os.path.join(bad_root, "bing", "file.txt"),
+    ]
 
     good = [
         os.path.join(root, "bar", "file.txt"),
@@ -393,7 +397,9 @@ def test_correct_mirror_args_does_no_modification_if_install_verified(monkeypatc
     assert not args.binary_only
 
 
-def test_correct_mirror_args_does_errors_if_binary_only_but_no_binaries_exist(monkeypatch):
+def test_correct_mirror_args_does_errors_if_binary_only_but_no_binaries_exist(
+    monkeypatch,
+):
     """
     This test verifies that `correct_mirror_args` errors out if binary_only
     is True and source_only gets defaulted to True.
@@ -492,7 +498,9 @@ def test_DistributionPackager_filter_exclude_configs_with_excludes_file(tmpdir):
     assert "specs" in content["spack"]
 
 
-def test_DistributionPackager_filter_exclude_configs_with_excludes_config_and_file(tmpdir):
+def test_DistributionPackager_filter_exclude_configs_with_excludes_config_and_file(
+    tmpdir,
+):
     """
     This test verifies that `filter_exclude_configs` correctly modifies the environment
     when an exclude config section and file is passed.
@@ -586,9 +594,6 @@ def test_concretize(tmpdir):
 
 
 def test_DistributionPackager_contains_only_nfs_file(tmpdir):
-    root = os.path.join(tmpdir.strpath, "root")
-    pkgr = distribution.DistributionPackager(None, root)
-
     nfs_only_dir = os.path.join(tmpdir.strpath, "nfs_only")
     os.makedirs(nfs_only_dir)
     with open(os.path.join(nfs_only_dir, ".nfs000000000001"), "w") as out:
@@ -737,8 +742,12 @@ def test_DistributionPackager_copy_extensions_files(tmpdir, monkeypatch):
     assert os.path.isdir(expected_extension_path)
     assert os.path.isdir(os.path.join(expected_extension_path, "spack-extensiona"))
     assert os.path.isdir(os.path.join(expected_extension_path, "spack-extensionb"))
-    assert os.path.isfile(os.path.join(expected_extension_path, "spack-extensiona", "test.py"))
-    assert os.path.isfile(os.path.join(expected_extension_path, "spack-extensionb", "test.py"))
+    assert os.path.isfile(
+        os.path.join(expected_extension_path, "spack-extensiona", "test.py")
+    )
+    assert os.path.isfile(
+        os.path.join(expected_extension_path, "spack-extensionb", "test.py")
+    )
 
 
 def test_DistributionPackager_configure_repos(tmpdir):
@@ -776,7 +785,9 @@ def test_DistributionPackager_configure_repos(tmpdir):
 
     expected = spack.util.spack_yaml.syaml_dict()
     for key, val in data.items():
-        expected[key] = f"../{os.path.basename(pkgr.package_repos)}/{os.path.basename(val)}"
+        expected[key] = (
+            f"../{os.path.basename(pkgr.package_repos)}/{os.path.basename(val)}"
+        )
 
     assert expected == result_config["spack"]["repos"]
 
@@ -996,7 +1007,10 @@ def _assert_boostrap_copy_from_env(monkeypatch, tmpdir, mirror_type):
             f"../bootstrap-mirror/metadata/{mirror_type}",
         ],
     ]
-    expected_update_index = ["buildcache", ["update-index", "../bootstrap-mirror/bootstrap_cache"]]
+    expected_update_index = [
+        "buildcache",
+        ["update-index", "../bootstrap-mirror/bootstrap_cache"],
+    ]
 
     assert expected_bootstrap_add in mock_data
     assert expected_update_index in mock_data
@@ -1009,7 +1023,9 @@ def _assert_boostrap_copy_from_env(monkeypatch, tmpdir, mirror_type):
     )
 
 
-def test_DistributionPackager_create_bootstrap_with_existing_sources(tmpdir, monkeypatch):
+def test_DistributionPackager_create_bootstrap_with_existing_sources(
+    tmpdir, monkeypatch
+):
     """
     Test that _create_bootstrap identifies existing bootstrap sources in the config,
     copies the root directory of those sources, and returns the correct relative paths.
@@ -1017,7 +1033,9 @@ def test_DistributionPackager_create_bootstrap_with_existing_sources(tmpdir, mon
     _assert_boostrap_copy_from_env(monkeypatch, tmpdir, "sources")
 
 
-def test_DistributionPackager_create_bootstrap_with_existing_binaries(tmpdir, monkeypatch):
+def test_DistributionPackager_create_bootstrap_with_existing_binaries(
+    tmpdir, monkeypatch
+):
     """
     Test that _create_bootstrap identifies existing bootstrap binaries in the config,
     copies the root directory of those sources, and returns the correct relative paths.
@@ -1025,7 +1043,9 @@ def test_DistributionPackager_create_bootstrap_with_existing_binaries(tmpdir, mo
     _assert_boostrap_copy_from_env(monkeypatch, tmpdir, "binaries")
 
 
-def test_DistributionPackager_configure_bootstrap_mirror_calls_update_index(tmpdir, monkeypatch):
+def test_DistributionPackager_configure_bootstrap_mirror_calls_update_index(
+    tmpdir, monkeypatch
+):
     """
     Test that configure_bootstrap_mirror calls 'spack buildcache update-index'
     after adding the bootstrap sources.
@@ -1043,7 +1063,9 @@ def test_DistributionPackager_configure_bootstrap_mirror_calls_update_index(tmpd
     monkeypatch.setattr(distribution, "call", MockCommand)
 
     # Mock _create_bootstrap to return a simple list
-    monkeypatch.setattr(pkgr, "_create_bootstrap", lambda e: [("internal-source", "some/path")])
+    monkeypatch.setattr(
+        pkgr, "_create_bootstrap", lambda e: [("internal-source", "some/path")]
+    )
 
     pkgr.configure_bootstrap_mirror()
 
@@ -1139,7 +1161,10 @@ def test_DistributionPackager_configure_bootstrap_mirror_fallback_to_empty_env(
     # Verify we attempted bootstrap mirror creation and then successfully
     # configured bootstrap sources/binaries plus updated the index.
     assert MockCommand.args[0] == "bootstrap"
-    assert ["update-index", "../bootstrap-mirror/bootstrap_cache"] in MockCommand.call_args
+    assert [
+        "update-index",
+        "../bootstrap-mirror/bootstrap_cache",
+    ] in MockCommand.call_args
     assert "buildcache" in MockCommand.args
 
     bootstrap_add_calls = [
@@ -1243,9 +1268,9 @@ def test_DistributionPackager_init_config(tmpdir, monkeypatch):
     with pkgr.env:
         for section in flattened_config:
             if section == "config":
-                flattened_config[section]["extensions"] != spack.config.CONFIG.get(section)[
-                    "extensions"
-                ]
+                flattened_config[section]["extensions"] != spack.config.CONFIG.get(
+                    section
+                )["extensions"]
             elif section == "concretizer":
                 assert flattened_config[section] != spack.config.CONFIG.get(section)
             else:
