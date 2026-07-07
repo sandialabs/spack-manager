@@ -1,4 +1,5 @@
 import fnmatch
+import errno
 import glob
 import os
 import shutil
@@ -190,6 +191,13 @@ def call(module, cmd, argv):
     callme = getattr(module, cmd)
     callme(parser, args)
 
+def contains_only_nfs_file(path):
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if not name.startswith(".nfs"):
+                return False
+    return True
+
 
 class DistributionPackager:
     def __init__(
@@ -261,7 +269,13 @@ class DistributionPackager:
             if "spack.yaml" in item:
                 continue
             elif os.path.isdir(fullname):
-                shutil.rmtree(fullname, ignore_errors=True)
+                try:
+                    shutil.rmtree(fullname)
+                except OSError as e:
+                    if e.errno == errno.ENOTEMPTY and contains_only_nfs_file(fullname):
+                        print(f"Skipping non-empty directory error for {fullname}")
+                        continue
+                    raise
             else:
                 os.remove(fullname)
 
