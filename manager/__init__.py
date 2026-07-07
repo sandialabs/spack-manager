@@ -74,7 +74,9 @@ def remove_project_via_path(path):
         config_yaml["spack-manager"]["projects"].remove(path)
         write_config()
     else:
-        raise MissingProjectException("No project is registered with the path {0}".format(path))
+        raise MissingProjectException(
+            "No project is registered with the path {0}".format(path)
+        )
 
 
 def remove_project_via_index(index):
@@ -83,7 +85,9 @@ def remove_project_via_index(index):
         config_yaml["spack-manager"]["projects"].pop(index)
         write_config()
     else:
-        raise MissingProjectException("No project is registered with the index {0}".format(index))
+        raise MissingProjectException(
+            "No project is registered with the index {0}".format(index)
+        )
 
 
 def initialize():

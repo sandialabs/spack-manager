@@ -37,7 +37,9 @@ _subcommands = {}
 
 
 def setup_parser(subparser):
-    sp = subparser.add_subparsers(metavar="spack-manager commands", dest="manager_command")
+    sp = subparser.add_subparsers(
+        metavar="spack-manager commands", dest="manager_command"
+    )
 
     cli_config.cli_commands["add"](sp, _subcommands)
     cli_config.cli_commands["remove"](sp, _subcommands)

@@ -71,9 +71,12 @@ def include_creator(parser, args):
 
 def add_command(parser, command_dict):
     sub_parser = parser.add_parser(
-        "include", help="create machine specific includes files for consistent environments"
+        "include",
+        help="create machine specific includes files for consistent environments",
     )
-    sub_parser.add_argument("-m", "--machine", required=False, help="Machine to match configs")
+    sub_parser.add_argument(
+        "-m", "--machine", required=False, help="Machine to match configs"
+    )
     sub_parser.add_argument(
         "-f", "--file", required=False, help="Name of the include file to create"
     )

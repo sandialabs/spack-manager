@@ -35,7 +35,9 @@ class create_args:
     @property
     def yaml(self):
         # TODO the module root isn't getting renamed based off args.name like it should
-        return os.path.join(os.environ["SPACK_MANAGER"], "env-templates", "snapshot.yaml")
+        return os.path.join(
+            os.environ["SPACK_MANAGER"], "env-templates", "snapshot.yaml"
+        )
 
     @property
     def spec(self):
@@ -140,7 +142,10 @@ def add_command(parser, command_dict):
         help="don't replace branch version with latest git hashes as verions",
     )
     sub_parser.add_argument(
-        "--name", "-n", required=False, help="name the environment something other than the date"
+        "--name",
+        "-n",
+        required=False,
+        help="name the environment something other than the date",
     )
     sub_parser.add_argument(
         "--use_machine_name",
@@ -149,7 +154,12 @@ def add_command(parser, command_dict):
         help="use machine name in the snapshot path instead of computed architecture",
     )
     sub_parser.add_argument(
-        "-s", "--specs", required=True, default=[], nargs="+", help="Specs to create snapshots for"
+        "-s",
+        "--specs",
+        required=True,
+        default=[],
+        nargs="+",
+        help="Specs to create snapshots for",
     )
     sub_parser.add_argument(
         "-i",

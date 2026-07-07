@@ -37,11 +37,15 @@ def canonicalize_path(path, default_wd=None):
     return spack_path_resolve(path, default_wd=default_wd)
 
 
-def pruned_spec_string(spec, variants_to_omit=["ipo", "dev_path=", "patches=", "build_system="]):
+def pruned_spec_string(
+    spec, variants_to_omit=["ipo", "dev_path=", "patches=", "build_system="]
+):
     full_spec = spec.format("{name}{@version}{variants}{%compiler}")
 
     # add spaces between variants so we can filter
-    spec_components = full_spec.replace("+", " +").replace("%", " %").replace("~", " ~").split(" ")
+    spec_components = (
+        full_spec.replace("+", " +").replace("%", " %").replace("~", " ~").split(" ")
+    )
 
     def filter_func(entry):
         for v in variants_to_omit:

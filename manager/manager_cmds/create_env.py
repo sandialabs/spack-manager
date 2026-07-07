@@ -23,7 +23,9 @@ from spack.extensions.manager.manager_cmds.location import location
 
 def create_env(parser, args):
     if args.name is not None:
-        theDir = environment.create(args.name, init_file=args.yaml, keep_relative=True).path
+        theDir = environment.create(
+            args.name, init_file=args.yaml, keep_relative=True
+        ).path
     else:
         if args.directory is not None:
             if os.path.exists(args.directory) is False:
@@ -69,7 +71,9 @@ def create_env(parser, args):
 
 
 def setup_parser_args(sub_parser):
-    sub_parser.add_argument("-m", "--machine", required=False, help="Machine to match configs")
+    sub_parser.add_argument(
+        "-m", "--machine", required=False, help="Machine to match configs"
+    )
     sub_parser.add_argument(
         "-p",
         "--project",
