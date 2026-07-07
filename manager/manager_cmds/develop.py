@@ -9,6 +9,7 @@ import os
 import shutil
 
 import spack.cmd
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:
@@ -133,7 +134,9 @@ def manager_develop(parser, args):
 
 def add_command(parser, command_dict):
     subparser = parser.add_parser(
-        "develop", help="a more intuitieve interface for spack develop", conflict_handler="resolve"
+        "develop",
+        help="a more intuitieve interface for spack develop",
+        conflict_handler="resolve",
     )
     s_setup_parser(subparser)
     clone_group = subparser.add_mutually_exclusive_group()

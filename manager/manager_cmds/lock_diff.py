@@ -12,6 +12,7 @@ import string
 import sys
 
 import spack.environment as ev
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:
@@ -19,12 +20,16 @@ except ImportError:
 from spack.spec import Spec
 
 command_name = "lock-diff"
-description = "compare two lock files to determine differences in the concrete environments"
+description = (
+    "compare two lock files to determine differences in the concrete environments"
+)
 aliases = ["ld"]
 
 
 def setup_parser_args(subparser):
-    subparser.add_argument("--old", "-o", help="path to the older spack.lock", required=True)
+    subparser.add_argument(
+        "--old", "-o", help="path to the older spack.lock", required=True
+    )
     subparser.add_argument(
         "--new", "-n", help="path to the newer/updated spack.lock", required=True
     )
@@ -131,7 +136,9 @@ def lock_diff(parser, args):
                     )
                 if old_spec.variants != new_spec.variants:
                     # since package hash is the same, varints should be the same too
-                    old_vars, new_vars = old_vs_new(old_spec.variants, new_spec.variants)
+                    old_vars, new_vars = old_vs_new(
+                        old_spec.variants, new_spec.variants
+                    )
                     diff_msg += "\n *variants diff - \n\tOld: {}\n\tNew: {}".format(
                         old_vars, new_vars
                     )

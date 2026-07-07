@@ -1102,7 +1102,7 @@ def test_DistributionPackager_configure_bootstrap_mirror(tmpdir, monkeypatch):
     monkeypatch.setattr(distribution, "call", MockCommand)
     pkgr.configure_bootstrap_mirror()
 
-    assert MockCommand.args == ["bootstrap", "bootstrap", "buildcache"]
+    assert MockCommand.args == ["bootstrap", "bootstrap", "bootstrap", "buildcache"]
 
     boostrap_parser = ArgumentParser()
     test_bootstrap_parse.setup_parser(boostrap_parser)

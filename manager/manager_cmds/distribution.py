@@ -47,7 +47,8 @@ def add_command(parser, command_dict):
         help="Directory where the packaged environment should be created",
     )
     subparser.add_argument(
-        "--include", help="Directory containing yaml to be included in the packaged environment"
+        "--include",
+        help="Directory containing yaml to be included in the packaged environment",
     )
     subparser.add_argument(
         "--exclude-configs",
@@ -192,6 +193,7 @@ def call(module, cmd, argv):
     callme = getattr(module, cmd)
     callme(parser, args)
 
+
 def contains_only_nfs_file(path):
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -202,7 +204,13 @@ def contains_only_nfs_file(path):
 
 class DistributionPackager:
     def __init__(
-        self, env, root, includes=None, exclude_configs=None, exclude_file=None, extra_data=None
+        self,
+        env,
+        root,
+        includes=None,
+        exclude_configs=None,
+        exclude_file=None,
+        extra_data=None,
     ):
         self.environment_to_package = env
         self.includes = includes
@@ -260,11 +268,14 @@ class DistributionPackager:
 
     def remove_unwanted_artifacts(self):
         include_patterns = [
-            os.path.join(self.spack_dir, ipattern) for ipattern in SPACK_USER_INCLUDE_PATTERNS
+            os.path.join(self.spack_dir, ipattern)
+            for ipattern in SPACK_USER_INCLUDE_PATTERNS
         ]
         for epattern in SPACK_USER_EXCLUDE_PATTERNS:
             for ipattern in SPACK_USER_INCLUDE_PATTERNS:
-                remove_by_pattern(os.path.join(self.spack_dir, epattern), include_patterns)
+                remove_by_pattern(
+                    os.path.join(self.spack_dir, epattern), include_patterns
+                )
         for item in os.listdir(self.env.path):
             fullname = os.path.join(self.env.path, item)
             if "spack.yaml" in item:
@@ -310,7 +321,9 @@ class DistributionPackager:
                 if flattened_config[section]:
                     try:
                         spack.config.CONFIG.set(
-                            section, flattened_config[section], scope=self.env.scope_name
+                            section,
+                            flattened_config[section],
+                            scope=self.env.scope_name,
                         )
                     except spack.config.ConfigFormatError as e:
                         tty.error(
@@ -332,7 +345,11 @@ class DistributionPackager:
                 for package in packages:
                     if "externals" in packages[package]:
                         with self.env.write_transaction():
-                            call(spack.cmd.config, "config", ["remove", f"packages:{package}"])
+                            call(
+                                spack.cmd.config,
+                                "config",
+                                ["remove", f"packages:{package}"],
+                            )
 
     def configure_includes(self):
         if self.includes:
@@ -410,19 +427,27 @@ class DistributionPackager:
             call(spack.cmd.mirror, "mirror", args)
 
             mirror_path = os.path.join(
-                os.path.relpath(self.path, self.env.path), os.path.basename(self.source_mirror)
+                os.path.relpath(self.path, self.env.path),
+                os.path.basename(self.source_mirror),
             )
             tty.msg(f"Adding mirror to env: {self.env.name}....")
             with self.env.write_transaction():
-                call(spack.cmd.mirror, "mirror", ["add", "internal-source", mirror_path])
+                call(
+                    spack.cmd.mirror, "mirror", ["add", "internal-source", mirror_path]
+                )
 
     def configure_binary_mirror(self):
         with self.environment_to_package:
             tty.msg(f"Creating binary mirror at {self.binary_mirror}....")
-            call(spack.cmd.buildcache, "buildcache", ["push", "--unsigned", self.binary_mirror])
+            call(
+                spack.cmd.buildcache,
+                "buildcache",
+                ["push", "--unsigned", self.binary_mirror],
+            )
 
         mirror_path = os.path.join(
-            os.path.relpath(self.path, self.env.path), os.path.basename(self.binary_mirror)
+            os.path.relpath(self.path, self.env.path),
+            os.path.basename(self.binary_mirror),
         )
         mirror_name = "internal-binary"
 
@@ -453,9 +478,14 @@ class DistributionPackager:
                         tty.msg(f"Copying {root} to {self.bootstrap_mirror}")
                         shutil.copytree(root, self.bootstrap_mirror, dirs_exist_ok=True)
                         rel_path = os.path.join(
-                            os.path.relpath(self.bootstrap_mirror, self.env.path), *remaining
+                            os.path.relpath(self.bootstrap_mirror, self.env.path),
+                            *remaining,
                         )
-                        name = "internal-source" if "sources" in remaining else "internal-binary"
+                        name = (
+                            "internal-source"
+                            if "sources" in remaining
+                            else "internal-binary"
+                        )
                         sources.append((name, rel_path))
 
             if not sources:
@@ -465,10 +495,14 @@ class DistributionPackager:
                     ["mirror", "--binary-packages", self.bootstrap_mirror],
                 )
                 bootstrap_source = os.path.join(
-                    os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "sources"
+                    os.path.relpath(self.bootstrap_mirror, self.env.path),
+                    "metadata",
+                    "sources",
                 )
                 bootstrap_binary = os.path.join(
-                    os.path.relpath(self.bootstrap_mirror, self.env.path), "metadata", "binaries"
+                    os.path.relpath(self.bootstrap_mirror, self.env.path),
+                    "metadata",
+                    "binaries",
                 )
                 sources.append(("internal-source", bootstrap_source))
                 sources.append(("internal-binary", bootstrap_binary))
@@ -479,7 +513,9 @@ class DistributionPackager:
         try:
             bootstrap_sources = self._create_bootstrap(self.environment_to_package)
         except spack.solver.asp.UnsatisfiableSpecError:
-            tty.msg("Bootstrap miror creation failed, re-attempting from a clean envionment")
+            tty.msg(
+                "Bootstrap miror creation failed, re-attempting from a clean envionment"
+            )
 
             with tempfile.TemporaryDirectory() as tmpdir:
                 temp_env = spack.environment.create_in_dir(tmpdir)
@@ -512,7 +548,12 @@ class DistributionPackager:
         os.makedirs(self.path, exist_ok=True)
         spack_install = os.path.join(self.path, "spack")
         tty.msg(f"Packing up Spack installation to {spack_install}....")
-        ignore_these = ["var/spack/environments/*", "opt/*", ".git*", "etc/spack/include.yaml"]
+        ignore_these = [
+            "var/spack/environments/*",
+            "opt/*",
+            ".git*",
+            "etc/spack/include.yaml",
+        ]
         copy_files_excluding_pattern(spack_root, spack_install, ignore_these)
 
     def bundle_extra_data(self):
@@ -535,10 +576,14 @@ def is_installed(spec):
 
 def correct_mirror_args(env, args):
     specs_to_check = list(env.concretized_specs())
-    install_status = [len(specs_to_check)] + [is_installed(x) for _, x in specs_to_check]
+    install_status = [len(specs_to_check)] + [
+        is_installed(x) for _, x in specs_to_check
+    ]
     has_installed_specs = all(install_status)
     if not args.source_only and not has_installed_specs:
-        tty.warn("Environment contains uninstalled specs, defaulting to source-only package")
+        tty.warn(
+            "Environment contains uninstalled specs, defaulting to source-only package"
+        )
         if args.binary_only:
             tty.die(
                 "Binary distribution requested, but the environment does not "

@@ -12,6 +12,7 @@ Functions for snapshot creation that are added here to be testable
 import os
 
 import spack.cmd
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:
@@ -73,7 +74,14 @@ def find_latest_git_hash(spec):
         tty.debug(f"{spec.name} has paired to git branch {branch}")
         # get the matching entry and shas for github
         query = (
-            git("ls-remote", "-h", spec.package.git, branch, output=str, error=os.devnull)
+            git(
+                "ls-remote",
+                "-h",
+                spec.package.git,
+                branch,
+                output=str,
+                error=os.devnull,
+            )
             .strip()
             .split()
         )
@@ -150,7 +158,9 @@ def pin_env(parser, args):
     pinDeps = args.dependencies or args.all
 
     if not env.concrete_roots():
-        tty.die("No concrete root specs detected. Pin requires a pre-concretized environment")
+        tty.die(
+            "No concrete root specs detected. Pin requires a pre-concretized environment"
+        )
 
     for user, root in env.concretized_specs():
         new_root = pin_graph(root, pinRoot, pinDeps)
@@ -163,7 +173,11 @@ def pin_env(parser, args):
 def setup_parser_args(sub_parser):
     spec_types = sub_parser.add_mutually_exclusive_group()
     spec_types.add_argument(
-        "-r", "--roots", action="store_true", default=False, help="only pin root spec versions"
+        "-r",
+        "--roots",
+        action="store_true",
+        default=False,
+        help="only pin root spec versions",
     )
     spec_types.add_argument(
         "-d",
@@ -173,7 +187,11 @@ def setup_parser_args(sub_parser):
         help="only pin root spec dependencie versions",
     )
     spec_types.add_argument(
-        "-a", "--all", action="store_true", default=True, help="pin all specs in the DAG"
+        "-a",
+        "--all",
+        action="store_true",
+        default=True,
+        help="pin all specs in the DAG",
     )
 
 

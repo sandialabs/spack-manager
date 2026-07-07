@@ -10,6 +10,7 @@ import os
 import spack
 import spack.config
 import spack.environment as ev
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:
@@ -116,12 +117,16 @@ def external(parser, args):
     snap_env.check_views()
 
     if not snap_env.views:
-        tty.die("Environments used to create externals must have at least 1 associated view")
+        tty.die(
+            "Environments used to create externals must have at least 1 associated view"
+        )
     # copy the file and overwrite any that may exist (or merge?)
     inc_name_abs = os.path.abspath(os.path.join(env.path, args.name))
 
     try:
-        detected = assemble_dict_of_detected_externals(snap_env, args.exclude, args.include)
+        detected = assemble_dict_of_detected_externals(
+            snap_env, args.exclude, args.include
+        )
         src = create_yaml_from_detected_externals(detected)
     except ev.SpackEnvironmentError as e:
         tty.die(e.long_message)
@@ -149,7 +154,9 @@ def external(parser, args):
 
 def add_command(parser, command_dict):
     ext = parser.add_parser(
-        "external", help="tools for configuring precompiled binaries", conflict_handler="resolve"
+        "external",
+        help="tools for configuring precompiled binaries",
+        conflict_handler="resolve",
     )
 
     ext.add_argument(
@@ -182,7 +189,9 @@ def add_command(parser, command_dict):
         required=False,
         help="(not implemented) specs that should be omitted (add all others)",
     )
-    ext.add_argument("path", nargs="?", help="The location of the external install directory")
+    ext.add_argument(
+        "path", nargs="?", help="The location of the external install directory"
+    )
     ext.set_defaults(merge=False, name="externals.yaml")
 
     command_dict["external"] = external
