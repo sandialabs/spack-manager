@@ -13,7 +13,10 @@ other modules.
 
 import os
 
-import spack.llnl.util.tty as tty
+try:
+    import spack.llnl.util.tty as tty
+except ImportError:
+    import spack.util.tty as tty
 import spack.util.spack_yaml as syaml
 
 try:
