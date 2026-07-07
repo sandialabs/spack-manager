@@ -16,10 +16,13 @@ import spack.environment
 import spack.extensions
 
 try:
-    import spack.util.filesystem as fs
-except ImportError:
     import spack.llnl.util.filesystem as fs
-import spack.llnl.util.tty as tty
+except ImportError:
+    import spack.util.filesystem as fs
+try:
+    import spack.llnl.util.tty as tty
+except ImportError:
+    import spack.util.tty as tty
 import spack.main
 import spack.solver.asp
 import spack.spec

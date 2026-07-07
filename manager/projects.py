@@ -7,9 +7,9 @@
 import os
 
 try:
-    import spack.util.lang as lang
-except ImportError:
     import spack.llnl.util.lang as lang
+except ImportError:
+    import spack.util.lang as lang
 from . import config_yaml
 from .manager_utils import canonicalize_path
 

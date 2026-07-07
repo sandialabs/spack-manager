@@ -13,10 +13,13 @@ import spack.cmd
 import spack.paths
 
 try:
-    from spack.util.filesystem import working_dir
-except ImportError:
     from spack.llnl.util.filesystem import working_dir
-import spack.llnl.util.tty as tty
+except ImportError:
+    from spack.util.filesystem import working_dir
+try:
+    import spack.llnl.util.tty as tty
+except ImportError:
+    import spack.util.tty as tty
 from spack.util.executable import Executable
 
 """
