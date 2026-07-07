@@ -13,7 +13,7 @@ import spack.environment as ev
 try:
     import spack.llnl.util.tty as tty
 except ImportError:
-    import spack.util.tty as ttyimport spack.util.spack_yaml as syaml
+    import spack.util.tty as tty
 from spack.detection.common import _pkg_config_dict
 from spack.extensions.manager.environment_utils import SpackManagerEnvironmentManifest
 from spack.extensions.manager.manager_utils import pruned_spec_string
