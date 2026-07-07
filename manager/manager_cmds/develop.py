@@ -9,6 +9,7 @@ import os
 import shutil
 
 import spack.cmd
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:

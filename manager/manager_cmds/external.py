@@ -10,6 +10,7 @@ import os
 import spack
 import spack.config
 import spack.environment as ev
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:

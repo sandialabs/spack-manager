@@ -12,6 +12,7 @@ Functions for snapshot creation that are added here to be testable
 import os
 
 import spack.cmd
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:

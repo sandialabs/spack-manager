@@ -12,6 +12,7 @@ import string
 import sys
 
 import spack.environment as ev
+
 try:
     import spack.llnl.util.tty as tty
 except ImportError:
