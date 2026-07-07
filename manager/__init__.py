@@ -17,9 +17,9 @@ import spack.llnl.util.tty as tty
 import spack.util.spack_yaml as syaml
 
 try:
-    import spack.util.filesystem as fs
-except ImportError:
     import spack.llnl.util.filesystem as fs
+except ImportError:
+    import spack.util.filesystem as fs
 
 
 _default_config = """
