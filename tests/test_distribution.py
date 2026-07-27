@@ -585,7 +585,8 @@ def test_concretize(tmpdir):
     pkgr.concretize()
     lockfile = os.path.join(env_dir, "spack.lock")
     assert os.path.isfile(lockfile)
-    assert spack.config.CONFIG.get("concretizer:concretization_cache:enable") is False
+    with pkgr.env:
+        assert spack.config.CONFIG.get("concretizer:concretization_cache:enable") is False
 
 
 def test_DistributionPackager_contains_only_nfs_file(tmpdir):
