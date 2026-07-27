@@ -253,6 +253,23 @@ def test_get_valid_env_scopes(tmpdir):
     assert len(scope_names) == 2
 
 
+def test_get_valid_env_scopes_escape_chars(tmpdir):
+    """
+    Regression test: valid_env_scopes should match an environment scope even
+    when env.name contains regex-special characters.
+    """
+    env_dir = os.path.join(tmpdir.strpath, "escape_char+_-=/*!~", "environment")
+    manifest = os.path.join(env_dir, "spack.yaml")
+
+    create_spack_manifest(manifest)
+
+    env = spack.environment.environment_from_name_or_dir(os.path.dirname(manifest))
+    with env:
+        scope_names = distribution.valid_env_scopes(env)
+
+    assert f"env:{env.name}" in scope_names
+
+
 class MockArgs:
     def __init__(self, source=False, binary=False):
         self.source_only = source

@@ -2,6 +2,7 @@ import errno
 import fnmatch
 import glob
 import os
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -165,7 +166,10 @@ def canonicalize_path(spath):
 
 
 def valid_env_scopes(env):
-    scopes = spack.config.CONFIG.matching_scopes(f"^env:{env.name}|^include:")
+    env_name = getattr(env, "name", None)
+    escaped_env_name = re.escape(env_name)
+    pattern = f"^(env:{escaped_env_name}|include:)"
+    scopes = spack.config.CONFIG.matching_scopes(pattern)
     return [s.name for s in scopes]
 
 
