@@ -14,6 +14,8 @@ import pytest
 import spack.extensions
 from spack.test.conftest import *  # noqa: F401 F403
 
+pytest_plugins = ["spack.test.concretization_cache_plugin"]
+
 _test_root = os.path.dirname(__file__)
 
 spack.extensions.load_extension("manager")

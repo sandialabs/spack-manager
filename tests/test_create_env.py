@@ -124,6 +124,6 @@ def test_local_source_tree_can_be_added_to_env(tmpdir):
         manager("create-env", "-s", "nalu-wind", "-l")
         e = env.Environment(tmpdir.strpath)
         with e:
-            install_tree = spack.config.get("config:install_tree")
+            install_tree = spack.config.CONFIG.get("config:install_tree")
 
         assert "$env/opt" in str(install_tree)

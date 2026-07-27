@@ -12,6 +12,10 @@ import spack.config
 import spack.environment as ev
 
 try:
+    from spack.active_environment import active_environment as active_environment
+except ImportError:
+    active_environment = ev.active_environment
+try:
     import spack.llnl.util.tty as tty
 except ImportError:
     import spack.util.tty as tty
@@ -57,7 +61,7 @@ def create_external_detected_spec(env, spec):
 
 def assemble_dict_of_detected_externals(env, exclude, include):
     external_spec_dict = {}
-    active_env = ev.active_environment()
+    active_env = active_environment()
 
     def update_dictionary(env, spec):
         ext_spec = create_external_detected_spec(env, spec)
@@ -102,7 +106,7 @@ def _get_first_view_containing_spec(env, spec):
 
 
 def external(parser, args):
-    env = ev.active_environment()
+    env = active_environment()
     if not env:
         tty.die("spack manager external requires an active environment")
 

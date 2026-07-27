@@ -17,6 +17,10 @@ import spack.environment
 import spack.extensions
 
 try:
+    from spack.active_environment import active_environment as active_environment
+except ImportError:
+    active_environment = spack.environment.active_environment
+try:
     import spack.llnl.util.filesystem as fs
 except ImportError:
     import spack.util.filesystem as fs
@@ -228,7 +232,7 @@ class DistributionPackager:
         self._cached_env = None
 
     def __enter__(self):
-        self._cached_env = spack.environment.active_environment()
+        self._cached_env = active_environment()
         tty.msg(f"Concretizing env: {self.environment_to_package.name}....")
         self.environment_to_package.concretize()
         self.environment_to_package.write()
@@ -256,10 +260,13 @@ class DistributionPackager:
         os.makedirs(self.path)
 
     def concretize(self):
-        spack.config.add("concretizer:concretization_cache:enable:false")
         tty.msg(f"Concretizing env: {self.env.name}....")
-        self.env.concretize(force=True)
-        self.env.write()
+        with self.env:
+            spack.config.CONFIG.add(
+                "concretizer:concretization_cache:enable:false", scope=self.env.scope_name
+            )
+            self.env.concretize(force=True)
+            self.env.write()
 
     def remove_unwanted_artifacts(self):
         include_patterns = [
@@ -372,7 +379,7 @@ class DistributionPackager:
         with self.environment_to_package:
             repos = spack.util.spack_yaml.syaml_dict()
             for scope in valid_env_scopes(self.environment_to_package):
-                repos.update(spack.config.get("repos", scope=scope))
+                repos.update(spack.config.CONFIG.get("repos", scope=scope))
 
         tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
