@@ -276,7 +276,7 @@ class DistributionPackager:
         with self.env:
             spack_config(
                 "add", "concretizer:concretization_cache:enable:false", scope=self.env.scope_name
-            )            
+            )
             self.env.concretize(force=True)
             self.env.write()
 
