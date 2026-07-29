@@ -131,6 +131,14 @@ def read_yaml_file(filename):
     return data
 
 
+def spack_config(method, *args, **kwargs):
+    try:
+        func = getattr(spack.config.CONFIG, method)
+    except AttributeError:
+        func = getattr(spack.config, method)
+    return func(*args, **kwargs)
+
+
 def copy_files_excluding_pattern(src, dst, exclude_patterns, include_patterns=None):
     """
     Include_patterns are used to override subsets of the exclude_patterns (include_patterns are
@@ -266,8 +274,8 @@ class DistributionPackager:
     def concretize(self):
         tty.msg(f"Concretizing env: {self.env.name}....")
         with self.env:
-            spack.config.CONFIG.add(
-                "concretizer:concretization_cache:enable:false", scope=self.env.scope_name
+            spack_config(
+                "add", "concretizer:concretization_cache:enable:false", scope=self.env.scope_name
             )
             self.env.concretize(force=True)
             self.env.write()
@@ -309,7 +317,7 @@ class DistributionPackager:
                 if section in SKIP_CONFIG_SECTION:
                     continue
                 try:
-                    flattened_config[section] = spack.config.CONFIG.get(section)
+                    flattened_config[section] = spack_config("get", section)
                 except spack.config.ConfigSectionError as e:
                     tty.error(
                         f"The configuration section: {section} does not exist in \
@@ -323,8 +331,8 @@ class DistributionPackager:
             for section in flattened_config:
                 if flattened_config[section]:
                     try:
-                        spack.config.CONFIG.set(
-                            section, flattened_config[section], scope=self.env.scope_name
+                        spack_config(
+                            "set", section, flattened_config[section], scope=self.env.scope_name
                         )
                     except spack.config.ConfigFormatError as e:
                         tty.error(
@@ -342,7 +350,7 @@ class DistributionPackager:
         if filter_externals:
             tty.msg("Excluding external packages....")
             with self.env:
-                packages = spack.config.CONFIG.get("packages")
+                packages = spack_config("get", "packages")
                 for package in packages:
                     if "externals" in packages[package]:
                         with self.env.write_transaction():
@@ -383,7 +391,8 @@ class DistributionPackager:
         with self.environment_to_package:
             repos = spack.util.spack_yaml.syaml_dict()
             for scope in valid_env_scopes(self.environment_to_package):
-                repos.update(spack.config.CONFIG.get("repos", scope=scope))
+                spack_config_cmd = spack_config("get", "repos", scope=scope)
+                repos.update(spack_config_cmd)
 
         tty.msg(f"Packing up package repositories to {self.package_repos}....")
         os.makedirs(self.package_repos)
@@ -451,7 +460,8 @@ class DistributionPackager:
 
     @staticmethod
     def _get_existing_bootstrap_sources():
-        return spack.config.CONFIG.get("bootstrap", {}).copy()
+        spack_bootstrap = spack_config("get", "bootstrap", {})
+        return spack_bootstrap.copy()
 
     def _create_bootstrap(self, env):
         with env:
