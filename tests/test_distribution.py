@@ -1215,7 +1215,6 @@ def test_DistributionPackager_get_flattened_config(tmpdir):
     """
     pkgr, root, env = init_test_environment(tmpdir.strpath)
     flattened_config = pkgr._get_flattened_config()
-    assert "compilers" in flattened_config
     assert "definitions" in flattened_config
     assert "toolchains" in flattened_config
     for section in distribution.SKIP_CONFIG_SECTION:
@@ -1251,7 +1250,6 @@ def test_DistributionPackager_init_config(tmpdir, monkeypatch):
         "env_vars": {"set": {"SOME_ENV_VAR": "test"}},
         "config": {"extensions": ["test"]},
         "toolchains": {"toolchain": "gcc"},
-        "compilers": ["incorrect_syntax"],
         "concretizer": {},
     }
     flattened_config["config"]["extensions"] = distribution.get_relative_paths(
