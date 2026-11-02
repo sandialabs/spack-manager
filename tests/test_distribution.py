@@ -1268,3 +1268,79 @@ def test_DistributionPackager_init_config(tmpdir, monkeypatch):
                 assert flattened_config[section] != spack.config.CONFIG.get(section)
             else:
                 assert flattened_config[section] == spack.config.CONFIG.get(section)
+
+
+def test_keep_lock_option_defaults_to_false():
+    """
+    This test verifies that the packaged lockfile is opt-in.
+    """
+    subparsers = ArgumentParser().add_subparsers()
+    command_dict = {}
+    distribution.add_command(subparsers, command_dict)
+    parser = subparsers.choices["distribution"]
+    assert not parser.parse_args([]).keep_lock
+    assert parser.parse_args(["--binary-only", "--keep-lock"]).keep_lock
+
+
+def test_distribution_keep_lock_requires_binary_only(monkeypatch):
+    """
+    This test verifies that `--keep-lock` is rejected for packages that build from source.
+    """
+    args = MockArgs(source=True)
+    args.keep_lock = True
+    monkeypatch.setattr(distribution.spack.cmd, "require_active_env", lambda args: None)
+    monkeypatch.setattr(distribution, "correct_mirror_args", lambda env, args: None)
+    with pytest.raises(SystemExit):
+        distribution.distribution(None, args)
+
+
+def test_DistributionPackager_remove_unwanted_artifacts_keep_lock(tmpdir):
+    """
+    This test verifies that `remove_unwanted_artifacts` keeps the lockfile
+    when `keep_lock` is set.
+    """
+    root = os.path.join(tmpdir.strpath, "root")
+    manifest = os.path.join(root, "environment", "spack.yaml")
+    create_spack_manifest(manifest)
+    env_dir = os.path.dirname(manifest)
+    env = get_fake_concretize_env(env_dir)
+
+    pkgr = distribution.DistributionPackager(None, root, keep_lock=True)
+    pkgr._env = env
+    pkgr.concretize()
+    pkgr.remove_unwanted_artifacts()
+
+    assert sorted(os.listdir(env_dir)) == ["spack.lock", "spack.yaml"]
+
+
+def test_DistributionPackager_bundle_lockfile(tmpdir):
+    """
+    This test verifies that `bundle_lockfile` copies the lockfile of the environment
+    being packaged, not one from concretizing the packaged environment.
+    """
+    pkgr, root, env = init_test_environment(tmpdir.strpath)
+    with open(env.lock_path, "w") as f:
+        f.write("built specs")
+    with open(pkgr.env.lock_path, "w") as f:
+        f.write("re-concretized specs")
+
+    pkgr.bundle_lockfile()
+    with open(pkgr.env.lock_path) as f:
+        assert f.read() == "built specs"
+
+
+@pytest.mark.parametrize("keep_lock", [False, True])
+def test_DistributionPackager_init_config_develop(tmpdir, keep_lock):
+    """
+    This test verifies that `init_config` drops the develop section only when
+    `keep_lock` is set.
+    """
+    manifest = os.path.join(tmpdir.strpath, "base-env", "spack.yaml")
+    develop = {"develop": {"foo": {"spec": "foo@=1.0", "path": "/not/on/customer/system"}}}
+    create_spack_manifest(manifest, extra_data=develop)
+    env = spack.environment.Environment(os.path.dirname(manifest))
+    root = os.path.join(tmpdir.strpath, "root")
+    pkgr = distribution.DistributionPackager(env, root, keep_lock=keep_lock)
+
+    pkgr.init_config()
+    assert ("develop" in get_manifest(pkgr.env)["spack"]) is not keep_lock
