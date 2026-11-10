@@ -105,6 +105,15 @@ def add_command(parser, command_dict):
             "Default is to create a source and binary mirror"
         ),
     )
+    subparser.add_argument(
+        "--keep-lock",
+        action="store_true",
+        help=(
+            "Ship the environment's spack.lock so the package installs exactly the specs "
+            "in the binary mirror without concretizing. Also drops the develop section, "
+            "whose paths only exist on this system. Requires --binary-only"
+        ),
+    )
     command_dict["distribution"] = distribution
 
 
@@ -221,7 +230,14 @@ def contains_only_nfs_file(path):
 
 class DistributionPackager:
     def __init__(
-        self, env, root, includes=None, exclude_configs=None, exclude_file=None, extra_data=None
+        self,
+        env,
+        root,
+        includes=None,
+        exclude_configs=None,
+        exclude_file=None,
+        extra_data=None,
+        keep_lock=False,
     ):
         self.environment_to_package = env
         self.includes = includes
@@ -231,6 +247,7 @@ class DistributionPackager:
         if exclude_configs:
             self.exclude_configs.extend(exclude_configs)
         self.extra_data = extra_data
+        self.keep_lock = keep_lock
 
         self.path = root
         self.package_repos = os.path.join(self.path, "spack_repo")
@@ -291,6 +308,8 @@ class DistributionPackager:
             fullname = os.path.join(self.env.path, item)
             if "spack.yaml" in item:
                 continue
+            elif self.keep_lock and item == "spack.lock":
+                continue
             elif os.path.isdir(fullname):
                 try:
                     shutil.rmtree(fullname)
@@ -308,6 +327,9 @@ class DistributionPackager:
             flattened_config["config"]["extensions"] = get_relative_paths(
                 spack.extensions.get_extension_paths(), self.env.path, self.extensions
             )
+        if self.keep_lock:
+            # The locked specs are already built, so their source paths are not needed
+            flattened_config.pop("develop", None)
         self._create_config_file(flattened_config)
 
     def _get_flattened_config(self):
@@ -545,6 +567,10 @@ class DistributionPackager:
             tty.msg(f"Packaging up extra data to {self.path}....")
             shutil.copytree(self.extra_data, self.path, dirs_exist_ok=True)
 
+    def bundle_lockfile(self):
+        tty.msg(f"Copying {self.environment_to_package.lock_path} to {self.env.path}....")
+        shutil.copy(self.environment_to_package.lock_path, self.env.lock_path)
+
     def _write(self, data):
         with open(os.path.join(self.env.path, "spack.yaml"), "w") as outf:
             spack.util.spack_yaml.dump(data, outf, default_flow_style=False)
@@ -588,6 +614,9 @@ def remove_by_pattern(exclude_pattern, include_patterns):
 def distribution(parser, args):
     env = spack.cmd.require_active_env(args)
     correct_mirror_args(env, args)
+    if args.keep_lock and not args.binary_only:
+        # A source build of the locked specs would need the develop paths that are dropped
+        tty.die("--keep-lock requires --binary-only")
 
     packager = DistributionPackager(
         env,
@@ -596,6 +625,7 @@ def distribution(parser, args):
         exclude_configs=args.exclude_configs,
         exclude_file=args.exclude_file,
         extra_data=args.extra_data,
+        keep_lock=args.keep_lock,
     )
 
     with packager:
@@ -613,3 +643,5 @@ def distribution(parser, args):
             packager.configure_binary_mirror()
         packager.bundle_spack()
         packager.bundle_extra_data()
+        if args.keep_lock:
+            packager.bundle_lockfile()

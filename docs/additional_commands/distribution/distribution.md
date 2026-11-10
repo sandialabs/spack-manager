@@ -25,6 +25,11 @@ The above YAML would prevent `cxx` from appearing in the list of packages entire
 
 Similarly, directories passed with `--include` would be copied into the distribution and added to its environment in the `include` section.
 
+## Binary packages that install without concretizing
+By default the packaged environment contains only a `spack.yaml`, so the end user concretizes it again on their machine. For a `--binary-only` package, any difference from the original concretization changes the hashes, and specs that miss the binary mirror are built from source, which fails without the source mirror.
+
+Passing `--keep-lock` together with `--binary-only` ships the active environment's `spack.lock` in the packaged environment, so the end user installs exactly the specs in the binary mirror. It also drops the `develop` section from the packaged `spack.yaml`, since its paths only exist on the machine that created the package.
+
 ## Using the resultant pacakge
 To install the package that was created by `spack manager distribution` an end user needs to source the included `setup-env.*` script from the included copy of Spack, activate the included environment, configure a desired compiler, and install.  For example:
 ```bash
