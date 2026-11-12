@@ -5,13 +5,24 @@
 # This software is released under the BSD 3-clause license. See LICENSE file
 # for more details.
 
+import functools
+import inspect
+
 import spack.binary_distribution as bindist
 import spack.cmd
 import spack.cmd.find
+import spack.config
 
 
 def setup_parser_args(sub_parser):
     spack.cmd.find.setup_parser(sub_parser)
+
+
+def _binary_cache_query():
+    # Newer Spack requires the configuration to be passed explicitly
+    if "config" in inspect.signature(bindist.BinaryCacheQuery.__init__).parameters:
+        return bindist.BinaryCacheQuery(True, config=spack.config.CONFIG)
+    return bindist.BinaryCacheQuery(True)
 
 
 def cache_search(self, **kwargs):
@@ -21,7 +32,7 @@ def cache_search(self, **kwargs):
     else:
         data = getattr(self, "constraint")
     qspecs = spack.cmd.parse_specs(data)
-    search_engine = bindist.BinaryCacheQuery(True)
+    search_engine = _binary_cache_query()
     results = {}
     for q in qspecs:
         hits = search_engine(str(q), **kwargs)
@@ -30,10 +41,10 @@ def cache_search(self, **kwargs):
     return sorted(results.values())
 
 
-spack.cmd.common.arguments.ConstraintAction._specs = cache_search
-
-
 def cache_query(parser, args):
+    # Only override spec lookup for this command so other commands (e.g. module refresh)
+    # still query installed specs instead of the binary cache
+    args.specs = functools.partial(cache_search, args)
     spack.cmd.find.find(parser, args)
 
 
